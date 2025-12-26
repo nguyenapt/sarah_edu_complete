@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "595631319099",
+    "project_id": "sarah-learn-english",
+    "storage_bucket": "sarah-learn-english.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595631319099:android:49e1508247e9c95f33941e",
+        "android_client_info": {
+          "package_name": "com.learnenglish.withsarah.sarah_learn_english"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1d1tk-pIaibVVZ97XgImmsEkjsXwrKXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595631319099:android:09e616c17e0b5d7433941e",
+        "android_client_info": {
+          "package_name": "com.sarah.edu.complete.sarah_edu_complete"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1d1tk-pIaibVVZ97XgImmsEkjsXwrKXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,264 @@
+{
+  "levels": {
+    "A1": {
+      "name": "Beginner A1",
+      "description": "Cấp độ cơ bản nhất, dành cho người mới bắt đầu học tiếng Anh",
+      "order": 1,
+      "totalUnits": 5,
+      "estimatedHours": 40
+    },
+    "A2": {
+      "name": "Elementary A2",
+      "description": "Cấp độ sơ cấp, mở rộng vốn từ và ngữ pháp cơ bản",
+      "order": 2,
+      "totalUnits": 6,
+      "estimatedHours": 50
+    },
+    "B1": {
+      "name": "Intermediate B1",
+      "description": "Cấp độ trung cấp, có thể giao tiếp trong các tình huống quen thuộc",
+      "order": 3,
+      "totalUnits": 7,
+      "estimatedHours": 60
+    },
+    "B2": {
+      "name": "Upper Intermediate B2",
+      "description": "Cấp độ trung cấp cao, giao tiếp tự tin trong hầu hết các tình huống",
+      "order": 4,
+      "totalUnits": 8,
+      "estimatedHours": 70
+    },
+    "C1": {
+      "name": "Advanced C1",
+      "description": "Cấp độ cao cấp, sử dụng tiếng Anh linh hoạt và hiệu quả",
+      "order": 5,
+      "totalUnits": 9,
+      "estimatedHours": 80
+    },
+    "C2": {
+      "name": "Proficient C2",
+      "description": "Cấp độ thành thạo, sử dụng tiếng Anh như người bản ngữ",
+      "order": 6,
+      "totalUnits": 10,
+      "estimatedHours": 90
+    }
+  },
+  "units": {
+    "unit_a1_1": {
+      "levelId": "A1",
+      "title": "Unit 1: Present Simple",
+      "description": "Học về thì hiện tại đơn - cách dùng cơ bản nhất trong tiếng Anh",
+      "order": 1,
+      "estimatedTime": 60,
+      "lessons": ["lesson_a1_1_1", "lesson_a1_1_2"],
+      "prerequisites": []
+    },
+    "unit_a1_2": {
+      "levelId": "A1",
+      "title": "Unit 2: Present Continuous",
+      "description": "Học về thì hiện tại tiếp diễn",
+      "order": 2,
+      "estimatedTime": 60,
+      "lessons": ["lesson_a1_2_1", "lesson_a1_2_2"],
+      "prerequisites": ["unit_a1_1"]
+    },
+    "unit_a1_3": {
+      "levelId": "A1",
+      "title": "Unit 3: Past Simple",
+      "description": "Học về thì quá khứ đơn",
+      "order": 3,
+      "estimatedTime": 60,
+      "lessons": ["lesson_a1_3_1", "lesson_a1_3_2"],
+      "prerequisites": ["unit_a1_2"]
+    },
+    "unit_a1_4": {
+      "levelId": "A1",
+      "title": "Unit 4: Future with 'will'",
+      "description": "Học về thì tương lai với 'will'",
+      "order": 4,
+      "estimatedTime": 60,
+      "lessons": ["lesson_a1_4_1", "lesson_a1_4_2"],
+      "prerequisites": ["unit_a1_3"]
+    },
+    "unit_a1_5": {
+      "levelId": "A1",
+      "title": "Unit 5: Basic Vocabulary",
+      "description": "Từ vựng cơ bản về gia đình, công việc, sở thích",
+      "order": 5,
+      "estimatedTime": 60,
+      "lessons": ["lesson_a1_5_1", "lesson_a1_5_2"],
+      "prerequisites": ["unit_a1_4"]
+    }
+  },
+  "lessons": {
+    "lesson_a1_1_1": {
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "title": "Present Simple - Affirmative",
+      "type": "grammar",
+      "order": 1,
+      "content": {
+        "theory": {
+          "title": "Present Simple",
+          "description": "Thì hiện tại đơn (Present Simple) được dùng để diễn tả thói quen, sự thật hiển nhiên, và các hành động lặp đi lặp lại.",
+          "usage": "Dùng để diễn tả: thói quen hàng ngày, sự thật hiển nhiên, lịch trình cố định",
+          "forms": {
+            "affirmative": "Subject + Verb (s/es cho ngôi thứ 3 số ít)",
+            "negative": "Subject + do/does + not + Verb",
+            "interrogative": "Do/Does + Subject + Verb?"
+          },
+          "examples": [
+            {
+              "sentence": "I go to school every day.",
+              "explanation": "Tôi đi học mỗi ngày"
+            },
+            {
+              "sentence": "She works in a hospital.",
+              "explanation": "Cô ấy làm việc ở bệnh viện"
+            },
+            {
+              "sentence": "The sun rises in the east.",
+              "explanation": "Mặt trời mọc ở phía đông"
+            }
+          ]
+        },
+        "exercises": ["exercise_a1_1_1_1", "exercise_a1_1_1_2", "exercise_a1_1_1_3"]
+      }
+    },
+    "lesson_a1_1_2": {
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "title": "Present Simple - Negative and Questions",
+      "type": "grammar",
+      "order": 2,
+      "content": {
+        "theory": {
+          "title": "Present Simple - Negative and Questions",
+          "description": "Học cách tạo câu phủ định và câu hỏi với thì hiện tại đơn",
+          "usage": "Dùng do/does cho câu hỏi và phủ định",
+          "forms": {
+            "negative": "Subject + do/does + not + Verb",
+            "interrogative": "Do/Does + Subject + Verb?"
+          },
+          "examples": [
+            {
+              "sentence": "I don't like coffee.",
+              "explanation": "Tôi không thích cà phê"
+            },
+            {
+              "sentence": "Do you speak English?",
+              "explanation": "Bạn có nói tiếng Anh không?"
+            },
+            {
+              "sentence": "She doesn't work on weekends.",
+              "explanation": "Cô ấy không làm việc vào cuối tuần"
+            }
+          ]
+        },
+        "exercises": ["exercise_a1_1_2_1", "exercise_a1_1_2_2"]
+      }
+    }
+  },
+  "exercises": {
+    "exercise_a1_1_1_1": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "single_choice",
+      "question": "Choose the correct form: I ___ to school every day.",
+      "points": 10,
+      "timeLimit": 30,
+      "difficulty": "easy",
+      "explanation": "Với chủ ngữ 'I', ta dùng 'go' (không thêm 's')",
+      "content": {
+        "options": ["go", "goes", "going", "went"],
+        "correctAnswers": ["go"]
+      }
+    },
+    "exercise_a1_1_1_2": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "multiple_choice",
+      "question": "Which sentences are correct? (Select all that apply)",
+      "points": 15,
+      "timeLimit": 45,
+      "difficulty": "medium",
+      "explanation": "Câu 2 và 3 đúng vì 'I' và 'They' không cần thêm 's'",
+      "content": {
+        "options": [
+          "I goes to school",
+          "I go to school",
+          "They play football",
+          "She go to work"
+        ],
+        "correctAnswers": ["I go to school", "They play football"]
+      }
+    },
+    "exercise_a1_1_1_3": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "fill_blank",
+      "question": "Fill in the blanks with the correct form of the verb",
+      "points": 20,
+      "timeLimit": 60,
+      "difficulty": "medium",
+      "explanation": "Nhớ thêm 's' cho ngôi thứ 3 số ít (he, she, it)",
+      "content": {
+        "text": "She ___ (work) in a hospital. They ___ (work) in an office.",
+        "blanks": [
+          {
+            "position": 0,
+            "correctAnswer": "works",
+            "hints": ["Ngôi thứ 3 số ít cần thêm 's'"]
+          },
+          {
+            "position": 1,
+            "correctAnswer": "work",
+            "hints": ["Ngôi thứ 3 số nhiều không thêm 's'"]
+          }
+        ]
+      }
+    },
+    "exercise_a1_1_2_1": {
+      "lessonId": "lesson_a1_1_2",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "matching",
+      "question": "Match the questions with the correct answers",
+      "points": 15,
+      "timeLimit": 45,
+      "difficulty": "easy",
+      "explanation": "Câu hỏi với 'Do' dùng cho ngôi thứ nhất, thứ hai và số nhiều",
+      "content": {
+        "leftItems": [
+          "Do you like coffee?",
+          "Does she work here?",
+          "Do they play football?"
+        ],
+        "rightItems": [
+          "Yes, I do",
+          "Yes, she does",
+          "Yes, they do"
+        ],
+        "correctPairs": [
+          {
+            "left": "Do you like coffee?",
+            "right": "Yes, I do"
+          },
+          {
+            "left": "Does she work here?",
+            "right": "Yes, she does"
+          },
+          {
+            "left": "Do they play football?",
+            "right": "Yes, they do"
+          }
+        ]
+      }
+    }
+  }
+}
+
+
