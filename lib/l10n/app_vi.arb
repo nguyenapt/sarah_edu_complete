@@ -63,6 +63,71 @@
   "error": "Lỗi",
   "retry": "Thử lại",
   "unlock": "Mở khóa",
-  "locked": "Đã khóa"
+  "locked": "Đã khóa",
+  "welcomeTitle1": "Chào mừng đến với Sarah Edu",
+  "welcomeDescription1": "Học tiếng Anh từ A1 đến C2 với các bài học có cấu trúc và bài tập tương tác",
+  "welcomeTitle2": "Theo dõi tiến độ",
+  "welcomeDescription2": "Theo dõi hành trình học tập, xác định điểm mạnh và điểm yếu, cải thiện liên tục",
+  "welcomeTitle3": "Chọn ngôn ngữ",
+  "welcomeDescription3": "Chọn ngôn ngữ ưa thích cho giao diện ứng dụng",
+  "next": "Tiếp theo",
+  "previous": "Trước",
+  "skip": "Bỏ qua",
+  "getStarted": "Bắt đầu",
+  "selectLanguage": "Chọn ngôn ngữ",
+  "sentenceForms": "Các dạng câu",
+  "howToUse": "Cách dùng",
+  "lessonsList": "Danh sách bài học",
+  "lessonNumber": "Bài {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "Chưa có bài học nào",
+  "noUnits": "Chưa có unit nào",
+  "noExercises": "Chưa có bài tập nào",
+  "exercisesCount": "{count} bài tập",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} bài học",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "Lỗi tải bài tập",
+  "exerciseTypeNotSupported": "Loại bài tập này chưa được hỗ trợ",
+  "selectOneAnswer": "Chọn một đáp án đúng",
+  "selectAllCorrectAnswers": "Chọn tất cả đáp án đúng",
+  "youGotPoints": "Bạn nhận được {points} điểm",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "Chọn 1 đáp án",
+  "selectMultipleAnswersShort": "Chọn nhiều đáp án",
+  "listening": "Nghe",
+  "speaking": "Nói",
+  "progressTitle": "Tiến Độ Học Tập",
+  "featureInDevelopment": "Tính năng đang phát triển",
+  "progressDescription": "Thống kê tiến độ, điểm yếu và\nbiểu đồ sẽ sớm có mặt tại đây",
+  "practiceDescription": "AI Practice và Custom Practice\nsẽ sớm có mặt tại đây",
+  "learningProgress": "Tiến độ học tập",
+  "loginToSaveProgress": "Đăng nhập để lưu tiến độ học tập và\nđồng bộ trên nhiều thiết bị",
+  "currentLevel": "Level hiện tại",
+  "unitsCompleted": "Units đã hoàn thành"
 }
 

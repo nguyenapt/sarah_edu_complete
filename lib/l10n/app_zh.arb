@@ -63,6 +63,71 @@
   "error": "错误",
   "retry": "重试",
   "unlock": "解锁",
-  "locked": "已锁定"
+  "locked": "已锁定",
+  "welcomeTitle1": "欢迎使用 Sarah Edu",
+  "welcomeDescription1": "通过结构化课程和互动练习从 A1 到 C2 学习英语",
+  "welcomeTitle2": "跟踪您的进度",
+  "welcomeDescription2": "监控您的学习旅程，识别优势和劣势，并持续改进",
+  "welcomeTitle3": "选择您的语言",
+  "welcomeDescription3": "为应用程序界面选择您喜欢的语言",
+  "next": "下一步",
+  "previous": "上一步",
+  "skip": "跳过",
+  "getStarted": "开始",
+  "selectLanguage": "选择语言",
+  "sentenceForms": "句子形式",
+  "howToUse": "使用方法",
+  "lessonsList": "课程列表",
+  "lessonNumber": "课程 {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "暂无课程",
+  "noUnits": "暂无单元",
+  "noExercises": "暂无练习",
+  "exercisesCount": "{count} 个练习",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} 个课程",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "加载练习时出错",
+  "exerciseTypeNotSupported": "此练习类型尚未支持",
+  "selectOneAnswer": "选择一个正确答案",
+  "selectAllCorrectAnswers": "选择所有正确答案",
+  "youGotPoints": "您获得了 {points} 分",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "选择 1 个答案",
+  "selectMultipleAnswersShort": "选择多个答案",
+  "listening": "听力",
+  "speaking": "口语",
+  "progressTitle": "学习进度",
+  "featureInDevelopment": "功能开发中",
+  "progressDescription": "统计、弱点和\n图表将很快推出",
+  "practiceDescription": "AI练习和自定义练习\n将很快推出",
+  "learningProgress": "学习进度",
+  "loginToSaveProgress": "登录以保存学习进度并\n在多个设备上同步",
+  "currentLevel": "当前级别",
+  "unitsCompleted": "已完成的单元"
 }
 

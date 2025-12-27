@@ -199,4 +199,129 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locked => 'Locked';
+
+  @override
+  String get welcomeTitle1 => 'Welcome to Sarah Edu';
+
+  @override
+  String get welcomeDescription1 =>
+      'Learn English from A1 to C2 with structured lessons and interactive exercises';
+
+  @override
+  String get welcomeTitle2 => 'Track Your Progress';
+
+  @override
+  String get welcomeDescription2 =>
+      'Monitor your learning journey, identify strengths and weaknesses, and improve continuously';
+
+  @override
+  String get welcomeTitle3 => 'Choose Your Language';
+
+  @override
+  String get welcomeDescription3 =>
+      'Select your preferred language for the app interface';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get sentenceForms => 'Sentence Forms';
+
+  @override
+  String get howToUse => 'How to use';
+
+  @override
+  String get lessonsList => 'Lessons List';
+
+  @override
+  String lessonNumber(int number) {
+    return 'Lesson $number';
+  }
+
+  @override
+  String get noLessons => 'No lessons available';
+
+  @override
+  String get noUnits => 'No units available';
+
+  @override
+  String get noExercises => 'No exercises available';
+
+  @override
+  String exercisesCount(int count) {
+    return '$count exercises';
+  }
+
+  @override
+  String lessonsCount(int count) {
+    return '$count lessons';
+  }
+
+  @override
+  String get errorLoadingExercises => 'Error loading exercises';
+
+  @override
+  String get exerciseTypeNotSupported => 'This exercise type is not supported';
+
+  @override
+  String get selectOneAnswer => 'Select one correct answer';
+
+  @override
+  String get selectAllCorrectAnswers => 'Select all correct answers';
+
+  @override
+  String youGotPoints(int points) {
+    return 'You got $points points';
+  }
+
+  @override
+  String get selectOneAnswerShort => 'Select 1 answer';
+
+  @override
+  String get selectMultipleAnswersShort => 'Select multiple answers';
+
+  @override
+  String get listening => 'Listening';
+
+  @override
+  String get speaking => 'Speaking';
+
+  @override
+  String get progressTitle => 'Learning Progress';
+
+  @override
+  String get featureInDevelopment => 'Feature in development';
+
+  @override
+  String get progressDescription =>
+      'Statistics, weaknesses and\ncharts will be available soon';
+
+  @override
+  String get practiceDescription =>
+      'AI Practice and Custom Practice\nwill be available soon';
+
+  @override
+  String get learningProgress => 'Learning Progress';
+
+  @override
+  String get loginToSaveProgress =>
+      'Login to save learning progress and\nsync across multiple devices';
+
+  @override
+  String get currentLevel => 'Current Level';
+
+  @override
+  String get unitsCompleted => 'Units Completed';
 }

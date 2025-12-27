@@ -63,6 +63,71 @@
   "error": "エラー",
   "retry": "再試行",
   "unlock": "ロック解除",
-  "locked": "ロック済み"
+  "locked": "ロック済み",
+  "welcomeTitle1": "Sarah Eduへようこそ",
+  "welcomeDescription1": "構造化されたレッスンとインタラクティブな練習でA1からC2まで英語を学びましょう",
+  "welcomeTitle2": "進捗を追跡",
+  "welcomeDescription2": "学習の旅を監視し、強みと弱みを特定し、継続的に改善しましょう",
+  "welcomeTitle3": "言語を選択",
+  "welcomeDescription3": "アプリインターフェースに希望する言語を選択してください",
+  "next": "次へ",
+  "previous": "前へ",
+  "skip": "スキップ",
+  "getStarted": "始める",
+  "selectLanguage": "言語を選択",
+  "sentenceForms": "文の形式",
+  "howToUse": "使い方",
+  "lessonsList": "レッスン一覧",
+  "lessonNumber": "レッスン {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "レッスンがありません",
+  "noUnits": "ユニットがありません",
+  "noExercises": "練習問題がありません",
+  "exercisesCount": "{count}個の練習問題",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count}個のレッスン",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "練習問題の読み込みエラー",
+  "exerciseTypeNotSupported": "この練習タイプはまだサポートされていません",
+  "selectOneAnswer": "正解を1つ選択",
+  "selectAllCorrectAnswers": "すべての正解を選択",
+  "youGotPoints": "{points}ポイントを獲得しました",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "1つ選択",
+  "selectMultipleAnswersShort": "複数選択",
+  "listening": "リスニング",
+  "speaking": "スピーキング",
+  "progressTitle": "学習進捗",
+  "featureInDevelopment": "開発中の機能",
+  "progressDescription": "統計、弱点、\nチャートがまもなく利用可能になります",
+  "practiceDescription": "AI練習とカスタム練習が\nまもなく利用可能になります",
+  "learningProgress": "学習進捗",
+  "loginToSaveProgress": "ログインして学習進捗を保存し\n複数のデバイスで同期します",
+  "currentLevel": "現在のレベル",
+  "unitsCompleted": "完了したユニット"
 }
 

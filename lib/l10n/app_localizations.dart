@@ -499,6 +499,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Locked'**
   String get locked;
+
+  /// No description provided for @welcomeTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Sarah Edu'**
+  String get welcomeTitle1;
+
+  /// No description provided for @welcomeDescription1.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn English from A1 to C2 with structured lessons and interactive exercises'**
+  String get welcomeDescription1;
+
+  /// No description provided for @welcomeTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Track Your Progress'**
+  String get welcomeTitle2;
+
+  /// No description provided for @welcomeDescription2.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor your learning journey, identify strengths and weaknesses, and improve continuously'**
+  String get welcomeDescription2;
+
+  /// No description provided for @welcomeTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Language'**
+  String get welcomeTitle3;
+
+  /// No description provided for @welcomeDescription3.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred language for the app interface'**
+  String get welcomeDescription3;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @sentenceForms.
+  ///
+  /// In en, this message translates to:
+  /// **'Sentence Forms'**
+  String get sentenceForms;
+
+  /// No description provided for @howToUse.
+  ///
+  /// In en, this message translates to:
+  /// **'How to use'**
+  String get howToUse;
+
+  /// No description provided for @lessonsList.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons List'**
+  String get lessonsList;
+
+  /// No description provided for @lessonNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson {number}'**
+  String lessonNumber(int number);
+
+  /// No description provided for @noLessons.
+  ///
+  /// In en, this message translates to:
+  /// **'No lessons available'**
+  String get noLessons;
+
+  /// No description provided for @noUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'No units available'**
+  String get noUnits;
+
+  /// No description provided for @noExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises available'**
+  String get noExercises;
+
+  /// No description provided for @exercisesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises'**
+  String exercisesCount(int count);
+
+  /// No description provided for @lessonsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} lessons'**
+  String lessonsCount(int count);
+
+  /// No description provided for @errorLoadingExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading exercises'**
+  String get errorLoadingExercises;
+
+  /// No description provided for @exerciseTypeNotSupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This exercise type is not supported'**
+  String get exerciseTypeNotSupported;
+
+  /// No description provided for @selectOneAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Select one correct answer'**
+  String get selectOneAnswer;
+
+  /// No description provided for @selectAllCorrectAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all correct answers'**
+  String get selectAllCorrectAnswers;
+
+  /// No description provided for @youGotPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'You got {points} points'**
+  String youGotPoints(int points);
+
+  /// No description provided for @selectOneAnswerShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Select 1 answer'**
+  String get selectOneAnswerShort;
+
+  /// No description provided for @selectMultipleAnswersShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Select multiple answers'**
+  String get selectMultipleAnswersShort;
+
+  /// No description provided for @listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get listening;
+
+  /// No description provided for @speaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get speaking;
+
+  /// No description provided for @progressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Progress'**
+  String get progressTitle;
+
+  /// No description provided for @featureInDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature in development'**
+  String get featureInDevelopment;
+
+  /// No description provided for @progressDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics, weaknesses and\ncharts will be available soon'**
+  String get progressDescription;
+
+  /// No description provided for @practiceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Practice and Custom Practice\nwill be available soon'**
+  String get practiceDescription;
+
+  /// No description provided for @learningProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Progress'**
+  String get learningProgress;
+
+  /// No description provided for @loginToSaveProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to save learning progress and\nsync across multiple devices'**
+  String get loginToSaveProgress;
+
+  /// No description provided for @currentLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Level'**
+  String get currentLevel;
+
+  /// No description provided for @unitsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Units Completed'**
+  String get unitsCompleted;
 }
 
 class _AppLocalizationsDelegate

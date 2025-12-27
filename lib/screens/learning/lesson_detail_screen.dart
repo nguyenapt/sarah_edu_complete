@@ -5,6 +5,7 @@ import '../../models/lesson_model.dart';
 import '../../core/services/firestore_service.dart';
 import '../../models/exercise_model.dart';
 import '../../providers/language_provider.dart';
+import '../../l10n/app_localizations.dart';
 import 'exercise_screen.dart';
 
 class LessonDetailScreen extends StatefulWidget {
@@ -36,8 +37,10 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     });
 
     try {
+      final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
       final exercises = await _firestoreService.getExercisesByLesson(
         widget.lesson.id,
+        languageCode: languageProvider.currentLanguageCode,
       );
       setState(() {
         _exercises = exercises;
@@ -50,7 +53,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi tải bài tập: $e'),
+            content: Text('${AppLocalizations.of(context)!.errorLoadingExercises}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -99,7 +102,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                 Icon(Icons.auto_stories, color: AppTheme.primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  'Lý thuyết',
+                  AppLocalizations.of(context)!.theory,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -133,7 +136,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Cách dùng: ${theory.getUsage(languageCode)}',
+                        '${AppLocalizations.of(context)!.howToUse}: ${theory.getUsage(languageCode)}',
                         style: TextStyle(
                           color: AppTheme.primaryColor,
                           fontWeight: FontWeight.w500,
@@ -163,18 +166,18 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Các dạng câu',
+          AppLocalizations.of(context)!.sentenceForms,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 12),
         if (forms.affirmative != null)
-          _buildFormItem('Khẳng định', forms.getAffirmative(languageCode), Icons.check_circle),
+          _buildFormItem(AppLocalizations.of(context)!.affirmative, forms.getAffirmative(languageCode), Icons.check_circle),
         if (forms.negative != null)
-          _buildFormItem('Phủ định', forms.getNegative(languageCode), Icons.cancel),
+          _buildFormItem(AppLocalizations.of(context)!.negative, forms.getNegative(languageCode), Icons.cancel),
         if (forms.interrogative != null)
-          _buildFormItem('Nghi vấn', forms.getInterrogative(languageCode), Icons.help_outline),
+          _buildFormItem(AppLocalizations.of(context)!.interrogative, forms.getInterrogative(languageCode), Icons.help_outline),
       ],
     );
   }
@@ -216,7 +219,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ví dụ',
+          AppLocalizations.of(context)!.examples,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -277,7 +280,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             Icon(Icons.quiz, color: AppTheme.primaryColor),
             const SizedBox(width: 8),
             Text(
-              'Bài tập',
+              AppLocalizations.of(context)!.exercises,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -288,10 +291,10 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         if (_isLoadingExercises)
           const Center(child: CircularProgressIndicator())
         else if (_exercises.isEmpty)
-          const Center(
+          Center(
             child: Padding(
-              padding: EdgeInsets.all(32.0),
-              child: Text('Chưa có bài tập nào'),
+              padding: const EdgeInsets.all(32.0),
+              child: Text(AppLocalizations.of(context)!.noExercises),
             ),
           )
         else
@@ -352,7 +355,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                 Icon(Icons.star, size: 14, color: Colors.amber),
                 const SizedBox(width: 4),
                 Text(
-                  '${exercise.points} điểm',
+                  '${exercise.points} ${AppLocalizations.of(context)!.points}',
                   style: const TextStyle(fontSize: 12),
                 ),
               ],
@@ -384,30 +387,32 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
   }
 
   String _getDifficultyLabel(Difficulty difficulty) {
+    final localizations = AppLocalizations.of(context)!;
     switch (difficulty) {
       case Difficulty.easy:
-        return 'Dễ';
+        return localizations.easy;
       case Difficulty.medium:
-        return 'Trung bình';
+        return localizations.medium;
       case Difficulty.hard:
-        return 'Khó';
+        return localizations.hard;
     }
   }
 
   String _getExerciseTypeLabel(ExerciseType type) {
+    final localizations = AppLocalizations.of(context)!;
     switch (type) {
       case ExerciseType.singleChoice:
-        return 'Chọn 1';
+        return localizations.selectOneAnswerShort;
       case ExerciseType.multipleChoice:
-        return 'Chọn nhiều';
+        return localizations.selectMultipleAnswersShort;
       case ExerciseType.fillBlank:
-        return 'Điền từ';
+        return localizations.fillBlank;
       case ExerciseType.matching:
-        return 'Nối';
+        return localizations.matching;
       case ExerciseType.listening:
-        return 'Nghe';
+        return localizations.listening;
       case ExerciseType.speaking:
-        return 'Nói';
+        return localizations.speaking;
     }
   }
 }

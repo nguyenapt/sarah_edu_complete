@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
@@ -8,7 +9,7 @@ class ProgressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tiến Độ Học Tập'),
+        title: Text(AppLocalizations.of(context)!.progressTitle),
       ),
       body: Center(
         child: Column(
@@ -21,14 +22,14 @@ class ProgressScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Tính năng đang phát triển',
+              AppLocalizations.of(context)!.featureInDevelopment,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Colors.grey[600],
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Thống kê tiến độ, điểm yếu và\nbiểu đồ sẽ sớm có mặt tại đây',
+              AppLocalizations.of(context)!.progressDescription,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey[500],

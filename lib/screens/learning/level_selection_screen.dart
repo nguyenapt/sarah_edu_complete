@@ -5,6 +5,7 @@ import '../../models/level_model.dart';
 import '../../core/services/firestore_service.dart';
 import '../../models/unit_model.dart';
 import '../../providers/language_provider.dart';
+import '../../l10n/app_localizations.dart';
 import 'unit_list_screen.dart';
 
 class LevelSelectionScreen extends StatefulWidget {
@@ -112,7 +113,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                                 const SizedBox(width: 12),
                                 _buildInfoChip(
                                   Icons.access_time,
-                                  '${_level!.estimatedHours} giờ',
+                                  '${_level!.estimatedHours} ${AppLocalizations.of(context)!.hours}',
                                 ),
                               ],
                             ),
@@ -124,17 +125,17 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 
                   // Units List
                   Text(
-                    'Các bài học',
+                    AppLocalizations.of(context)!.lessonsList,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 16),
                   if (_units.isEmpty)
-                    const Center(
+                    Center(
                       child: Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: Text('Chưa có unit nào'),
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(AppLocalizations.of(context)!.noUnits),
                       ),
                     )
                   else
@@ -200,7 +201,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                 Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 4),
                 Text(
-                  '${unit.estimatedTime} phút',
+                  '${unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -210,7 +211,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                 Icon(Icons.menu_book, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 4),
                 Text(
-                  '${unit.lessons.length} bài học',
+                  AppLocalizations.of(context)!.lessonsCount(unit.lessons.length),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],

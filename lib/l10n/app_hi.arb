@@ -63,6 +63,71 @@
   "error": "त्रुटि",
   "retry": "पुनः प्रयास करें",
   "unlock": "अनलॉक करें",
-  "locked": "लॉक किया गया"
+  "locked": "लॉक किया गया",
+  "welcomeTitle1": "Sarah Edu में आपका स्वागत है",
+  "welcomeDescription1": "संरचित पाठ और इंटरैक्टिव अभ्यास के साथ A1 से C2 तक अंग्रेजी सीखें",
+  "welcomeTitle2": "अपनी प्रगति को ट्रैक करें",
+  "welcomeDescription2": "अपनी सीखने की यात्रा की निगरानी करें, ताकत और कमजोरियों की पहचान करें, और लगातार सुधार करें",
+  "welcomeTitle3": "अपनी भाषा चुनें",
+  "welcomeDescription3": "ऐप इंटरफेस के लिए अपनी पसंदीदा भाषा चुनें",
+  "next": "अगला",
+  "previous": "पिछला",
+  "skip": "छोड़ें",
+  "getStarted": "शुरू करें",
+  "selectLanguage": "भाषा चुनें",
+  "sentenceForms": "वाक्य रूप",
+  "howToUse": "कैसे उपयोग करें",
+  "lessonsList": "पाठ सूची",
+  "lessonNumber": "पाठ {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "कोई पाठ उपलब्ध नहीं",
+  "noUnits": "कोई इकाई उपलब्ध नहीं",
+  "noExercises": "कोई अभ्यास उपलब्ध नहीं",
+  "exercisesCount": "{count} अभ्यास",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} पाठ",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "अभ्यास लोड करने में त्रुटि",
+  "exerciseTypeNotSupported": "इस प्रकार का अभ्यास अभी तक समर्थित नहीं है",
+  "selectOneAnswer": "एक सही उत्तर चुनें",
+  "selectAllCorrectAnswers": "सभी सही उत्तर चुनें",
+  "youGotPoints": "आपको {points} अंक मिले",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "1 उत्तर चुनें",
+  "selectMultipleAnswersShort": "कई उत्तर चुनें",
+  "listening": "सुनना",
+  "speaking": "बोलना",
+  "progressTitle": "सीखने की प्रगति",
+  "featureInDevelopment": "विकास में सुविधा",
+  "progressDescription": "आंकड़े, कमजोरियां और\nचार्ट जल्द ही उपलब्ध होंगे",
+  "practiceDescription": "AI अभ्यास और कस्टम अभ्यास\nजल्द ही उपलब्ध होंगे",
+  "learningProgress": "सीखने की प्रगति",
+  "loginToSaveProgress": "अपनी प्रगति सहेजने और\nकई उपकरणों पर सिंक करने के लिए लॉगिन करें",
+  "currentLevel": "वर्तमान स्तर",
+  "unitsCompleted": "पूर्ण इकाइयाँ"
 }
 

@@ -63,6 +63,71 @@
   "error": "Ошибка",
   "retry": "Повторить",
   "unlock": "Разблокировать",
-  "locked": "Заблокировано"
+  "locked": "Заблокировано",
+  "welcomeTitle1": "Добро пожаловать в Sarah Edu",
+  "welcomeDescription1": "Изучайте английский от A1 до C2 с структурированными уроками и интерактивными упражнениями",
+  "welcomeTitle2": "Отслеживайте свой прогресс",
+  "welcomeDescription2": "Следите за своим учебным путешествием, определяйте сильные и слабые стороны и постоянно улучшайтесь",
+  "welcomeTitle3": "Выберите язык",
+  "welcomeDescription3": "Выберите предпочитаемый язык для интерфейса приложения",
+  "next": "Далее",
+  "previous": "Назад",
+  "skip": "Пропустить",
+  "getStarted": "Начать",
+  "selectLanguage": "Выбрать язык",
+  "sentenceForms": "Формы предложений",
+  "howToUse": "Как использовать",
+  "lessonsList": "Список уроков",
+  "lessonNumber": "Урок {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "Уроков нет",
+  "noUnits": "Единиц нет",
+  "noExercises": "Упражнений нет",
+  "exercisesCount": "{count} упражнений",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} уроков",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "Ошибка загрузки упражнений",
+  "exerciseTypeNotSupported": "Этот тип упражнения еще не поддерживается",
+  "selectOneAnswer": "Выберите один правильный ответ",
+  "selectAllCorrectAnswers": "Выберите все правильные ответы",
+  "youGotPoints": "Вы получили {points} баллов",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "Выбрать 1 ответ",
+  "selectMultipleAnswersShort": "Выбрать несколько ответов",
+  "listening": "Аудирование",
+  "speaking": "Говорение",
+  "progressTitle": "Прогресс обучения",
+  "featureInDevelopment": "Функция в разработке",
+  "progressDescription": "Статистика, слабые стороны и\nграфики скоро появятся",
+  "practiceDescription": "ИИ-практика и пользовательская практика\nскоро появятся",
+  "learningProgress": "Прогресс обучения",
+  "loginToSaveProgress": "Войдите, чтобы сохранить прогресс обучения и\nсинхронизировать на нескольких устройствах",
+  "currentLevel": "Текущий уровень",
+  "unitsCompleted": "Завершенные единицы"
 }
 

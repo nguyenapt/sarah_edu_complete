@@ -63,6 +63,71 @@
   "error": "Fehler",
   "retry": "Wiederholen",
   "unlock": "Entsperren",
-  "locked": "Gesperrt"
+  "locked": "Gesperrt",
+  "welcomeTitle1": "Willkommen bei Sarah Edu",
+  "welcomeDescription1": "Lernen Sie Englisch von A1 bis C2 mit strukturierten Lektionen und interaktiven Übungen",
+  "welcomeTitle2": "Verfolgen Sie Ihren Fortschritt",
+  "welcomeDescription2": "Überwachen Sie Ihre Lernreise, identifizieren Sie Stärken und Schwächen und verbessern Sie sich kontinuierlich",
+  "welcomeTitle3": "Wählen Sie Ihre Sprache",
+  "welcomeDescription3": "Wählen Sie Ihre bevorzugte Sprache für die App-Oberfläche",
+  "next": "Weiter",
+  "previous": "Zurück",
+  "skip": "Überspringen",
+  "getStarted": "Loslegen",
+  "selectLanguage": "Sprache auswählen",
+  "sentenceForms": "Satzformen",
+  "howToUse": "Verwendung",
+  "lessonsList": "Lektionenliste",
+  "lessonNumber": "Lektion {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "Keine Lektionen verfügbar",
+  "noUnits": "Keine Einheiten verfügbar",
+  "noExercises": "Keine Übungen verfügbar",
+  "exercisesCount": "{count} Übungen",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} Lektionen",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "Fehler beim Laden der Übungen",
+  "exerciseTypeNotSupported": "Dieser Übungstyp wird noch nicht unterstützt",
+  "selectOneAnswer": "Eine richtige Antwort auswählen",
+  "selectAllCorrectAnswers": "Alle richtigen Antworten auswählen",
+  "youGotPoints": "Sie haben {points} Punkte erhalten",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "1 Antwort auswählen",
+  "selectMultipleAnswersShort": "Mehrere Antworten auswählen",
+  "listening": "Hören",
+  "speaking": "Sprechen",
+  "progressTitle": "Lernfortschritt",
+  "featureInDevelopment": "Funktion in Entwicklung",
+  "progressDescription": "Statistiken, Schwächen und\nDiagramme werden bald verfügbar sein",
+  "practiceDescription": "KI-Übung und benutzerdefinierte Übung\nwerden bald verfügbar sein",
+  "learningProgress": "Lernfortschritt",
+  "loginToSaveProgress": "Melden Sie sich an, um Ihren Fortschritt zu speichern und\nauf mehreren Geräten zu synchronisieren",
+  "currentLevel": "Aktuelles Level",
+  "unitsCompleted": "Abgeschlossene Einheiten"
 }
 

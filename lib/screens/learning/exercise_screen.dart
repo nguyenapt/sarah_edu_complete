@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/exercise_model.dart';
+import '../../l10n/app_localizations.dart';
 
 class ExerciseScreen extends StatefulWidget {
   final ExerciseModel exercise;
@@ -23,7 +24,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bài tập'),
+        title: Text(AppLocalizations.of(context)!.exercises),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -69,7 +70,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                       children: [
                         Icon(Icons.star, size: 16, color: Colors.amber),
                         const SizedBox(width: 4),
-                        Text('${widget.exercise.points} điểm'),
+                        Text('${widget.exercise.points} ${AppLocalizations.of(context)!.points}'),
                         const SizedBox(width: 16),
                         Chip(
                           label: Text(
@@ -130,7 +131,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       case ExerciseType.matching:
         return _buildMatching();
       default:
-        return const Center(child: Text('Loại bài tập này chưa được hỗ trợ'));
+        return Center(child: Text(AppLocalizations.of(context)!.exerciseTypeNotSupported));
     }
   }
 
@@ -141,7 +142,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Chọn một đáp án đúng:',
+          '${AppLocalizations.of(context)!.selectOneAnswer}:',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -196,7 +197,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Chọn tất cả đáp án đúng:',
+          '${AppLocalizations.of(context)!.selectAllCorrectAnswers}:',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -347,7 +348,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 Icon(Icons.star, color: Colors.amber),
                 const SizedBox(width: 4),
                 Text(
-                  'Bạn nhận được ${_isCorrect ? widget.exercise.points : 0} điểm',
+                  AppLocalizations.of(context)!.youGotPoints(_isCorrect ? widget.exercise.points : 0),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -364,7 +365,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Quay lại'),
+                child: Text(AppLocalizations.of(context)!.back),
               ),
             ),
           ],
@@ -374,30 +375,32 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   }
 
   String _getExerciseTypeLabel(ExerciseType type) {
+    final localizations = AppLocalizations.of(context)!;
     switch (type) {
       case ExerciseType.singleChoice:
-        return 'Chọn 1 đáp án';
+        return localizations.selectOneAnswerShort;
       case ExerciseType.multipleChoice:
-        return 'Chọn nhiều đáp án';
+        return localizations.selectMultipleAnswersShort;
       case ExerciseType.fillBlank:
-        return 'Điền từ';
+        return localizations.fillBlank;
       case ExerciseType.matching:
-        return 'Nối';
+        return localizations.matching;
       case ExerciseType.listening:
-        return 'Nghe';
+        return localizations.listening;
       case ExerciseType.speaking:
-        return 'Nói';
+        return localizations.speaking;
     }
   }
 
   String _getDifficultyLabel(Difficulty difficulty) {
+    final localizations = AppLocalizations.of(context)!;
     switch (difficulty) {
       case Difficulty.easy:
-        return 'Dễ';
+        return localizations.easy;
       case Difficulty.medium:
-        return 'Trung bình';
+        return localizations.medium;
       case Difficulty.hard:
-        return 'Khó';
+        return localizations.hard;
     }
   }
 }

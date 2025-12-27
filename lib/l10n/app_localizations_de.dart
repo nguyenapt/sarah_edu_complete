@@ -200,4 +200,130 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get locked => 'Gesperrt';
+
+  @override
+  String get welcomeTitle1 => 'Willkommen bei Sarah Edu';
+
+  @override
+  String get welcomeDescription1 =>
+      'Lernen Sie Englisch von A1 bis C2 mit strukturierten Lektionen und interaktiven Übungen';
+
+  @override
+  String get welcomeTitle2 => 'Verfolgen Sie Ihren Fortschritt';
+
+  @override
+  String get welcomeDescription2 =>
+      'Überwachen Sie Ihre Lernreise, identifizieren Sie Stärken und Schwächen und verbessern Sie sich kontinuierlich';
+
+  @override
+  String get welcomeTitle3 => 'Wählen Sie Ihre Sprache';
+
+  @override
+  String get welcomeDescription3 =>
+      'Wählen Sie Ihre bevorzugte Sprache für die App-Oberfläche';
+
+  @override
+  String get next => 'Weiter';
+
+  @override
+  String get previous => 'Zurück';
+
+  @override
+  String get skip => 'Überspringen';
+
+  @override
+  String get getStarted => 'Loslegen';
+
+  @override
+  String get selectLanguage => 'Sprache auswählen';
+
+  @override
+  String get sentenceForms => 'Satzformen';
+
+  @override
+  String get howToUse => 'Verwendung';
+
+  @override
+  String get lessonsList => 'Lektionenliste';
+
+  @override
+  String lessonNumber(int number) {
+    return 'Lektion $number';
+  }
+
+  @override
+  String get noLessons => 'Keine Lektionen verfügbar';
+
+  @override
+  String get noUnits => 'Keine Einheiten verfügbar';
+
+  @override
+  String get noExercises => 'Keine Übungen verfügbar';
+
+  @override
+  String exercisesCount(int count) {
+    return '$count Übungen';
+  }
+
+  @override
+  String lessonsCount(int count) {
+    return '$count Lektionen';
+  }
+
+  @override
+  String get errorLoadingExercises => 'Fehler beim Laden der Übungen';
+
+  @override
+  String get exerciseTypeNotSupported =>
+      'Dieser Übungstyp wird noch nicht unterstützt';
+
+  @override
+  String get selectOneAnswer => 'Eine richtige Antwort auswählen';
+
+  @override
+  String get selectAllCorrectAnswers => 'Alle richtigen Antworten auswählen';
+
+  @override
+  String youGotPoints(int points) {
+    return 'Sie haben $points Punkte erhalten';
+  }
+
+  @override
+  String get selectOneAnswerShort => '1 Antwort auswählen';
+
+  @override
+  String get selectMultipleAnswersShort => 'Mehrere Antworten auswählen';
+
+  @override
+  String get listening => 'Hören';
+
+  @override
+  String get speaking => 'Sprechen';
+
+  @override
+  String get progressTitle => 'Lernfortschritt';
+
+  @override
+  String get featureInDevelopment => 'Funktion in Entwicklung';
+
+  @override
+  String get progressDescription =>
+      'Statistiken, Schwächen und\nDiagramme werden bald verfügbar sein';
+
+  @override
+  String get practiceDescription =>
+      'KI-Übung und benutzerdefinierte Übung\nwerden bald verfügbar sein';
+
+  @override
+  String get learningProgress => 'Lernfortschritt';
+
+  @override
+  String get loginToSaveProgress =>
+      'Melden Sie sich an, um Ihren Fortschritt zu speichern und\nauf mehreren Geräten zu synchronisieren';
+
+  @override
+  String get currentLevel => 'Aktuelles Level';
+
+  @override
+  String get unitsCompleted => 'Abgeschlossene Einheiten';
 }

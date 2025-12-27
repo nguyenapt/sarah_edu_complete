@@ -200,4 +200,130 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get locked => 'Заблокировано';
+
+  @override
+  String get welcomeTitle1 => 'Добро пожаловать в Sarah Edu';
+
+  @override
+  String get welcomeDescription1 =>
+      'Изучайте английский от A1 до C2 с структурированными уроками и интерактивными упражнениями';
+
+  @override
+  String get welcomeTitle2 => 'Отслеживайте свой прогресс';
+
+  @override
+  String get welcomeDescription2 =>
+      'Следите за своим учебным путешествием, определяйте сильные и слабые стороны и постоянно улучшайтесь';
+
+  @override
+  String get welcomeTitle3 => 'Выберите язык';
+
+  @override
+  String get welcomeDescription3 =>
+      'Выберите предпочитаемый язык для интерфейса приложения';
+
+  @override
+  String get next => 'Далее';
+
+  @override
+  String get previous => 'Назад';
+
+  @override
+  String get skip => 'Пропустить';
+
+  @override
+  String get getStarted => 'Начать';
+
+  @override
+  String get selectLanguage => 'Выбрать язык';
+
+  @override
+  String get sentenceForms => 'Формы предложений';
+
+  @override
+  String get howToUse => 'Как использовать';
+
+  @override
+  String get lessonsList => 'Список уроков';
+
+  @override
+  String lessonNumber(int number) {
+    return 'Урок $number';
+  }
+
+  @override
+  String get noLessons => 'Уроков нет';
+
+  @override
+  String get noUnits => 'Единиц нет';
+
+  @override
+  String get noExercises => 'Упражнений нет';
+
+  @override
+  String exercisesCount(int count) {
+    return '$count упражнений';
+  }
+
+  @override
+  String lessonsCount(int count) {
+    return '$count уроков';
+  }
+
+  @override
+  String get errorLoadingExercises => 'Ошибка загрузки упражнений';
+
+  @override
+  String get exerciseTypeNotSupported =>
+      'Этот тип упражнения еще не поддерживается';
+
+  @override
+  String get selectOneAnswer => 'Выберите один правильный ответ';
+
+  @override
+  String get selectAllCorrectAnswers => 'Выберите все правильные ответы';
+
+  @override
+  String youGotPoints(int points) {
+    return 'Вы получили $points баллов';
+  }
+
+  @override
+  String get selectOneAnswerShort => 'Выбрать 1 ответ';
+
+  @override
+  String get selectMultipleAnswersShort => 'Выбрать несколько ответов';
+
+  @override
+  String get listening => 'Аудирование';
+
+  @override
+  String get speaking => 'Говорение';
+
+  @override
+  String get progressTitle => 'Прогресс обучения';
+
+  @override
+  String get featureInDevelopment => 'Функция в разработке';
+
+  @override
+  String get progressDescription =>
+      'Статистика, слабые стороны и\nграфики скоро появятся';
+
+  @override
+  String get practiceDescription =>
+      'ИИ-практика и пользовательская практика\nскоро появятся';
+
+  @override
+  String get learningProgress => 'Прогресс обучения';
+
+  @override
+  String get loginToSaveProgress =>
+      'Войдите, чтобы сохранить прогресс обучения и\nсинхронизировать на нескольких устройствах';
+
+  @override
+  String get currentLevel => 'Текущий уровень';
+
+  @override
+  String get unitsCompleted => 'Завершенные единицы';
 }

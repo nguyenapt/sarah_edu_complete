@@ -101,7 +101,10 @@ class FirestoreService {
   }
 
   // Exercises
-  Future<List<ExerciseModel>> getExercisesByLesson(String lessonId) async {
+  Future<List<ExerciseModel>> getExercisesByLesson(
+    String lessonId, {
+    String? languageCode,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection(FirebaseConstants.exercisesCollection)
@@ -109,14 +112,21 @@ class FirestoreService {
           .get();
       
       return snapshot.docs
-          .map((doc) => ExerciseModel.fromFirestore(doc.data(), doc.id))
+          .map((doc) => ExerciseModel.fromFirestore(
+                doc.data(), 
+                doc.id,
+                languageCode: languageCode,
+              ))
           .toList();
     } catch (e) {
       throw Exception('Error fetching exercises: $e');
     }
   }
 
-  Future<ExerciseModel?> getExercise(String exerciseId) async {
+  Future<ExerciseModel?> getExercise(
+    String exerciseId, {
+    String? languageCode,
+  }) async {
     try {
       final doc = await _firestore
           .collection(FirebaseConstants.exercisesCollection)
@@ -124,7 +134,11 @@ class FirestoreService {
           .get();
       
       if (!doc.exists) return null;
-      return ExerciseModel.fromFirestore(doc.data()!, doc.id);
+      return ExerciseModel.fromFirestore(
+        doc.data()!, 
+        doc.id,
+        languageCode: languageCode,
+      );
     } catch (e) {
       throw Exception('Error fetching exercise: $e');
     }

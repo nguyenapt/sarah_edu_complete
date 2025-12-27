@@ -63,6 +63,71 @@
   "error": "Erro",
   "retry": "Tentar novamente",
   "unlock": "Desbloquear",
-  "locked": "Bloqueado"
+  "locked": "Bloqueado",
+  "welcomeTitle1": "Bem-vindo ao Sarah Edu",
+  "welcomeDescription1": "Aprenda inglês de A1 a C2 com lições estruturadas e exercícios interativos",
+  "welcomeTitle2": "Acompanhe seu progresso",
+  "welcomeDescription2": "Monitore sua jornada de aprendizado, identifique pontos fortes e fracos e melhore continuamente",
+  "welcomeTitle3": "Escolha seu idioma",
+  "welcomeDescription3": "Selecione seu idioma preferido para a interface do aplicativo",
+  "next": "Próximo",
+  "previous": "Anterior",
+  "skip": "Pular",
+  "getStarted": "Começar",
+  "selectLanguage": "Selecionar idioma",
+  "sentenceForms": "Formas de frases",
+  "howToUse": "Como usar",
+  "lessonsList": "Lista de lições",
+  "lessonNumber": "Lição {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "Nenhuma lição disponível",
+  "noUnits": "Nenhuma unidade disponível",
+  "noExercises": "Nenhum exercício disponível",
+  "exercisesCount": "{count} exercícios",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} lições",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "Erro ao carregar exercícios",
+  "exerciseTypeNotSupported": "Este tipo de exercício ainda não é suportado",
+  "selectOneAnswer": "Selecione uma resposta correta",
+  "selectAllCorrectAnswers": "Selecione todas as respostas corretas",
+  "youGotPoints": "Você obteve {points} pontos",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "Selecionar 1 resposta",
+  "selectMultipleAnswersShort": "Selecionar múltiplas respostas",
+  "listening": "Escuta",
+  "speaking": "Fala",
+  "progressTitle": "Progresso de aprendizagem",
+  "featureInDevelopment": "Funcionalidade em desenvolvimento",
+  "progressDescription": "Estatísticas, fraquezas e\ngráficos estarão disponíveis em breve",
+  "practiceDescription": "Prática de IA e Prática personalizada\nestarão disponíveis em breve",
+  "learningProgress": "Progresso de aprendizagem",
+  "loginToSaveProgress": "Faça login para salvar seu progresso e\nsincronizar em vários dispositivos",
+  "currentLevel": "Nível atual",
+  "unitsCompleted": "Unidades concluídas"
 }
 

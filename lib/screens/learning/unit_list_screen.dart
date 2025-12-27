@@ -5,6 +5,7 @@ import '../../models/unit_model.dart';
 import '../../core/services/firestore_service.dart';
 import '../../models/lesson_model.dart';
 import '../../providers/language_provider.dart';
+import '../../l10n/app_localizations.dart';
 import 'lesson_detail_screen.dart';
 
 class UnitListScreen extends StatefulWidget {
@@ -90,14 +91,14 @@ class _UnitListScreenState extends State<UnitListScreen> {
                             children: [
                               Chip(
                                 avatar: const Icon(Icons.access_time, size: 18),
-                                label: Text('${widget.unit.estimatedTime} phút'),
+                                label: Text('${widget.unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}'),
                                 backgroundColor:
                                     AppTheme.primaryColor.withOpacity(0.1),
                               ),
                               const SizedBox(width: 12),
                               Chip(
                                 avatar: const Icon(Icons.menu_book, size: 18),
-                                label: Text('${_lessons.length} bài học'),
+                                label: Text(AppLocalizations.of(context)!.lessonsCount(_lessons.length)),
                                 backgroundColor:
                                     AppTheme.primaryColor.withOpacity(0.1),
                               ),
@@ -111,17 +112,17 @@ class _UnitListScreenState extends State<UnitListScreen> {
 
                   // Lessons List
                   Text(
-                    'Danh sách bài học',
+                    AppLocalizations.of(context)!.lessonsList,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 16),
                   if (_lessons.isEmpty)
-                    const Center(
+                    Center(
                       child: Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: Text('Chưa có bài học nào'),
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(AppLocalizations.of(context)!.noLessons),
                       ),
                     )
                   else
@@ -161,7 +162,7 @@ class _UnitListScreenState extends State<UnitListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text('Bài ${index + 1}'),
+            Text(AppLocalizations.of(context)!.lessonNumber(index + 1)),
             if (lesson.exercises.isNotEmpty) ...[
               const SizedBox(height: 8),
               Row(
@@ -169,7 +170,7 @@ class _UnitListScreenState extends State<UnitListScreen> {
                   Icon(Icons.quiz, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
-                    '${lesson.exercises.length} bài tập',
+                    AppLocalizations.of(context)!.exercisesCount(lesson.exercises.length),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[600],

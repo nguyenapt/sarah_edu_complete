@@ -63,6 +63,71 @@
   "error": "Error",
   "retry": "Retry",
   "unlock": "Unlock",
-  "locked": "Locked"
+  "locked": "Locked",
+  "welcomeTitle1": "Welcome to Sarah Edu",
+  "welcomeDescription1": "Learn English from A1 to C2 with structured lessons and interactive exercises",
+  "welcomeTitle2": "Track Your Progress",
+  "welcomeDescription2": "Monitor your learning journey, identify strengths and weaknesses, and improve continuously",
+  "welcomeTitle3": "Choose Your Language",
+  "welcomeDescription3": "Select your preferred language for the app interface",
+  "next": "Next",
+  "previous": "Previous",
+  "skip": "Skip",
+  "getStarted": "Get Started",
+  "selectLanguage": "Select Language",
+  "sentenceForms": "Sentence Forms",
+  "howToUse": "How to use",
+  "lessonsList": "Lessons List",
+  "lessonNumber": "Lesson {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "No lessons available",
+  "noUnits": "No units available",
+  "noExercises": "No exercises available",
+  "exercisesCount": "{count} exercises",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} lessons",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "Error loading exercises",
+  "exerciseTypeNotSupported": "This exercise type is not supported",
+  "selectOneAnswer": "Select one correct answer",
+  "selectAllCorrectAnswers": "Select all correct answers",
+  "youGotPoints": "You got {points} points",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "Select 1 answer",
+  "selectMultipleAnswersShort": "Select multiple answers",
+  "listening": "Listening",
+  "speaking": "Speaking",
+  "progressTitle": "Learning Progress",
+  "featureInDevelopment": "Feature in development",
+  "progressDescription": "Statistics, weaknesses and\ncharts will be available soon",
+  "practiceDescription": "AI Practice and Custom Practice\nwill be available soon",
+  "learningProgress": "Learning Progress",
+  "loginToSaveProgress": "Login to save learning progress and\nsync across multiple devices",
+  "currentLevel": "Current Level",
+  "unitsCompleted": "Units Completed"
 }
 

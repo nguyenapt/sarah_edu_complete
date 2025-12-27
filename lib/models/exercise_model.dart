@@ -396,7 +396,11 @@ class ExerciseModel {
     this.explanation,
   });
 
-  factory ExerciseModel.fromFirestore(Map<String, dynamic> data, String id) {
+  factory ExerciseModel.fromFirestore(
+    Map<String, dynamic> data, 
+    String id, {
+    String? languageCode,
+  }) {
     final type = ExerciseType.fromString(data['type'] ?? 'single_choice');
     dynamic content;
 
@@ -419,27 +423,43 @@ class ExerciseModel {
         break;
     }
 
-    // Question - luôn là String (tiếng Anh)
+    // Question - luôn là String
+    // Hỗ trợ cả String và Map<String, dynamic> (multilanguage) từ Firestore
+    // Ưu tiên lấy theo language đã chọn, nếu không có thì fallback sang 'en'
     String questionText = '';
     if (data['question'] != null) {
-      if (data['question'] is Map) {
-        // Nếu là Map, lấy giá trị 'en' hoặc giá trị đầu tiên
+      if (data['question'] is Map<String, dynamic>) {
         final questionMap = data['question'] as Map<String, dynamic>;
-        questionText = questionMap['en']?.toString() ?? 
-                      questionMap.values.first.toString();
+        // Ưu tiên lấy theo language đã chọn, nếu không có thì fallback sang 'en'
+        if (languageCode != null && questionMap.containsKey(languageCode)) {
+          questionText = questionMap[languageCode].toString();
+        } else {
+          questionText = questionMap['en']?.toString() ?? 
+                        (questionMap.values.isNotEmpty 
+                          ? questionMap.values.first.toString() 
+                          : '');
+        }
       } else {
         questionText = data['question'].toString();
       }
     }
 
-    // Explanation - luôn là String (tiếng Anh)
+    // Explanation - luôn là String
+    // Hỗ trợ cả String và Map<String, dynamic> (multilanguage) từ Firestore
+    // Ưu tiên lấy theo language đã chọn, nếu không có thì fallback sang 'en'
     String? explanationText;
     if (data['explanation'] != null) {
-      if (data['explanation'] is Map) {
-        // Nếu là Map, lấy giá trị 'en' hoặc giá trị đầu tiên
+      if (data['explanation'] is Map<String, dynamic>) {
         final explanationMap = data['explanation'] as Map<String, dynamic>;
-        explanationText = explanationMap['en']?.toString() ?? 
-                         explanationMap.values.first.toString();
+        // Ưu tiên lấy theo language đã chọn, nếu không có thì fallback sang 'en'
+        if (languageCode != null && explanationMap.containsKey(languageCode)) {
+          explanationText = explanationMap[languageCode].toString();
+        } else {
+          explanationText = explanationMap['en']?.toString() ?? 
+                           (explanationMap.values.isNotEmpty 
+                             ? explanationMap.values.first.toString() 
+                             : null);
+        }
       } else {
         explanationText = data['explanation'].toString();
       }

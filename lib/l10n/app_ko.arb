@@ -63,6 +63,71 @@
   "error": "오류",
   "retry": "다시 시도",
   "unlock": "잠금 해제",
-  "locked": "잠김"
+  "locked": "잠김",
+  "welcomeTitle1": "Sarah Edu에 오신 것을 환영합니다",
+  "welcomeDescription1": "구조화된 수업과 대화형 연습으로 A1부터 C2까지 영어를 배우세요",
+  "welcomeTitle2": "진도 추적",
+  "welcomeDescription2": "학습 여정을 모니터링하고 강점과 약점을 파악하며 지속적으로 개선하세요",
+  "welcomeTitle3": "언어 선택",
+  "welcomeDescription3": "앱 인터페이스에 선호하는 언어를 선택하세요",
+  "next": "다음",
+  "previous": "이전",
+  "skip": "건너뛰기",
+  "getStarted": "시작하기",
+  "selectLanguage": "언어 선택",
+  "sentenceForms": "문장 형태",
+  "howToUse": "사용법",
+  "lessonsList": "수업 목록",
+  "lessonNumber": "수업 {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "수업이 없습니다",
+  "noUnits": "단원이 없습니다",
+  "noExercises": "연습문제가 없습니다",
+  "exercisesCount": "{count}개 연습문제",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count}개 수업",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "연습문제 로딩 오류",
+  "exerciseTypeNotSupported": "이 연습 유형은 아직 지원되지 않습니다",
+  "selectOneAnswer": "정답 하나 선택",
+  "selectAllCorrectAnswers": "모든 정답 선택",
+  "youGotPoints": "{points}점을 받았습니다",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "1개 선택",
+  "selectMultipleAnswersShort": "여러 개 선택",
+  "listening": "듣기",
+  "speaking": "말하기",
+  "progressTitle": "학습 진행 상황",
+  "featureInDevelopment": "개발 중인 기능",
+  "progressDescription": "통계, 약점 및\n차트가 곧 제공될 예정입니다",
+  "practiceDescription": "AI 연습 및 맞춤 연습이\n곧 제공될 예정입니다",
+  "learningProgress": "학습 진행 상황",
+  "loginToSaveProgress": "로그인하여 학습 진행 상황을 저장하고\n여러 기기에서 동기화하세요",
+  "currentLevel": "현재 레벨",
+  "unitsCompleted": "완료된 단원"
 }
 

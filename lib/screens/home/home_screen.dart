@@ -197,17 +197,17 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Tiến độ học tập',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.learningProgress,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
-            _buildProgressItem('Level hiện tại', 'A1', 0.3),
+            _buildProgressItem(AppLocalizations.of(context)!.currentLevel, 'A1', 0.3),
             const SizedBox(height: 12),
-            _buildProgressItem('Units đã hoàn thành', '3/10', 0.3),
+            _buildProgressItem(AppLocalizations.of(context)!.unitsCompleted, '3/10', 0.3),
           ],
         ),
       ),
@@ -259,9 +259,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Tiếp tục học',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.continueLearning,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -416,9 +416,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'Mở khóa',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.unlock,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,

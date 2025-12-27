@@ -199,4 +199,123 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get locked => '잠김';
+
+  @override
+  String get welcomeTitle1 => 'Sarah Edu에 오신 것을 환영합니다';
+
+  @override
+  String get welcomeDescription1 => '구조화된 수업과 대화형 연습으로 A1부터 C2까지 영어를 배우세요';
+
+  @override
+  String get welcomeTitle2 => '진도 추적';
+
+  @override
+  String get welcomeDescription2 => '학습 여정을 모니터링하고 강점과 약점을 파악하며 지속적으로 개선하세요';
+
+  @override
+  String get welcomeTitle3 => '언어 선택';
+
+  @override
+  String get welcomeDescription3 => '앱 인터페이스에 선호하는 언어를 선택하세요';
+
+  @override
+  String get next => '다음';
+
+  @override
+  String get previous => '이전';
+
+  @override
+  String get skip => '건너뛰기';
+
+  @override
+  String get getStarted => '시작하기';
+
+  @override
+  String get selectLanguage => '언어 선택';
+
+  @override
+  String get sentenceForms => '문장 형태';
+
+  @override
+  String get howToUse => '사용법';
+
+  @override
+  String get lessonsList => '수업 목록';
+
+  @override
+  String lessonNumber(int number) {
+    return '수업 $number';
+  }
+
+  @override
+  String get noLessons => '수업이 없습니다';
+
+  @override
+  String get noUnits => '단원이 없습니다';
+
+  @override
+  String get noExercises => '연습문제가 없습니다';
+
+  @override
+  String exercisesCount(int count) {
+    return '$count개 연습문제';
+  }
+
+  @override
+  String lessonsCount(int count) {
+    return '$count개 수업';
+  }
+
+  @override
+  String get errorLoadingExercises => '연습문제 로딩 오류';
+
+  @override
+  String get exerciseTypeNotSupported => '이 연습 유형은 아직 지원되지 않습니다';
+
+  @override
+  String get selectOneAnswer => '정답 하나 선택';
+
+  @override
+  String get selectAllCorrectAnswers => '모든 정답 선택';
+
+  @override
+  String youGotPoints(int points) {
+    return '$points점을 받았습니다';
+  }
+
+  @override
+  String get selectOneAnswerShort => '1개 선택';
+
+  @override
+  String get selectMultipleAnswersShort => '여러 개 선택';
+
+  @override
+  String get listening => '듣기';
+
+  @override
+  String get speaking => '말하기';
+
+  @override
+  String get progressTitle => '학습 진행 상황';
+
+  @override
+  String get featureInDevelopment => '개발 중인 기능';
+
+  @override
+  String get progressDescription => '통계, 약점 및\n차트가 곧 제공될 예정입니다';
+
+  @override
+  String get practiceDescription => 'AI 연습 및 맞춤 연습이\n곧 제공될 예정입니다';
+
+  @override
+  String get learningProgress => '학습 진행 상황';
+
+  @override
+  String get loginToSaveProgress => '로그인하여 학습 진행 상황을 저장하고\n여러 기기에서 동기화하세요';
+
+  @override
+  String get currentLevel => '현재 레벨';
+
+  @override
+  String get unitsCompleted => '완료된 단원';
 }

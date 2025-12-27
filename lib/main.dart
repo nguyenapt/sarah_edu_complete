@@ -5,7 +5,7 @@ import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/auth_provider.dart';
 import 'providers/language_provider.dart';
-import 'screens/main_navigation.dart';
+import 'screens/welcome/welcome_wrapper.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             locale: languageProvider.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const MainNavigation(),
+            home: const WelcomeWrapper(),
           );
         },
       ),

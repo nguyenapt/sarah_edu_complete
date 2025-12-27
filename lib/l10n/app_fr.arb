@@ -63,6 +63,71 @@
   "error": "Erreur",
   "retry": "Réessayer",
   "unlock": "Déverrouiller",
-  "locked": "Verrouillé"
+  "locked": "Verrouillé",
+  "welcomeTitle1": "Bienvenue sur Sarah Edu",
+  "welcomeDescription1": "Apprenez l'anglais de A1 à C2 avec des leçons structurées et des exercices interactifs",
+  "welcomeTitle2": "Suivez vos progrès",
+  "welcomeDescription2": "Surveillez votre parcours d'apprentissage, identifiez vos forces et faiblesses, et améliorez-vous continuellement",
+  "welcomeTitle3": "Choisissez votre langue",
+  "welcomeDescription3": "Sélectionnez votre langue préférée pour l'interface de l'application",
+  "next": "Suivant",
+  "previous": "Précédent",
+  "skip": "Passer",
+  "getStarted": "Commencer",
+  "selectLanguage": "Sélectionner la langue",
+  "sentenceForms": "Formes de phrases",
+  "howToUse": "Comment utiliser",
+  "lessonsList": "Liste des leçons",
+  "lessonNumber": "Leçon {number}",
+  "@lessonNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "noLessons": "Aucune leçon disponible",
+  "noUnits": "Aucune unité disponible",
+  "noExercises": "Aucun exercice disponible",
+  "exercisesCount": "{count} exercices",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonsCount": "{count} leçons",
+  "@lessonsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingExercises": "Erreur de chargement des exercices",
+  "exerciseTypeNotSupported": "Ce type d'exercice n'est pas encore pris en charge",
+  "selectOneAnswer": "Sélectionner une bonne réponse",
+  "selectAllCorrectAnswers": "Sélectionner toutes les bonnes réponses",
+  "youGotPoints": "Vous avez obtenu {points} points",
+  "@youGotPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "selectOneAnswerShort": "Sélectionner 1 réponse",
+  "selectMultipleAnswersShort": "Sélectionner plusieurs réponses",
+  "listening": "Écoute",
+  "speaking": "Parole",
+  "progressTitle": "Progrès d'apprentissage",
+  "featureInDevelopment": "Fonctionnalité en développement",
+  "progressDescription": "Statistiques, faiblesses et\ngraphiques seront bientôt disponibles",
+  "practiceDescription": "Pratique IA et Pratique personnalisée\nseront bientôt disponibles",
+  "learningProgress": "Progrès d'apprentissage",
+  "loginToSaveProgress": "Connectez-vous pour enregistrer vos progrès et\nsynchroniser sur plusieurs appareils",
+  "currentLevel": "Niveau actuel",
+  "unitsCompleted": "Unités terminées"
 }
 

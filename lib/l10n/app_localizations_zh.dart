@@ -199,4 +199,123 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get locked => '已锁定';
+
+  @override
+  String get welcomeTitle1 => '欢迎使用 Sarah Edu';
+
+  @override
+  String get welcomeDescription1 => '通过结构化课程和互动练习从 A1 到 C2 学习英语';
+
+  @override
+  String get welcomeTitle2 => '跟踪您的进度';
+
+  @override
+  String get welcomeDescription2 => '监控您的学习旅程，识别优势和劣势，并持续改进';
+
+  @override
+  String get welcomeTitle3 => '选择您的语言';
+
+  @override
+  String get welcomeDescription3 => '为应用程序界面选择您喜欢的语言';
+
+  @override
+  String get next => '下一步';
+
+  @override
+  String get previous => '上一步';
+
+  @override
+  String get skip => '跳过';
+
+  @override
+  String get getStarted => '开始';
+
+  @override
+  String get selectLanguage => '选择语言';
+
+  @override
+  String get sentenceForms => '句子形式';
+
+  @override
+  String get howToUse => '使用方法';
+
+  @override
+  String get lessonsList => '课程列表';
+
+  @override
+  String lessonNumber(int number) {
+    return '课程 $number';
+  }
+
+  @override
+  String get noLessons => '暂无课程';
+
+  @override
+  String get noUnits => '暂无单元';
+
+  @override
+  String get noExercises => '暂无练习';
+
+  @override
+  String exercisesCount(int count) {
+    return '$count 个练习';
+  }
+
+  @override
+  String lessonsCount(int count) {
+    return '$count 个课程';
+  }
+
+  @override
+  String get errorLoadingExercises => '加载练习时出错';
+
+  @override
+  String get exerciseTypeNotSupported => '此练习类型尚未支持';
+
+  @override
+  String get selectOneAnswer => '选择一个正确答案';
+
+  @override
+  String get selectAllCorrectAnswers => '选择所有正确答案';
+
+  @override
+  String youGotPoints(int points) {
+    return '您获得了 $points 分';
+  }
+
+  @override
+  String get selectOneAnswerShort => '选择 1 个答案';
+
+  @override
+  String get selectMultipleAnswersShort => '选择多个答案';
+
+  @override
+  String get listening => '听力';
+
+  @override
+  String get speaking => '口语';
+
+  @override
+  String get progressTitle => '学习进度';
+
+  @override
+  String get featureInDevelopment => '功能开发中';
+
+  @override
+  String get progressDescription => '统计、弱点和\n图表将很快推出';
+
+  @override
+  String get practiceDescription => 'AI练习和自定义练习\n将很快推出';
+
+  @override
+  String get learningProgress => '学习进度';
+
+  @override
+  String get loginToSaveProgress => '登录以保存学习进度并\n在多个设备上同步';
+
+  @override
+  String get currentLevel => '当前级别';
+
+  @override
+  String get unitsCompleted => '已完成的单元';
 }

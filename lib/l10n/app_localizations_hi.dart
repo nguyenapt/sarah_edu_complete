@@ -199,4 +199,129 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get locked => 'लॉक किया गया';
+
+  @override
+  String get welcomeTitle1 => 'Sarah Edu में आपका स्वागत है';
+
+  @override
+  String get welcomeDescription1 =>
+      'संरचित पाठ और इंटरैक्टिव अभ्यास के साथ A1 से C2 तक अंग्रेजी सीखें';
+
+  @override
+  String get welcomeTitle2 => 'अपनी प्रगति को ट्रैक करें';
+
+  @override
+  String get welcomeDescription2 =>
+      'अपनी सीखने की यात्रा की निगरानी करें, ताकत और कमजोरियों की पहचान करें, और लगातार सुधार करें';
+
+  @override
+  String get welcomeTitle3 => 'अपनी भाषा चुनें';
+
+  @override
+  String get welcomeDescription3 => 'ऐप इंटरफेस के लिए अपनी पसंदीदा भाषा चुनें';
+
+  @override
+  String get next => 'अगला';
+
+  @override
+  String get previous => 'पिछला';
+
+  @override
+  String get skip => 'छोड़ें';
+
+  @override
+  String get getStarted => 'शुरू करें';
+
+  @override
+  String get selectLanguage => 'भाषा चुनें';
+
+  @override
+  String get sentenceForms => 'वाक्य रूप';
+
+  @override
+  String get howToUse => 'कैसे उपयोग करें';
+
+  @override
+  String get lessonsList => 'पाठ सूची';
+
+  @override
+  String lessonNumber(int number) {
+    return 'पाठ $number';
+  }
+
+  @override
+  String get noLessons => 'कोई पाठ उपलब्ध नहीं';
+
+  @override
+  String get noUnits => 'कोई इकाई उपलब्ध नहीं';
+
+  @override
+  String get noExercises => 'कोई अभ्यास उपलब्ध नहीं';
+
+  @override
+  String exercisesCount(int count) {
+    return '$count अभ्यास';
+  }
+
+  @override
+  String lessonsCount(int count) {
+    return '$count पाठ';
+  }
+
+  @override
+  String get errorLoadingExercises => 'अभ्यास लोड करने में त्रुटि';
+
+  @override
+  String get exerciseTypeNotSupported =>
+      'इस प्रकार का अभ्यास अभी तक समर्थित नहीं है';
+
+  @override
+  String get selectOneAnswer => 'एक सही उत्तर चुनें';
+
+  @override
+  String get selectAllCorrectAnswers => 'सभी सही उत्तर चुनें';
+
+  @override
+  String youGotPoints(int points) {
+    return 'आपको $points अंक मिले';
+  }
+
+  @override
+  String get selectOneAnswerShort => '1 उत्तर चुनें';
+
+  @override
+  String get selectMultipleAnswersShort => 'कई उत्तर चुनें';
+
+  @override
+  String get listening => 'सुनना';
+
+  @override
+  String get speaking => 'बोलना';
+
+  @override
+  String get progressTitle => 'सीखने की प्रगति';
+
+  @override
+  String get featureInDevelopment => 'विकास में सुविधा';
+
+  @override
+  String get progressDescription =>
+      'आंकड़े, कमजोरियां और\nचार्ट जल्द ही उपलब्ध होंगे';
+
+  @override
+  String get practiceDescription =>
+      'AI अभ्यास और कस्टम अभ्यास\nजल्द ही उपलब्ध होंगे';
+
+  @override
+  String get learningProgress => 'सीखने की प्रगति';
+
+  @override
+  String get loginToSaveProgress =>
+      'अपनी प्रगति सहेजने और\nकई उपकरणों पर सिंक करने के लिए लॉगिन करें';
+
+  @override
+  String get currentLevel => 'वर्तमान स्तर';
+
+  @override
+  String get unitsCompleted => 'पूर्ण इकाइयाँ';
 }
