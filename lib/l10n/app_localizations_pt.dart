@@ -326,4 +326,29 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get unitsCompleted => 'Unidades concluídas';
+
+  @override
+  String get placementTest => 'Teste de nivelamento';
+
+  @override
+  String get placementTestResult => 'Resultado do teste';
+
+  @override
+  String get placementTestTitle => 'Fazer teste de avaliação de nível';
+
+  @override
+  String get placementTestDescription =>
+      'Verifique seu nível de inglês e receba recomendações de nível apropriadas';
+
+  @override
+  String get vocabulary => 'Vocabulário';
+
+  @override
+  String get weakSkills => 'Habilidades fracas';
+
+  @override
+  String get overview => 'Visão geral';
+
+  @override
+  String get featureComingSoon => 'Recurso em breve';
 }

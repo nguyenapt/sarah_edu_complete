@@ -128,6 +128,15 @@
   "learningProgress": "Progrès d'apprentissage",
   "loginToSaveProgress": "Connectez-vous pour enregistrer vos progrès et\nsynchroniser sur plusieurs appareils",
   "currentLevel": "Niveau actuel",
-  "unitsCompleted": "Unités terminées"
+  "unitsCompleted": "Unités terminées",
+  "placementTest": "Test de placement",
+  "placementTestResult": "Résultat du test",
+  "placementTestTitle": "Passer un test d'évaluation de niveau",
+  "placementTestDescription": "Vérifiez votre niveau d'anglais et recevez des recommandations de niveau appropriées",
+  "vocabulary": "Vocabulaire",
+  "weakSkills": "Compétences faibles",
+  "learningProgress": "Progrès d'apprentissage",
+  "overview": "Aperçu",
+  "featureComingSoon": "Fonctionnalité à venir"
 }
 

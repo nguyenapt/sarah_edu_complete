@@ -128,6 +128,15 @@
   "learningProgress": "学习进度",
   "loginToSaveProgress": "登录以保存学习进度并\n在多个设备上同步",
   "currentLevel": "当前级别",
-  "unitsCompleted": "已完成的单元"
+  "unitsCompleted": "已完成的单元",
+  "placementTest": "分班测试",
+  "placementTestResult": "测试结果",
+  "placementTestTitle": "进行水平评估测试",
+  "placementTestDescription": "检查您的英语水平并获得合适的级别推荐",
+  "vocabulary": "词汇",
+  "weakSkills": "薄弱技能",
+  "learningProgress": "学习进度",
+  "overview": "概览",
+  "featureComingSoon": "功能即将推出"
 }
 

@@ -128,6 +128,15 @@
   "learningProgress": "Tiến độ học tập",
   "loginToSaveProgress": "Đăng nhập để lưu tiến độ học tập và\nđồng bộ trên nhiều thiết bị",
   "currentLevel": "Level hiện tại",
-  "unitsCompleted": "Units đã hoàn thành"
+  "unitsCompleted": "Units đã hoàn thành",
+  "placementTest": "Bài kiểm tra xếp lớp",
+  "placementTestResult": "Kết quả kiểm tra",
+  "placementTestTitle": "Làm bài test đánh giá cấp độ",
+  "placementTestDescription": "Kiểm tra trình độ tiếng Anh của bạn và nhận đề xuất cấp độ phù hợp",
+  "vocabulary": "Từ vựng",
+  "weakSkills": "Kỹ năng yếu",
+  "learningProgress": "Tiến độ học tập",
+  "overview": "Tổng quan",
+  "featureComingSoon": "Tính năng sắp ra mắt"
 }
 

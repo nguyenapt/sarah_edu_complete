@@ -721,6 +721,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Units Completed'**
   String get unitsCompleted;
+
+  /// No description provided for @placementTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Placement Test'**
+  String get placementTest;
+
+  /// No description provided for @placementTestResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Result'**
+  String get placementTestResult;
+
+  /// No description provided for @placementTestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a level assessment test'**
+  String get placementTestTitle;
+
+  /// No description provided for @placementTestDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your English level and receive appropriate level recommendations'**
+  String get placementTestDescription;
+
+  /// No description provided for @vocabulary.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get vocabulary;
+
+  /// No description provided for @weakSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak Skills'**
+  String get weakSkills;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @featureComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature coming soon'**
+  String get featureComingSoon;
 }
 
 class _AppLocalizationsDelegate

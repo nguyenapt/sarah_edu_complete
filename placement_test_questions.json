@@ -1,0 +1,1855 @@
+{
+  "placementTest": {
+    "pt_001": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct word: I ___ a student.",
+        "vi": "Chọn từ đúng: Tôi ___ một học sinh."
+      },
+      "options": ["am", "is", "are", "be"],
+      "correctAnswers": ["am"],
+      "explanation": {
+        "en": "Use 'am' with 'I' in present tense.",
+        "vi": "Dùng 'am' với 'I' ở thì hiện tại."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_002": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the correct form? She ___ to school every day.",
+        "vi": "Dạng đúng là gì? Cô ấy ___ đến trường mỗi ngày."
+      },
+      "options": ["go", "goes", "going", "went"],
+      "correctAnswers": ["goes"],
+      "explanation": {
+        "en": "Third person singular (she) uses 'goes' in present simple.",
+        "vi": "Ngôi thứ ba số ít (she) dùng 'goes' ở thì hiện tại đơn."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_003": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the opposite of 'hot'?",
+        "vi": "Từ trái nghĩa của 'hot' là gì?"
+      },
+      "options": ["cold", "warm", "cool", "freezing"],
+      "correctAnswers": ["cold"],
+      "explanation": {
+        "en": "The opposite of 'hot' is 'cold'.",
+        "vi": "Từ trái nghĩa của 'hot' là 'cold'."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_004": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences are correct? (Select all that apply)",
+        "vi": "Những câu nào sau đây đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "I goes to school",
+        "I go to school",
+        "They play football",
+        "She go to work"
+      ],
+      "correctAnswers": ["I go to school", "They play football"],
+      "explanation": {
+        "en": "'I' and 'They' don't need 's' in present simple.",
+        "vi": "'I' và 'They' không cần thêm 's' ở thì hiện tại đơn."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_005": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: I ___ breakfast at 7 AM.",
+        "vi": "Điền vào chỗ trống: Tôi ___ bữa sáng lúc 7 giờ sáng."
+      },
+      "options": ["have", "has", "having", "had"],
+      "correctAnswers": ["have"],
+      "explanation": {
+        "en": "Use 'have' with 'I' in present tense.",
+        "vi": "Dùng 'have' với 'I' ở thì hiện tại."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_006": {
+      "category": "reading",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Tom is a teacher. He works at a school. He likes his job.' What does Tom do?",
+        "vi": "Đọc: 'Tom là một giáo viên. Anh ấy làm việc ở trường học. Anh ấy thích công việc của mình.' Tom làm nghề gì?"
+      },
+      "options": ["doctor", "teacher", "student", "engineer"],
+      "correctAnswers": ["teacher"],
+      "explanation": {
+        "en": "The text says 'Tom is a teacher'.",
+        "vi": "Đoạn văn nói 'Tom là một giáo viên'."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_007": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I ___ to London last year.",
+        "vi": "Chọn dạng đúng: Tôi ___ đến London năm ngoái."
+      },
+      "options": ["go", "goes", "went", "going"],
+      "correctAnswers": ["went"],
+      "explanation": {
+        "en": "Use past tense 'went' for actions in the past.",
+        "vi": "Dùng quá khứ 'went' cho hành động trong quá khứ."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_008": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'enormous' mean?",
+        "vi": "'Enormous' có nghĩa là gì?"
+      },
+      "options": ["very small", "very large", "very fast", "very slow"],
+      "correctAnswers": ["very large"],
+      "explanation": {
+        "en": "'Enormous' means very large or huge.",
+        "vi": "'Enormous' có nghĩa là rất lớn hoặc khổng lồ."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_009": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: She is ___ a book now.",
+        "vi": "Chọn dạng đúng: Cô ấy đang ___ một cuốn sách."
+      },
+      "options": ["read", "reads", "reading", "readed"],
+      "correctAnswers": ["reading"],
+      "explanation": {
+        "en": "Use 'reading' (present continuous) with 'is' for actions happening now.",
+        "vi": "Dùng 'reading' (hiện tại tiếp diễn) với 'is' cho hành động đang xảy ra."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_010": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Sarah loves reading books. She reads every evening before bed. Her favorite books are about adventure.' When does Sarah read?",
+        "vi": "Đọc: 'Sarah thích đọc sách. Cô ấy đọc mỗi buổi tối trước khi ngủ. Sách yêu thích của cô ấy là về phiêu lưu.' Sarah đọc sách khi nào?"
+      },
+      "options": ["in the morning", "in the afternoon", "every evening", "on weekends"],
+      "correctAnswers": ["every evening"],
+      "explanation": {
+        "en": "The text says 'She reads every evening before bed'.",
+        "vi": "Đoạn văn nói 'Cô ấy đọc mỗi buổi tối trước khi ngủ'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_011": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The weather is very ___ today. I need a jacket.",
+        "vi": "Điền vào chỗ trống: Thời tiết hôm nay rất ___. Tôi cần một chiếc áo khoác."
+      },
+      "options": ["hot", "warm", "cold", "sunny"],
+      "correctAnswers": ["cold"],
+      "explanation": {
+        "en": "If you need a jacket, the weather is cold.",
+        "vi": "Nếu cần áo khoác, thời tiết là lạnh."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_012": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I have ___ this movie before.",
+        "vi": "Chọn dạng đúng: Tôi đã ___ bộ phim này trước đây."
+      },
+      "options": ["see", "saw", "seen", "seeing"],
+      "correctAnswers": ["seen"],
+      "explanation": {
+        "en": "Use past participle 'seen' with 'have' in present perfect.",
+        "vi": "Dùng quá khứ phân từ 'seen' với 'have' ở thì hiện tại hoàn thành."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_013": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'reluctant' mean?",
+        "vi": "'Reluctant' có nghĩa là gì?"
+      },
+      "options": ["eager", "unwilling", "happy", "excited"],
+      "correctAnswers": ["unwilling"],
+      "explanation": {
+        "en": "'Reluctant' means unwilling or hesitant to do something.",
+        "vi": "'Reluctant' có nghĩa là không muốn hoặc do dự làm gì đó."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_014": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: If I ___ rich, I would travel the world.",
+        "vi": "Chọn dạng đúng: Nếu tôi ___ giàu, tôi sẽ đi du lịch thế giới."
+      },
+      "options": ["am", "was", "were", "be"],
+      "correctAnswers": ["were"],
+      "explanation": {
+        "en": "Use 'were' in second conditional (unreal present).",
+        "vi": "Dùng 'were' trong câu điều kiện loại 2 (giả định hiện tại)."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_015": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Climate change is one of the most pressing issues of our time. Scientists warn that without immediate action, the consequences could be catastrophic. Rising sea levels, extreme weather, and loss of biodiversity are just some of the challenges we face.' What is the main idea?",
+        "vi": "Đọc: 'Biến đổi khí hậu là một trong những vấn đề cấp bách nhất của thời đại chúng ta. Các nhà khoa học cảnh báo rằng nếu không hành động ngay lập tức, hậu quả có thể là thảm khốc. Mực nước biển dâng cao, thời tiết cực đoan và mất đa dạng sinh học chỉ là một số thách thức chúng ta phải đối mặt.' Ý chính là gì?"
+      },
+      "options": [
+        "Climate change is not important",
+        "Climate change is a serious problem requiring action",
+        "Scientists are wrong about climate change",
+        "There are no solutions to climate change"
+      ],
+      "correctAnswers": ["Climate change is a serious problem requiring action"],
+      "explanation": {
+        "en": "The text emphasizes the urgency and seriousness of climate change.",
+        "vi": "Đoạn văn nhấn mạnh tính cấp bách và nghiêm trọng của biến đổi khí hậu."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_016": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: By next year, I ___ here for five years.",
+        "vi": "Chọn dạng đúng: Đến năm sau, tôi ___ ở đây được năm năm."
+      },
+      "options": ["work", "will work", "will have worked", "worked"],
+      "correctAnswers": ["will have worked"],
+      "explanation": {
+        "en": "Use future perfect 'will have worked' for actions completed by a future time.",
+        "vi": "Dùng tương lai hoàn thành 'will have worked' cho hành động hoàn thành trước một thời điểm tương lai."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_017": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What is a synonym for 'abundant'?",
+        "vi": "Từ đồng nghĩa của 'abundant' là gì?"
+      },
+      "options": ["scarce", "plentiful", "empty", "limited"],
+      "correctAnswers": ["plentiful"],
+      "explanation": {
+        "en": "'Abundant' means existing in large quantities, similar to 'plentiful'.",
+        "vi": "'Abundant' có nghĩa là tồn tại với số lượng lớn, tương tự như 'plentiful'."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_018": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use the passive voice correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng câu bị động đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "The book was written by him",
+        "The book written by him",
+        "The house was built last year",
+        "The house built last year"
+      ],
+      "correctAnswers": ["The book was written by him", "The house was built last year"],
+      "explanation": {
+        "en": "Passive voice uses 'was/were + past participle'.",
+        "vi": "Câu bị động dùng 'was/were + quá khứ phân từ'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_019": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The invention of the printing press in the 15th century revolutionized the way information was shared. Before this, books were handwritten and extremely expensive. The printing press made books accessible to ordinary people, leading to increased literacy and the spread of knowledge.' What was the main impact of the printing press?",
+        "vi": "Đọc: 'Việc phát minh ra máy in vào thế kỷ 15 đã cách mạng hóa cách thức chia sẻ thông tin. Trước đó, sách được viết tay và cực kỳ đắt đỏ. Máy in làm cho sách trở nên dễ tiếp cận với người thường, dẫn đến tăng tỷ lệ biết chữ và lan truyền kiến thức.' Tác động chính của máy in là gì?"
+      },
+      "options": [
+        "Made books more expensive",
+        "Made books accessible to ordinary people",
+        "Reduced literacy rates",
+        "Limited knowledge sharing"
+      ],
+      "correctAnswers": ["Made books accessible to ordinary people"],
+      "explanation": {
+        "en": "The text states that the printing press made books accessible to ordinary people.",
+        "vi": "Đoạn văn nói rằng máy in làm cho sách trở nên dễ tiếp cận với người thường."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_020": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The company needs to ___ its expenses to stay profitable.",
+        "vi": "Điền vào chỗ trống: Công ty cần ___ chi phí để duy trì lợi nhuận."
+      },
+      "options": ["increase", "reduce", "maintain", "ignore"],
+      "correctAnswers": ["reduce"],
+      "explanation": {
+        "en": "To stay profitable, a company needs to reduce expenses.",
+        "vi": "Để duy trì lợi nhuận, công ty cần giảm chi phí."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_021": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Not only ___ she speak English, but she also speaks French.",
+        "vi": "Chọn dạng đúng: Không chỉ ___ cô ấy nói tiếng Anh, mà cô ấy còn nói tiếng Pháp."
+      },
+      "options": ["does", "do", "did", "is"],
+      "correctAnswers": ["does"],
+      "explanation": {
+        "en": "After 'Not only' at the beginning, use inversion: 'does she speak'.",
+        "vi": "Sau 'Not only' ở đầu câu, dùng đảo ngữ: 'does she speak'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_022": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'ubiquitous' mean?",
+        "vi": "'Ubiquitous' có nghĩa là gì?"
+      },
+      "options": ["rare", "present everywhere", "invisible", "expensive"],
+      "correctAnswers": ["present everywhere"],
+      "explanation": {
+        "en": "'Ubiquitous' means present, appearing, or found everywhere.",
+        "vi": "'Ubiquitous' có nghĩa là có mặt, xuất hiện hoặc được tìm thấy ở khắp mọi nơi."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_023": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Had I known about the meeting, I ___ attended.",
+        "vi": "Chọn dạng đúng: Nếu tôi biết về cuộc họp, tôi ___ đã tham dự."
+      },
+      "options": ["would", "would have", "will", "will have"],
+      "correctAnswers": ["would have"],
+      "explanation": {
+        "en": "Use 'would have + past participle' in third conditional (unreal past).",
+        "vi": "Dùng 'would have + quá khứ phân từ' trong câu điều kiện loại 3 (giả định quá khứ)."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_024": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The concept of artificial intelligence has evolved significantly over the decades. Initially, AI was limited to simple rule-based systems. Today, machine learning algorithms can process vast amounts of data and make complex decisions. However, ethical concerns about AI's impact on employment and privacy continue to be debated.' What is the author's tone?",
+        "vi": "Đọc: 'Khái niệm trí tuệ nhân tạo đã phát triển đáng kể qua nhiều thập kỷ. Ban đầu, AI chỉ giới hạn ở các hệ thống dựa trên quy tắc đơn giản. Ngày nay, các thuật toán machine learning có thể xử lý lượng lớn dữ liệu và đưa ra quyết định phức tạp. Tuy nhiên, các mối quan ngại đạo đức về tác động của AI đối với việc làm và quyền riêng tư vẫn tiếp tục được tranh luận.' Giọng điệu của tác giả là gì?"
+      },
+      "options": [
+        "Completely positive",
+        "Completely negative",
+        "Balanced and informative",
+        "Highly critical"
+      ],
+      "correctAnswers": ["Balanced and informative"],
+      "explanation": {
+        "en": "The author presents both progress and concerns, showing a balanced perspective.",
+        "vi": "Tác giả trình bày cả tiến bộ và mối quan ngại, thể hiện quan điểm cân bằng."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_025": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the meaning of 'ephemeral'?",
+        "vi": "'Ephemeral' có nghĩa là gì?"
+      },
+      "options": ["permanent", "lasting for a very short time", "ancient", "modern"],
+      "correctAnswers": ["lasting for a very short time"],
+      "explanation": {
+        "en": "'Ephemeral' means lasting for a very short time.",
+        "vi": "'Ephemeral' có nghĩa là chỉ tồn tại trong thời gian rất ngắn."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_026": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: The report, ___ was published yesterday, contains important findings.",
+        "vi": "Chọn dạng đúng: Báo cáo, ___ được xuất bản hôm qua, chứa những phát hiện quan trọng."
+      },
+      "options": ["which", "that", "who", "what"],
+      "correctAnswers": ["which"],
+      "explanation": {
+        "en": "Use 'which' for non-restrictive relative clauses (with commas).",
+        "vi": "Dùng 'which' cho mệnh đề quan hệ không giới hạn (có dấu phẩy)."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_027": {
+      "category": "reading",
+      "level": "B2",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Read: 'Renewable energy sources such as solar and wind power are becoming increasingly cost-effective. Many countries are investing heavily in these technologies to reduce carbon emissions. However, challenges remain, including energy storage and grid integration.' Which statements are true? (Select all that apply)",
+        "vi": "Đọc: 'Các nguồn năng lượng tái tạo như năng lượng mặt trời và gió đang trở nên ngày càng hiệu quả về chi phí. Nhiều quốc gia đang đầu tư mạnh vào các công nghệ này để giảm phát thải carbon. Tuy nhiên, vẫn còn những thách thức, bao gồm lưu trữ năng lượng và tích hợp lưới điện.' Những câu nào đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "Renewable energy is becoming more cost-effective",
+        "All countries have solved energy storage problems",
+        "Grid integration is a challenge",
+        "Solar and wind are mentioned as renewable sources"
+      ],
+      "correctAnswers": ["Renewable energy is becoming more cost-effective", "Grid integration is a challenge", "Solar and wind are mentioned as renewable sources"],
+      "explanation": {
+        "en": "The text mentions cost-effectiveness, challenges with storage and grid integration, and lists solar and wind as examples.",
+        "vi": "Đoạn văn đề cập đến hiệu quả chi phí, thách thức với lưu trữ và tích hợp lưới điện, và liệt kê mặt trời và gió làm ví dụ."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_028": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'paradigm shift' mean?",
+        "vi": "'Paradigm shift' có nghĩa là gì?"
+      },
+      "options": [
+        "A small change",
+        "A fundamental change in approach or understanding",
+        "A return to old methods",
+        "A temporary adjustment"
+      ],
+      "correctAnswers": ["A fundamental change in approach or understanding"],
+      "explanation": {
+        "en": "'Paradigm shift' refers to a fundamental change in the basic assumptions or approach to something.",
+        "vi": "'Paradigm shift' đề cập đến một thay đổi cơ bản trong các giả định hoặc cách tiếp cận đối với điều gì đó."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_029": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: So complex ___ the problem that it took years to solve.",
+        "vi": "Chọn dạng đúng: Vấn đề ___ phức tạp đến mức phải mất nhiều năm mới giải quyết được."
+      },
+      "options": ["was", "is", "were", "are"],
+      "correctAnswers": ["was"],
+      "explanation": {
+        "en": "After 'So + adjective' at the beginning, use inversion: 'was the problem'.",
+        "vi": "Sau 'So + tính từ' ở đầu câu, dùng đảo ngữ: 'was the problem'."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_030": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The intersection of technology and ethics presents a complex landscape for modern society. As algorithms increasingly influence decision-making in areas from finance to healthcare, questions arise about accountability, bias, and the preservation of human agency. The challenge lies not merely in developing advanced systems, but in ensuring they serve humanity's best interests while respecting fundamental rights.' What is the main concern?",
+        "vi": "Đọc: 'Sự giao thoa giữa công nghệ và đạo đức tạo ra một cảnh quan phức tạp cho xã hội hiện đại. Khi các thuật toán ngày càng ảnh hưởng đến việc ra quyết định trong các lĩnh vực từ tài chính đến chăm sóc sức khỏe, các câu hỏi nảy sinh về trách nhiệm, thiên vị và bảo tồn quyền tự quyết của con người. Thách thức không chỉ nằm ở việc phát triển các hệ thống tiên tiến, mà còn ở việc đảm bảo chúng phục vụ lợi ích tốt nhất của nhân loại trong khi tôn trọng các quyền cơ bản.' Mối quan ngại chính là gì?"
+      },
+      "options": [
+        "Technology is too advanced",
+        "Ensuring technology serves humanity while respecting rights",
+        "Technology should not be used",
+        "Ethics are not important"
+      ],
+      "correctAnswers": ["Ensuring technology serves humanity while respecting rights"],
+      "explanation": {
+        "en": "The text emphasizes the challenge of ensuring technology serves humanity's interests while respecting fundamental rights.",
+        "vi": "Đoạn văn nhấn mạnh thách thức đảm bảo công nghệ phục vụ lợi ích của nhân loại trong khi tôn trọng các quyền cơ bản."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_031": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What color is the sky?",
+        "vi": "Bầu trời có màu gì?"
+      },
+      "options": ["red", "blue", "green", "yellow"],
+      "correctAnswers": ["blue"],
+      "explanation": {
+        "en": "The sky is typically blue during the day.",
+        "vi": "Bầu trời thường có màu xanh vào ban ngày."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_032": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: They ___ my friends.",
+        "vi": "Chọn dạng đúng: Họ ___ bạn của tôi."
+      },
+      "options": ["am", "is", "are", "be"],
+      "correctAnswers": ["are"],
+      "explanation": {
+        "en": "Use 'are' with 'they' in present tense.",
+        "vi": "Dùng 'are' với 'they' ở thì hiện tại."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_033": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What do you use to write?",
+        "vi": "Bạn dùng gì để viết?"
+      },
+      "options": ["pen", "book", "table", "chair"],
+      "correctAnswers": ["pen"],
+      "explanation": {
+        "en": "A pen is used for writing.",
+        "vi": "Bút được dùng để viết."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_034": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I ___ a cat.",
+        "vi": "Chọn dạng đúng: Tôi ___ một con mèo."
+      },
+      "options": ["have", "has", "having", "had"],
+      "correctAnswers": ["have"],
+      "explanation": {
+        "en": "Use 'have' with 'I' in present tense.",
+        "vi": "Dùng 'have' với 'I' ở thì hiện tại."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_035": {
+      "category": "reading",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Mary likes apples. She eats one every day. Apples are healthy.' What does Mary eat every day?",
+        "vi": "Đọc: 'Mary thích táo. Cô ấy ăn một quả mỗi ngày. Táo rất tốt cho sức khỏe.' Mary ăn gì mỗi ngày?"
+      },
+      "options": ["bananas", "apples", "oranges", "grapes"],
+      "correctAnswers": ["apples"],
+      "explanation": {
+        "en": "The text says 'She eats one every day' referring to apples.",
+        "vi": "Đoạn văn nói 'Cô ấy ăn một quả mỗi ngày' đề cập đến táo."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_036": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: I drink ___ in the morning.",
+        "vi": "Điền vào chỗ trống: Tôi uống ___ vào buổi sáng."
+      },
+      "options": ["coffee", "car", "house", "book"],
+      "correctAnswers": ["coffee"],
+      "explanation": {
+        "en": "Coffee is a common morning drink.",
+        "vi": "Cà phê là thức uống phổ biến vào buổi sáng."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_037": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I was ___ TV when you called.",
+        "vi": "Chọn dạng đúng: Tôi đang ___ TV khi bạn gọi."
+      },
+      "options": ["watch", "watches", "watching", "watched"],
+      "correctAnswers": ["watching"],
+      "explanation": {
+        "en": "Use 'watching' (past continuous) with 'was' for actions in progress in the past.",
+        "vi": "Dùng 'watching' (quá khứ tiếp diễn) với 'was' cho hành động đang diễn ra trong quá khứ."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_038": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'delicious' mean?",
+        "vi": "'Delicious' có nghĩa là gì?"
+      },
+      "options": ["bad", "tasty", "ugly", "small"],
+      "correctAnswers": ["tasty"],
+      "explanation": {
+        "en": "'Delicious' means very tasty or pleasant to eat.",
+        "vi": "'Delicious' có nghĩa là rất ngon hoặc dễ chịu khi ăn."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_039": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: How long ___ you been here?",
+        "vi": "Chọn dạng đúng: Bạn đã ở đây bao lâu?"
+      },
+      "options": ["have", "has", "had", "having"],
+      "correctAnswers": ["have"],
+      "explanation": {
+        "en": "Use 'have' with 'you' in present perfect questions.",
+        "vi": "Dùng 'have' với 'you' trong câu hỏi hiện tại hoàn thành."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_040": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The library is open from 9 AM to 6 PM. It has many books. Students can borrow books for two weeks.' How long can students keep books?",
+        "vi": "Đọc: 'Thư viện mở từ 9 giờ sáng đến 6 giờ chiều. Nó có nhiều sách. Sinh viên có thể mượn sách trong hai tuần.' Sinh viên có thể giữ sách bao lâu?"
+      },
+      "options": ["one week", "two weeks", "one month", "one day"],
+      "correctAnswers": ["two weeks"],
+      "explanation": {
+        "en": "The text says 'Students can borrow books for two weeks'.",
+        "vi": "Đoạn văn nói 'Sinh viên có thể mượn sách trong hai tuần'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_041": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The weather is ___ today. Let's go to the beach.",
+        "vi": "Điền vào chỗ trống: Thời tiết hôm nay rất ___. Hãy đi biển."
+      },
+      "options": ["rainy", "sunny", "snowy", "windy"],
+      "correctAnswers": ["sunny"],
+      "explanation": {
+        "en": "Sunny weather is good for going to the beach.",
+        "vi": "Thời tiết nắng tốt cho việc đi biển."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_042": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use 'can' correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng 'can' đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "I can speak English",
+        "She can to swim",
+        "They can play piano",
+        "He can goes home"
+      ],
+      "correctAnswers": ["I can speak English", "They can play piano"],
+      "explanation": {
+        "en": "'Can' is followed by the base form of the verb (without 'to' or 's').",
+        "vi": "'Can' được theo sau bởi dạng nguyên thể của động từ (không có 'to' hoặc 's')."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_043": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'significant' mean?",
+        "vi": "'Significant' có nghĩa là gì?"
+      },
+      "options": ["unimportant", "important", "small", "tiny"],
+      "correctAnswers": ["important"],
+      "explanation": {
+        "en": "'Significant' means important or notable.",
+        "vi": "'Significant' có nghĩa là quan trọng hoặc đáng chú ý."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_044": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I wish I ___ speak French.",
+        "vi": "Chọn dạng đúng: Tôi ước tôi ___ nói tiếng Pháp."
+      },
+      "options": ["can", "could", "will", "would"],
+      "correctAnswers": ["could"],
+      "explanation": {
+        "en": "Use 'could' after 'wish' to express an unreal present situation.",
+        "vi": "Dùng 'could' sau 'wish' để diễn tả tình huống hiện tại không thực tế."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_045": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Remote work has become increasingly popular in recent years. Many companies now offer flexible working arrangements. Employees appreciate the work-life balance that remote work provides. However, some challenges include isolation and the need for self-discipline.' What is a challenge of remote work?",
+        "vi": "Đọc: 'Làm việc từ xa đã trở nên ngày càng phổ biến trong những năm gần đây. Nhiều công ty hiện cung cấp các sắp xếp làm việc linh hoạt. Nhân viên đánh giá cao sự cân bằng công việc-cuộc sống mà làm việc từ xa mang lại. Tuy nhiên, một số thách thức bao gồm sự cô lập và nhu cầu tự kỷ luật.' Thách thức của làm việc từ xa là gì?"
+      },
+      "options": [
+        "Increased salary",
+        "Isolation and need for self-discipline",
+        "More vacation days",
+        "Better office space"
+      ],
+      "correctAnswers": ["Isolation and need for self-discipline"],
+      "explanation": {
+        "en": "The text mentions 'isolation and the need for self-discipline' as challenges.",
+        "vi": "Đoạn văn đề cập 'sự cô lập và nhu cầu tự kỷ luật' như là thách thức."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_046": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The company decided to ___ the project due to budget constraints.",
+        "vi": "Điền vào chỗ trống: Công ty quyết định ___ dự án do hạn chế ngân sách."
+      },
+      "options": ["start", "cancel", "expand", "continue"],
+      "correctAnswers": ["cancel"],
+      "explanation": {
+        "en": "Due to budget constraints, a company would cancel a project.",
+        "vi": "Do hạn chế ngân sách, công ty sẽ hủy dự án."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_047": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: The book ___ by millions of people.",
+        "vi": "Chọn dạng đúng: Cuốn sách ___ bởi hàng triệu người."
+      },
+      "options": ["read", "reads", "is read", "are read"],
+      "correctAnswers": ["is read"],
+      "explanation": {
+        "en": "Use passive voice 'is read' for present tense passive.",
+        "vi": "Dùng câu bị động 'is read' cho thì hiện tại bị động."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_048": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What is a synonym for 'efficient'?",
+        "vi": "Từ đồng nghĩa của 'efficient' là gì?"
+      },
+      "options": ["slow", "productive", "lazy", "difficult"],
+      "correctAnswers": ["productive"],
+      "explanation": {
+        "en": "'Efficient' means achieving maximum productivity with minimum wasted effort, similar to 'productive'.",
+        "vi": "'Efficient' có nghĩa là đạt năng suất tối đa với nỗ lực lãng phí tối thiểu, tương tự như 'productive'."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_049": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Social media has transformed how people communicate. Platforms like Facebook and Twitter allow instant sharing of information. While this has many benefits, concerns about privacy and misinformation have also emerged.' What is a concern mentioned?",
+        "vi": "Đọc: 'Mạng xã hội đã thay đổi cách mọi người giao tiếp. Các nền tảng như Facebook và Twitter cho phép chia sẻ thông tin tức thì. Mặc dù điều này có nhiều lợi ích, nhưng các mối quan ngại về quyền riêng tư và thông tin sai lệch cũng đã xuất hiện.' Mối quan ngại được đề cập là gì?"
+      },
+      "options": [
+        "Increased communication",
+        "Privacy and misinformation",
+        "More friends",
+        "Better internet speed"
+      ],
+      "correctAnswers": ["Privacy and misinformation"],
+      "explanation": {
+        "en": "The text mentions 'concerns about privacy and misinformation'.",
+        "vi": "Đoạn văn đề cập 'mối quan ngại về quyền riêng tư và thông tin sai lệch'."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_050": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: She suggested ___ to the cinema.",
+        "vi": "Chọn dạng đúng: Cô ấy đề xuất ___ đến rạp chiếu phim."
+      },
+      "options": ["go", "going", "to go", "went"],
+      "correctAnswers": ["going"],
+      "explanation": {
+        "en": "After 'suggest', use gerund (verb + ing).",
+        "vi": "Sau 'suggest', dùng danh động từ (động từ + ing)."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_051": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'ambiguous' mean?",
+        "vi": "'Ambiguous' có nghĩa là gì?"
+      },
+      "options": [
+        "clear and obvious",
+        "having more than one possible meaning",
+        "very simple",
+        "completely wrong"
+      ],
+      "correctAnswers": ["having more than one possible meaning"],
+      "explanation": {
+        "en": "'Ambiguous' means having more than one possible meaning or interpretation.",
+        "vi": "'Ambiguous' có nghĩa là có nhiều hơn một ý nghĩa hoặc cách hiểu có thể."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_052": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Hardly had I arrived ___ it started raining.",
+        "vi": "Chọn dạng đúng: Vừa mới đến ___ trời bắt đầu mưa."
+      },
+      "options": ["when", "than", "that", "then"],
+      "correctAnswers": ["when"],
+      "explanation": {
+        "en": "After 'Hardly had...', use 'when' to indicate immediate sequence.",
+        "vi": "Sau 'Hardly had...', dùng 'when' để chỉ trình tự ngay lập tức."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_053": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The debate over climate change policy continues to divide opinion. Proponents argue that immediate action is necessary to prevent catastrophic consequences. Critics, however, point to economic costs and question the reliability of climate models. Finding a balanced approach that addresses both environmental and economic concerns remains a challenge.' What is the main challenge?",
+        "vi": "Đọc: 'Cuộc tranh luận về chính sách biến đổi khí hậu tiếp tục chia rẽ ý kiến. Những người ủng hộ cho rằng hành động ngay lập tức là cần thiết để ngăn chặn hậu quả thảm khốc. Tuy nhiên, các nhà phê bình chỉ ra chi phí kinh tế và đặt câu hỏi về độ tin cậy của các mô hình khí hậu. Tìm một cách tiếp cận cân bằng giải quyết cả mối quan ngại về môi trường và kinh tế vẫn là một thách thức.' Thách thức chính là gì?"
+      },
+      "options": [
+        "Everyone agrees on climate policy",
+        "Finding a balanced approach addressing both environmental and economic concerns",
+        "Climate models are always wrong",
+        "No action is needed"
+      ],
+      "correctAnswers": ["Finding a balanced approach addressing both environmental and economic concerns"],
+      "explanation": {
+        "en": "The text states that 'Finding a balanced approach that addresses both environmental and economic concerns remains a challenge'.",
+        "vi": "Đoạn văn nói rằng 'Tìm một cách tiếp cận cân bằng giải quyết cả mối quan ngại về môi trường và kinh tế vẫn là một thách thức'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_054": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the meaning of 'scrutinize'?",
+        "vi": "'Scrutinize' có nghĩa là gì?"
+      },
+      "options": [
+        "to ignore completely",
+        "to examine closely and carefully",
+        "to approve without checking",
+        "to destroy"
+      ],
+      "correctAnswers": ["to examine closely and carefully"],
+      "explanation": {
+        "en": "'Scrutinize' means to examine or inspect closely and thoroughly.",
+        "vi": "'Scrutinize' có nghĩa là xem xét hoặc kiểm tra kỹ lưỡng và toàn diện."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_055": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: It's high time we ___ something about this problem.",
+        "vi": "Chọn dạng đúng: Đã đến lúc chúng ta ___ điều gì đó về vấn đề này."
+      },
+      "options": ["do", "did", "done", "doing"],
+      "correctAnswers": ["did"],
+      "explanation": {
+        "en": "After 'It's high time', use past simple to express that something should be done now.",
+        "vi": "Sau 'It's high time', dùng quá khứ đơn để diễn tả rằng điều gì đó nên được làm ngay bây giờ."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_056": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'ubiquitous' mean?",
+        "vi": "'Ubiquitous' có nghĩa là gì?"
+      },
+      "options": [
+        "rare and unusual",
+        "present, appearing, or found everywhere",
+        "completely absent",
+        "very expensive"
+      ],
+      "correctAnswers": ["present, appearing, or found everywhere"],
+      "explanation": {
+        "en": "'Ubiquitous' means present, appearing, or found everywhere.",
+        "vi": "'Ubiquitous' có nghĩa là có mặt, xuất hiện hoặc được tìm thấy ở khắp mọi nơi."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_057": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Were it not for your help, I ___ succeeded.",
+        "vi": "Chọn dạng đúng: Nếu không có sự giúp đỡ của bạn, tôi ___ đã thành công."
+      },
+      "options": ["wouldn't", "wouldn't have", "won't", "will not"],
+      "correctAnswers": ["wouldn't have"],
+      "explanation": {
+        "en": "Use 'wouldn't have + past participle' in third conditional with inversion.",
+        "vi": "Dùng 'wouldn't have + quá khứ phân từ' trong câu điều kiện loại 3 với đảo ngữ."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_058": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The proliferation of digital technologies has fundamentally altered human interaction patterns. While connectivity has increased exponentially, some argue that genuine interpersonal relationships have suffered. The paradox lies in being more connected than ever while potentially feeling more isolated. This phenomenon requires nuanced examination of both technological benefits and social costs.' What is the paradox mentioned?",
+        "vi": "Đọc: 'Sự lan rộng của công nghệ số đã thay đổi cơ bản các mô hình tương tác của con người. Mặc dù kết nối đã tăng theo cấp số nhân, một số người cho rằng các mối quan hệ giữa các cá nhân thực sự đã bị ảnh hưởng. Nghịch lý nằm ở việc kết nối hơn bao giờ hết trong khi có thể cảm thấy cô lập hơn. Hiện tượng này đòi hỏi sự xem xét tinh tế về cả lợi ích công nghệ và chi phí xã hội.' Nghịch lý được đề cập là gì?"
+      },
+      "options": [
+        "Technology has no impact",
+        "Being more connected while potentially feeling more isolated",
+        "Everyone feels less isolated",
+        "Technology only has benefits"
+      ],
+      "correctAnswers": ["Being more connected while potentially feeling more isolated"],
+      "explanation": {
+        "en": "The text describes the paradox as 'being more connected than ever while potentially feeling more isolated'.",
+        "vi": "Đoạn văn mô tả nghịch lý là 'kết nối hơn bao giờ hết trong khi có thể cảm thấy cô lập hơn'."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_059": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'dichotomy' mean?",
+        "vi": "'Dichotomy' có nghĩa là gì?"
+      },
+      "options": [
+        "a division into two mutually exclusive groups",
+        "a complete agreement",
+        "a three-way split",
+        "a continuous spectrum"
+      ],
+      "correctAnswers": ["a division into two mutually exclusive groups"],
+      "explanation": {
+        "en": "'Dichotomy' means a division or contrast between two things that are or are represented as being opposed or entirely different.",
+        "vi": "'Dichotomy' có nghĩa là sự phân chia hoặc tương phản giữa hai điều được coi là đối lập hoặc hoàn toàn khác nhau."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_060": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Not until she had finished the report ___ realize the mistake.",
+        "vi": "Chọn dạng đúng: Mãi đến khi cô ấy hoàn thành báo cáo ___ nhận ra lỗi."
+      },
+      "options": ["she did", "did she", "she does", "does she"],
+      "correctAnswers": ["did she"],
+      "explanation": {
+        "en": "After 'Not until' at the beginning, use inversion: 'did she realize'.",
+        "vi": "Sau 'Not until' ở đầu câu, dùng đảo ngữ: 'did she realize'."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_061": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What do you say when you meet someone?",
+        "vi": "Bạn nói gì khi gặp ai đó?"
+      },
+      "options": ["goodbye", "hello", "sorry", "thanks"],
+      "correctAnswers": ["hello"],
+      "explanation": {
+        "en": "You say 'hello' when you meet someone.",
+        "vi": "Bạn nói 'hello' khi gặp ai đó."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_062": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: What ___ your name?",
+        "vi": "Chọn dạng đúng: Tên bạn ___ gì?"
+      },
+      "options": ["am", "is", "are", "be"],
+      "correctAnswers": ["is"],
+      "explanation": {
+        "en": "Use 'is' with 'name' (singular) in questions.",
+        "vi": "Dùng 'is' với 'name' (số ít) trong câu hỏi."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_063": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What number comes after five?",
+        "vi": "Số nào đứng sau số năm?"
+      },
+      "options": ["four", "six", "seven", "eight"],
+      "correctAnswers": ["six"],
+      "explanation": {
+        "en": "Six comes after five.",
+        "vi": "Sáu đứng sau năm."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_064": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: There ___ three apples on the table.",
+        "vi": "Chọn dạng đúng: Có ___ ba quả táo trên bàn."
+      },
+      "options": ["am", "is", "are", "be"],
+      "correctAnswers": ["are"],
+      "explanation": {
+        "en": "Use 'are' with plural nouns (three apples).",
+        "vi": "Dùng 'are' với danh từ số nhiều (ba quả táo)."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_065": {
+      "category": "reading",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'John has a dog. The dog is brown. John loves his dog very much.' What color is John's dog?",
+        "vi": "Đọc: 'John có một con chó. Con chó màu nâu. John yêu con chó của mình rất nhiều.' Con chó của John màu gì?"
+      },
+      "options": ["white", "black", "brown", "gray"],
+      "correctAnswers": ["brown"],
+      "explanation": {
+        "en": "The text says 'The dog is brown'.",
+        "vi": "Đoạn văn nói 'Con chó màu nâu'."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_066": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'expensive' mean?",
+        "vi": "'Expensive' có nghĩa là gì?"
+      },
+      "options": ["cheap", "costing a lot of money", "free", "small"],
+      "correctAnswers": ["costing a lot of money"],
+      "explanation": {
+        "en": "'Expensive' means costing a lot of money.",
+        "vi": "'Expensive' có nghĩa là tốn nhiều tiền."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_067": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I ___ to the store yesterday.",
+        "vi": "Chọn dạng đúng: Tôi ___ đến cửa hàng hôm qua."
+      },
+      "options": ["go", "goes", "went", "going"],
+      "correctAnswers": ["went"],
+      "explanation": {
+        "en": "Use past tense 'went' for actions in the past (yesterday).",
+        "vi": "Dùng quá khứ 'went' cho hành động trong quá khứ (hôm qua)."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_068": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: I need to ___ my homework before dinner.",
+        "vi": "Điền vào chỗ trống: Tôi cần ___ bài tập về nhà trước bữa tối."
+      },
+      "options": ["do", "eat", "sleep", "run"],
+      "correctAnswers": ["do"],
+      "explanation": {
+        "en": "You 'do' homework.",
+        "vi": "Bạn 'làm' bài tập về nhà."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_069": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The museum opens at 10 AM and closes at 6 PM. It is closed on Mondays. Tickets cost $10 for adults and $5 for children.' When is the museum closed?",
+        "vi": "Đọc: 'Bảo tàng mở cửa lúc 10 giờ sáng và đóng cửa lúc 6 giờ chiều. Nó đóng cửa vào thứ Hai. Vé có giá 10 đô la cho người lớn và 5 đô la cho trẻ em.' Khi nào bảo tàng đóng cửa?"
+      },
+      "options": ["Sundays", "Mondays", "Tuesdays", "Wednesdays"],
+      "correctAnswers": ["Mondays"],
+      "explanation": {
+        "en": "The text says 'It is closed on Mondays'.",
+        "vi": "Đoạn văn nói 'Nó đóng cửa vào thứ Hai'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_070": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I will ___ you tomorrow.",
+        "vi": "Chọn dạng đúng: Tôi sẽ ___ bạn ngày mai."
+      },
+      "options": ["see", "saw", "seen", "seeing"],
+      "correctAnswers": ["see"],
+      "explanation": {
+        "en": "Use base form 'see' after 'will' in future tense.",
+        "vi": "Dùng dạng nguyên thể 'see' sau 'will' ở thì tương lai."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_071": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'approximate' mean?",
+        "vi": "'Approximate' có nghĩa là gì?"
+      },
+      "options": ["exact", "close to but not exact", "completely wrong", "very far"],
+      "correctAnswers": ["close to but not exact"],
+      "explanation": {
+        "en": "'Approximate' means close to the actual value but not exact.",
+        "vi": "'Approximate' có nghĩa là gần với giá trị thực tế nhưng không chính xác."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_072": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I would rather ___ at home tonight.",
+        "vi": "Chọn dạng đúng: Tôi thà ___ ở nhà tối nay."
+      },
+      "options": ["stay", "staying", "to stay", "stayed"],
+      "correctAnswers": ["stay"],
+      "explanation": {
+        "en": "After 'would rather', use base form of the verb.",
+        "vi": "Sau 'would rather', dùng dạng nguyên thể của động từ."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_073": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Online learning platforms have revolutionized education. Students can now access courses from anywhere in the world. However, maintaining motivation and discipline without traditional classroom structure can be challenging.' What is a challenge of online learning?",
+        "vi": "Đọc: 'Các nền tảng học trực tuyến đã cách mạng hóa giáo dục. Sinh viên giờ có thể truy cập các khóa học từ bất kỳ đâu trên thế giới. Tuy nhiên, duy trì động lực và kỷ luật mà không có cấu trúc lớp học truyền thống có thể là thách thức.' Thách thức của học trực tuyến là gì?"
+      },
+      "options": [
+        "Access to courses",
+        "Maintaining motivation and discipline",
+        "Learning from anywhere",
+        "Revolutionizing education"
+      ],
+      "correctAnswers": ["Maintaining motivation and discipline"],
+      "explanation": {
+        "en": "The text mentions 'maintaining motivation and discipline' as a challenge.",
+        "vi": "Đoạn văn đề cập 'duy trì động lực và kỷ luật' như là thách thức."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_074": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The meeting was ___ due to bad weather.",
+        "vi": "Điền vào chỗ trống: Cuộc họp đã bị ___ do thời tiết xấu."
+      },
+      "options": ["started", "postponed", "continued", "finished"],
+      "correctAnswers": ["postponed"],
+      "explanation": {
+        "en": "A meeting would be 'postponed' (delayed) due to bad weather.",
+        "vi": "Một cuộc họp sẽ bị 'hoãn lại' do thời tiết xấu."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_075": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: The house ___ last year.",
+        "vi": "Chọn dạng đúng: Ngôi nhà ___ năm ngoái."
+      },
+      "options": ["build", "built", "was built", "is built"],
+      "correctAnswers": ["was built"],
+      "explanation": {
+        "en": "Use passive voice 'was built' for past tense passive.",
+        "vi": "Dùng câu bị động 'was built' cho thì quá khứ bị động."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_076": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'comprehensive' mean?",
+        "vi": "'Comprehensive' có nghĩa là gì?"
+      },
+      "options": [
+        "incomplete",
+        "complete and including everything",
+        "very short",
+        "confusing"
+      ],
+      "correctAnswers": ["complete and including everything"],
+      "explanation": {
+        "en": "'Comprehensive' means complete and including everything necessary.",
+        "vi": "'Comprehensive' có nghĩa là đầy đủ và bao gồm mọi thứ cần thiết."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_077": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: No sooner had I left ___ the phone rang.",
+        "vi": "Chọn dạng đúng: Vừa mới rời đi ___ điện thoại reo."
+      },
+      "options": ["when", "than", "that", "then"],
+      "correctAnswers": ["than"],
+      "explanation": {
+        "en": "After 'No sooner had...', use 'than' to indicate immediate sequence.",
+        "vi": "Sau 'No sooner had...', dùng 'than' để chỉ trình tự ngay lập tức."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_078": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The globalization of markets has created unprecedented opportunities for businesses to expand internationally. However, this expansion brings challenges such as cultural adaptation, regulatory compliance, and managing diverse teams across time zones. Success requires a delicate balance between standardization and localization.' What is required for success?",
+        "vi": "Đọc: 'Toàn cầu hóa thị trường đã tạo ra những cơ hội chưa từng có cho các doanh nghiệp mở rộng quốc tế. Tuy nhiên, sự mở rộng này mang lại những thách thức như thích ứng văn hóa, tuân thủ quy định và quản lý các nhóm đa dạng qua các múi giờ. Thành công đòi hỏi sự cân bằng tinh tế giữa tiêu chuẩn hóa và địa phương hóa.' Điều gì cần thiết cho thành công?"
+      },
+      "options": [
+        "Only standardization",
+        "Only localization",
+        "A balance between standardization and localization",
+        "Ignoring cultural differences"
+      ],
+      "correctAnswers": ["A balance between standardization and localization"],
+      "explanation": {
+        "en": "The text states that 'Success requires a delicate balance between standardization and localization'.",
+        "vi": "Đoạn văn nói rằng 'Thành công đòi hỏi sự cân bằng tinh tế giữa tiêu chuẩn hóa và địa phương hóa'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_079": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the meaning of 'prevalent'?",
+        "vi": "'Prevalent' có nghĩa là gì?"
+      },
+      "options": [
+        "rare and uncommon",
+        "widespread or common",
+        "completely absent",
+        "very expensive"
+      ],
+      "correctAnswers": ["widespread or common"],
+      "explanation": {
+        "en": "'Prevalent' means widespread or common in a particular area or at a particular time.",
+        "vi": "'Prevalent' có nghĩa là phổ biến hoặc thường gặp trong một khu vực hoặc thời điểm cụ thể."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_080": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Little ___ she know that her life was about to change.",
+        "vi": "Chọn dạng đúng: Cô ấy ___ biết rằng cuộc sống của cô ấy sắp thay đổi."
+      },
+      "options": ["does", "did", "do", "done"],
+      "correctAnswers": ["did"],
+      "explanation": {
+        "en": "After 'Little' at the beginning, use inversion with past tense: 'did she know'.",
+        "vi": "Sau 'Little' ở đầu câu, dùng đảo ngữ với quá khứ: 'did she know'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_081": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'conundrum' mean?",
+        "vi": "'Conundrum' có nghĩa là gì?"
+      },
+      "options": [
+        "a simple problem",
+        "a confusing and difficult problem or question",
+        "a clear solution",
+        "an easy answer"
+      ],
+      "correctAnswers": ["a confusing and difficult problem or question"],
+      "explanation": {
+        "en": "'Conundrum' means a confusing and difficult problem or question.",
+        "vi": "'Conundrum' có nghĩa là một vấn đề hoặc câu hỏi khó hiểu và khó khăn."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_082": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Such was the impact of the discovery ___ it changed the entire field.",
+        "vi": "Chọn dạng đúng: Tác động của khám phá ___ đến mức nó thay đổi toàn bộ lĩnh vực."
+      },
+      "options": ["that", "which", "what", "who"],
+      "correctAnswers": ["that"],
+      "explanation": {
+        "en": "After 'Such was...', use 'that' to introduce a result clause.",
+        "vi": "Sau 'Such was...', dùng 'that' để giới thiệu mệnh đề kết quả."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_083": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The philosophical implications of artificial consciousness extend far beyond technical considerations. If machines achieve genuine awareness, questions of rights, responsibilities, and moral status become paramount. The discourse shifts from 'can we?' to 'should we?' and 'what obligations do we have?' This represents a fundamental shift in how humanity relates to its creations.' What does the discourse shift to?",
+        "vi": "Đọc: 'Các hàm ý triết học của ý thức nhân tạo mở rộng xa hơn nhiều so với các cân nhắc kỹ thuật. Nếu máy móc đạt được nhận thức thực sự, các câu hỏi về quyền, trách nhiệm và địa vị đạo đức trở nên tối quan trọng. Cuộc thảo luận chuyển từ 'chúng ta có thể không?' sang 'chúng ta có nên không?' và 'chúng ta có nghĩa vụ gì?' Điều này đại diện cho một sự thay đổi cơ bản trong cách nhân loại liên hệ với các sáng tạo của mình.' Cuộc thảo luận chuyển sang gì?"
+      },
+      "options": [
+        "Only technical questions",
+        "'Should we?' and 'what obligations do we have?'",
+        "Ignoring moral questions",
+        "Only 'can we?' questions"
+      ],
+      "correctAnswers": ["'Should we?' and 'what obligations do we have?'"],
+      "explanation": {
+        "en": "The text states that 'The discourse shifts from 'can we?' to 'should we?' and 'what obligations do we have?''.",
+        "vi": "Đoạn văn nói rằng 'Cuộc thảo luận chuyển từ 'chúng ta có thể không?' sang 'chúng ta có nên không?' và 'chúng ta có nghĩa vụ gì?''."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_084": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'serendipitous' mean?",
+        "vi": "'Serendipitous' có nghĩa là gì?"
+      },
+      "options": [
+        "occurring by chance in a happy or beneficial way",
+        "planned and expected",
+        "always negative",
+        "completely random"
+      ],
+      "correctAnswers": ["occurring by chance in a happy or beneficial way"],
+      "explanation": {
+        "en": "'Serendipitous' means occurring or discovered by chance in a happy or beneficial way.",
+        "vi": "'Serendipitous' có nghĩa là xảy ra hoặc được phát hiện một cách tình cờ theo cách hạnh phúc hoặc có lợi."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_085": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Rarely ___ such dedication in a young professional.",
+        "vi": "Chọn dạng đúng: Hiếm khi ___ sự tận tâm như vậy ở một chuyên gia trẻ."
+      },
+      "options": ["one sees", "does one see", "one see", "sees one"],
+      "correctAnswers": ["does one see"],
+      "explanation": {
+        "en": "After 'Rarely' at the beginning, use inversion: 'does one see'.",
+        "vi": "Sau 'Rarely' ở đầu câu, dùng đảo ngữ: 'does one see'."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_086": {
+      "category": "vocabulary",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "What do you say when you leave?",
+        "vi": "Bạn nói gì khi rời đi?"
+      },
+      "options": ["hello", "goodbye", "please", "thanks"],
+      "correctAnswers": ["goodbye"],
+      "explanation": {
+        "en": "You say 'goodbye' when you leave.",
+        "vi": "Bạn nói 'goodbye' khi rời đi."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_087": {
+      "category": "grammar",
+      "level": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: We ___ students.",
+        "vi": "Chọn dạng đúng: Chúng tôi ___ học sinh."
+      },
+      "options": ["am", "is", "are", "be"],
+      "correctAnswers": ["are"],
+      "explanation": {
+        "en": "Use 'are' with 'we' in present tense.",
+        "vi": "Dùng 'are' với 'we' ở thì hiện tại."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "pt_088": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'beautiful' mean?",
+        "vi": "'Beautiful' có nghĩa là gì?"
+      },
+      "options": ["ugly", "very pretty", "small", "big"],
+      "correctAnswers": ["very pretty"],
+      "explanation": {
+        "en": "'Beautiful' means very pretty or attractive.",
+        "vi": "'Beautiful' có nghĩa là rất đẹp hoặc hấp dẫn."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_089": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I ___ my keys yesterday.",
+        "vi": "Chọn dạng đúng: Tôi ___ chìa khóa của tôi hôm qua."
+      },
+      "options": ["lose", "loses", "lost", "losing"],
+      "correctAnswers": ["lost"],
+      "explanation": {
+        "en": "Use past tense 'lost' for actions in the past (yesterday).",
+        "vi": "Dùng quá khứ 'lost' cho hành động trong quá khứ (hôm qua)."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_090": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The park is open from 6 AM to 10 PM. Many people come here to exercise in the morning. There are also playgrounds for children.' When is the park open?",
+        "vi": "Đọc: 'Công viên mở từ 6 giờ sáng đến 10 giờ tối. Nhiều người đến đây để tập thể dục vào buổi sáng. Cũng có sân chơi cho trẻ em.' Công viên mở khi nào?"
+      },
+      "options": ["6 AM to 10 PM", "6 PM to 10 AM", "All day", "Only in the morning"],
+      "correctAnswers": ["6 AM to 10 PM"],
+      "explanation": {
+        "en": "The text says 'The park is open from 6 AM to 10 PM'.",
+        "vi": "Đoạn văn nói 'Công viên mở từ 6 giờ sáng đến 10 giờ tối'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "pt_091": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'essential' mean?",
+        "vi": "'Essential' có nghĩa là gì?"
+      },
+      "options": ["unimportant", "absolutely necessary", "optional", "rare"],
+      "correctAnswers": ["absolutely necessary"],
+      "explanation": {
+        "en": "'Essential' means absolutely necessary or extremely important.",
+        "vi": "'Essential' có nghĩa là hoàn toàn cần thiết hoặc cực kỳ quan trọng."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_092": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I'm used to ___ early in the morning.",
+        "vi": "Chọn dạng đúng: Tôi quen với việc ___ sớm vào buổi sáng."
+      },
+      "options": ["wake", "waking", "woke", "woken"],
+      "correctAnswers": ["waking"],
+      "explanation": {
+        "en": "After 'used to', use gerund (verb + ing).",
+        "vi": "Sau 'used to', dùng danh động từ (động từ + ing)."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "pt_093": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Sustainable agriculture focuses on producing food while protecting the environment. This approach uses fewer chemicals, conserves water, and maintains soil health. Many farmers are adopting these practices to ensure long-term productivity.' What is the main focus of sustainable agriculture?",
+        "vi": "Đọc: 'Nông nghiệp bền vững tập trung vào việc sản xuất thực phẩm trong khi bảo vệ môi trường. Cách tiếp cận này sử dụng ít hóa chất hơn, bảo tồn nước và duy trì sức khỏe đất. Nhiều nông dân đang áp dụng các thực hành này để đảm bảo năng suất lâu dài.' Trọng tâm chính của nông nghiệp bền vững là gì?"
+      },
+      "options": [
+        "Using more chemicals",
+        "Producing food while protecting the environment",
+        "Increasing short-term profits",
+        "Ignoring environmental concerns"
+      ],
+      "correctAnswers": ["Producing food while protecting the environment"],
+      "explanation": {
+        "en": "The text states that sustainable agriculture 'focuses on producing food while protecting the environment'.",
+        "vi": "Đoạn văn nói rằng nông nghiệp bền vững 'tập trung vào việc sản xuất thực phẩm trong khi bảo vệ môi trường'."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "pt_094": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'meticulous' mean?",
+        "vi": "'Meticulous' có nghĩa là gì?"
+      },
+      "options": [
+        "careless and sloppy",
+        "showing great attention to detail",
+        "very fast",
+        "completely random"
+      ],
+      "correctAnswers": ["showing great attention to detail"],
+      "explanation": {
+        "en": "'Meticulous' means showing great attention to detail; very careful and precise.",
+        "vi": "'Meticulous' có nghĩa là thể hiện sự chú ý lớn đến chi tiết; rất cẩn thận và chính xác."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_095": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Seldom ___ such dedication in a team.",
+        "vi": "Chọn dạng đúng: Hiếm khi ___ sự tận tâm như vậy trong một đội."
+      },
+      "options": ["one sees", "does one see", "one see", "sees one"],
+      "correctAnswers": ["does one see"],
+      "explanation": {
+        "en": "After 'Seldom' at the beginning, use inversion: 'does one see'.",
+        "vi": "Sau 'Seldom' ở đầu câu, dùng đảo ngữ: 'does one see'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_096": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The evolution of communication technology has fundamentally transformed human interaction. From the printing press to the internet, each innovation has reshaped how information is shared and consumed. While these advances offer unprecedented connectivity, they also raise questions about information quality, privacy, and the nature of human relationships in a digital age.' What is a concern mentioned?",
+        "vi": "Đọc: 'Sự tiến hóa của công nghệ truyền thông đã thay đổi cơ bản cách con người tương tác. Từ máy in đến internet, mỗi đổi mới đã định hình lại cách thông tin được chia sẻ và tiêu thụ. Mặc dù những tiến bộ này mang lại kết nối chưa từng có, chúng cũng đặt ra câu hỏi về chất lượng thông tin, quyền riêng tư và bản chất của các mối quan hệ con người trong thời đại số.' Mối quan ngại được đề cập là gì?"
+      },
+      "options": [
+        "Only benefits are mentioned",
+        "Information quality, privacy, and nature of relationships",
+        "Technology has no impact",
+        "All concerns are solved"
+      ],
+      "correctAnswers": ["Information quality, privacy, and nature of relationships"],
+      "explanation": {
+        "en": "The text mentions 'questions about information quality, privacy, and the nature of human relationships'.",
+        "vi": "Đoạn văn đề cập 'câu hỏi về chất lượng thông tin, quyền riêng tư và bản chất của các mối quan hệ con người'."
+      },
+      "points": 15,
+      "difficulty": "hard"
+    },
+    "pt_097": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'pervasive' mean?",
+        "vi": "'Pervasive' có nghĩa là gì?"
+      },
+      "options": [
+        "rare and uncommon",
+        "spreading widely throughout an area or group",
+        "completely absent",
+        "very expensive"
+      ],
+      "correctAnswers": ["spreading widely throughout an area or group"],
+      "explanation": {
+        "en": "'Pervasive' means spreading widely throughout an area or group of people.",
+        "vi": "'Pervasive' có nghĩa là lan rộng khắp một khu vực hoặc nhóm người."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_098": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Under no circumstances ___ such behavior be tolerated.",
+        "vi": "Chọn dạng đúng: Trong bất kỳ hoàn cảnh nào ___ hành vi như vậy được dung thứ."
+      },
+      "options": ["should", "will", "can", "must"],
+      "correctAnswers": ["should"],
+      "explanation": {
+        "en": "After 'Under no circumstances' at the beginning, use inversion with 'should'.",
+        "vi": "Sau 'Under no circumstances' ở đầu câu, dùng đảo ngữ với 'should'."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_099": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The philosophical debate surrounding free will versus determinism has persisted for millennia. Proponents of free will argue that individuals possess genuine agency to make choices independent of external forces. Determinists counter that all events, including human decisions, are the inevitable result of preceding causes. Contemporary neuroscience adds complexity, suggesting that what we perceive as conscious choice may actually be the brain's post-hoc rationalization of predetermined neural processes.' What does contemporary neuroscience suggest?",
+        "vi": "Đọc: 'Cuộc tranh luận triết học xung quanh ý chí tự do so với thuyết quyết định đã tồn tại hàng thiên niên kỷ. Những người ủng hộ ý chí tự do cho rằng các cá nhân sở hữu quyền tự quyết thực sự để đưa ra lựa chọn độc lập với các lực lượng bên ngoài. Những người theo thuyết quyết định phản bác rằng tất cả các sự kiện, bao gồm cả quyết định của con người, là kết quả không thể tránh khỏi của các nguyên nhân trước đó. Khoa học thần kinh đương đại thêm vào sự phức tạp, gợi ý rằng những gì chúng ta nhận thức như là lựa chọn có ý thức có thể thực sự là sự hợp lý hóa sau sự kiện của não về các quá trình thần kinh đã được xác định trước.' Khoa học thần kinh đương đại gợi ý gì?"
+      },
+      "options": [
+        "Free will is completely proven",
+        "Conscious choice may be post-hoc rationalization of predetermined processes",
+        "Determinism is completely wrong",
+        "No research has been done"
+      ],
+      "correctAnswers": ["Conscious choice may be post-hoc rationalization of predetermined processes"],
+      "explanation": {
+        "en": "The text states that neuroscience suggests 'what we perceive as conscious choice may actually be the brain's post-hoc rationalization of predetermined neural processes'.",
+        "vi": "Đoạn văn nói rằng khoa học thần kinh gợi ý 'những gì chúng ta nhận thức như là lựa chọn có ý thức có thể thực sự là sự hợp lý hóa sau sự kiện của não về các quá trình thần kinh đã được xác định trước'."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    },
+    "pt_100": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'inextricable' mean?",
+        "vi": "'Inextricable' có nghĩa là gì?"
+      },
+      "options": [
+        "easily separated",
+        "impossible to disentangle or separate",
+        "completely independent",
+        "very simple"
+      ],
+      "correctAnswers": ["impossible to disentangle or separate"],
+      "explanation": {
+        "en": "'Inextricable' means impossible to disentangle or separate.",
+        "vi": "'Inextricable' có nghĩa là không thể gỡ rối hoặc tách rời."
+      },
+      "points": 20,
+      "difficulty": "hard"
+    }
+  }
+}
+

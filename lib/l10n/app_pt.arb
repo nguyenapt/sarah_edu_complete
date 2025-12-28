@@ -128,6 +128,15 @@
   "learningProgress": "Progresso de aprendizagem",
   "loginToSaveProgress": "Faça login para salvar seu progresso e\nsincronizar em vários dispositivos",
   "currentLevel": "Nível atual",
-  "unitsCompleted": "Unidades concluídas"
+  "unitsCompleted": "Unidades concluídas",
+  "placementTest": "Teste de nivelamento",
+  "placementTestResult": "Resultado do teste",
+  "placementTestTitle": "Fazer teste de avaliação de nível",
+  "placementTestDescription": "Verifique seu nível de inglês e receba recomendações de nível apropriadas",
+  "vocabulary": "Vocabulário",
+  "weakSkills": "Habilidades fracas",
+  "learningProgress": "Progresso de aprendizagem",
+  "overview": "Visão geral",
+  "featureComingSoon": "Recurso em breve"
 }
 

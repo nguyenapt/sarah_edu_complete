@@ -128,6 +128,15 @@
   "learningProgress": "Прогресс обучения",
   "loginToSaveProgress": "Войдите, чтобы сохранить прогресс обучения и\nсинхронизировать на нескольких устройствах",
   "currentLevel": "Текущий уровень",
-  "unitsCompleted": "Завершенные единицы"
+  "unitsCompleted": "Завершенные единицы",
+  "placementTest": "Тест на определение уровня",
+  "placementTestResult": "Результат теста",
+  "placementTestTitle": "Пройти тест на оценку уровня",
+  "placementTestDescription": "Проверьте свой уровень английского и получите подходящие рекомендации по уровню",
+  "vocabulary": "Словарь",
+  "weakSkills": "Слабые навыки",
+  "learningProgress": "Прогресс обучения",
+  "overview": "Обзор",
+  "featureComingSoon": "Функция скоро появится"
 }
 

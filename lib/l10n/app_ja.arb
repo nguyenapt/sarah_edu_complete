@@ -128,6 +128,15 @@
   "learningProgress": "学習進捗",
   "loginToSaveProgress": "ログインして学習進捗を保存し\n複数のデバイスで同期します",
   "currentLevel": "現在のレベル",
-  "unitsCompleted": "完了したユニット"
+  "unitsCompleted": "完了したユニット",
+  "placementTest": "プレースメントテスト",
+  "placementTestResult": "テスト結果",
+  "placementTestTitle": "レベル評価テストを受ける",
+  "placementTestDescription": "英語レベルを確認し、適切なレベルの推奨を受け取る",
+  "vocabulary": "語彙",
+  "weakSkills": "苦手なスキル",
+  "learningProgress": "学習進捗",
+  "overview": "概要",
+  "featureComingSoon": "機能は間もなく公開されます"
 }
 

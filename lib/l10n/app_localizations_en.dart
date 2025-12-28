@@ -324,4 +324,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitsCompleted => 'Units Completed';
+
+  @override
+  String get placementTest => 'Placement Test';
+
+  @override
+  String get placementTestResult => 'Test Result';
+
+  @override
+  String get placementTestTitle => 'Take a level assessment test';
+
+  @override
+  String get placementTestDescription =>
+      'Check your English level and receive appropriate level recommendations';
+
+  @override
+  String get vocabulary => 'Vocabulary';
+
+  @override
+  String get weakSkills => 'Weak Skills';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get featureComingSoon => 'Feature coming soon';
 }

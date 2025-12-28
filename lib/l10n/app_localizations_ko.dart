@@ -318,4 +318,28 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get unitsCompleted => '완료된 단원';
+
+  @override
+  String get placementTest => '배치 테스트';
+
+  @override
+  String get placementTestResult => '테스트 결과';
+
+  @override
+  String get placementTestTitle => '레벨 평가 테스트 받기';
+
+  @override
+  String get placementTestDescription => '영어 실력을 확인하고 적절한 레벨 추천을 받으세요';
+
+  @override
+  String get vocabulary => '어휘';
+
+  @override
+  String get weakSkills => '약한 기술';
+
+  @override
+  String get overview => '개요';
+
+  @override
+  String get featureComingSoon => '기능이 곧 출시됩니다';
 }

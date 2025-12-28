@@ -324,4 +324,29 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get unitsCompleted => 'पूर्ण इकाइयाँ';
+
+  @override
+  String get placementTest => 'प्लेसमेंट टेस्ट';
+
+  @override
+  String get placementTestResult => 'टेस्ट परिणाम';
+
+  @override
+  String get placementTestTitle => 'स्तर मूल्यांकन परीक्षा लें';
+
+  @override
+  String get placementTestDescription =>
+      'अपने अंग्रेजी स्तर की जांच करें और उपयुक्त स्तर की सिफारिशें प्राप्त करें';
+
+  @override
+  String get vocabulary => 'शब्दावली';
+
+  @override
+  String get weakSkills => 'कमजोर कौशल';
+
+  @override
+  String get overview => 'अवलोकन';
+
+  @override
+  String get featureComingSoon => 'जल्द ही सुविधा आ रही है';
 }

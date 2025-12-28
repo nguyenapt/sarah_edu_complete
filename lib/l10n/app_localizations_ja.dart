@@ -318,4 +318,28 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get unitsCompleted => '完了したユニット';
+
+  @override
+  String get placementTest => 'プレースメントテスト';
+
+  @override
+  String get placementTestResult => 'テスト結果';
+
+  @override
+  String get placementTestTitle => 'レベル評価テストを受ける';
+
+  @override
+  String get placementTestDescription => '英語レベルを確認し、適切なレベルの推奨を受け取る';
+
+  @override
+  String get vocabulary => '語彙';
+
+  @override
+  String get weakSkills => '苦手なスキル';
+
+  @override
+  String get overview => '概要';
+
+  @override
+  String get featureComingSoon => '機能は間もなく公開されます';
 }

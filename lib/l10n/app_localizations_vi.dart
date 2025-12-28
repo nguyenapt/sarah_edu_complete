@@ -324,4 +324,29 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get unitsCompleted => 'Units đã hoàn thành';
+
+  @override
+  String get placementTest => 'Bài kiểm tra xếp lớp';
+
+  @override
+  String get placementTestResult => 'Kết quả kiểm tra';
+
+  @override
+  String get placementTestTitle => 'Làm bài test đánh giá cấp độ';
+
+  @override
+  String get placementTestDescription =>
+      'Kiểm tra trình độ tiếng Anh của bạn và nhận đề xuất cấp độ phù hợp';
+
+  @override
+  String get vocabulary => 'Từ vựng';
+
+  @override
+  String get weakSkills => 'Kỹ năng yếu';
+
+  @override
+  String get overview => 'Tổng quan';
+
+  @override
+  String get featureComingSoon => 'Tính năng sắp ra mắt';
 }

@@ -128,6 +128,15 @@
   "learningProgress": "Learning Progress",
   "loginToSaveProgress": "Login to save learning progress and\nsync across multiple devices",
   "currentLevel": "Current Level",
-  "unitsCompleted": "Units Completed"
+  "unitsCompleted": "Units Completed",
+  "placementTest": "Placement Test",
+  "placementTestResult": "Test Result",
+  "placementTestTitle": "Take a level assessment test",
+  "placementTestDescription": "Check your English level and receive appropriate level recommendations",
+  "vocabulary": "Vocabulary",
+  "weakSkills": "Weak Skills",
+  "learningProgress": "Learning Progress",
+  "overview": "Overview",
+  "featureComingSoon": "Feature coming soon"
 }
 

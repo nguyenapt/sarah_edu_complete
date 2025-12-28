@@ -7,6 +7,7 @@ class FirebaseConstants {
   static const String lessonsCollection = 'lessons';
   static const String exercisesCollection = 'exercises';
   static const String aiPracticeCollection = 'aiPractice';
+  static const String placementTestCollection = 'placementTest';
 
   // User fields
   static const String userEmail = 'email';

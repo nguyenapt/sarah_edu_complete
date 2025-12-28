@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/user_model.dart';
+import '../../models/placement_test_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import 'firestore_service.dart';
+import 'placement_storage_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,6 +35,9 @@ class AuthService {
       // Update last active date
       await _updateLastActiveDate(credential.user!.uid);
       
+      // Sync placement test result if exists
+      await _syncPlacementTestResult(credential.user!.uid);
+      
       return credential;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
@@ -55,11 +60,19 @@ class AuthService {
       await credential.user?.updateDisplayName(displayName);
       await credential.user?.reload();
 
-      // Create user document in Firestore
+      // Kiểm tra placement test result trước để lấy level
+      final placementResult = await PlacementStorageService.loadPlacementTestResult();
+      final initialLevel = placementResult?.assessedLevel.toString();
+
+      // Create user document in Firestore với level từ placement test nếu có
       await _createUserDocument(
         credential.user!,
         displayName,
+        initialLevel: initialLevel,
       );
+
+      // Sync placement test result if exists
+      await _syncPlacementTestResult(credential.user!.uid);
 
       return credential;
     } on FirebaseAuthException catch (e) {
@@ -87,9 +100,14 @@ class AuthService {
 
       // Create or update user document
       if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+        // Kiểm tra placement test result trước để lấy level
+        final placementResult = await PlacementStorageService.loadPlacementTestResult();
+        final initialLevel = placementResult?.assessedLevel.toString();
+
         await _createUserDocument(
           userCredential.user!,
           userCredential.user!.displayName ?? '',
+          initialLevel: initialLevel,
         );
       } else {
         // Cập nhật thông tin user nếu có thay đổi (displayName, photoUrl)
@@ -100,6 +118,9 @@ class AuthService {
         );
         await _updateLastActiveDate(userCredential.user!.uid);
       }
+
+      // Sync placement test result if exists
+      await _syncPlacementTestResult(userCredential.user!.uid);
 
       return userCredential;
     } catch (e) {
@@ -125,14 +146,23 @@ class AuthService {
   }
 
   // Create user document in Firestore
-  Future<void> _createUserDocument(User user, String displayName) async {
+  Future<void> _createUserDocument(User user, String displayName, {String? initialLevel}) async {
+    // Kiểm tra placement test result để lấy level nếu có
+    String level = initialLevel ?? 'A1';
+    if (initialLevel == null) {
+      final result = await PlacementStorageService.loadPlacementTestResult();
+      if (result != null) {
+        level = result.assessedLevel.toString();
+      }
+    }
+
     final userModel = UserModel(
       id: user.uid,
       email: user.email ?? '',
       displayName: displayName,
       photoUrl: user.photoURL,
       createdAt: DateTime.now(),
-      currentLevel: 'A1',
+      currentLevel: level,
       totalXP: 0,
       streak: 0,
       lastActiveDate: DateTime.now(),
@@ -175,6 +205,46 @@ class AuthService {
         .update({
       'lastActiveDate': Timestamp.fromDate(DateTime.now()),
     });
+  }
+
+  // Sync placement test result from local storage to Firestore
+  Future<void> _syncPlacementTestResult(String userId) async {
+    try {
+      // Load result from local storage
+      final result = await PlacementStorageService.loadPlacementTestResult();
+      
+      if (result != null) {
+        // Update result with userId
+        final updatedResult = PlacementTestResult(
+          userId: userId,
+          assessedLevel: result.assessedLevel,
+          totalQuestions: result.totalQuestions,
+          correctAnswers: result.correctAnswers,
+          scorePercentage: result.scorePercentage,
+          categoryScores: result.categoryScores,
+          categoryTotals: result.categoryTotals,
+          completedAt: result.completedAt,
+          timeSpentSeconds: result.timeSpentSeconds,
+        );
+
+        // Save to Firestore
+        await _firestoreService.savePlacementTestResult(userId, updatedResult);
+
+        // Update user's currentLevel
+        await FirebaseFirestore.instance
+            .collection(FirebaseConstants.usersCollection)
+            .doc(userId)
+            .update({
+          'currentLevel': result.assessedLevel.toString(),
+        });
+
+        // Clear local storage
+        await PlacementStorageService.clearPlacementTestResult();
+      }
+    } catch (e) {
+      // Ignore errors during sync - don't block login
+      print('Error syncing placement test result: $e');
+    }
   }
 
   // Handle auth exceptions

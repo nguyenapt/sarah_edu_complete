@@ -327,4 +327,29 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get unitsCompleted => 'Unités terminées';
+
+  @override
+  String get placementTest => 'Test de placement';
+
+  @override
+  String get placementTestResult => 'Résultat du test';
+
+  @override
+  String get placementTestTitle => 'Passer un test d\'évaluation de niveau';
+
+  @override
+  String get placementTestDescription =>
+      'Vérifiez votre niveau d\'anglais et recevez des recommandations de niveau appropriées';
+
+  @override
+  String get vocabulary => 'Vocabulaire';
+
+  @override
+  String get weakSkills => 'Compétences faibles';
+
+  @override
+  String get overview => 'Aperçu';
+
+  @override
+  String get featureComingSoon => 'Fonctionnalité à venir';
 }

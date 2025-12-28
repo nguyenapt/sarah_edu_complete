@@ -128,6 +128,15 @@
   "learningProgress": "सीखने की प्रगति",
   "loginToSaveProgress": "अपनी प्रगति सहेजने और\nकई उपकरणों पर सिंक करने के लिए लॉगिन करें",
   "currentLevel": "वर्तमान स्तर",
-  "unitsCompleted": "पूर्ण इकाइयाँ"
+  "unitsCompleted": "पूर्ण इकाइयाँ",
+  "placementTest": "प्लेसमेंट टेस्ट",
+  "placementTestResult": "टेस्ट परिणाम",
+  "placementTestTitle": "स्तर मूल्यांकन परीक्षा लें",
+  "placementTestDescription": "अपने अंग्रेजी स्तर की जांच करें और उपयुक्त स्तर की सिफारिशें प्राप्त करें",
+  "vocabulary": "शब्दावली",
+  "weakSkills": "कमजोर कौशल",
+  "learningProgress": "सीखने की प्रगति",
+  "overview": "अवलोकन",
+  "featureComingSoon": "जल्द ही सुविधा आ रही है"
 }
 

@@ -3,6 +3,7 @@ import '../../models/level_model.dart';
 import '../../models/unit_model.dart';
 import '../../models/lesson_model.dart';
 import '../../models/exercise_model.dart';
+import '../../models/placement_test_model.dart';
 import '../../core/constants/firebase_constants.dart';
 
 class FirestoreService {
@@ -141,6 +142,38 @@ class FirestoreService {
       );
     } catch (e) {
       throw Exception('Error fetching exercise: $e');
+    }
+  }
+
+  // Placement Test Questions
+  Future<List<PlacementTestQuestion>> loadPlacementTestQuestions({
+    String? languageCode,
+  }) async {
+    try {
+      final snapshot = await _firestore
+          .collection(FirebaseConstants.placementTestCollection)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => PlacementTestQuestion.fromMap(doc.data(), doc.id))
+          .toList();
+    } catch (e) {
+      throw Exception('Error fetching placement test questions: $e');
+    }
+  }
+
+  // Save placement test result
+  Future<void> savePlacementTestResult(
+    String userId,
+    PlacementTestResult result,
+  ) async {
+    try {
+      await _firestore
+          .collection('placementTestResults')
+          .doc(userId)
+          .set(result.toMap());
+    } catch (e) {
+      throw Exception('Error saving placement test result: $e');
     }
   }
 

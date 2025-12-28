@@ -326,4 +326,29 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get unitsCompleted => 'Завершенные единицы';
+
+  @override
+  String get placementTest => 'Тест на определение уровня';
+
+  @override
+  String get placementTestResult => 'Результат теста';
+
+  @override
+  String get placementTestTitle => 'Пройти тест на оценку уровня';
+
+  @override
+  String get placementTestDescription =>
+      'Проверьте свой уровень английского и получите подходящие рекомендации по уровню';
+
+  @override
+  String get vocabulary => 'Словарь';
+
+  @override
+  String get weakSkills => 'Слабые навыки';
+
+  @override
+  String get overview => 'Обзор';
+
+  @override
+  String get featureComingSoon => 'Функция скоро появится';
 }

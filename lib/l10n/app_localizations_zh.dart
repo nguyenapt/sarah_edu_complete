@@ -318,4 +318,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get unitsCompleted => '已完成的单元';
+
+  @override
+  String get placementTest => '分班测试';
+
+  @override
+  String get placementTestResult => '测试结果';
+
+  @override
+  String get placementTestTitle => '进行水平评估测试';
+
+  @override
+  String get placementTestDescription => '检查您的英语水平并获得合适的级别推荐';
+
+  @override
+  String get vocabulary => '词汇';
+
+  @override
+  String get weakSkills => '薄弱技能';
+
+  @override
+  String get overview => '概览';
+
+  @override
+  String get featureComingSoon => '功能即将推出';
 }

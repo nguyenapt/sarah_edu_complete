@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/firebase_constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/firestore_service.dart';
 import '../../models/level_model.dart';
+import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../learning/level_selection_screen.dart';
 import '../auth/login_screen.dart';
+import '../placement/placement_test_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,11 +25,29 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirestoreService _firestoreService = FirestoreService();
   List<LevelModel> _levels = [];
   bool _isLoading = true;
+  UserProgressModel? _userProgress;
 
   @override
   void initState() {
     super.initState();
     _loadLevels();
+  }
+
+  Future<void> _loadUserProgress(String userId) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection(FirebaseConstants.userProgressCollection)
+          .doc(userId)
+          .get();
+
+      if (doc.exists && mounted) {
+        setState(() {
+          _userProgress = UserProgressModel.fromFirestore(doc);
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading user progress: $e');
+    }
   }
 
   Future<void> _loadLevels() async {
@@ -58,6 +80,26 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
+          // Load user progress khi user đã đăng nhập
+          if (authProvider.isAuthenticated && authProvider.user != null) {
+            if (_userProgress == null || _userProgress!.userId != authProvider.user!.id) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _loadUserProgress(authProvider.user!.id);
+              });
+            }
+          } else {
+            // Reset user progress khi user đăng xuất
+            if (_userProgress != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  setState(() {
+                    _userProgress = null;
+                  });
+                }
+              });
+            }
+          }
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -75,14 +117,89 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildWelcomeSection(),
                   const SizedBox(height: 24),
                   
-                  // Nếu đã đăng nhập: hiển thị Continue Learning trước, sau đó Quick Stats
+                  // Nếu đã đăng nhập: hiển thị Continue Learning
                   if (authProvider.isAuthenticated) ...[
                     // Continue Learning
                     _buildContinueLearning(),
                     const SizedBox(height: 24),
+                  ] else ...[
+                    // Placement Test Card cho guest user
+                    _buildPlacementTestCard(),
+                    const SizedBox(height: 24),
                     
-                    // Quick Stats
-                    _buildQuickStats(),
+                    // Vocabulary và Practice Section (2 cột)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildCompactSection(
+                            AppLocalizations.of(context)!.vocabulary,
+                            Icons.book,
+                            () {
+                              // TODO: Navigate to vocabulary screen
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildCompactSection(
+                            AppLocalizations.of(context)!.practice,
+                            Icons.fitness_center,
+                            () {
+                              // TODO: Navigate to practice screen
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  
+                  // Nếu đã đăng nhập: thêm các section bổ sung
+                  if (authProvider.isAuthenticated) ...[
+                    // Vocabulary và Weak Skills (2 cột)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildCompactSection(
+                            AppLocalizations.of(context)!.vocabulary,
+                            Icons.book,
+                            () {
+                              // TODO: Navigate to vocabulary screen
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildCompactSection(
+                            AppLocalizations.of(context)!.weakSkills,
+                            Icons.trending_down,
+                            () {
+                              // TODO: Navigate to weak skills screen
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Learning Progress và Overview (2 cột)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildLearningProgressSection(authProvider),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildCompactSection(
+                            AppLocalizations.of(context)!.overview,
+                            Icons.dashboard,
+                            () {
+                              // TODO: Navigate to overview screen
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 24),
                   ],
                   
@@ -208,54 +325,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickStats() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.learningProgress,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildProgressItem(AppLocalizations.of(context)!.currentLevel, 'A1', 0.3),
-            const SizedBox(height: 12),
-            _buildProgressItem(AppLocalizations.of(context)!.unitsCompleted, '3/10', 0.3),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProgressItem(String label, String value, double progress) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label),
-            Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: progress,
-          backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
         ),
       ],
     );
@@ -454,6 +523,257 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlacementTestCard() {
+    return Card(
+      color: AppTheme.primaryColor,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PlacementTestScreen(),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.quiz,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.placementTestTitle,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      AppLocalizations.of(context)!.placementTestDescription,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Learning Progress Section với thông tin thực tế
+  Widget _buildLearningProgressSection(AuthProvider authProvider) {
+    final currentLevel = authProvider.user?.currentLevel ?? 'A1';
+    final levelProgress = _userProgress?.levelProgress[currentLevel];
+    final completedUnitsCount = levelProgress?.completedUnits.length ?? 0;
+    
+    // Lấy tổng số unit của level hiện tại
+    int totalUnits = 0;
+    if (_levels.isNotEmpty) {
+      final currentLevelModel = _levels.firstWhere(
+        (level) => level.id == currentLevel,
+        orElse: () => _levels.first,
+      );
+      totalUnits = currentLevelModel.totalUnits;
+    } else {
+      // Fallback nếu chưa load được levels
+      totalUnits = 10; // Giá trị mặc định
+    }
+
+    return Card(
+      child: InkWell(
+        onTap: () {
+          // TODO: Navigate to learning progress screen
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      AppLocalizations.of(context)!.learningProgress,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Colors.grey[600],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Current Level
+              Row(
+                children: [
+                  Icon(
+                    Icons.school,
+                    size: 20,
+                    color: AppTheme.primaryColor,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.currentLevel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          currentLevel,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Units Completed
+              Row(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    size: 20,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.unitsCompleted,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          '$completedUnitsCount/$totalUnits',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Compact Section Widget (cho 2 cột)
+  Widget _buildCompactSection(String title, IconData icon, VoidCallback onTap) {
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Colors.grey[600],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      icon,
+                      size: 40,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      AppLocalizations.of(context)!.featureComingSoon,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
