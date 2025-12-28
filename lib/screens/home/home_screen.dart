@@ -158,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (authProvider.isAuthenticated) ...[
                     // Vocabulary và Weak Skills (2 cột)
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: _buildCompactSection(
@@ -184,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     
                     // Learning Progress và Overview (2 cột)
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: _buildLearningProgressSection(authProvider),
@@ -203,8 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 24),
                   ],
                   
-                  // Levels Section
-                  _buildLevelsSection(),
                 ],
               ],
             ),
@@ -303,30 +303,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStatItem(IconData icon, String value, String label) {
-    return Row(
-      children: [
-        Icon(icon, color: AppTheme.primaryColor),
-        const SizedBox(width: 8),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+    return Expanded(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: AppTheme.primaryColor),
+          const SizedBox(width: 8),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -374,155 +373,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white,
                 size: 20,
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLevelsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context)!.levels,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.2,
-          ),
-          itemCount: _levels.isEmpty ? AppConstants.levels.length : _levels.length,
-          itemBuilder: (context, index) {
-            if (_levels.isEmpty) {
-              final level = AppConstants.levels[index];
-              return _buildLevelCard(level, index == 0, null);
-            } else {
-              final level = _levels[index];
-              // A1 luôn unlock, các level khác unlock khi level trước đã hoàn thành
-              final isUnlocked = level.id == 'A1' || index < _levels.length;
-              return _buildLevelCard(level.id, isUnlocked, level);
-            }
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLevelCard(String level, bool isUnlocked, LevelModel? levelModel) {
-    final color = AppTheme.levelColors[level] ?? AppTheme.primaryColor;
-    
-    return Card(
-      elevation: isUnlocked ? 4 : 2,
-        child: InkWell(
-        onTap: isUnlocked
-            ? () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LevelSelectionScreen(
-                      levelId: level,
-                      levelModel: levelModel,
-                    ),
-                  ),
-                );
-              }
-            : null,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: isUnlocked
-                ? AppTheme.getLevelGradient(level)
-                : null,
-            color: isUnlocked ? null : Colors.grey[300],
-          ),
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (!isUnlocked)
-                      Icon(
-                        Icons.lock,
-                        size: 32,
-                        color: Colors.grey[600],
-                      )
-                    else
-                      Text(
-                        level,
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    if (isUnlocked) ...[
-                      const SizedBox(height: 6),
-                      Flexible(
-                        child: Text(
-                          levelModel != null
-                              ? levelModel.getName(Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode)
-                              : 'Level $level',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white.withOpacity(0.9),
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        levelModel != null
-                            ? '${levelModel.totalUnits} Units'
-                            : '0 Units',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (isUnlocked)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.unlock,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
             ],
           ),
         ),
@@ -734,6 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Text(
@@ -756,6 +607,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 12),
               Center(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       icon,

@@ -351,4 +351,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Recurso em breve';
+
+  @override
+  String get all => 'Todos';
 }

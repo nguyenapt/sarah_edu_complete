@@ -352,4 +352,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Función próximamente';
+
+  @override
+  String get all => 'Todos';
 }

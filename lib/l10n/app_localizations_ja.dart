@@ -342,4 +342,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get featureComingSoon => '機能は間もなく公開されます';
+
+  @override
+  String get all => 'すべて';
 }

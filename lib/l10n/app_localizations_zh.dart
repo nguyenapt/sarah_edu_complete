@@ -342,4 +342,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get featureComingSoon => '功能即将推出';
+
+  @override
+  String get all => '全部';
 }

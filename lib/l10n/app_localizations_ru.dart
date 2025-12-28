@@ -351,4 +351,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Функция скоро появится';
+
+  @override
+  String get all => 'Все';
 }

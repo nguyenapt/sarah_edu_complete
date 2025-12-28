@@ -342,4 +342,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get featureComingSoon => '기능이 곧 출시됩니다';
+
+  @override
+  String get all => '전체';
 }

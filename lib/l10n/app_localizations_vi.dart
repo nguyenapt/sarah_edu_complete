@@ -349,4 +349,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Tính năng sắp ra mắt';
+
+  @override
+  String get all => 'Tất cả';
 }

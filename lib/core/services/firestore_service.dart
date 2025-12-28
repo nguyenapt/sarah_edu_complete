@@ -56,6 +56,25 @@ class FirestoreService {
     }
   }
 
+  // Get all units sorted by level order and unit order
+  Future<List<UnitModel>> getAllUnits() async {
+    try {
+      // Lấy tất cả levels để sắp xếp
+      final levels = await getLevels();
+      
+      // Lấy tất cả units từ tất cả levels
+      final allUnits = <UnitModel>[];
+      for (final level in levels) {
+        final units = await getUnitsByLevel(level.id);
+        allUnits.addAll(units);
+      }
+      
+      return allUnits;
+    } catch (e) {
+      throw Exception('Error fetching all units: $e');
+    }
+  }
+
   Future<UnitModel?> getUnit(String unitId) async {
     try {
       final doc = await _firestore

@@ -352,4 +352,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Fonctionnalité à venir';
+
+  @override
+  String get all => 'Tous';
 }

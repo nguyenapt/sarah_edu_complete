@@ -349,4 +349,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'जल्द ही सुविधा आ रही है';
+
+  @override
+  String get all => 'सभी';
 }
