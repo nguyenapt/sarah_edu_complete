@@ -332,6 +332,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 4),
             Row(
@@ -354,9 +355,12 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                 const SizedBox(width: 8),
                 Icon(Icons.star, size: 14, color: Colors.amber),
                 const SizedBox(width: 4),
-                Text(
-                  '${exercise.points} ${AppLocalizations.of(context)!.points}',
-                  style: const TextStyle(fontSize: 12),
+                Flexible(
+                  child: Text(
+                    '${exercise.points} ${AppLocalizations.of(context)!.points}',
+                    style: const TextStyle(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

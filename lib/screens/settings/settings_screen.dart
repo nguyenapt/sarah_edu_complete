@@ -117,12 +117,17 @@ class SettingsScreen extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 30,
-                  backgroundImage: user?.photoUrl != null
-                      ? NetworkImage(user!.photoUrl!)
+                  radius: 35,
+                  backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                  backgroundImage: user?.photoUrl != null && user!.photoUrl!.isNotEmpty
+                      ? NetworkImage(user.photoUrl!)
                       : null,
-                  child: user?.photoUrl == null
-                      ? const Icon(Icons.person, size: 30)
+                  child: user?.photoUrl == null || user!.photoUrl!.isEmpty
+                      ? Icon(
+                          Icons.person,
+                          size: 35,
+                          color: AppTheme.primaryColor,
+                        )
                       : null,
                 ),
                 const SizedBox(width: 16),
@@ -131,7 +136,9 @@ class SettingsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user?.displayName ?? 'User',
+                        user?.displayName != null && user!.displayName!.isNotEmpty
+                            ? user.displayName!
+                            : 'User',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),

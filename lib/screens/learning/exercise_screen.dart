@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/exercise_model.dart';
 import '../../l10n/app_localizations.dart';
+import '../../providers/auth_provider.dart';
+import '../auth/login_screen.dart';
 
 class ExerciseScreen extends StatefulWidget {
   final ExerciseModel exercise;
@@ -283,6 +286,30 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       _isSubmitted = true;
       _isCorrect = isCorrect;
     });
+
+    // Kiểm tra auth state và hiển thị thông báo nếu chưa đăng nhập
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.loginToSync),
+          backgroundColor: AppTheme.primaryColor,
+          action: SnackBarAction(
+            label: AppLocalizations.of(context)!.login,
+            textColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
+            },
+          ),
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    }
   }
 
   Widget _buildResultSection() {

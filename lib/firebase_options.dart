@@ -44,9 +44,12 @@ class DefaultFirebaseOptions {
     }
   }
 
+  // TODO: Lấy Web App ID từ Firebase Console
+  // Vào Firebase Console > Project Settings > Your apps > Web app
+  // Copy appId (có dạng: 1:595631319099:web:xxxxx)
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDummyKeyForWeb',
-    appId: '1:595631319099:web:dummy',
+    apiKey: 'AIzaSyA1d1tk-pIaibVVZ97XgImmsEkjsXwrKXs',
+    appId: '1:595631319099:web:ffc6f6b025e6634733941e',
     messagingSenderId: '595631319099',
     projectId: 'sarah-learn-english',
     authDomain: 'sarah-learn-english.firebaseapp.com',

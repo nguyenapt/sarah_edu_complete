@@ -34,7 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text,
       );
 
-      if (!success && mounted) {
+      if (success && mounted) {
+        // Đăng nhập thành công, quay lại màn hình trước
+        Navigator.pop(context);
+      } else if (!success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(authProvider.errorMessage ?? 'Đăng nhập thất bại'),
@@ -49,7 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.signInWithGoogle();
 
-    if (!success && mounted) {
+    if (success && mounted) {
+      // Đăng nhập thành công, quay lại màn hình trước
+      Navigator.pop(context);
+    } else if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(authProvider.errorMessage ?? 'Đăng nhập Google thất bại'),

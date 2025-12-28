@@ -8,6 +8,7 @@ import '../../models/level_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../learning/level_selection_screen.dart';
+import '../auth/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,36 +56,43 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Sarah Edu'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (_isLoading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(32.0),
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            else ...[
-              // Welcome Section
-              _buildWelcomeSection(),
-              const SizedBox(height: 24),
-              
-              // Quick Stats
-              _buildQuickStats(),
-              const SizedBox(height: 24),
-              
-              // Continue Learning
-              _buildContinueLearning(),
-              const SizedBox(height: 24),
-              
-              // Levels Section
-              _buildLevelsSection(),
-            ],
-          ],
-        ),
+      body: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_isLoading)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else ...[
+                  // Welcome Section
+                  _buildWelcomeSection(),
+                  const SizedBox(height: 24),
+                  
+                  // Nếu đã đăng nhập: hiển thị Continue Learning trước, sau đó Quick Stats
+                  if (authProvider.isAuthenticated) ...[
+                    // Continue Learning
+                    _buildContinueLearning(),
+                    const SizedBox(height: 24),
+                    
+                    // Quick Stats
+                    _buildQuickStats(),
+                    const SizedBox(height: 24),
+                  ],
+                  
+                  // Levels Section
+                  _buildLevelsSection(),
+                ],
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -131,26 +139,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ] else ...[
                   const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.info_outline, color: AppTheme.primaryColor),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            AppLocalizations.of(context)!.loginToSync,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.primaryColor,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.info_outline, color: AppTheme.primaryColor),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              AppLocalizations.of(context)!.loginToSync,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.primaryColor,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Icon(Icons.arrow_forward_ios, 
+                            size: 16, 
+                            color: AppTheme.primaryColor,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -361,6 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     if (!isUnlocked)
                       Icon(
@@ -378,18 +402,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     if (isUnlocked) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        levelModel != null
-                            ? levelModel.getName(Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode)
-                            : 'Level $level',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withOpacity(0.9),
+                      const SizedBox(height: 6),
+                      Flexible(
+                        child: Text(
+                          levelModel != null
+                              ? levelModel.getName(Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode)
+                              : 'Level $level',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Text(
                         levelModel != null
                             ? '${levelModel.totalUnits} Units'

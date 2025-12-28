@@ -23,6 +23,24 @@ class UserModel {
     this.lastActiveDate,
   });
 
+  // Helper function để convert timestamp từ Firestore (hỗ trợ cả Timestamp và int)
+  static DateTime? _parseTimestamp(dynamic value) {
+    if (value == null) return null;
+    if (value is Timestamp) {
+      return value.toDate();
+    }
+    if (value is int) {
+      // Nếu là int, có thể là milliseconds hoặc seconds
+      // Thử milliseconds trước (timestamp thường > 1000000000000)
+      if (value > 1000000000000) {
+        return DateTime.fromMillisecondsSinceEpoch(value);
+      } else {
+        return DateTime.fromMillisecondsSinceEpoch(value * 1000);
+      }
+    }
+    return null;
+  }
+
   // Convert từ Firestore Document
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -31,11 +49,11 @@ class UserModel {
       email: data['email'] ?? '',
       displayName: data['displayName'],
       photoUrl: data['photoUrl'],
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdAt: _parseTimestamp(data['createdAt']) ?? DateTime.now(),
       currentLevel: data['currentLevel'] ?? 'A1',
       totalXP: data['totalXP'] ?? 0,
       streak: data['streak'] ?? 0,
-      lastActiveDate: (data['lastActiveDate'] as Timestamp?)?.toDate(),
+      lastActiveDate: _parseTimestamp(data['lastActiveDate']),
     );
   }
 

@@ -38,7 +38,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _nameController.text.trim(),
       );
 
-      if (!success && mounted) {
+      if (success && mounted) {
+        // Đăng ký thành công, quay lại màn hình trước
+        Navigator.pop(context);
+      } else if (!success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(authProvider.errorMessage ?? 'Đăng ký thất bại'),

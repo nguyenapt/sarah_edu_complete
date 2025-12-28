@@ -7,7 +7,10 @@ import 'firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // Google Sign-In với clientId cho web platform
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: '595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com',
+  );
   final FirestoreService _firestoreService = FirestoreService();
 
   // Get current user
@@ -53,7 +56,10 @@ class AuthService {
       await credential.user?.reload();
 
       // Create user document in Firestore
-      await _createUserDocument(credential.user!, displayName);
+      await _createUserDocument(
+        credential.user!,
+        displayName,
+      );
 
       return credential;
     } on FirebaseAuthException catch (e) {
@@ -86,6 +92,12 @@ class AuthService {
           userCredential.user!.displayName ?? '',
         );
       } else {
+        // Cập nhật thông tin user nếu có thay đổi (displayName, photoUrl)
+        await _updateUserProfile(
+          userCredential.user!.uid,
+          userCredential.user!.displayName,
+          userCredential.user!.photoURL,
+        );
         await _updateLastActiveDate(userCredential.user!.uid);
       }
 
@@ -132,13 +144,36 @@ class AuthService {
         .set(userModel.toFirestore());
   }
 
+  // Update user profile (displayName, photoUrl)
+  Future<void> _updateUserProfile(
+    String userId,
+    String? displayName,
+    String? photoUrl,
+  ) async {
+    final updateData = <String, dynamic>{
+      'lastActiveDate': Timestamp.fromDate(DateTime.now()),
+    };
+
+    if (displayName != null) {
+      updateData['displayName'] = displayName;
+    }
+    if (photoUrl != null) {
+      updateData['photoUrl'] = photoUrl;
+    }
+
+    await FirebaseFirestore.instance
+        .collection(FirebaseConstants.usersCollection)
+        .doc(userId)
+        .update(updateData);
+  }
+
   // Update last active date
   Future<void> _updateLastActiveDate(String userId) async {
     await FirebaseFirestore.instance
         .collection(FirebaseConstants.usersCollection)
         .doc(userId)
         .update({
-      'lastActiveDate': DateTime.now(),
+      'lastActiveDate': Timestamp.fromDate(DateTime.now()),
     });
   }
 

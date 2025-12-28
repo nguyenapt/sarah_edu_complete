@@ -43,6 +43,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "595631319099-2ud08fjn36pjap6j6l72eu4amckvfihc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sarah.edu.complete.sarah_edu_complete",
+            "certificate_hash": "80d1043e5298526cb23d1edb31a1627d83d83b07"
+          }
+        },
+        {
+          "client_id": "595631319099-94rrujihpsd259rruebdq6hg9q7rqqf3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sarah.edu.complete.sarah_edu_complete",
+            "certificate_hash": "606697b2927b6459dae503140fa1bba3766b08e2"
+          }
+        },
+        {
           "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
           "client_type": 3
         }
