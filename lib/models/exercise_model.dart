@@ -7,8 +7,16 @@ enum ExerciseType {
   speaking;
 
   static ExerciseType fromString(String value) {
+    // Normalize value: convert snake_case to camelCase
+    String normalizedValue = value;
+    if (value.contains('_')) {
+      final parts = value.split('_');
+      normalizedValue = parts[0] + 
+          parts.sublist(1).map((p) => p[0].toUpperCase() + p.substring(1)).join();
+    }
+    
     return ExerciseType.values.firstWhere(
-      (e) => e.toString().split('.').last == value,
+      (e) => e.toString().split('.').last.toLowerCase() == normalizedValue.toLowerCase(),
       orElse: () => ExerciseType.singleChoice,
     );
   }
