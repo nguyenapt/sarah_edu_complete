@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_html/flutter_html.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/lesson_model.dart';
 import '../../core/services/firestore_service.dart';
@@ -121,31 +122,9 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
               theory.getDescription(languageCode),
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            if (theory.usage != null) ...[
+            if (theory.usage != null && theory.usage!.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.info_outline, color: AppTheme.primaryColor),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        '${AppLocalizations.of(context)!.howToUse}: ${theory.getUsage(languageCode)}',
-                        style: TextStyle(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildUsageSection(theory.usage!, languageCode),
             ],
             if (theory.forms != null) ...[
               const SizedBox(height: 16),
@@ -172,44 +151,124 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
               ),
         ),
         const SizedBox(height: 12),
-        if (forms.affirmative != null)
-          _buildFormItem(AppLocalizations.of(context)!.affirmative, forms.getAffirmative(languageCode), Icons.check_circle),
-        if (forms.negative != null)
-          _buildFormItem(AppLocalizations.of(context)!.negative, forms.getNegative(languageCode), Icons.cancel),
-        if (forms.interrogative != null)
-          _buildFormItem(AppLocalizations.of(context)!.interrogative, forms.getInterrogative(languageCode), Icons.help_outline),
+        if (forms.statement != null && forms.statement!.isNotEmpty)
+          _buildFormList(
+            AppLocalizations.of(context)!.affirmative,
+            forms.getStatement(),
+            Icons.check_circle,
+          ),
+        if (forms.negative != null && forms.negative!.isNotEmpty)
+          _buildFormList(
+            AppLocalizations.of(context)!.negative,
+            forms.getNegative(),
+            Icons.cancel,
+          ),
+        if (forms.question != null && forms.question!.isNotEmpty)
+          _buildFormList(
+            AppLocalizations.of(context)!.interrogative,
+            forms.getQuestion(),
+            Icons.help_outline,
+          ),
       ],
     );
   }
 
-  Widget _buildFormItem(String label, String form, IconData icon) {
+  Widget _buildFormList(String label, List<String> forms, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: AppTheme.primaryColor),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  form,
-                  style: TextStyle(
+          Row(
+            children: [
+              Icon(icon, size: 20, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...forms.asMap().entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 28, bottom: 4),
+              child: Html(
+                data: entry.value,
+                style: {
+                  "body": Style(
+                    margin: Margins.zero,
+                    padding: HtmlPaddings.zero,
                     color: Colors.grey[700],
                     fontStyle: FontStyle.italic,
                   ),
-                ),
-              ],
-            ),
-          ),
+                  "strong": Style(
+                    fontWeight: FontWeight.bold,
+                  ),
+                },
+              ),
+            );
+          }),
         ],
+      ),
+    );
+  }
+
+  Widget _buildUsageSection(List<UsageItem> usageItems, String languageCode) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.info_outline, color: AppTheme.primaryColor),
+            const SizedBox(width: 8),
+            Text(
+              AppLocalizations.of(context)!.howToUse,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...usageItems.map((item) => _buildUsageItem(item, languageCode)),
+      ],
+    );
+  }
+
+  Widget _buildUsageItem(UsageItem item, String languageCode) {
+    final title = item.getTitle(languageCode);
+    final example = item.getExample(languageCode);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      color: AppTheme.primaryColor.withOpacity(0.05),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title.isNotEmpty) ...[
+              Text(
+                title,
+                style: TextStyle(
+                  color: AppTheme.primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (example.isNotEmpty)
+              Text(
+                example,
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -417,6 +476,8 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         return localizations.listening;
       case ExerciseType.speaking:
         return localizations.speaking;
+      case ExerciseType.buttonSingleChoice:
+        return localizations.selectOneAnswerShort;
     }
   }
 }

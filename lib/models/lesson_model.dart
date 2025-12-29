@@ -1,10 +1,70 @@
 import 'multilanguage_content.dart';
 
+class UsageItem {
+  final Map<String, dynamic>? en; // {title: String, example: String}
+  final Map<String, dynamic>? vi; // {title: String, example: String}
+
+  UsageItem({
+    this.en,
+    this.vi,
+  });
+
+  /// Get title theo language code
+  String getTitle(String languageCode) {
+    if (languageCode == 'vi' && vi != null) {
+      return vi!['title']?.toString() ?? '';
+    }
+    return en?['title']?.toString() ?? '';
+  }
+
+  /// Get example theo language code
+  String getExample(String languageCode) {
+    if (languageCode == 'vi' && vi != null) {
+      return vi!['example']?.toString() ?? '';
+    }
+    return en?['example']?.toString() ?? '';
+  }
+
+  factory UsageItem.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic>? enData;
+    if (map['en'] != null) {
+      if (map['en'] is Map) {
+        enData = Map<String, dynamic>.from(map['en']);
+      } else {
+        // Nếu là String, tạo Map với 'example' key
+        enData = {'example': map['en'].toString()};
+      }
+    }
+
+    Map<String, dynamic>? viData;
+    if (map['vi'] != null) {
+      if (map['vi'] is Map) {
+        viData = Map<String, dynamic>.from(map['vi']);
+      } else {
+        // Nếu là String, tạo Map với 'example' key
+        viData = {'example': map['vi'].toString()};
+      }
+    }
+
+    return UsageItem(
+      en: enData,
+      vi: viData,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'en': en,
+      'vi': vi,
+    };
+  }
+}
+
 class TheoryContent {
   final Map<String, dynamic>? title; // Multi-language: Map<String, String>
   final Map<String, dynamic>? description; // Multi-language: Map<String, String>
   final List<Example> examples;
-  final Map<String, dynamic>? usage; // Multi-language: Map<String, String>
+  final List<UsageItem>? usage; // Array of UsageItem
   final GrammarForms? forms;
 
   TheoryContent({
@@ -25,9 +85,9 @@ class TheoryContent {
     return MultilanguageContent.getText(description, languageCode);
   }
 
-  /// Get usage theo language code
-  String getUsage(String languageCode) {
-    return MultilanguageContent.getText(usage, languageCode);
+  /// Get usage items
+  List<UsageItem> getUsageItems() {
+    return usage ?? [];
   }
 
   factory TheoryContent.fromMap(Map<String, dynamic> map) {
@@ -50,12 +110,38 @@ class TheoryContent {
       }
     }
 
-    Map<String, dynamic>? usageData;
+    // Usage: hỗ trợ cả List (new format) và Map/String (old format)
+    List<UsageItem>? usageData;
     if (map['usage'] != null) {
-      if (map['usage'] is Map) {
-        usageData = map['usage'] as Map<String, dynamic>;
-      } else {
-        usageData = {'en': map['usage'].toString()};
+      try {
+        if (map['usage'] is List) {
+          usageData = (map['usage'] as List<dynamic>)
+              .map((e) {
+                if (e is Map) {
+                  return UsageItem.fromMap(e as Map<String, dynamic>);
+                } else {
+                  // Nếu item trong list là String
+                  return UsageItem(
+                    en: {'example': e.toString()},
+                  );
+                }
+              })
+              .toList();
+        } else if (map['usage'] is Map) {
+          // Old format: Map -> convert to List with one UsageItem
+          final usageMap = map['usage'] as Map<String, dynamic>;
+          usageData = [UsageItem.fromMap(usageMap)];
+        } else {
+          // Old format: String -> convert to List with one UsageItem
+          usageData = [
+            UsageItem(
+              en: {'example': map['usage'].toString()},
+            )
+          ];
+        }
+      } catch (e) {
+        // Nếu có lỗi khi parse, bỏ qua usage để không crash app
+        usageData = null;
       }
     }
 
@@ -78,7 +164,7 @@ class TheoryContent {
       'title': title,
       'description': description,
       'examples': examples.map((e) => e.toMap()).toList(),
-      'usage': usage,
+      'usage': usage?.map((e) => e.toMap()).toList(),
       'forms': forms?.toMap(),
     };
   }
@@ -141,71 +227,112 @@ class Example {
 }
 
 class GrammarForms {
-  final Map<String, dynamic>? affirmative; // Multi-language: Map<String, String>
-  final Map<String, dynamic>? negative; // Multi-language: Map<String, String>
-  final Map<String, dynamic>? interrogative; // Multi-language: Map<String, String>
+  final List<String>? statement; // Array of strings
+  final List<String>? negative; // Array of strings
+  final List<String>? question; // Array of strings
 
   GrammarForms({
-    this.affirmative,
+    this.statement,
     this.negative,
-    this.interrogative,
+    this.question,
   });
 
-  /// Get affirmative theo language code
-  String getAffirmative(String languageCode) {
-    return MultilanguageContent.getText(affirmative, languageCode);
+  /// Get statement forms
+  List<String> getStatement() {
+    return statement ?? [];
   }
 
-  /// Get negative theo language code
-  String getNegative(String languageCode) {
-    return MultilanguageContent.getText(negative, languageCode);
+  /// Get negative forms
+  List<String> getNegative() {
+    return negative ?? [];
   }
 
-  /// Get interrogative theo language code
-  String getInterrogative(String languageCode) {
-    return MultilanguageContent.getText(interrogative, languageCode);
+  /// Get question forms
+  List<String> getQuestion() {
+    return question ?? [];
   }
 
   factory GrammarForms.fromMap(Map<String, dynamic> map) {
-    Map<String, dynamic>? affirmativeData;
-    if (map['affirmative'] != null) {
-      if (map['affirmative'] is Map) {
-        affirmativeData = map['affirmative'] as Map<String, dynamic>;
+    // Hỗ trợ backward compatible: nếu là Map (old format) hoặc List (new format)
+    List<String>? statementData;
+    if (map['statement'] != null) {
+      if (map['statement'] is List) {
+        statementData = (map['statement'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else if (map['statement'] is Map) {
+        // Old format: Map -> convert to List with first value
+        final statementMap = map['statement'] as Map<String, dynamic>;
+        statementData = [statementMap.values.first.toString()];
       } else {
-        affirmativeData = {'en': map['affirmative'].toString()};
+        statementData = [map['statement'].toString()];
+      }
+    } else if (map['affirmative'] != null) {
+      // Backward compatible với old field name
+      if (map['affirmative'] is List) {
+        statementData = (map['affirmative'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else if (map['affirmative'] is Map) {
+        final affirmativeMap = map['affirmative'] as Map<String, dynamic>;
+        statementData = [affirmativeMap.values.first.toString()];
+      } else {
+        statementData = [map['affirmative'].toString()];
       }
     }
 
-    Map<String, dynamic>? negativeData;
+    List<String>? negativeData;
     if (map['negative'] != null) {
-      if (map['negative'] is Map) {
-        negativeData = map['negative'] as Map<String, dynamic>;
+      if (map['negative'] is List) {
+        negativeData = (map['negative'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else if (map['negative'] is Map) {
+        final negativeMap = map['negative'] as Map<String, dynamic>;
+        negativeData = [negativeMap.values.first.toString()];
       } else {
-        negativeData = {'en': map['negative'].toString()};
+        negativeData = [map['negative'].toString()];
       }
     }
 
-    Map<String, dynamic>? interrogativeData;
-    if (map['interrogative'] != null) {
-      if (map['interrogative'] is Map) {
-        interrogativeData = map['interrogative'] as Map<String, dynamic>;
+    List<String>? questionData;
+    if (map['question'] != null) {
+      if (map['question'] is List) {
+        questionData = (map['question'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else if (map['question'] is Map) {
+        final questionMap = map['question'] as Map<String, dynamic>;
+        questionData = [questionMap.values.first.toString()];
       } else {
-        interrogativeData = {'en': map['interrogative'].toString()};
+        questionData = [map['question'].toString()];
+      }
+    } else if (map['interrogative'] != null) {
+      // Backward compatible với old field name
+      if (map['interrogative'] is List) {
+        questionData = (map['interrogative'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else if (map['interrogative'] is Map) {
+        final interrogativeMap = map['interrogative'] as Map<String, dynamic>;
+        questionData = [interrogativeMap.values.first.toString()];
+      } else {
+        questionData = [map['interrogative'].toString()];
       }
     }
 
     return GrammarForms(
-      affirmative: affirmativeData,
+      statement: statementData,
       negative: negativeData,
-      interrogative: interrogativeData,
+      question: questionData,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'affirmative': affirmative,
+      'statement': statement,
       'negative': negative,
-      'interrogative': interrogative,
+      'question': question,
     };
   }
 }
