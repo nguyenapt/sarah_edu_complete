@@ -148,6 +148,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get submit => 'Отправить';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => 'Правильно!';
 
   @override

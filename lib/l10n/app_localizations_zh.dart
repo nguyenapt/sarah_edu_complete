@@ -147,6 +147,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get submit => '提交';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => '正确！';
 
   @override

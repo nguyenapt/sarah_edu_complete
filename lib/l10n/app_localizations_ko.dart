@@ -147,6 +147,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get submit => '제출';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => '정답입니다!';
 
   @override

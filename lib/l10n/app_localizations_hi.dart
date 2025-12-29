@@ -147,6 +147,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get submit => 'सबमिट करें';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => 'सही!';
 
   @override

@@ -148,6 +148,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get submit => 'Enviar';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => 'Correto!';
 
   @override

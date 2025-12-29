@@ -392,6 +392,12 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submit;
 
+  /// No description provided for @continueText.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueText;
+
   /// No description provided for @correct.
   ///
   /// In en, this message translates to:

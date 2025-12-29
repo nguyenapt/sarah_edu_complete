@@ -148,6 +148,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get submit => 'Soumettre';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => 'Correct!';
 
   @override

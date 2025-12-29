@@ -147,6 +147,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get submit => '提出';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => '正解です！';
 
   @override

@@ -124,12 +124,29 @@ class FillBlankContent {
       }
     }
 
+    // Parse blanks - hỗ trợ cả format cũ (blanks array) và format mới (correctAnswers array)
+    List<BlankItem> blanksList = [];
+    
+    // Format mới: có correctAnswers array (ưu tiên nếu có cả 2)
+    if (map['correctAnswers'] != null) {
+      final correctAnswers = map['correctAnswers'] as List<dynamic>;
+      for (int i = 0; i < correctAnswers.length; i++) {
+        blanksList.add(BlankItem(
+          position: i,
+          correctAnswer: correctAnswers[i].toString(),
+          hints: [],
+        ));
+      }
+    } else if (map['blanks'] != null) {
+      // Format cũ: có blanks array
+      blanksList = (map['blanks'] as List<dynamic>)
+          .map((e) => BlankItem.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
     return FillBlankContent(
       text: textValue,
-      blanks: (map['blanks'] as List<dynamic>?)
-              ?.map((e) => BlankItem.fromMap(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      blanks: blanksList,
     );
   }
 
@@ -430,6 +447,10 @@ class GroupQuestion {
       case ExerciseType.singleChoice:
       case ExerciseType.multipleChoice:
         content = ChoiceContent.fromMap(map['content'] ?? {});
+        break;
+      case ExerciseType.fillBlank:
+        final contentData = map['content'] ?? {};
+        content = FillBlankContent.fromMap(contentData);
         break;
       default:
         content = null;

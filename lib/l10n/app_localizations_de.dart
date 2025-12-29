@@ -148,6 +148,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Einreichen';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => 'Richtig!';
 
   @override

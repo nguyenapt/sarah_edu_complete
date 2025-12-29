@@ -147,6 +147,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
+  String get continueText => 'Continue';
+
+  @override
   String get correct => 'Correct!';
 
   @override

@@ -147,6 +147,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get submit => 'Nộp bài';
 
   @override
+  String get continueText => 'Tiếp tục';
+
+  @override
   String get correct => 'Chính xác!';
 
   @override
