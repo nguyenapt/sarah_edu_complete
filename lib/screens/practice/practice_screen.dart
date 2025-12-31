@@ -6,11 +6,13 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../core/services/firestore_service.dart';
+import '../../core/services/next_exercise_service.dart';
 import '../../models/unit_model.dart';
 import '../../models/level_model.dart';
 import '../../models/progress_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../learning/unit_list_screen.dart';
+import '../learning/exercise_screen.dart';
 
 class PracticeScreen extends StatefulWidget {
   const PracticeScreen({super.key});
@@ -21,6 +23,7 @@ class PracticeScreen extends StatefulWidget {
 
 class _PracticeScreenState extends State<PracticeScreen> {
   final FirestoreService _firestoreService = FirestoreService();
+  final NextExerciseService _nextExerciseService = NextExerciseService();
   final ScrollController _scrollController = ScrollController();
   Map<String, GlobalKey> _unitKeys = {};
   
@@ -188,23 +191,25 @@ class _PracticeScreenState extends State<PracticeScreen> {
         .toList()
       ..sort((a, b) => a.order.compareTo(b.order));
     
-    final unitIndex = unitsInLevel.indexWhere((u) => u.id == currentUnit!.id);
-    final unitNumber = unitIndex >= 0 ? unitIndex + 1 : 1;
-    
-    // Lấy title của unit
-    final unitTitle = currentUnit.getTitle(languageCode);
-    
-    // Kiểm tra xem title đã có "Unit X:" chưa, nếu có thì chỉ lấy phần sau
-    final unitTitleRegex = RegExp(r'^Unit\s+\d+:\s*(.+)$', caseSensitive: false);
-    final match = unitTitleRegex.firstMatch(unitTitle);
-    
-    if (match != null) {
-      // Title đã có "Unit X:", chỉ lấy phần sau
-      return 'Unit $unitNumber: ${match.group(1)}';
-    } else {
-      // Title chưa có "Unit X:", thêm vào
-      return 'Unit $unitNumber: $unitTitle';
+    return currentUnit.getTitle(languageCode);
+  }
+
+  String _getContinueLearningText() {
+    final highestProgress = _userProgress?.highestProgress;
+    if (highestProgress == null) {
+      return 'Bắt đầu học';
     }
+    
+    // Parse để hiển thị thông tin
+    final parts = highestProgress.exerciseId.split('_');
+    if (parts.length >= 5) {
+      final level = parts[1].toUpperCase();
+      final unit = parts[2];
+      final lesson = parts[3];
+      return 'Level $level - Unit $unit - Lesson $lesson';
+    }
+    
+    return AppLocalizations.of(context)!.continueLearning;
   }
 
   @override
@@ -288,89 +293,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
     return Column(
       children: [
-        // "Tiếp tục học" section
+        // "Học tiếp" section - style giống trang chủ (background màu xanh)
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: InkWell(
-            onTap: () {
-              // Navigate to current unit
-              if (_currentUnitId != null) {
-                final unit = _allUnits.firstWhere(
-                  (u) => u.id == _currentUnitId,
-                  orElse: () => _allUnits.firstWhere(
-                    (u) => u.levelId == currentLevel,
-                    orElse: () => _allUnits.first,
-                  ),
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UnitListScreen(unit: unit),
-                  ),
-                );
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryColor,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: AppTheme.primaryColor,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.continueLearning,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _getCurrentUnitTitle(currentLevel),
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(
-                    Icons.chevron_right,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: _buildContinueLearningCard(currentLevel),
         ),
         // Danh sách units
         Expanded(
@@ -444,19 +370,19 @@ class _PracticeScreenState extends State<PracticeScreen> {
         ..sort((a, b) => a.order.compareTo(b.order));
 
       if (filteredUnits.isEmpty) {
-        return Center(
+    return Center(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
                   Icons.inbox,
                   size: 64,
                   color: Colors.grey[400],
-                ),
+            ),
                 const SizedBox(height: 16),
-                Text(
+            Text(
                   AppLocalizations.of(context)!.noUnits,
                   style: TextStyle(
                     fontSize: 16,
@@ -464,8 +390,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   ),
                 ),
               ],
+                  ),
             ),
-          ),
         );
       }
 
@@ -575,18 +501,18 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 'No units available',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey[600],
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       );
     }
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
       itemCount: sortedLevels.length,
       itemBuilder: (context, index) {
         final level = sortedLevels[index];
@@ -595,8 +521,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
         if (units.isEmpty) return const SizedBox.shrink();
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
             // Units list (không có level header khi chọn "All")
             ...units.map((unit) => _buildUnitCard(
                   unit,
@@ -639,7 +565,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   '${index + 1}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                   ),
                 ),
         ),
@@ -658,9 +584,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
               unit.getDescription(languageCode),
               style: TextStyle(
                 color: isLocked ? Colors.grey : null,
-              ),
-            ),
-            const SizedBox(height: 8),
+                          ),
+                    ),
+                    const SizedBox(height: 8),
             Row(
               children: [
                 Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
@@ -675,17 +601,17 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 const SizedBox(width: 16),
                 Icon(Icons.menu_book, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 4),
-                Text(
+                    Text(
                   AppLocalizations.of(context)!.lessonsCount(unit.lessons.length),
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
           ],
-        ),
+            ),
         trailing: isLocked
             ? Icon(Icons.lock, color: Colors.grey[400])
             : const Icon(Icons.arrow_forward_ios, size: 16),
@@ -705,15 +631,145 @@ class _PracticeScreenState extends State<PracticeScreen> {
     );
   }
 
+  // Continue learning card - style giống trang chủ (background màu xanh)
+  Widget _buildContinueLearningCard(String currentLevel) {
+    return Card(
+      margin: EdgeInsets.zero,
+      color: AppTheme.primaryColor,
+      child: InkWell(
+        onTap: () async {
+          // Hiển thị loading
+          if (mounted) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+          try {
+            // Lấy highestProgress
+            final highestProgress = _userProgress?.highestProgress;
+            
+            // Tìm exercise tiếp theo
+            final nextExercise = highestProgress != null
+                ? await _nextExerciseService.getNextExercise(highestProgress)
+                : await _nextExerciseService.getFirstExercise();
+
+            if (mounted) {
+              Navigator.pop(context); // Đóng loading dialog
+
+              if (nextExercise != null) {
+                // Navigate to exercise
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseScreen(exercise: nextExercise),
+                  ),
+                );
+              } else {
+                // Đã học hết hoặc không tìm thấy, fallback về unit
+                if (_currentUnitId != null) {
+                  final unit = _allUnits.firstWhere(
+                    (u) => u.id == _currentUnitId,
+                    orElse: () => _allUnits.firstWhere(
+                      (u) => u.levelId == currentLevel,
+                      orElse: () => _allUnits.first,
+                    ),
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UnitListScreen(unit: unit),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Bạn đã hoàn thành tất cả bài học!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              }
+            }
+          } catch (e) {
+            if (mounted) {
+              Navigator.pop(context); // Đóng loading dialog
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Lỗi: $e'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          }
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.play_circle_filled,
+                color: Colors.white,
+                size: 48,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+        child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                      'Học tiếp',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+                    const SizedBox(height: 4),
+            Text(
+                      _getContinueLearningText(),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // Unit card
   Widget _buildUnitCard(UnitModel unit, bool isHighlighted) {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final levelColor = AppTheme.levelColors[unit.levelId] ?? AppTheme.primaryColor;
     
     return Card(
       key: _unitKeys[unit.id],
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: isHighlighted ? 4 : 2,
-      color: isHighlighted ? AppTheme.primaryColor.withOpacity(0.05) : null,
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: isHighlighted ? 6 : 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: isHighlighted 
+            ? BorderSide(color: levelColor.withOpacity(0.3), width: 2)
+            : BorderSide.none,
+            ),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -723,122 +779,203 @@ class _PracticeScreenState extends State<PracticeScreen> {
             ),
           );
         },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppTheme.levelColors[unit.levelId]?.withOpacity(0.1) ??
-                      AppTheme.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    unit.levelId,
-                    style: TextStyle(
-                      color: AppTheme.levelColors[unit.levelId] ?? AppTheme.primaryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: isHighlighted
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      levelColor.withOpacity(0.08),
+                      levelColor.withOpacity(0.03),
+                    ],
+                  )
+                : null,
+          ),
+              child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Level badge với gradient
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        levelColor,
+                        levelColor.withOpacity(0.8),
+                      ],
                     ),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: levelColor.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      unit.getTitle(languageCode),
+                  child: Center(
+                    child: Text(
+                      unit.levelId,
                       style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (unit.getDescription(languageCode).isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        unit.getDescription(languageCode),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        unit.getTitle(languageCode),
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.book,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            '${unit.lessons.length} ${AppLocalizations.of(context)!.lessons}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                          fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          color: isHighlighted ? levelColor : null,
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            '${unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                    ),
+                      if (unit.getDescription(languageCode).isNotEmpty) ...[
+                        const SizedBox(height: 6),
+                    Text(
+                          unit.getDescription(languageCode),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                            height: 1.4,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: levelColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: levelColor.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.menu_book,
+                                  size: 14,
+                                  color: levelColor,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${unit.lessons.length} ${AppLocalizations.of(context)!.lessons}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: levelColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: levelColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: levelColor.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.access_time,
+                                  size: 14,
+                                  color: levelColor,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: levelColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              const SizedBox(width: 12),
+              // Continue learning badge nếu highlighted
+              if (isHighlighted)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        levelColor,
+                        levelColor.withOpacity(0.8),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: levelColor.withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Học tiếp',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ],
                 ),
               ),
-              if (isHighlighted)
-                Flexible(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.continueLearning,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey,
-              ),
-            ],
+              Icon(
+                Icons.chevron_right,
+                size: 24,
+                color: isHighlighted ? levelColor : Colors.grey[400],
+            ),
+          ],
           ),
+        ),
         ),
       ),
     );

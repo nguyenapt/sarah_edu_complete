@@ -9,6 +9,7 @@ class UnitModel {
   final int estimatedTime; // minutes
   final List<String> lessons;
   final List<String> prerequisites; // Unit IDs cần hoàn thành trước
+  final String? group; // THÊM MỚI
 
   UnitModel({
     required this.id,
@@ -19,6 +20,7 @@ class UnitModel {
     required this.estimatedTime,
     this.lessons = const [],
     this.prerequisites = const [],
+    this.group, // THÊM MỚI
   });
 
   /// Get title theo language code
@@ -60,6 +62,7 @@ class UnitModel {
       estimatedTime: data['estimatedTime'] ?? 0,
       lessons: List<String>.from(data['lessons'] ?? []),
       prerequisites: List<String>.from(data['prerequisites'] ?? []),
+      group: data['group'], // THÊM MỚI
     );
   }
 
@@ -72,6 +75,7 @@ class UnitModel {
       'estimatedTime': estimatedTime,
       'lessons': lessons,
       'prerequisites': prerequisites,
+      'group': group, // THÊM MỚI
     };
   }
 }

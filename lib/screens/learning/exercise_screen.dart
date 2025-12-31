@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../models/exercise_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+import '../../core/services/firestore_service.dart';
 import '../auth/login_screen.dart';
 
 class ExerciseScreen extends StatefulWidget {
@@ -36,6 +37,16 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   // Cho groupQuestions - chỉ hiển thị 1 question tại một thời điểm
   int _currentGroupQuestionIndex = 0;
   Map<int, bool> _questionResults = {}; // Map<questionIndex, isCorrect> - lưu kết quả từng question
+  
+  // Tracking time spent
+  DateTime? _startTime;
+  final FirestoreService _firestoreService = FirestoreService();
+
+  @override
+  void initState() {
+    super.initState();
+    _startTime = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +59,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Question
+            // Question - chỉ hiển thị cho các loại không phải button_single_choice và fill_blank
+            // Kiểm tra cả standalone và groupQuestions
+            if (_shouldShowExerciseInfo())
             Card(
-              margin: EdgeInsets.zero,
+                margin: EdgeInsets.zero,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -102,6 +115,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                 ),
               ),
             ),
+            if (_shouldShowExerciseInfo())
             const SizedBox(height: 24),
 
             // Answer Section based on type
@@ -146,6 +160,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       controller.dispose();
     }
     super.dispose();
+  }
+
+  /// Kiểm tra xem có nên hiển thị section thông tin exercise không
+  /// Bỏ section này cho button_single_choice và fill_blank
+  bool _shouldShowExerciseInfo() {
+    // Nếu có groupQuestions, kiểm tra type của question đầu tiên
+    if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
+      final firstQuestion = widget.exercise.groupQuestions![0];
+      return firstQuestion.type != ExerciseType.buttonSingleChoice && 
+             firstQuestion.type != ExerciseType.fillBlank;
+    }
+    
+    // Nếu không có groupQuestions, kiểm tra type của exercise
+    return widget.exercise.type != ExerciseType.buttonSingleChoice && 
+           widget.exercise.type != ExerciseType.fillBlank;
   }
 
   Widget _buildAnswerSection() {
@@ -223,7 +252,75 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   void _goToNextQuestion() {
     // Check và lưu kết quả question hiện tại trước khi chuyển
     final currentQuestion = widget.exercise.groupQuestions![_currentGroupQuestionIndex];
+    
+    // Log câu hỏi và đáp án user đã chọn
+    print('=== TIẾP TỤC - Question ${_currentGroupQuestionIndex + 1} ===');
+    print('Question: ${currentQuestion.question}');
+    print('Type: ${currentQuestion.type}');
+    
+    if (currentQuestion.type == ExerciseType.fillBlank) {
+      final regex = RegExp(r'\{(\d+)\}');
+      final matches = regex.allMatches(currentQuestion.question);
+      final placeholderIndices = matches.map((m) => int.parse(m.group(1)!)).toList();
+      
+      print('Placeholder indices: $placeholderIndices');
+      for (final placeholderIndex in placeholderIndices) {
+        final key = _currentGroupQuestionIndex * 1000 + placeholderIndex;
+        final userAnswer = _fillBlankAnswers[key];
+        print('  Placeholder {${placeholderIndex}}: User answer = "$userAnswer"');
+      }
+      
+      // Log correct answers
+      Map<int, String> correctAnswersMap = {};
+      if (currentQuestion.content is FillBlankContent) {
+        final content = currentQuestion.content as FillBlankContent;
+        final regex2 = RegExp(r'\{(\d+)\}');
+        final matches2 = regex2.allMatches(currentQuestion.question);
+        final placeholderIndices2 = matches2.map((m) => int.parse(m.group(1)!)).toList();
+        if (content.blanks.isNotEmpty) {
+          final sortedBlanks = List<BlankItem>.from(content.blanks);
+          sortedBlanks.sort((a, b) => a.position.compareTo(b.position));
+          for (int idx = 0; idx < placeholderIndices2.length && idx < sortedBlanks.length; idx++) {
+            final placeholderIndex = placeholderIndices2[idx];
+            correctAnswersMap[placeholderIndex] = sortedBlanks[idx].correctAnswer;
+          }
+        }
+      } else if (currentQuestion.content is Map) {
+        final contentMap = currentQuestion.content as Map<String, dynamic>;
+        if (contentMap['correctAnswers'] != null) {
+          final answers = contentMap['correctAnswers'] as List<dynamic>;
+          final regex2 = RegExp(r'\{(\d+)\}');
+          final matches2 = regex2.allMatches(currentQuestion.question);
+          final placeholderIndices2 = matches2.map((m) => int.parse(m.group(1)!)).toList();
+          for (int idx = 0; idx < placeholderIndices2.length && idx < answers.length; idx++) {
+            correctAnswersMap[placeholderIndices2[idx]] = answers[idx].toString();
+          }
+        }
+      }
+      print('Correct answers map: $correctAnswersMap');
+      for (final entry in correctAnswersMap.entries) {
+        print('  Placeholder {${entry.key}}: Correct answer = "${entry.value}"');
+      }
+    } else if (currentQuestion.type == ExerciseType.buttonSingleChoice) {
+      final content = currentQuestion.content as ButtonSingleChoiceContent;
+      final placeholderCount = _countPlaceholders(currentQuestion.question);
+      final userAnswers = <String>[];
+      for (int j = 0; j < placeholderCount; j++) {
+        final key = _currentGroupQuestionIndex * 1000 + j;
+        final answer = _selectedAnswers[key];
+        if (answer != null) {
+          userAnswers.add(answer);
+        }
+        print('  Placeholder $j: User answer = "${answer ?? "null"}"');
+      }
+      print('User answers: $userAnswers');
+      print('Correct answers: ${content.correctAnswers}');
+    }
+    
     final isCorrect = _checkQuestionAnswer(currentQuestion, _currentGroupQuestionIndex);
+    print('Result: ${isCorrect ? "ĐÚNG" : "SAI"}');
+    print('==========================================\n');
+    
     _questionResults[_currentGroupQuestionIndex] = isCorrect;
     
     if (_currentGroupQuestionIndex < widget.exercise.groupQuestions!.length - 1) {
@@ -974,13 +1071,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           (widget.exercise.groupQuestions != null && 
            _questionResults.containsKey(groupIndex)));
       final correctAnswer = correctAnswersMap[placeholderIndex] ?? '';
-      // Nếu question đã được check, lấy kết quả từ _questionResults
-      final questionIsCorrect = widget.exercise.groupQuestions != null && 
-          _questionResults.containsKey(groupIndex)
-          ? _questionResults[groupIndex]!
-          : (isSubmitted && userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase());
-      final isCorrect = isSubmitted && questionIsCorrect;
-      final isWrong = isSubmitted && userAnswer.isNotEmpty && !questionIsCorrect;
+      // Check từng placeholder riêng biệt (không dùng kết quả của toàn bộ câu hỏi)
+      final isCorrect = isSubmitted && userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase();
+      final isWrong = isSubmitted && userAnswer.isNotEmpty && !isCorrect;
       
       widgets.add(Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -1057,29 +1150,106 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
     // Nếu có groupQuestions
     if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
+      print('=== SUBMIT - Tất cả questions ===');
+      
       // Check question cuối cùng (question hiện tại) nếu chưa check
       final lastQuestionIndex = widget.exercise.groupQuestions!.length - 1;
       if (!_questionResults.containsKey(lastQuestionIndex)) {
         final lastQuestion = widget.exercise.groupQuestions![lastQuestionIndex];
+        
+        // Log question cuối cùng
+        print('Question ${lastQuestionIndex + 1} (chưa check):');
+        print('  Question: ${lastQuestion.question}');
+        print('  Type: ${lastQuestion.type}');
+        
+        if (lastQuestion.type == ExerciseType.fillBlank) {
+          final regex = RegExp(r'\{(\d+)\}');
+          final matches = regex.allMatches(lastQuestion.question);
+          final placeholderIndices = matches.map((m) => int.parse(m.group(1)!)).toList();
+          
+          // Lấy correct answers
+          Map<int, String> correctAnswersMap = {};
+          if (lastQuestion.content is FillBlankContent) {
+            final content = lastQuestion.content as FillBlankContent;
+            final regex2 = RegExp(r'\{(\d+)\}');
+            final matches2 = regex2.allMatches(lastQuestion.question);
+            final placeholderIndices2 = matches2.map((m) => int.parse(m.group(1)!)).toList();
+            if (content.blanks.isNotEmpty) {
+              final sortedBlanks = List<BlankItem>.from(content.blanks);
+              sortedBlanks.sort((a, b) => a.position.compareTo(b.position));
+              for (int idx = 0; idx < placeholderIndices2.length && idx < sortedBlanks.length; idx++) {
+                final placeholderIndex = placeholderIndices2[idx];
+                correctAnswersMap[placeholderIndex] = sortedBlanks[idx].correctAnswer;
+              }
+            }
+          } else if (lastQuestion.content is Map) {
+            final contentMap = lastQuestion.content as Map<String, dynamic>;
+            if (contentMap['correctAnswers'] != null) {
+              final answers = contentMap['correctAnswers'] as List<dynamic>;
+              final regex2 = RegExp(r'\{(\d+)\}');
+              final matches2 = regex2.allMatches(lastQuestion.question);
+              final placeholderIndices2 = matches2.map((m) => int.parse(m.group(1)!)).toList();
+              for (int idx = 0; idx < placeholderIndices2.length && idx < answers.length; idx++) {
+                correctAnswersMap[placeholderIndices2[idx]] = answers[idx].toString();
+              }
+            }
+          }
+          
+          for (final placeholderIndex in placeholderIndices) {
+            final key = lastQuestionIndex * 1000 + placeholderIndex;
+            final userAnswer = _fillBlankAnswers[key];
+            final correctAnswer = correctAnswersMap[placeholderIndex];
+            print('    Placeholder {${placeholderIndex}}: User answer = "$userAnswer", Correct answer = "$correctAnswer"');
+          }
+        } else if (lastQuestion.type == ExerciseType.buttonSingleChoice) {
+          final content = lastQuestion.content as ButtonSingleChoiceContent;
+          final placeholderCount = _countPlaceholders(lastQuestion.question);
+          for (int j = 0; j < placeholderCount; j++) {
+            final key = lastQuestionIndex * 1000 + j;
+            final answer = _selectedAnswers[key];
+            final correctAnswer = j < content.correctAnswers.length ? content.correctAnswers[j] : null;
+            print('    Placeholder $j: User answer = "${answer ?? "null"}", Correct answer = "$correctAnswer"');
+          }
+        }
+        
         final lastQuestionCorrect = _checkQuestionAnswer(lastQuestion, lastQuestionIndex);
+        print('  Result: ${lastQuestionCorrect ? "ĐÚNG" : "SAI"}');
         _questionResults[lastQuestionIndex] = lastQuestionCorrect;
+      }
+      
+      // Log tất cả questions
+      for (int i = 0; i < widget.exercise.groupQuestions!.length; i++) {
+        final question = widget.exercise.groupQuestions![i];
+        print('Question ${i + 1}: ${question.question}');
+        print('  Result: ${_questionResults[i] == true ? "ĐÚNG" : "SAI"}');
       }
       
       // Tổng hợp kết quả: tất cả questions phải đúng
       isCorrect = _questionResults.values.every((result) => result == true) && 
                   _questionResults.length == widget.exercise.groupQuestions!.length;
+      
+      print('Tổng hợp: ${isCorrect ? "ĐÚNG" : "SAI"}');
+      print('==========================================\n');
     } else {
-      switch (widget.exercise.type) {
-        case ExerciseType.singleChoice:
-          final content = widget.exercise.content as ChoiceContent;
-          isCorrect = content.correctAnswers.contains(_selectedAnswer);
-          break;
-        case ExerciseType.multipleChoice:
-          final content = widget.exercise.content as ChoiceContent;
-          final selected = _selectedAnswer as List<String>? ?? [];
-          isCorrect = selected.length == content.correctAnswers.length &&
-              selected.every((answer) => content.correctAnswers.contains(answer));
-          break;
+      print('=== SUBMIT - Standalone exercise ===');
+      print('Question: ${widget.exercise.question}');
+      print('Type: ${widget.exercise.type}');
+
+    switch (widget.exercise.type) {
+      case ExerciseType.singleChoice:
+        final content = widget.exercise.content as ChoiceContent;
+          print('User answer: $_selectedAnswer');
+          print('Correct answers: ${content.correctAnswers}');
+        isCorrect = content.correctAnswers.contains(_selectedAnswer);
+        break;
+      case ExerciseType.multipleChoice:
+        final content = widget.exercise.content as ChoiceContent;
+        final selected = _selectedAnswer as List<String>? ?? [];
+          print('User answers: $selected');
+          print('Correct answers: ${content.correctAnswers}');
+        isCorrect = selected.length == content.correctAnswers.length &&
+            selected.every((answer) => content.correctAnswers.contains(answer));
+        break;
         case ExerciseType.fillBlank:
           final content = widget.exercise.content as FillBlankContent;
           // Tạo map từ position -> correctAnswer
@@ -1092,6 +1262,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           final regex = RegExp(r'\{(\d+)\}');
           final matches = regex.allMatches(widget.exercise.question);
           final placeholderIndices = matches.map((m) => int.parse(m.group(1)!)).toList();
+          
+          print('Placeholder indices: $placeholderIndices');
+          for (final placeholderIndex in placeholderIndices) {
+            final key = 0 * 1000 + placeholderIndex; // groupIndex = 0 for standalone
+            final userAnswer = _fillBlankAnswers[key];
+            final correctAnswer = correctAnswersMap[placeholderIndex];
+            print('  Placeholder {${placeholderIndex}}: User = "$userAnswer", Correct = "$correctAnswer"');
+          }
           
           if (placeholderIndices.length != correctAnswersMap.length) {
             isCorrect = false;
@@ -1118,7 +1296,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             if (answer != null) {
               userAnswers.add(answer);
             }
+            print('  Placeholder $i: User answer = "${answer ?? "null"}"');
           }
+          print('User answers: $userAnswers');
+          print('Correct answers: ${content.correctAnswers}');
           // So sánh theo thứ tự
           if (userAnswers.length != content.correctAnswers.length) {
             isCorrect = false;
@@ -1132,9 +1313,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             }
           }
           break;
-        default:
-          isCorrect = false;
+      default:
+        isCorrect = false;
       }
+      
+      print('Result: ${isCorrect ? "ĐÚNG" : "SAI"}');
+      print('==========================================\n');
     }
 
     setState(() {
@@ -1142,9 +1326,59 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       _isCorrect = isCorrect;
     });
 
-    // Kiểm tra auth state và hiển thị thông báo nếu chưa đăng nhập
+    // Kiểm tra auth state và lưu progress nếu đã đăng nhập
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (!authProvider.isAuthenticated && mounted) {
+    print('=== SAVE PROGRESS DEBUG ===');
+    print('isAuthenticated: ${authProvider.isAuthenticated}');
+    print('user: ${authProvider.user}');
+    print('user.id: ${authProvider.user?.id}');
+    
+    if (authProvider.isAuthenticated && authProvider.user != null) {
+      // Tính time spent
+      final timeSpent = _startTime != null 
+          ? DateTime.now().difference(_startTime!).inSeconds 
+          : 0;
+      
+      print('Saving progress for user: ${authProvider.user!.id}');
+      print('Exercise: ${widget.exercise.id}');
+      print('isCorrect: $isCorrect');
+      print('timeSpent: $timeSpent seconds');
+      
+      // Lưu progress lên Firestore (async, không block UI)
+      _firestoreService.saveExerciseProgress(
+        authProvider.user!.id,
+        widget.exercise,
+        isCorrect,
+        timeSpent,
+      ).then((_) {
+        print('✅ Progress saved successfully!');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Đã lưu tiến trình học tập'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }).catchError((error) {
+        // Log error nhưng không block UI
+        print('❌ Error saving exercise progress: $error');
+        print('Error stack trace: ${StackTrace.current}');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Lỗi khi lưu tiến trình: $error'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      });
+    } else {
+      print('⚠️ User not authenticated, skipping save');
+      if (mounted) {
+        // Hiển thị thông báo nếu chưa đăng nhập
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.loginToSync),
@@ -1164,6 +1398,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           duration: const Duration(seconds: 4),
         ),
       );
+      }
     }
   }
 

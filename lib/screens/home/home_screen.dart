@@ -6,11 +6,13 @@ import '../../core/constants/app_constants.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/firestore_service.dart';
+import '../../core/services/next_exercise_service.dart';
 import '../../models/level_model.dart';
 import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../learning/level_selection_screen.dart';
+import '../learning/exercise_screen.dart';
 import '../auth/login_screen.dart';
 import '../placement/placement_test_screen.dart';
 
@@ -23,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirestoreService _firestoreService = FirestoreService();
+  final NextExerciseService _nextExerciseService = NextExerciseService();
   List<LevelModel> _levels = [];
   bool _isLoading = true;
   UserProgressModel? _userProgress;
@@ -306,35 +309,98 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: AppTheme.primaryColor),
-          const SizedBox(width: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+      children: [
+        Icon(icon, color: AppTheme.primaryColor),
+        const SizedBox(width: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
           const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
     );
   }
 
   Widget _buildContinueLearning() {
+    // Lấy highestProgress để hiển thị thông tin
+    final highestProgress = _userProgress?.highestProgress;
+    String displayText = 'Bắt đầu học';
+    
+    if (highestProgress != null) {
+      // Parse để hiển thị thông tin
+      final parts = highestProgress.exerciseId.split('_');
+      if (parts.length >= 5) {
+        final level = parts[1].toUpperCase();
+        final unit = parts[2];
+        final lesson = parts[3];
+        displayText = 'Level $level - Unit $unit - Lesson $lesson';
+      }
+    }
+
     return Card(
       color: AppTheme.primaryColor,
       child: InkWell(
-        onTap: () {
-          // Navigate to current lesson
+        onTap: () async {
+          // Hiển thị loading
+          if (mounted) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          try {
+            // Tìm exercise tiếp theo
+            final nextExercise = highestProgress != null
+                ? await _nextExerciseService.getNextExercise(highestProgress)
+                : await _nextExerciseService.getFirstExercise();
+
+            if (mounted) {
+              Navigator.pop(context); // Đóng loading dialog
+
+              if (nextExercise != null) {
+                // Navigate to exercise
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseScreen(exercise: nextExercise),
+                  ),
+                );
+              } else {
+                // Đã học hết
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Bạn đã hoàn thành tất cả bài học!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            }
+          } catch (e) {
+            if (mounted) {
+              Navigator.pop(context); // Đóng loading dialog
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Lỗi: $e'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -360,11 +426,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Unit 1: Present Simple',
+                      displayText,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 14,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -372,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Icon(Icons.arrow_forward_ios, 
                 color: Colors.white,
                 size: 20,
-              ),
+                ),
             ],
           ),
         ),

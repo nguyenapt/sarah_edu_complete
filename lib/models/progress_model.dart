@@ -30,6 +30,7 @@ class LevelProgress {
 
 class ExerciseHistoryItem {
   final String exerciseId;
+  final String lessonId; // THÊM MỚI
   final String unitId;
   final String level;
   final double score; // 0.0 - 1.0
@@ -39,6 +40,7 @@ class ExerciseHistoryItem {
 
   ExerciseHistoryItem({
     required this.exerciseId,
+    required this.lessonId, // THÊM MỚI
     required this.unitId,
     required this.level,
     required this.score,
@@ -50,6 +52,7 @@ class ExerciseHistoryItem {
   factory ExerciseHistoryItem.fromMap(Map<String, dynamic> map) {
     return ExerciseHistoryItem(
       exerciseId: map['exerciseId'] ?? '',
+      lessonId: map['lessonId'] ?? '', // THÊM MỚI
       unitId: map['unitId'] ?? '',
       level: map['level'] ?? '',
       score: (map['score'] ?? 0.0).toDouble(),
@@ -62,6 +65,7 @@ class ExerciseHistoryItem {
   Map<String, dynamic> toMap() {
     return {
       'exerciseId': exerciseId,
+      'lessonId': lessonId, // THÊM MỚI
       'unitId': unitId,
       'level': level,
       'score': score,
@@ -69,6 +73,58 @@ class ExerciseHistoryItem {
       'timeSpent': timeSpent,
       'mistakes': mistakes,
     };
+  }
+}
+
+class HighestProgress {
+  final String levelId;
+  final String unitId;
+  final String lessonId;
+  final String exerciseId;
+  final DateTime updatedAt;
+
+  HighestProgress({
+    required this.levelId,
+    required this.unitId,
+    required this.lessonId,
+    required this.exerciseId,
+    required this.updatedAt,
+  });
+
+  factory HighestProgress.fromMap(Map<String, dynamic> map) {
+    return HighestProgress(
+      levelId: map['levelId'] ?? '',
+      unitId: map['unitId'] ?? '',
+      lessonId: map['lessonId'] ?? '',
+      exerciseId: map['exerciseId'] ?? '',
+      updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'levelId': levelId,
+      'unitId': unitId,
+      'lessonId': lessonId,
+      'exerciseId': exerciseId,
+      'updatedAt': Timestamp.fromDate(updatedAt),
+    };
+  }
+
+  HighestProgress copyWith({
+    String? levelId,
+    String? unitId,
+    String? lessonId,
+    String? exerciseId,
+    DateTime? updatedAt,
+  }) {
+    return HighestProgress(
+      levelId: levelId ?? this.levelId,
+      unitId: unitId ?? this.unitId,
+      lessonId: lessonId ?? this.lessonId,
+      exerciseId: exerciseId ?? this.exerciseId,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
   }
 }
 
@@ -101,6 +157,7 @@ class UserProgressModel {
   final Map<String, LevelProgress> levelProgress; // Key: levelId
   final WeakPoints weakPoints;
   final List<ExerciseHistoryItem> exerciseHistory;
+  final HighestProgress? highestProgress; // THÊM MỚI
   final DateTime lastUpdated;
 
   UserProgressModel({
@@ -108,6 +165,7 @@ class UserProgressModel {
     this.levelProgress = const {},
     required this.weakPoints,
     this.exerciseHistory = const [],
+    this.highestProgress, // THÊM MỚI
     required this.lastUpdated,
   });
 
@@ -132,11 +190,18 @@ class UserProgressModel {
       );
     }
 
+    // Parse highestProgress
+    HighestProgress? highestProgressData;
+    if (data['highestProgress'] != null) {
+      highestProgressData = HighestProgress.fromMap(data['highestProgress'] as Map<String, dynamic>);
+    }
+
     return UserProgressModel(
       userId: doc.id,
       levelProgress: levelProgressMap,
       weakPoints: WeakPoints.fromMap(data['weakPoints'] ?? {}),
       exerciseHistory: exerciseHistoryList,
+      highestProgress: highestProgressData, // THÊM MỚI
       lastUpdated: (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -152,6 +217,7 @@ class UserProgressModel {
       'levelProgress': levelProgressMap,
       'weakPoints': weakPoints.toMap(),
       'exerciseHistory': exerciseHistory.map((e) => e.toMap()).toList(),
+      'highestProgress': highestProgress?.toMap(), // THÊM MỚI
       'lastUpdated': Timestamp.fromDate(lastUpdated),
     };
   }
@@ -161,6 +227,7 @@ class UserProgressModel {
     Map<String, LevelProgress>? levelProgress,
     WeakPoints? weakPoints,
     List<ExerciseHistoryItem>? exerciseHistory,
+    HighestProgress? highestProgress, // THÊM MỚI
     DateTime? lastUpdated,
   }) {
     return UserProgressModel(
@@ -168,6 +235,7 @@ class UserProgressModel {
       levelProgress: levelProgress ?? this.levelProgress,
       weakPoints: weakPoints ?? this.weakPoints,
       exerciseHistory: exerciseHistory ?? this.exerciseHistory,
+      highestProgress: highestProgress ?? this.highestProgress, // THÊM MỚI
       lastUpdated: lastUpdated ?? this.lastUpdated,
     );
   }
