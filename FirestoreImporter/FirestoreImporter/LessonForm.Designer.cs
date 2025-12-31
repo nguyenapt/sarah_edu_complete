@@ -451,6 +451,7 @@
             btnAddDescription.TabIndex = 15;
             btnAddDescription.Text = "Add";
             btnAddDescription.UseVisualStyleBackColor = true;
+            btnAddDescription.Click += btnAddDescription_Click;
             // 
             // txtLanguageDescriptionValue
             // 
@@ -502,6 +503,7 @@
             btnAddExplanation.TabIndex = 15;
             btnAddExplanation.Text = "Add";
             btnAddExplanation.UseVisualStyleBackColor = true;
+            btnAddExplanation.Click += btnAddExplanation_Click;
             // 
             // txtLanguageValueExplanation
             // 
@@ -561,6 +563,7 @@
             btnAddExample.TabIndex = 18;
             btnAddExample.Text = "Add";
             btnAddExample.UseVisualStyleBackColor = true;
+            btnAddExample.Click += btnAddExample_Click;
             // 
             // grvExample
             // 
@@ -637,6 +640,7 @@
             btnAddHint.TabIndex = 21;
             btnAddHint.Text = "Add";
             btnAddHint.UseVisualStyleBackColor = true;
+            btnAddHint.Click += btnAddHint_Click;
             // 
             // txtHintVaue
             // 
@@ -689,6 +693,7 @@
             btnAddToUsage.TabIndex = 28;
             btnAddToUsage.Text = "Add";
             btnAddToUsage.UseVisualStyleBackColor = true;
+            btnAddToUsage.Click += btnAddToUsage_Click;
             // 
             // grvUsageLanguage
             // 
@@ -706,6 +711,7 @@
             btnAddLanguageUsage.TabIndex = 25;
             btnAddLanguageUsage.Text = "Add";
             btnAddLanguageUsage.UseVisualStyleBackColor = true;
+            btnAddLanguageUsage.Click += btnAddLanguageUsage_Click;
             // 
             // txtUsageExample
             // 

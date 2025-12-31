@@ -287,14 +287,14 @@ public partial class Form1 : Form
 
     private void BtnCreateLesson_Click(object? sender, EventArgs e)
     {
-        using var form = new CreateLessonForm();
+        using var form = new LessonForm();
         if (form.ShowDialog() == DialogResult.OK)
         {
-            var json = form.GetJson();
-            if (!string.IsNullOrEmpty(json))
-            {
-                SetJsonContent(json);
-            }
+            //var json = form.GetJson();
+            //if (!string.IsNullOrEmpty(json))
+            //{
+            //    SetJsonContent(json);
+            //}
         }
     }
 
