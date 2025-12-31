@@ -60,6 +60,19 @@ namespace FirestoreImporter
             // Setup grvTitle
             grvTitle.AutoGenerateColumns = false;
             grvTitle.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumnTitle = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvTitle.Columns.Add(deleteColumnTitle);
+            
             grvTitle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -73,18 +86,31 @@ namespace FirestoreImporter
                 Name = "colValue",
                 HeaderText = "Value",
                 DataPropertyName = "Value",
-                Width = 550,
+                Width = 490,
                 ReadOnly = true
             });
             grvTitle.AllowUserToAddRows = false;
-            grvTitle.AllowUserToDeleteRows = true;
+            grvTitle.AllowUserToDeleteRows = false;
             grvTitle.ReadOnly = true;
             grvTitle.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvTitle.UserDeletingRow += GrvTitle_UserDeletingRow;
+            grvTitle.CellContentClick += GrvTitle_CellContentClick;
 
             // Setup grvDescription
             grvDescription.AutoGenerateColumns = false;
             grvDescription.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumnDescription = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvDescription.Columns.Add(deleteColumnDescription);
+            
             grvDescription.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -98,29 +124,37 @@ namespace FirestoreImporter
                 Name = "colValue",
                 HeaderText = "Value",
                 DataPropertyName = "Value",
-                Width = 550,
+                Width = 490,
                 ReadOnly = true
             });
             grvDescription.AllowUserToAddRows = false;
-            grvDescription.AllowUserToDeleteRows = true;
+            grvDescription.AllowUserToDeleteRows = false;
             grvDescription.ReadOnly = true;
             grvDescription.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvDescription.UserDeletingRow += GrvDescription_UserDeletingRow;
+            grvDescription.CellContentClick += GrvDescription_CellContentClick;
         }
 
-        private void GrvTitle_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvTitle_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is KeyValuePair<string, string> kvp)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                _titleDictionary.Remove(kvp.Key);
+                if (grvTitle.Rows[e.RowIndex].DataBoundItem is KeyValuePair<string, string> kvp)
+                {
+                    _titleDictionary.Remove(kvp.Key);
+                    RefreshTitleGrid();
+                }
             }
         }
 
-        private void GrvDescription_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvDescription_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is KeyValuePair<string, string> kvp)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                _descriptionDictionary.Remove(kvp.Key);
+                if (grvDescription.Rows[e.RowIndex].DataBoundItem is KeyValuePair<string, string> kvp)
+                {
+                    _descriptionDictionary.Remove(kvp.Key);
+                    RefreshDescriptionGrid();
+                }
             }
         }
 

@@ -101,6 +101,19 @@ namespace FirestoreImporter
         {
             grvTitle.AutoGenerateColumns = false;
             grvTitle.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvTitle.Columns.Add(deleteColumn);
+            
             grvTitle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -114,20 +127,33 @@ namespace FirestoreImporter
                 Name = "colValue",
                 HeaderText = "Value",
                 DataPropertyName = "Value",
-                Width = 550,
+                Width = 490,
                 ReadOnly = true
             });
             grvTitle.AllowUserToAddRows = false;
-            grvTitle.AllowUserToDeleteRows = true;
+            grvTitle.AllowUserToDeleteRows = false;
             grvTitle.ReadOnly = true;
             grvTitle.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvTitle.UserDeletingRow += GrvTitle_UserDeletingRow;
+            grvTitle.CellContentClick += GrvTitle_CellContentClick;
         }
 
         private void SetupDescriptionGrid()
         {
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            dataGridView1.Columns.Add(deleteColumn);
+            
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -141,20 +167,33 @@ namespace FirestoreImporter
                 Name = "colValue",
                 HeaderText = "Value",
                 DataPropertyName = "Value",
-                Width = 550,
+                Width = 490,
                 ReadOnly = true
             });
             dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = true;
+            dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ReadOnly = true;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.UserDeletingRow += GrvDescription_UserDeletingRow;
+            dataGridView1.CellContentClick += GrvDescription_CellContentClick;
         }
 
         private void SetupExplanationGrid()
         {
             grvExplanation.AutoGenerateColumns = false;
             grvExplanation.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvExplanation.Columns.Add(deleteColumn);
+            
             grvExplanation.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -168,20 +207,33 @@ namespace FirestoreImporter
                 Name = "colValue",
                 HeaderText = "Value",
                 DataPropertyName = "Value",
-                Width = 500,
+                Width = 440,
                 ReadOnly = true
             });
             grvExplanation.AllowUserToAddRows = false;
-            grvExplanation.AllowUserToDeleteRows = true;
+            grvExplanation.AllowUserToDeleteRows = false;
             grvExplanation.ReadOnly = true;
             grvExplanation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvExplanation.UserDeletingRow += GrvExplanation_UserDeletingRow;
+            grvExplanation.CellContentClick += GrvExplanation_CellContentClick;
         }
 
         private void SetupExampleGrid()
         {
             grvExample.AutoGenerateColumns = false;
             grvExample.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvExample.Columns.Add(deleteColumn);
+            
             grvExample.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colIndex",
@@ -195,7 +247,7 @@ namespace FirestoreImporter
                 Name = "colSentence",
                 HeaderText = "Sentence",
                 DataPropertyName = "Sentence",
-                Width = 400,
+                Width = 350,
                 ReadOnly = true
             });
             grvExample.Columns.Add(new DataGridViewTextBoxColumn
@@ -207,16 +259,29 @@ namespace FirestoreImporter
                 ReadOnly = true
             });
             grvExample.AllowUserToAddRows = false;
-            grvExample.AllowUserToDeleteRows = true;
+            grvExample.AllowUserToDeleteRows = false;
             grvExample.ReadOnly = true;
             grvExample.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvExample.UserDeletingRow += GrvExample_UserDeletingRow;
+            grvExample.CellContentClick += GrvExample_CellContentClick;
         }
 
         private void SetupHintGrid()
         {
             grvHint.AutoGenerateColumns = false;
             grvHint.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvHint.Columns.Add(deleteColumn);
+            
             grvHint.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -230,20 +295,33 @@ namespace FirestoreImporter
                 Name = "colHints",
                 HeaderText = "Hints",
                 DataPropertyName = "Hints",
-                Width = 550,
+                Width = 490,
                 ReadOnly = true
             });
             grvHint.AllowUserToAddRows = false;
-            grvHint.AllowUserToDeleteRows = true;
+            grvHint.AllowUserToDeleteRows = false;
             grvHint.ReadOnly = true;
             grvHint.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvHint.UserDeletingRow += GrvHint_UserDeletingRow;
+            grvHint.CellContentClick += GrvHint_CellContentClick;
         }
 
         private void SetupUsageLanguageGrid()
         {
             grvUsageLanguage.AutoGenerateColumns = false;
             grvUsageLanguage.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvUsageLanguage.Columns.Add(deleteColumn);
+            
             grvUsageLanguage.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -257,7 +335,7 @@ namespace FirestoreImporter
                 Name = "colTitle",
                 HeaderText = "Title",
                 DataPropertyName = "Title",
-                Width = 250,
+                Width = 200,
                 ReadOnly = true
             });
             grvUsageLanguage.Columns.Add(new DataGridViewTextBoxColumn
@@ -265,20 +343,33 @@ namespace FirestoreImporter
                 Name = "colExample",
                 HeaderText = "Example",
                 DataPropertyName = "Example",
-                Width = 300,
+                Width = 290,
                 ReadOnly = true
             });
             grvUsageLanguage.AllowUserToAddRows = false;
-            grvUsageLanguage.AllowUserToDeleteRows = true;
+            grvUsageLanguage.AllowUserToDeleteRows = false;
             grvUsageLanguage.ReadOnly = true;
             grvUsageLanguage.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvUsageLanguage.UserDeletingRow += GrvUsageLanguage_UserDeletingRow;
+            grvUsageLanguage.CellContentClick += GrvUsageLanguage_CellContentClick;
         }
 
         private void SetupUsageGrid()
         {
             grvUsage.AutoGenerateColumns = false;
             grvUsage.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvUsage.Columns.Add(deleteColumn);
+            
             grvUsage.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colIndex",
@@ -292,14 +383,14 @@ namespace FirestoreImporter
                 Name = "colUsage",
                 HeaderText = "Usage",
                 DataPropertyName = "Usage",
-                Width = 650,
+                Width = 590,
                 ReadOnly = true
             });
             grvUsage.AllowUserToAddRows = false;
-            grvUsage.AllowUserToDeleteRows = true;
+            grvUsage.AllowUserToDeleteRows = false;
             grvUsage.ReadOnly = true;
             grvUsage.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grvUsage.UserDeletingRow += GrvUsage_UserDeletingRow;
+            grvUsage.CellContentClick += GrvUsage_CellContentClick;
         }
 
         // Helper classes để bind vào DataGridView
@@ -329,11 +420,15 @@ namespace FirestoreImporter
             public string Usage { get; set; } = string.Empty;
         }
 
-        private void GrvTitle_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvTitle_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is KeyValuePair<string, string> kvp)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                _titleDictionary.Remove(kvp.Key);
+                if (grvTitle.Rows[e.RowIndex].DataBoundItem is KeyValuePair<string, string> kvp)
+                {
+                    _titleDictionary.Remove(kvp.Key);
+                    RefreshTitleGrid();
+                }
             }
         }
 
@@ -355,11 +450,15 @@ namespace FirestoreImporter
             }
         }
 
-        private void GrvDescription_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvDescription_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is KeyValuePair<string, string> kvp)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                _theoryDescriptionDictionary.Remove(kvp.Key);
+                if (dataGridView1.Rows[e.RowIndex].DataBoundItem is KeyValuePair<string, string> kvp)
+                {
+                    _theoryDescriptionDictionary.Remove(kvp.Key);
+                    RefreshDescriptionGrid();
+                }
             }
         }
 
@@ -372,11 +471,15 @@ namespace FirestoreImporter
             }
         }
 
-        private void GrvExplanation_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvExplanation_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is KeyValuePair<string, string> kvp)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                _currentExampleExplanationDictionary.Remove(kvp.Key);
+                if (grvExplanation.Rows[e.RowIndex].DataBoundItem is KeyValuePair<string, string> kvp)
+                {
+                    _currentExampleExplanationDictionary.Remove(kvp.Key);
+                    RefreshExplanationGrid();
+                }
             }
         }
 
@@ -397,15 +500,18 @@ namespace FirestoreImporter
             }
         }
 
-        private void GrvExample_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvExample_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is ExampleGridItem item)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                int index = item.Index - 1;
-                if (index >= 0 && index < _examples.Count)
+                if (grvExample.Rows[e.RowIndex].DataBoundItem is ExampleGridItem item)
                 {
-                    _examples.RemoveAt(index);
-                    RefreshExampleGrid();
+                    int index = item.Index - 1;
+                    if (index >= 0 && index < _examples.Count)
+                    {
+                        _examples.RemoveAt(index);
+                        RefreshExampleGrid();
+                    }
                 }
             }
         }
@@ -424,11 +530,15 @@ namespace FirestoreImporter
             }
         }
 
-        private void GrvHint_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvHint_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is HintGridItem item)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                _hintsDictionary.Remove(item.LanguageCode);
+                if (grvHint.Rows[e.RowIndex].DataBoundItem is HintGridItem item)
+                {
+                    _hintsDictionary.Remove(item.LanguageCode);
+                    RefreshHintGrid();
+                }
             }
         }
 
@@ -440,14 +550,35 @@ namespace FirestoreImporter
 
         private Dictionary<string, object>? _currentUsageLanguageData;
 
-        private void GrvUsageLanguage_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvUsageLanguage_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is UsageLanguageGridItem item)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                if (_currentUsageLanguageData != null)
+                if (grvUsageLanguage.Rows[e.RowIndex].DataBoundItem is UsageLanguageGridItem item)
                 {
-                    _currentUsageLanguageData.Remove(item.LanguageCode);
-                    RefreshUsageLanguageGrid();
+                    if (_currentUsageLanguageData != null)
+                    {
+                        _currentUsageLanguageData.Remove(item.LanguageCode);
+                        RefreshUsageLanguageGrid();
+                        if (_currentUsageLanguageData.Count > 0)
+                        {
+                            var dataSource = _currentUsageLanguageData.Select(kvp =>
+                            {
+                                var langData = kvp.Value as Dictionary<string, string>;
+                                return new UsageLanguageGridItem
+                                {
+                                    LanguageCode = kvp.Key,
+                                    Title = langData?.GetValueOrDefault("title") ?? "",
+                                    Example = langData?.GetValueOrDefault("example") ?? ""
+                                };
+                            }).ToList();
+                            grvUsageLanguage.DataSource = dataSource;
+                        }
+                        else
+                        {
+                            grvUsageLanguage.DataSource = null;
+                        }
+                    }
                 }
             }
         }
@@ -466,15 +597,18 @@ namespace FirestoreImporter
             }
         }
 
-        private void GrvUsage_UserDeletingRow(object? sender, DataGridViewRowCancelEventArgs e)
+        private void GrvUsage_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.Row.DataBoundItem is UsageGridItem item)
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
             {
-                int index = item.Index - 1;
-                if (index >= 0 && index < _usageItems.Count)
+                if (grvUsage.Rows[e.RowIndex].DataBoundItem is UsageGridItem item)
                 {
-                    _usageItems.RemoveAt(index);
-                    RefreshUsageGrid();
+                    int index = item.Index - 1;
+                    if (index >= 0 && index < _usageItems.Count)
+                    {
+                        _usageItems.RemoveAt(index);
+                        RefreshUsageGrid();
+                    }
                 }
             }
         }
