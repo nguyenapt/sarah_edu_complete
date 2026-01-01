@@ -166,6 +166,44 @@ class FirestoreService {
     }
   }
 
+  /// Lấy exercises từ nhiều units
+  /// Firestore có giới hạn 10 items cho whereIn, nên chia nhỏ query nếu cần
+  Future<List<ExerciseModel>> getExercisesByUnits(
+    List<String> unitIds, {
+    String? languageCode,
+  }) async {
+    try {
+      if (unitIds.isEmpty) return [];
+
+      final allExercises = <ExerciseModel>[];
+      
+      // Firestore whereIn có giới hạn 10 items, chia nhỏ nếu cần
+      const batchSize = 10;
+      for (int i = 0; i < unitIds.length; i += batchSize) {
+        final batch = unitIds.skip(i).take(batchSize).toList();
+        
+        final snapshot = await _firestore
+            .collection(FirebaseConstants.exercisesCollection)
+            .where('unitId', whereIn: batch)
+            .get();
+        
+        final exercises = snapshot.docs
+            .map((doc) => ExerciseModel.fromFirestore(
+                  doc.data(),
+                  doc.id,
+                  languageCode: languageCode,
+                ))
+            .toList();
+        
+        allExercises.addAll(exercises);
+      }
+      
+      return allExercises;
+    } catch (e) {
+      throw Exception('Error fetching exercises by units: $e');
+    }
+  }
+
   // Placement Test Questions
   Future<List<PlacementTestQuestion>> loadPlacementTestQuestions({
     String? languageCode,

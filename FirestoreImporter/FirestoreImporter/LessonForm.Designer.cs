@@ -40,6 +40,49 @@
             btnExportJson = new Button();
             tabControl1 = new TabControl();
             tabPage2 = new TabPage();
+            dataGridView1 = new DataGridView();
+            btnAddDescription = new Button();
+            txtLanguageDescriptionValue = new TextBox();
+            label8 = new Label();
+            cbLanguageCodeDescription = new ComboBox();
+            label9 = new Label();
+            tabPage1 = new TabPage();
+            groupBox2 = new GroupBox();
+            grvExplanation = new DataGridView();
+            label12 = new Label();
+            cbLanuageCodeExplanation = new ComboBox();
+            label10 = new Label();
+            txtLanguageValueExplanation = new TextBox();
+            btnAddExplanation = new Button();
+            grvExample = new DataGridView();
+            btnAddExample = new Button();
+            txtSentence = new TextBox();
+            label13 = new Label();
+            tabPage3 = new TabPage();
+            txtQuestion = new TextBox();
+            label16 = new Label();
+            txtNegative = new TextBox();
+            label15 = new Label();
+            txtStatement = new TextBox();
+            label14 = new Label();
+            tabPage4 = new TabPage();
+            grvHint = new DataGridView();
+            btnAddHint = new Button();
+            txtHintVaue = new TextBox();
+            label17 = new Label();
+            cbHintLanguageCode = new ComboBox();
+            label20 = new Label();
+            tabPage5 = new TabPage();
+            txtUsageTitle = new TextBox();
+            label21 = new Label();
+            grvUsage = new DataGridView();
+            btnAddToUsage = new Button();
+            grvUsageLanguage = new DataGridView();
+            btnAddLanguageUsage = new Button();
+            txtUsageExample = new TextBox();
+            label22 = new Label();
+            cbUsageLanguageCode = new ComboBox();
+            label23 = new Label();
             groupBox1 = new GroupBox();
             grvTitle = new DataGridView();
             btnAddTitle = new Button();
@@ -53,69 +96,26 @@
             label18 = new Label();
             label1 = new Label();
             cbType = new ComboBox();
-            tabPage1 = new TabPage();
-            tabPage3 = new TabPage();
-            tabPage4 = new TabPage();
-            tabPage5 = new TabPage();
             txtExercises = new TextBox();
             label5 = new Label();
-            dataGridView1 = new DataGridView();
-            btnAddDescription = new Button();
-            txtLanguageDescriptionValue = new TextBox();
-            label8 = new Label();
-            cbLanguageCodeDescription = new ComboBox();
-            label9 = new Label();
-            grvExplanation = new DataGridView();
-            btnAddExplanation = new Button();
-            txtLanguageValueExplanation = new TextBox();
-            label10 = new Label();
-            cbLanuageCodeExplanation = new ComboBox();
-            label12 = new Label();
-            txtSentence = new TextBox();
-            label13 = new Label();
-            btnAddExample = new Button();
-            grvExample = new DataGridView();
-            txtStatement = new TextBox();
-            label14 = new Label();
-            label15 = new Label();
-            txtNegative = new TextBox();
-            label16 = new Label();
-            txtQuestion = new TextBox();
-            grvHint = new DataGridView();
-            btnAddHint = new Button();
-            txtHintVaue = new TextBox();
-            label17 = new Label();
-            cbHintLanguageCode = new ComboBox();
-            label20 = new Label();
-            grvUsage = new DataGridView();
-            btnAddToUsage = new Button();
-            grvUsageLanguage = new DataGridView();
-            btnAddLanguageUsage = new Button();
-            txtUsageExample = new TextBox();
-            label22 = new Label();
-            cbUsageLanguageCode = new ComboBox();
-            label23 = new Label();
-            txtUsageTitle = new TextBox();
-            label21 = new Label();
-            groupBox2 = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)numOrder).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            tabPage1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvExplanation).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grvExample).BeginInit();
+            tabPage3.SuspendLayout();
+            tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvHint).BeginInit();
+            tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvUsage).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).BeginInit();
-            tabPage1.SuspendLayout();
-            tabPage3.SuspendLayout();
-            tabPage4.SuspendLayout();
-            tabPage5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvExplanation).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvExample).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvHint).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvUsage).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).BeginInit();
-            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // txtLessonId
@@ -235,6 +235,416 @@
             tabPage2.Text = "Description";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(8, 36);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(703, 378);
+            dataGridView1.TabIndex = 12;
+            // 
+            // btnAddDescription
+            // 
+            btnAddDescription.Location = new Point(555, 11);
+            btnAddDescription.Name = "btnAddDescription";
+            btnAddDescription.Size = new Size(75, 23);
+            btnAddDescription.TabIndex = 15;
+            btnAddDescription.Text = "Add";
+            btnAddDescription.UseVisualStyleBackColor = true;
+            btnAddDescription.Click += btnAddDescription_Click;
+            // 
+            // txtLanguageDescriptionValue
+            // 
+            txtLanguageDescriptionValue.Location = new Point(267, 10);
+            txtLanguageDescriptionValue.Name = "txtLanguageDescriptionValue";
+            txtLanguageDescriptionValue.Size = new Size(282, 23);
+            txtLanguageDescriptionValue.TabIndex = 14;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(226, 18);
+            label8.Name = "label8";
+            label8.Size = new Size(35, 15);
+            label8.TabIndex = 11;
+            label8.Text = "value";
+            // 
+            // cbLanguageCodeDescription
+            // 
+            cbLanguageCodeDescription.FormattingEnabled = true;
+            cbLanguageCodeDescription.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbLanguageCodeDescription.Location = new Point(99, 10);
+            cbLanguageCodeDescription.Name = "cbLanguageCodeDescription";
+            cbLanguageCodeDescription.Size = new Size(121, 23);
+            cbLanguageCodeDescription.TabIndex = 13;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(8, 18);
+            label9.Name = "label9";
+            label9.Size = new Size(85, 15);
+            label9.TabIndex = 10;
+            label9.Text = "language code";
+            // 
+            // tabPage1
+            // 
+            tabPage1.Controls.Add(groupBox2);
+            tabPage1.Controls.Add(grvExample);
+            tabPage1.Controls.Add(btnAddExample);
+            tabPage1.Controls.Add(txtSentence);
+            tabPage1.Controls.Add(label13);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(717, 437);
+            tabPage1.TabIndex = 2;
+            tabPage1.Text = "Example";
+            tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(grvExplanation);
+            groupBox2.Controls.Add(label12);
+            groupBox2.Controls.Add(cbLanuageCodeExplanation);
+            groupBox2.Controls.Add(label10);
+            groupBox2.Controls.Add(txtLanguageValueExplanation);
+            groupBox2.Controls.Add(btnAddExplanation);
+            groupBox2.Location = new Point(14, 35);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(697, 156);
+            groupBox2.TabIndex = 20;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Sentence Explanation";
+            // 
+            // grvExplanation
+            // 
+            grvExplanation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvExplanation.Location = new Point(6, 42);
+            grvExplanation.Name = "grvExplanation";
+            grvExplanation.Size = new Size(685, 108);
+            grvExplanation.TabIndex = 12;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(24, 24);
+            label12.Name = "label12";
+            label12.Size = new Size(85, 15);
+            label12.TabIndex = 10;
+            label12.Text = "language code";
+            // 
+            // cbLanuageCodeExplanation
+            // 
+            cbLanuageCodeExplanation.FormattingEnabled = true;
+            cbLanuageCodeExplanation.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbLanuageCodeExplanation.Location = new Point(115, 16);
+            cbLanuageCodeExplanation.Name = "cbLanuageCodeExplanation";
+            cbLanuageCodeExplanation.Size = new Size(121, 23);
+            cbLanuageCodeExplanation.TabIndex = 13;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(242, 24);
+            label10.Name = "label10";
+            label10.Size = new Size(35, 15);
+            label10.TabIndex = 11;
+            label10.Text = "value";
+            // 
+            // txtLanguageValueExplanation
+            // 
+            txtLanguageValueExplanation.Location = new Point(283, 16);
+            txtLanguageValueExplanation.Name = "txtLanguageValueExplanation";
+            txtLanguageValueExplanation.Size = new Size(282, 23);
+            txtLanguageValueExplanation.TabIndex = 14;
+            // 
+            // btnAddExplanation
+            // 
+            btnAddExplanation.Location = new Point(571, 17);
+            btnAddExplanation.Name = "btnAddExplanation";
+            btnAddExplanation.Size = new Size(75, 23);
+            btnAddExplanation.TabIndex = 15;
+            btnAddExplanation.Text = "Add";
+            btnAddExplanation.UseVisualStyleBackColor = true;
+            btnAddExplanation.Click += btnAddExplanation_Click;
+            // 
+            // grvExample
+            // 
+            grvExample.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvExample.Location = new Point(10, 238);
+            grvExample.Name = "grvExample";
+            grvExample.Size = new Size(703, 193);
+            grvExample.TabIndex = 19;
+            // 
+            // btnAddExample
+            // 
+            btnAddExample.Location = new Point(585, 209);
+            btnAddExample.Name = "btnAddExample";
+            btnAddExample.Size = new Size(75, 23);
+            btnAddExample.TabIndex = 18;
+            btnAddExample.Text = "Add";
+            btnAddExample.UseVisualStyleBackColor = true;
+            btnAddExample.Click += btnAddExample_Click;
+            // 
+            // txtSentence
+            // 
+            txtSentence.Location = new Point(79, 6);
+            txtSentence.Name = "txtSentence";
+            txtSentence.Size = new Size(626, 23);
+            txtSentence.TabIndex = 17;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(18, 9);
+            label13.Name = "label13";
+            label13.Size = new Size(55, 15);
+            label13.TabIndex = 16;
+            label13.Text = "Sentence";
+            // 
+            // tabPage3
+            // 
+            tabPage3.Controls.Add(txtQuestion);
+            tabPage3.Controls.Add(label16);
+            tabPage3.Controls.Add(txtNegative);
+            tabPage3.Controls.Add(label15);
+            tabPage3.Controls.Add(txtStatement);
+            tabPage3.Controls.Add(label14);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Padding = new Padding(3);
+            tabPage3.Size = new Size(717, 437);
+            tabPage3.TabIndex = 3;
+            tabPage3.Text = "Form";
+            tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // txtQuestion
+            // 
+            txtQuestion.Location = new Point(121, 183);
+            txtQuestion.Multiline = true;
+            txtQuestion.Name = "txtQuestion";
+            txtQuestion.Size = new Size(589, 71);
+            txtQuestion.TabIndex = 25;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(19, 183);
+            label16.Name = "label16";
+            label16.Size = new Size(55, 15);
+            label16.TabIndex = 24;
+            label16.Text = "Question";
+            // 
+            // txtNegative
+            // 
+            txtNegative.Location = new Point(122, 106);
+            txtNegative.Multiline = true;
+            txtNegative.Name = "txtNegative";
+            txtNegative.Size = new Size(589, 71);
+            txtNegative.TabIndex = 25;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(19, 106);
+            label15.Name = "label15";
+            label15.Size = new Size(54, 15);
+            label15.TabIndex = 24;
+            label15.Text = "Negative";
+            // 
+            // txtStatement
+            // 
+            txtStatement.Location = new Point(122, 29);
+            txtStatement.Multiline = true;
+            txtStatement.Name = "txtStatement";
+            txtStatement.Size = new Size(589, 71);
+            txtStatement.TabIndex = 25;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(19, 29);
+            label14.Name = "label14";
+            label14.Size = new Size(61, 15);
+            label14.TabIndex = 24;
+            label14.Text = "Statement";
+            // 
+            // tabPage4
+            // 
+            tabPage4.Controls.Add(grvHint);
+            tabPage4.Controls.Add(btnAddHint);
+            tabPage4.Controls.Add(txtHintVaue);
+            tabPage4.Controls.Add(label17);
+            tabPage4.Controls.Add(cbHintLanguageCode);
+            tabPage4.Controls.Add(label20);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Padding = new Padding(3);
+            tabPage4.Size = new Size(717, 437);
+            tabPage4.TabIndex = 4;
+            tabPage4.Text = "Hint";
+            tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // grvHint
+            // 
+            grvHint.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvHint.Location = new Point(8, 152);
+            grvHint.Name = "grvHint";
+            grvHint.Size = new Size(703, 279);
+            grvHint.TabIndex = 18;
+            // 
+            // btnAddHint
+            // 
+            btnAddHint.Location = new Point(636, 123);
+            btnAddHint.Name = "btnAddHint";
+            btnAddHint.Size = new Size(75, 23);
+            btnAddHint.TabIndex = 21;
+            btnAddHint.Text = "Add";
+            btnAddHint.UseVisualStyleBackColor = true;
+            btnAddHint.Click += btnAddHint_Click;
+            // 
+            // txtHintVaue
+            // 
+            txtHintVaue.Location = new Point(99, 43);
+            txtHintVaue.Multiline = true;
+            txtHintVaue.Name = "txtHintVaue";
+            txtHintVaue.Size = new Size(612, 74);
+            txtHintVaue.TabIndex = 20;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(58, 51);
+            label17.Name = "label17";
+            label17.Size = new Size(35, 15);
+            label17.TabIndex = 17;
+            label17.Text = "value";
+            // 
+            // cbHintLanguageCode
+            // 
+            cbHintLanguageCode.FormattingEnabled = true;
+            cbHintLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbHintLanguageCode.Location = new Point(99, 14);
+            cbHintLanguageCode.Name = "cbHintLanguageCode";
+            cbHintLanguageCode.Size = new Size(121, 23);
+            cbHintLanguageCode.TabIndex = 19;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(8, 22);
+            label20.Name = "label20";
+            label20.Size = new Size(85, 15);
+            label20.TabIndex = 16;
+            label20.Text = "language code";
+            // 
+            // tabPage5
+            // 
+            tabPage5.Controls.Add(txtUsageTitle);
+            tabPage5.Controls.Add(label21);
+            tabPage5.Controls.Add(grvUsage);
+            tabPage5.Controls.Add(btnAddToUsage);
+            tabPage5.Controls.Add(grvUsageLanguage);
+            tabPage5.Controls.Add(btnAddLanguageUsage);
+            tabPage5.Controls.Add(txtUsageExample);
+            tabPage5.Controls.Add(label22);
+            tabPage5.Controls.Add(cbUsageLanguageCode);
+            tabPage5.Controls.Add(label23);
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Padding = new Padding(3);
+            tabPage5.Size = new Size(717, 437);
+            tabPage5.TabIndex = 5;
+            tabPage5.Text = "Usage";
+            tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // txtUsageTitle
+            // 
+            txtUsageTitle.Location = new Point(109, 32);
+            txtUsageTitle.Name = "txtUsageTitle";
+            txtUsageTitle.Size = new Size(282, 23);
+            txtUsageTitle.TabIndex = 31;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(57, 35);
+            label21.Name = "label21";
+            label21.Size = new Size(30, 15);
+            label21.TabIndex = 30;
+            label21.Text = "Title";
+            // 
+            // grvUsage
+            // 
+            grvUsage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvUsage.Location = new Point(8, 266);
+            grvUsage.Name = "grvUsage";
+            grvUsage.Size = new Size(703, 165);
+            grvUsage.TabIndex = 29;
+            // 
+            // btnAddToUsage
+            // 
+            btnAddToUsage.Location = new Point(634, 237);
+            btnAddToUsage.Name = "btnAddToUsage";
+            btnAddToUsage.Size = new Size(75, 23);
+            btnAddToUsage.TabIndex = 28;
+            btnAddToUsage.Text = "Add";
+            btnAddToUsage.UseVisualStyleBackColor = true;
+            btnAddToUsage.Click += btnAddToUsage_Click;
+            // 
+            // grvUsageLanguage
+            // 
+            grvUsageLanguage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvUsageLanguage.Location = new Point(6, 90);
+            grvUsageLanguage.Name = "grvUsageLanguage";
+            grvUsageLanguage.Size = new Size(703, 141);
+            grvUsageLanguage.TabIndex = 22;
+            // 
+            // btnAddLanguageUsage
+            // 
+            btnAddLanguageUsage.Location = new Point(634, 60);
+            btnAddLanguageUsage.Name = "btnAddLanguageUsage";
+            btnAddLanguageUsage.Size = new Size(75, 23);
+            btnAddLanguageUsage.TabIndex = 25;
+            btnAddLanguageUsage.Text = "Add";
+            btnAddLanguageUsage.UseVisualStyleBackColor = true;
+            btnAddLanguageUsage.Click += btnAddLanguageUsage_Click;
+            // 
+            // txtUsageExample
+            // 
+            txtUsageExample.Location = new Point(109, 61);
+            txtUsageExample.Name = "txtUsageExample";
+            txtUsageExample.Size = new Size(282, 23);
+            txtUsageExample.TabIndex = 24;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(36, 64);
+            label22.Name = "label22";
+            label22.Size = new Size(51, 15);
+            label22.TabIndex = 21;
+            label22.Text = "Example";
+            // 
+            // cbUsageLanguageCode
+            // 
+            cbUsageLanguageCode.FormattingEnabled = true;
+            cbUsageLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbUsageLanguageCode.Location = new Point(109, 3);
+            cbUsageLanguageCode.Name = "cbUsageLanguageCode";
+            cbUsageLanguageCode.Size = new Size(121, 23);
+            cbUsageLanguageCode.TabIndex = 23;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new Point(2, 14);
+            label23.Name = "label23";
+            label23.Size = new Size(85, 15);
+            label23.TabIndex = 20;
+            label23.Text = "language code";
+            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(grvTitle);
@@ -352,73 +762,6 @@
             cbType.Size = new Size(173, 23);
             cbType.TabIndex = 21;
             // 
-            // tabPage1
-            // 
-            tabPage1.Controls.Add(groupBox2);
-            tabPage1.Controls.Add(grvExample);
-            tabPage1.Controls.Add(btnAddExample);
-            tabPage1.Controls.Add(txtSentence);
-            tabPage1.Controls.Add(label13);
-            tabPage1.Location = new Point(4, 24);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(717, 437);
-            tabPage1.TabIndex = 2;
-            tabPage1.Text = "Example";
-            tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage3
-            // 
-            tabPage3.Controls.Add(txtQuestion);
-            tabPage3.Controls.Add(label16);
-            tabPage3.Controls.Add(txtNegative);
-            tabPage3.Controls.Add(label15);
-            tabPage3.Controls.Add(txtStatement);
-            tabPage3.Controls.Add(label14);
-            tabPage3.Location = new Point(4, 24);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(717, 437);
-            tabPage3.TabIndex = 3;
-            tabPage3.Text = "Form";
-            tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            tabPage4.Controls.Add(grvHint);
-            tabPage4.Controls.Add(btnAddHint);
-            tabPage4.Controls.Add(txtHintVaue);
-            tabPage4.Controls.Add(label17);
-            tabPage4.Controls.Add(cbHintLanguageCode);
-            tabPage4.Controls.Add(label20);
-            tabPage4.Location = new Point(4, 24);
-            tabPage4.Name = "tabPage4";
-            tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(717, 437);
-            tabPage4.TabIndex = 4;
-            tabPage4.Text = "Hint";
-            tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // tabPage5
-            // 
-            tabPage5.Controls.Add(txtUsageTitle);
-            tabPage5.Controls.Add(label21);
-            tabPage5.Controls.Add(grvUsage);
-            tabPage5.Controls.Add(btnAddToUsage);
-            tabPage5.Controls.Add(grvUsageLanguage);
-            tabPage5.Controls.Add(btnAddLanguageUsage);
-            tabPage5.Controls.Add(txtUsageExample);
-            tabPage5.Controls.Add(label22);
-            tabPage5.Controls.Add(cbUsageLanguageCode);
-            tabPage5.Controls.Add(label23);
-            tabPage5.Location = new Point(4, 24);
-            tabPage5.Name = "tabPage5";
-            tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(717, 437);
-            tabPage5.TabIndex = 5;
-            tabPage5.Text = "Usage";
-            tabPage5.UseVisualStyleBackColor = true;
-            // 
             // txtExercises
             // 
             txtExercises.Location = new Point(149, 820);
@@ -434,349 +777,6 @@
             label5.Size = new Size(53, 15);
             label5.TabIndex = 22;
             label5.Text = "Exercises";
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(8, 36);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(703, 378);
-            dataGridView1.TabIndex = 12;
-            // 
-            // btnAddDescription
-            // 
-            btnAddDescription.Location = new Point(555, 11);
-            btnAddDescription.Name = "btnAddDescription";
-            btnAddDescription.Size = new Size(75, 23);
-            btnAddDescription.TabIndex = 15;
-            btnAddDescription.Text = "Add";
-            btnAddDescription.UseVisualStyleBackColor = true;
-            btnAddDescription.Click += btnAddDescription_Click;
-            // 
-            // txtLanguageDescriptionValue
-            // 
-            txtLanguageDescriptionValue.Location = new Point(267, 10);
-            txtLanguageDescriptionValue.Name = "txtLanguageDescriptionValue";
-            txtLanguageDescriptionValue.Size = new Size(282, 23);
-            txtLanguageDescriptionValue.TabIndex = 14;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(226, 18);
-            label8.Name = "label8";
-            label8.Size = new Size(35, 15);
-            label8.TabIndex = 11;
-            label8.Text = "value";
-            // 
-            // cbLanguageCodeDescription
-            // 
-            cbLanguageCodeDescription.FormattingEnabled = true;
-            cbLanguageCodeDescription.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
-            cbLanguageCodeDescription.Location = new Point(99, 10);
-            cbLanguageCodeDescription.Name = "cbLanguageCodeDescription";
-            cbLanguageCodeDescription.Size = new Size(121, 23);
-            cbLanguageCodeDescription.TabIndex = 13;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(8, 18);
-            label9.Name = "label9";
-            label9.Size = new Size(85, 15);
-            label9.TabIndex = 10;
-            label9.Text = "language code";
-            // 
-            // grvExplanation
-            // 
-            grvExplanation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvExplanation.Location = new Point(6, 42);
-            grvExplanation.Name = "grvExplanation";
-            grvExplanation.Size = new Size(685, 108);
-            grvExplanation.TabIndex = 12;
-            // 
-            // btnAddExplanation
-            // 
-            btnAddExplanation.Location = new Point(571, 17);
-            btnAddExplanation.Name = "btnAddExplanation";
-            btnAddExplanation.Size = new Size(75, 23);
-            btnAddExplanation.TabIndex = 15;
-            btnAddExplanation.Text = "Add";
-            btnAddExplanation.UseVisualStyleBackColor = true;
-            btnAddExplanation.Click += btnAddExplanation_Click;
-            // 
-            // txtLanguageValueExplanation
-            // 
-            txtLanguageValueExplanation.Location = new Point(283, 16);
-            txtLanguageValueExplanation.Name = "txtLanguageValueExplanation";
-            txtLanguageValueExplanation.Size = new Size(282, 23);
-            txtLanguageValueExplanation.TabIndex = 14;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(242, 24);
-            label10.Name = "label10";
-            label10.Size = new Size(35, 15);
-            label10.TabIndex = 11;
-            label10.Text = "value";
-            // 
-            // cbLanuageCodeExplanation
-            // 
-            cbLanuageCodeExplanation.FormattingEnabled = true;
-            cbLanuageCodeExplanation.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
-            cbLanuageCodeExplanation.Location = new Point(115, 16);
-            cbLanuageCodeExplanation.Name = "cbLanuageCodeExplanation";
-            cbLanuageCodeExplanation.Size = new Size(121, 23);
-            cbLanuageCodeExplanation.TabIndex = 13;
-            // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Location = new Point(24, 24);
-            label12.Name = "label12";
-            label12.Size = new Size(85, 15);
-            label12.TabIndex = 10;
-            label12.Text = "language code";
-            // 
-            // txtSentence
-            // 
-            txtSentence.Location = new Point(79, 6);
-            txtSentence.Name = "txtSentence";
-            txtSentence.Size = new Size(626, 23);
-            txtSentence.TabIndex = 17;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Location = new Point(18, 9);
-            label13.Name = "label13";
-            label13.Size = new Size(55, 15);
-            label13.TabIndex = 16;
-            label13.Text = "Sentence";
-            // 
-            // btnAddExample
-            // 
-            btnAddExample.Location = new Point(585, 209);
-            btnAddExample.Name = "btnAddExample";
-            btnAddExample.Size = new Size(75, 23);
-            btnAddExample.TabIndex = 18;
-            btnAddExample.Text = "Add";
-            btnAddExample.UseVisualStyleBackColor = true;
-            btnAddExample.Click += btnAddExample_Click;
-            // 
-            // grvExample
-            // 
-            grvExample.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvExample.Location = new Point(10, 238);
-            grvExample.Name = "grvExample";
-            grvExample.Size = new Size(703, 193);
-            grvExample.TabIndex = 19;
-            // 
-            // txtStatement
-            // 
-            txtStatement.Location = new Point(122, 29);
-            txtStatement.Multiline = true;
-            txtStatement.Name = "txtStatement";
-            txtStatement.Size = new Size(589, 71);
-            txtStatement.TabIndex = 25;
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(19, 29);
-            label14.Name = "label14";
-            label14.Size = new Size(61, 15);
-            label14.TabIndex = 24;
-            label14.Text = "Statement";
-            // 
-            // label15
-            // 
-            label15.AutoSize = true;
-            label15.Location = new Point(19, 106);
-            label15.Name = "label15";
-            label15.Size = new Size(54, 15);
-            label15.TabIndex = 24;
-            label15.Text = "Negative";
-            // 
-            // txtNegative
-            // 
-            txtNegative.Location = new Point(122, 106);
-            txtNegative.Multiline = true;
-            txtNegative.Name = "txtNegative";
-            txtNegative.Size = new Size(589, 71);
-            txtNegative.TabIndex = 25;
-            // 
-            // label16
-            // 
-            label16.AutoSize = true;
-            label16.Location = new Point(19, 183);
-            label16.Name = "label16";
-            label16.Size = new Size(55, 15);
-            label16.TabIndex = 24;
-            label16.Text = "Question";
-            // 
-            // txtQuestion
-            // 
-            txtQuestion.Location = new Point(121, 183);
-            txtQuestion.Multiline = true;
-            txtQuestion.Name = "txtQuestion";
-            txtQuestion.Size = new Size(589, 71);
-            txtQuestion.TabIndex = 25;
-            // 
-            // grvHint
-            // 
-            grvHint.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvHint.Location = new Point(8, 152);
-            grvHint.Name = "grvHint";
-            grvHint.Size = new Size(703, 279);
-            grvHint.TabIndex = 18;
-            // 
-            // btnAddHint
-            // 
-            btnAddHint.Location = new Point(636, 123);
-            btnAddHint.Name = "btnAddHint";
-            btnAddHint.Size = new Size(75, 23);
-            btnAddHint.TabIndex = 21;
-            btnAddHint.Text = "Add";
-            btnAddHint.UseVisualStyleBackColor = true;
-            btnAddHint.Click += btnAddHint_Click;
-            // 
-            // txtHintVaue
-            // 
-            txtHintVaue.Location = new Point(99, 43);
-            txtHintVaue.Multiline = true;
-            txtHintVaue.Name = "txtHintVaue";
-            txtHintVaue.Size = new Size(612, 74);
-            txtHintVaue.TabIndex = 20;
-            // 
-            // label17
-            // 
-            label17.AutoSize = true;
-            label17.Location = new Point(58, 51);
-            label17.Name = "label17";
-            label17.Size = new Size(35, 15);
-            label17.TabIndex = 17;
-            label17.Text = "value";
-            // 
-            // cbHintLanguageCode
-            // 
-            cbHintLanguageCode.FormattingEnabled = true;
-            cbHintLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
-            cbHintLanguageCode.Location = new Point(99, 14);
-            cbHintLanguageCode.Name = "cbHintLanguageCode";
-            cbHintLanguageCode.Size = new Size(121, 23);
-            cbHintLanguageCode.TabIndex = 19;
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Location = new Point(8, 22);
-            label20.Name = "label20";
-            label20.Size = new Size(85, 15);
-            label20.TabIndex = 16;
-            label20.Text = "language code";
-            // 
-            // grvUsage
-            // 
-            grvUsage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvUsage.Location = new Point(8, 266);
-            grvUsage.Name = "grvUsage";
-            grvUsage.Size = new Size(703, 165);
-            grvUsage.TabIndex = 29;
-            // 
-            // btnAddToUsage
-            // 
-            btnAddToUsage.Location = new Point(634, 237);
-            btnAddToUsage.Name = "btnAddToUsage";
-            btnAddToUsage.Size = new Size(75, 23);
-            btnAddToUsage.TabIndex = 28;
-            btnAddToUsage.Text = "Add";
-            btnAddToUsage.UseVisualStyleBackColor = true;
-            btnAddToUsage.Click += btnAddToUsage_Click;
-            // 
-            // grvUsageLanguage
-            // 
-            grvUsageLanguage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvUsageLanguage.Location = new Point(6, 90);
-            grvUsageLanguage.Name = "grvUsageLanguage";
-            grvUsageLanguage.Size = new Size(703, 141);
-            grvUsageLanguage.TabIndex = 22;
-            // 
-            // btnAddLanguageUsage
-            // 
-            btnAddLanguageUsage.Location = new Point(634, 60);
-            btnAddLanguageUsage.Name = "btnAddLanguageUsage";
-            btnAddLanguageUsage.Size = new Size(75, 23);
-            btnAddLanguageUsage.TabIndex = 25;
-            btnAddLanguageUsage.Text = "Add";
-            btnAddLanguageUsage.UseVisualStyleBackColor = true;
-            btnAddLanguageUsage.Click += btnAddLanguageUsage_Click;
-            // 
-            // txtUsageExample
-            // 
-            txtUsageExample.Location = new Point(109, 32);
-            txtUsageExample.Name = "txtUsageExample";
-            txtUsageExample.Size = new Size(282, 23);
-            txtUsageExample.TabIndex = 24;
-            // 
-            // label22
-            // 
-            label22.AutoSize = true;
-            label22.Location = new Point(36, 35);
-            label22.Name = "label22";
-            label22.Size = new Size(51, 15);
-            label22.TabIndex = 21;
-            label22.Text = "Example";
-            // 
-            // cbUsageLanguageCode
-            // 
-            cbUsageLanguageCode.FormattingEnabled = true;
-            cbUsageLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
-            cbUsageLanguageCode.Location = new Point(109, 3);
-            cbUsageLanguageCode.Name = "cbUsageLanguageCode";
-            cbUsageLanguageCode.Size = new Size(121, 23);
-            cbUsageLanguageCode.TabIndex = 23;
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Location = new Point(2, 14);
-            label23.Name = "label23";
-            label23.Size = new Size(85, 15);
-            label23.TabIndex = 20;
-            label23.Text = "language code";
-            // 
-            // txtUsageTitle
-            // 
-            txtUsageTitle.Location = new Point(109, 61);
-            txtUsageTitle.Name = "txtUsageTitle";
-            txtUsageTitle.Size = new Size(282, 23);
-            txtUsageTitle.TabIndex = 31;
-            // 
-            // label21
-            // 
-            label21.AutoSize = true;
-            label21.Location = new Point(57, 64);
-            label21.Name = "label21";
-            label21.Size = new Size(30, 15);
-            label21.TabIndex = 30;
-            label21.Text = "Title";
-            // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(grvExplanation);
-            groupBox2.Controls.Add(label12);
-            groupBox2.Controls.Add(cbLanuageCodeExplanation);
-            groupBox2.Controls.Add(label10);
-            groupBox2.Controls.Add(txtLanguageValueExplanation);
-            groupBox2.Controls.Add(btnAddExplanation);
-            groupBox2.Location = new Point(14, 35);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(697, 156);
-            groupBox2.TabIndex = 20;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Sentence Explanation";
             // 
             // LessonForm
             // 
@@ -809,27 +809,27 @@
             tabControl1.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvExplanation).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grvExample).EndInit();
+            tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvHint).EndInit();
+            tabPage5.ResumeLayout(false);
+            tabPage5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvUsage).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).EndInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).EndInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).EndInit();
-            tabPage1.ResumeLayout(false);
-            tabPage1.PerformLayout();
-            tabPage3.ResumeLayout(false);
-            tabPage3.PerformLayout();
-            tabPage4.ResumeLayout(false);
-            tabPage4.PerformLayout();
-            tabPage5.ResumeLayout(false);
-            tabPage5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvExplanation).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvExample).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvHint).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvUsage).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).EndInit();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }

@@ -51,7 +51,8 @@
       "order": 1,
       "estimatedTime": 60,
       "lessons": ["lesson_a1_1_1", "lesson_a1_1_2"],
-      "prerequisites": []
+      "prerequisites": [],
+      "group": "1"
     },
     "unit_a1_2": {
       "levelId": "A1",
@@ -60,7 +61,8 @@
       "order": 2,
       "estimatedTime": 60,
       "lessons": ["lesson_a1_2_1", "lesson_a1_2_2"],
-      "prerequisites": ["unit_a1_1"]
+      "prerequisites": ["unit_a1_1"],
+      "group": "1"
     },
     "unit_a1_3": {
       "levelId": "A1",
@@ -69,7 +71,8 @@
       "order": 3,
       "estimatedTime": 60,
       "lessons": ["lesson_a1_3_1", "lesson_a1_3_2"],
-      "prerequisites": ["unit_a1_2"]
+      "prerequisites": ["unit_a1_2"],
+      "group": "1"
     },
     "unit_a1_4": {
       "levelId": "A1",
@@ -78,7 +81,8 @@
       "order": 4,
       "estimatedTime": 60,
       "lessons": ["lesson_a1_4_1", "lesson_a1_4_2"],
-      "prerequisites": ["unit_a1_3"]
+      "prerequisites": ["unit_a1_3"],
+      "group": "2"
     },
     "unit_a1_5": {
       "levelId": "A1",
@@ -87,7 +91,8 @@
       "order": 5,
       "estimatedTime": 60,
       "lessons": ["lesson_a1_5_1", "lesson_a1_5_2"],
-      "prerequisites": ["unit_a1_4"]
+      "prerequisites": ["unit_a1_4"],
+      "group": "2"
     }
   },
   "lessons": {

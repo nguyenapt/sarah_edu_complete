@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,12 +8,16 @@ import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../core/services/firestore_service.dart';
 import '../../core/services/next_exercise_service.dart';
+import '../../core/services/unit_group_service.dart';
 import '../../models/unit_model.dart';
 import '../../models/level_model.dart';
 import '../../models/progress_model.dart';
+import '../../models/unit_group_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../learning/unit_list_screen.dart';
 import '../learning/exercise_screen.dart';
+import 'group_exercise_screen.dart';
+import '../../core/services/unit_group_service.dart';
 
 class PracticeScreen extends StatefulWidget {
   const PracticeScreen({super.key});
@@ -24,11 +29,13 @@ class PracticeScreen extends StatefulWidget {
 class _PracticeScreenState extends State<PracticeScreen> {
   final FirestoreService _firestoreService = FirestoreService();
   final NextExerciseService _nextExerciseService = NextExerciseService();
+  final UnitGroupService _unitGroupService = UnitGroupService();
   final ScrollController _scrollController = ScrollController();
   Map<String, GlobalKey> _unitKeys = {};
   
   List<UnitModel> _allUnits = [];
   List<LevelModel> _levels = [];
+  List<UnitGroup> _unitGroups = [];
   bool _isLoading = true;
   String? _selectedLevel; // null = All, hoặc 'A1', 'A2', etc.
   String? _currentUnitId; // Unit hiện tại user đang học (cho authenticated user)
@@ -66,17 +73,54 @@ class _PracticeScreenState extends State<PracticeScreen> {
         _levels = levels;
         _allUnits = units;
         _unitKeys = keys;
-        _isLoading = false;
       });
 
-      // Nếu user đã đăng nhập, load userProgress và scroll đến unit hiện tại
+      // Nếu user đã đăng nhập, load userProgress và unit groups TRƯỚC KHI set _isLoading = false
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       if (authProvider.isAuthenticated && authProvider.user != null) {
         final userId = authProvider.user!.id;
         final currentLevel = authProvider.user!.currentLevel;
         await _loadUserProgress(userId);
+        
+        // Load unit groups cho level hiện tại
+        // Tạo progress mới nếu chưa có
+        final progress = _userProgress ?? UserProgressModel(
+          userId: userId,
+          weakPoints: WeakPoints(),
+          lastUpdated: DateTime.now(),
+        );
+        
+        try {
+          final groups = await _unitGroupService.getAllUnitGroups(
+            currentLevel,
+            progress,
+            progress.highestProgress,
+          );
+          
+          debugPrint('Loaded ${groups.length} unit groups for level $currentLevel');
+          
+          if (mounted) {
+            setState(() {
+              _unitGroups = groups;
+              _isLoading = false; // Chỉ set false sau khi load groups xong
+            });
+          }
+        } catch (e) {
+          // Nếu có lỗi load groups, log và tiếp tục với fallback view
+          debugPrint('Error loading unit groups: $e');
+          if (mounted) {
+            setState(() {
+              _unitGroups = [];
+              _isLoading = false; // Vẫn set false để hiển thị fallback view
+            });
+          }
+        }
+      } else {
+        // Guest user: không cần load groups, set loading = false ngay
         if (mounted) {
-          _scrollToCurrentUnit(currentLevel);
+          setState(() {
+            _isLoading = false;
+          });
         }
       }
     } catch (e) {
@@ -291,6 +335,69 @@ class _PracticeScreenState extends State<PracticeScreen> {
   Widget _buildAuthenticatedView(AuthProvider authProvider) {
     final currentLevel = authProvider.user?.currentLevel ?? 'A1';
 
+    // Nếu có unit groups, hiển thị modules
+    if (_unitGroups.isNotEmpty) {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          // "Tiếp tục học" section ở phía trên cùng
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: _buildContinueLearningCard(currentLevel),
+          ),
+          // Danh sách practice modules với separator
+          ..._unitGroups.asMap().entries.map((entry) {
+            final index = entry.key;
+            final group = entry.value;
+            return Column(
+              children: [
+                _buildPracticeModule(group, currentLevel),
+                // Vạch phân cách (trừ module cuối cùng)
+                if (index < _unitGroups.length - 1)
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey[300],
+                    indent: 48, // Bắt đầu từ sau pentagon
+                  ),
+              ],
+            );
+          }),
+        ],
+      );
+    }
+
+    // Fallback: hiển thị view cũ nếu chưa có groups
+    // (Có thể do units chưa có field group hoặc chưa load xong)
+    // Kiểm tra xem có units trong level không
+    final unitsInLevel = _allUnits.where((u) => u.levelId == currentLevel).toList();
+    
+    if (unitsInLevel.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.inbox,
+                size: 64,
+                color: Colors.grey[400],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.noUnits,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Column(
       children: [
         // "Học tiếp" section - style giống trang chủ (background màu xanh)
@@ -303,6 +410,182 @@ class _PracticeScreenState extends State<PracticeScreen> {
           child: _buildUnitsList(highlightCurrentLevel: currentLevel),
         ),
       ],
+    );
+  }
+
+  // Widget để build mỗi practice module
+  Widget _buildPracticeModule(UnitGroup group, String levelId) {
+    const double pentagonSize = 64.0; // Kích thước pentagon
+    const double pentagonPadding = 8.0; // Padding của pentagon
+    const double pentagonTotalSize = pentagonSize + (pentagonPadding * 2); // 64 + 16 = 80
+    const double moduleHeight = pentagonTotalSize - 4; // Chiều cao module = chiều cao pentagon với padding - 4px
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      height: moduleHeight,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Container chính với border
+          Positioned(
+            left: 32, // Chừa chỗ cho pentagon (một nửa kích thước)
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Spacer để căn giữa với pentagon
+                  const SizedBox(width: 32),
+                  // Text ở giữa - có thể click
+                  Expanded(
+                    child: _buildModuleContent(group, levelId),
+                  ),
+                  // Vạch phân cách dọc
+                  Container(
+                    width: 1,
+                    height: double.infinity,
+                    color: Colors.grey[300],
+                  ),
+                  // Menu icon bên phải - có thể click
+                  _buildMenuIcon(group, levelId),
+                ],
+              ),
+            ),
+          ),
+          // Pentagon icon bên trái - di chuyển sang trái 6px và xuống dưới 2px
+          Positioned(
+            left: -6, // Di chuyển sang trái 6px
+            top: 2, // Di chuyển xuống dưới 2px
+            bottom: -2, // Điều chỉnh bottom để giữ chiều cao
+            child: Center(
+              child: _buildPentagonIcon(group, levelId),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget pentagon icon - có thể click, to hơn và tràn ra ngoài border
+  Widget _buildPentagonIcon(UnitGroup group, String levelId) {
+    Color iconColor;
+    if (group.type == GroupType.locked) {
+      iconColor = Colors.grey;
+    } else if (group.type == GroupType.review) {
+      iconColor = Colors.green;
+    } else if (group.type == GroupType.continuePractice) {
+      iconColor = Colors.blue;
+    } else {
+      iconColor = AppTheme.primaryColor;
+    }
+
+    return InkWell(
+      onTap: group.isUnlocked
+          ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GroupExerciseScreen(
+                    levelId: levelId,
+                    group: group.group,
+                    displayName: group.displayName,
+                  ),
+                ),
+              );
+            }
+          : null,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: CustomPaint(
+          size: const Size(64, 64),
+          painter: PentagonPainter(color: iconColor),
+        ),
+      ),
+    );
+  }
+
+  // Widget content ở giữa - có thể click
+  Widget _buildModuleContent(UnitGroup group, String levelId) {
+    if (group.type == GroupType.locked) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        child: Icon(
+          Icons.lock,
+          color: Colors.grey[600],
+          size: 24,
+        ),
+      );
+    }
+
+    return InkWell(
+      onTap: group.isUnlocked
+          ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GroupExerciseScreen(
+                    levelId: levelId,
+                    group: group.group,
+                    displayName: group.displayName,
+                  ),
+                ),
+              );
+            }
+          : null,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        alignment: Alignment.center,
+        child: Text(
+          group.displayName,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: group.type == GroupType.review 
+                ? Colors.green[700] 
+                : group.type == GroupType.continuePractice 
+                    ? Colors.orange[700] 
+                    : Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Widget menu icon bên phải - có thể click
+  Widget _buildMenuIcon(UnitGroup group, String levelId) {
+    return InkWell(
+      onTap: group.isUnlocked && group.units.isNotEmpty
+          ? () async {
+              // Navigate đến tất cả units trong group
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UnitListScreen(units: group.units),
+                ),
+              );
+            }
+          : null,
+      borderRadius: const BorderRadius.only(
+        topRight: Radius.circular(12),
+        bottomRight: Radius.circular(12),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        child: Icon(
+          Icons.menu,
+          color: group.isUnlocked ? Colors.grey[700] : Colors.grey[400],
+          size: 24,
+        ),
+      ),
     );
   }
 
@@ -980,4 +1263,41 @@ class _PracticeScreenState extends State<PracticeScreen> {
       ),
     );
   }
+}
+
+// Custom painter để vẽ hình ngũ giác
+class PentagonPainter extends CustomPainter {
+  final Color color;
+
+  PentagonPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    // Vẽ ngũ giác (5 cạnh)
+    for (int i = 0; i < 5; i++) {
+      final angle = (i * 2 * math.pi / 5) - (math.pi / 2); // Bắt đầu từ trên
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+      
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

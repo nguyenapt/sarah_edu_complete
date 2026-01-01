@@ -9,12 +9,14 @@ import '../../l10n/app_localizations.dart';
 import 'lesson_detail_screen.dart';
 
 class UnitListScreen extends StatefulWidget {
-  final UnitModel unit;
+  final UnitModel? unit; // Optional: nếu có thì hiển thị unit này
+  final List<UnitModel>? units; // Optional: nếu có thì hiển thị tất cả units trong group
 
   const UnitListScreen({
     super.key,
-    required this.unit,
-  });
+    this.unit,
+    this.units,
+  }) : assert(unit != null || units != null, 'Phải cung cấp unit hoặc units');
 
   @override
   State<UnitListScreen> createState() => _UnitListScreenState();
@@ -22,8 +24,18 @@ class UnitListScreen extends StatefulWidget {
 
 class _UnitListScreenState extends State<UnitListScreen> {
   final FirestoreService _firestoreService = FirestoreService();
-  List<LessonModel> _lessons = [];
+  Map<String, List<LessonModel>> _lessonsByUnit = {}; // Map unitId -> lessons
   bool _isLoading = true;
+
+  // Lấy danh sách units cần hiển thị
+  List<UnitModel> get _unitsToDisplay {
+    if (widget.units != null && widget.units!.isNotEmpty) {
+      return widget.units!;
+    } else if (widget.unit != null) {
+      return [widget.unit!];
+    }
+    return [];
+  }
 
   @override
   void initState() {
@@ -33,9 +45,17 @@ class _UnitListScreenState extends State<UnitListScreen> {
 
   Future<void> _loadLessons() async {
     try {
-      final lessons = await _firestoreService.getLessonsByUnit(widget.unit.id);
+      final units = _unitsToDisplay;
+      final lessonsMap = <String, List<LessonModel>>{};
+      
+      // Load lessons cho tất cả units
+      for (final unit in units) {
+        final lessons = await _firestoreService.getLessonsByUnit(unit.id);
+        lessonsMap[unit.id] = lessons;
+      }
+      
       setState(() {
-        _lessons = lessons;
+        _lessonsByUnit = lessonsMap;
         _isLoading = false;
       });
     } catch (e) {
@@ -59,7 +79,7 @@ class _UnitListScreenState extends State<UnitListScreen> {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.unit.getTitle(languageCode)),
+        title: const Text(''), // Xóa title
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -67,77 +87,81 @@ class _UnitListScreenState extends State<UnitListScreen> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Unit Info
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.unit.getTitle(languageCode),
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(widget.unit.getDescription(languageCode)),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Chip(
-                                avatar: const Icon(Icons.access_time, size: 18),
-                                label: Text('${widget.unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}'),
-                                backgroundColor:
-                                    AppTheme.primaryColor.withOpacity(0.1),
-                              ),
-                              const SizedBox(width: 12),
-                              Chip(
-                                avatar: const Icon(Icons.menu_book, size: 18),
-                                label: Text(AppLocalizations.of(context)!.lessonsCount(_lessons.length)),
-                                backgroundColor:
-                                    AppTheme.primaryColor.withOpacity(0.1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Lessons List
-                  Text(
-                    AppLocalizations.of(context)!.lessonsList,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (_lessons.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Text(AppLocalizations.of(context)!.noLessons),
-                      ),
-                    )
-                  else
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _lessons.length,
-                      itemBuilder: (context, index) {
-                        final lesson = _lessons[index];
-                        return _buildLessonCard(lesson, index);
-                      },
-                    ),
-                ],
+                children: _unitsToDisplay.map((unit) {
+                  final lessons = _lessonsByUnit[unit.id] ?? [];
+                  return _buildUnitCard(unit, lessons, languageCode);
+                }).toList(),
               ),
             ),
+    );
+  }
+
+  Widget _buildUnitCard(UnitModel unit, List<LessonModel> lessons, String languageCode) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              unit.getTitle(languageCode),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(unit.getDescription(languageCode)),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Chip(
+                  avatar: const Icon(Icons.access_time, size: 18),
+                  label: Text('${unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}'),
+                  backgroundColor:
+                      AppTheme.primaryColor.withOpacity(0.1),
+                ),
+                const SizedBox(width: 12),
+                Chip(
+                  avatar: const Icon(Icons.menu_book, size: 18),
+                  label: Text(AppLocalizations.of(context)!.lessonsCount(lessons.length)),
+                  backgroundColor:
+                      AppTheme.primaryColor.withOpacity(0.1),
+                ),
+              ],
+            ),
+            // Danh sách bài học ngay phía dưới
+            const SizedBox(height: 24),
+            Text(
+              AppLocalizations.of(context)!.lessonsList,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            if (lessons.isEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Text(AppLocalizations.of(context)!.noLessons),
+                ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: lessons.length,
+                itemBuilder: (context, index) {
+                  final lesson = lessons[index];
+                  return _buildLessonCard(lesson, index);
+                },
+              ),
+          ],
+        ),
+      ),
     );
   }
 

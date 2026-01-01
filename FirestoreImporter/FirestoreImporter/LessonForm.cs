@@ -897,10 +897,9 @@ namespace FirestoreImporter
                 var hintsObject = new Dictionary<string, object>();
                 foreach (var kvp in _hintsDictionary)
                 {
-                    hintsObject[kvp.Key] = kvp.Value;
+                    hintsObject[kvp.Key] = kvp.Value; // List<string>
                 }
-                // Note: TheoryContent không có field Hints trong model hiện tại
-                // Có thể cần thêm vào model hoặc lưu vào một field khác
+                theory.Hints = hintsObject;
             }
 
             // Usage: convert từ list sang object
@@ -911,7 +910,7 @@ namespace FirestoreImporter
             }
 
             // Chỉ thêm theory nếu có ít nhất một field
-            if (theory.Description != null || theory.Examples.Count > 0 || theory.Forms != null || theory.Usage != null)
+            if (theory.Description != null || theory.Examples.Count > 0 || theory.Forms != null || theory.Usage != null || theory.Hints.Count > 0)
             {
                 content.Theory = theory;
             }

@@ -78,6 +78,10 @@ public class TheoryContent
     [JsonProperty("title")]
     public Dictionary<string, string>? Title { get; set; }
 
+    /// <summary>
+    /// Description chứa raw HTML (không bị escape).
+    /// Key là language code (ví dụ: "en", "vi"), value là raw HTML string.
+    /// </summary>
     [JsonProperty("description")]
     public Dictionary<string, string>? Description { get; set; }
 
@@ -86,6 +90,9 @@ public class TheoryContent
 
     [JsonProperty("usage")]
     public object? Usage { get; set; } // Có thể là List<UsageItem> hoặc Map
+
+    [JsonProperty("hints")]
+    public Dictionary<string, object> Hints { get; set; } = new();
 
     [JsonProperty("forms")]
     public GrammarForms? Forms { get; set; }
@@ -117,6 +124,11 @@ public class TheoryContent
         if (Forms != null)
         {
             data["forms"] = Forms.ToFirestore();
+        }
+
+        if (Hints != null && Hints.Count > 0)
+        {
+            data["hints"] = Hints;
         }
 
         return data;

@@ -118,9 +118,22 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                   ),
             ),
             const SizedBox(height: 8),
-            Text(
-              theory.getDescription(languageCode),
-              style: Theme.of(context).textTheme.bodyLarge,
+            Html(
+              data: theory.getDescription(languageCode),
+              style: {
+                "body": Style(
+                  margin: Margins.zero,
+                  padding: HtmlPaddings.zero,
+                  fontSize: FontSize(Theme.of(context).textTheme.bodyLarge?.fontSize ?? 16),
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+                "p": Style(
+                  margin: Margins.only(bottom: 8),
+                ),
+                "strong": Style(
+                  fontWeight: FontWeight.bold,
+                ),
+              },
             ),
             if (theory.usage != null && theory.usage!.isNotEmpty) ...[
               const SizedBox(height: 16),
