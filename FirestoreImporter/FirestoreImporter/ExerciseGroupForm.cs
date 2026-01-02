@@ -515,10 +515,17 @@ namespace FirestoreImporter
             using var exerciseForm = new ExerciseForm(isGroupQuestionMode: true);
             exerciseForm.Text = "Tạo Group Question";
             
+            // Subscribe event để nhận GroupQuestion khi Save and Add New
+            exerciseForm.GroupQuestionSaved += (s, groupQuestion) =>
+            {
+                _groupQuestions.Add(groupQuestion);
+                RefreshQuestionGrid();
+            };
+            
             // Hiển thị form
             if (exerciseForm.ShowDialog() == DialogResult.OK)
             {
-                // Lấy GroupQuestion từ ExerciseForm
+                // Lấy GroupQuestion từ ExerciseForm (khi click Save)
                 var groupQuestion = exerciseForm.GetGroupQuestion();
                 if (groupQuestion != null)
                 {

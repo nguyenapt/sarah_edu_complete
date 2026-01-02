@@ -18,7 +18,7 @@ namespace FirestoreImporter
     {
         // Lesson Title
         private Dictionary<string, string> _titleDictionary;
-        
+
         // Theory Content
         private Dictionary<string, string> _theoryDescriptionDictionary;
         private Dictionary<string, string> _currentExampleExplanationDictionary;
@@ -55,7 +55,7 @@ namespace FirestoreImporter
         {
             // Lấy level ID (lowercase)
             string levelId = cbLevelId.SelectedItem?.ToString()?.ToLower() ?? "";
-            
+
             // Lấy các giá trị numeric
             int unitValue = (int)numUnit.Value;
             int lessonValue = (int)numLesson.Value;
@@ -77,22 +77,22 @@ namespace FirestoreImporter
         {
             // Setup grvTitle (Lesson Title)
             SetupTitleGrid();
-            
+
             // Setup dataGridView1 (Theory Description)
             SetupDescriptionGrid();
-            
+
             // Setup grvExplanation (Example Explanation)
             SetupExplanationGrid();
-            
+
             // Setup grvExample (Examples)
             SetupExampleGrid();
-            
+
             // Setup grvHint (Hints)
             SetupHintGrid();
-            
+
             // Setup grvUsageLanguage (Usage Language)
             SetupUsageLanguageGrid();
-            
+
             // Setup grvUsage (Usage Items)
             SetupUsageGrid();
         }
@@ -101,7 +101,7 @@ namespace FirestoreImporter
         {
             grvTitle.AutoGenerateColumns = false;
             grvTitle.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -113,7 +113,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvTitle.Columns.Add(deleteColumn);
-            
+
             grvTitle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -141,7 +141,7 @@ namespace FirestoreImporter
         {
             dataGridView1.AutoGenerateColumns = false;
             dataGridView1.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -153,7 +153,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             dataGridView1.Columns.Add(deleteColumn);
-            
+
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -181,7 +181,7 @@ namespace FirestoreImporter
         {
             grvExplanation.AutoGenerateColumns = false;
             grvExplanation.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -193,7 +193,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvExplanation.Columns.Add(deleteColumn);
-            
+
             grvExplanation.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -221,7 +221,7 @@ namespace FirestoreImporter
         {
             grvExample.AutoGenerateColumns = false;
             grvExample.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -233,7 +233,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvExample.Columns.Add(deleteColumn);
-            
+
             grvExample.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colIndex",
@@ -269,7 +269,7 @@ namespace FirestoreImporter
         {
             grvHint.AutoGenerateColumns = false;
             grvHint.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -281,7 +281,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvHint.Columns.Add(deleteColumn);
-            
+
             grvHint.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -309,7 +309,7 @@ namespace FirestoreImporter
         {
             grvUsageLanguage.AutoGenerateColumns = false;
             grvUsageLanguage.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -321,7 +321,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvUsageLanguage.Columns.Add(deleteColumn);
-            
+
             grvUsageLanguage.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -357,7 +357,7 @@ namespace FirestoreImporter
         {
             grvUsage.AutoGenerateColumns = false;
             grvUsage.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumn = new DataGridViewButtonColumn
             {
@@ -369,7 +369,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvUsage.Columns.Add(deleteColumn);
-            
+
             grvUsage.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colIndex",
@@ -1154,6 +1154,205 @@ namespace FirestoreImporter
             // Clear current usage language data
             _currentUsageLanguageData = null;
             grvUsageLanguage.DataSource = null;
+        }
+
+        private void btnTitleAddAndNext_Click(object sender, EventArgs e)
+        {
+            //cbLanguageCodeTitle select to next option
+            if (cbLanguageCodeTitle.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtLanguageTitleValue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Title!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbLanguageCodeTitle.SelectedItem.ToString()!;
+            string value = txtLanguageTitleValue.Text.Trim();
+
+            // Update hoặc thêm mới
+            _titleDictionary[languageCode] = value;
+
+            // Refresh grid
+            RefreshTitleGrid();
+
+            // Clear input
+            if (cbLanguageCodeTitle.SelectedIndex != cbLanguageCodeTitle.Items.Count - 1)
+            {
+                cbLanguageCodeTitle.SelectedIndex += 1;
+            }
+            txtLanguageTitleValue.Clear();
+        }
+
+        private void btnDescriptionAddAndNext_Click(object sender, EventArgs e)
+        {
+            if (cbLanguageCodeDescription.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtLanguageDescriptionValue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Description!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbLanguageCodeDescription.SelectedItem.ToString()!;
+            string value = txtLanguageDescriptionValue.Text.Trim();
+
+            // Update hoặc thêm mới
+            _theoryDescriptionDictionary[languageCode] = value;
+
+            // Refresh grid
+            RefreshDescriptionGrid();
+
+            if (cbLanguageCodeDescription.SelectedIndex != cbLanguageCodeDescription.Items.Count - 1)
+            {
+                txtLanguageDescriptionValue.SelectionStart += 1;
+            }
+
+            // Clear input
+            txtLanguageDescriptionValue.Clear();
+
+        }
+
+        private void btnSentenceAddAndNext_Click(object sender, EventArgs e)
+        {
+            if (cbLanuageCodeExplanation.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtLanguageValueExplanation.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Explanation!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbLanuageCodeExplanation.SelectedItem.ToString()!;
+            string value = txtLanguageValueExplanation.Text.Trim();
+
+            // Update hoặc thêm mới vào current example explanation
+            _currentExampleExplanationDictionary[languageCode] = value;
+
+            if (cbLanuageCodeExplanation.SelectedIndex != cbLanuageCodeExplanation.Items.Count - 1)
+            {
+                cbLanuageCodeExplanation.SelectedIndex += 1;
+            }
+
+            // Refresh grid
+            RefreshExplanationGrid();
+
+            // Clear input
+            txtLanguageValueExplanation.Clear();
+        }
+
+        private void btnHintAddAndNext_Click(object sender, EventArgs e)
+        {
+            if (cbHintLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtHintVaue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Hint!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbHintLanguageCode.SelectedItem.ToString()!;
+            string value = txtHintVaue.Text.Trim();
+
+            // Split theo newline và tạo list
+            var hints = value.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToList();
+
+            // Update hoặc thêm mới
+            _hintsDictionary[languageCode] = hints;
+
+            if (cbHintLanguageCode.SelectedIndex != cbHintLanguageCode.Items.Count - 1)
+            {
+                cbHintLanguageCode.SelectedIndex += 1;
+            }
+
+            // Refresh grid
+            RefreshHintGrid();
+
+            // Clear input
+            txtHintVaue.Clear();
+        }
+
+        private void btnUsageAddAndNext_Click(object sender, EventArgs e)
+        {
+            if (cbUsageLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtUsageTitle.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Title!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtUsageExample.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Example!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbUsageLanguageCode.SelectedItem.ToString()!;
+            string title = txtUsageTitle.Text.Trim();
+            string example = txtUsageExample.Text.Trim();
+
+            // Khởi tạo _currentUsageLanguageData nếu chưa có
+            if (_currentUsageLanguageData == null)
+            {
+                _currentUsageLanguageData = new Dictionary<string, object>();
+            }
+
+            // Thêm/update language data
+            _currentUsageLanguageData[languageCode] = new Dictionary<string, string>
+            {
+                { "title", title },
+                { "example", example }
+            };
+
+            // Refresh usage language grid
+            RefreshUsageLanguageGrid();
+            if (_currentUsageLanguageData.Count > 0)
+            {
+                var dataSource = _currentUsageLanguageData.Select(kvp =>
+                {
+                    var langData = kvp.Value as Dictionary<string, string>;
+                    return new UsageLanguageGridItem
+                    {
+                        LanguageCode = kvp.Key,
+                        Title = langData?.GetValueOrDefault("title") ?? "",
+                        Example = langData?.GetValueOrDefault("example") ?? ""
+                    };
+                }).ToList();
+                grvUsageLanguage.DataSource = dataSource;
+            }
+
+            if(cbUsageLanguageCode.SelectedIndex != cbUsageLanguageCode.Items.Count - 1)
+            {
+                cbUsageLanguageCode.SelectedIndex += 1;
+            }
+
+            // Clear inputs
+            txtUsageTitle.Clear();
+            //txtUsageExample.Clear();
         }
     }
 }

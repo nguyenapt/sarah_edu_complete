@@ -20,6 +20,9 @@ namespace FirestoreImporter
         private Dictionary<string, string> _explanationDictionary;
         private Dictionary<string, dynamic> _content;
         private bool _isGroupQuestionMode;
+        
+        // Event để gửi GroupQuestion về form cha khi Save and Add New
+        public event EventHandler<GroupQuestion>? GroupQuestionSaved;
 
         public ExerciseForm(bool isGroupQuestionMode = false)
         {
@@ -54,7 +57,7 @@ namespace FirestoreImporter
         {
             // Lấy level ID (lowercase)
             string levelId = cbLevelId.SelectedItem?.ToString()?.ToLower() ?? "";
-            
+
             // Lấy các giá trị numeric
             int unitValue = (int)numUnit.Value;
             int lessonValue = (int)numLesson.Value;
@@ -109,7 +112,7 @@ namespace FirestoreImporter
             // Setup grvQuestion
             grvQuestion.AutoGenerateColumns = false;
             grvQuestion.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumnQuestion = new DataGridViewButtonColumn
             {
@@ -121,7 +124,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvQuestion.Columns.Add(deleteColumnQuestion);
-            
+
             grvQuestion.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -147,7 +150,7 @@ namespace FirestoreImporter
             // Setup grvExplanation
             grvExplanation.AutoGenerateColumns = false;
             grvExplanation.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumnExplanation = new DataGridViewButtonColumn
             {
@@ -159,7 +162,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvExplanation.Columns.Add(deleteColumnExplanation);
-            
+
             grvExplanation.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -185,7 +188,7 @@ namespace FirestoreImporter
             // Setup grvContent
             grvContent.AutoGenerateColumns = false;
             grvContent.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumnContent = new DataGridViewButtonColumn
             {
@@ -197,7 +200,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvContent.Columns.Add(deleteColumnContent);
-            
+
             grvContent.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colPropertyName",
@@ -798,6 +801,115 @@ namespace FirestoreImporter
             }
 
             return groupQuestion;
+        }
+
+        private async void btnSaveAndAddNew_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_isGroupQuestionMode)
+                {
+                    // Mode GroupQuestion: Validate và gửi về ExerciseGroupForm
+                    if (_questionDictionary.Count == 0)
+                    {
+                        MessageBox.Show("Vui lòng nhập ít nhất một Question!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Tạo GroupQuestion từ dữ liệu form
+                    var groupQuestion = CreateGroupQuestionFromInputs();
+                    
+                    // Trigger event để gửi về form cha
+                    GroupQuestionSaved?.Invoke(this, groupQuestion);
+                    
+                    // Clear các controls trong tab question, explanation, content
+                    ClearQuestionExplanationContentTabs();
+                }
+                else
+                {
+                    // Mode Exercise thông thường: Validate và export JSON
+                    if (string.IsNullOrWhiteSpace(txtId.Text))
+                    {
+                        MessageBox.Show("Vui lòng nhập Exercise ID!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(txtLessonId.Text))
+                    {
+                        MessageBox.Show("Vui lòng nhập Lesson ID!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (_questionDictionary.Count == 0)
+                    {
+                        MessageBox.Show("Vui lòng nhập ít nhất một Question!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Export JSON (lưu vào clipboard hoặc file)
+                    var jsonResult = ExportJson();
+                    Clipboard.SetText(jsonResult);
+                    MessageBox.Show("Đã lưu Exercise và copy JSON vào clipboard!\nBạn có thể paste vào form chính.",
+                        "Thành công",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    // Tăng exercise number để tạo exercise mới
+                    if (numExercise.Value < numExercise.Maximum)
+                    {
+                        numExercise.Value++;
+                    }
+                    else
+                    {
+                        // Nếu đã đạt max, tăng lesson
+                        if (numLesson.Value < numLesson.Maximum)
+                        {
+                            numLesson.Value++;
+                            numExercise.Value = 1;
+                        }
+                    }
+
+                    // Clear các controls trong tab question, explanation, content
+                    ClearQuestionExplanationContentTabs();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi lưu: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            // Clear các controls trong tab question, explanation, content
+            ClearQuestionExplanationContentTabs();
+        }
+
+        private void ClearQuestionExplanationContentTabs()
+        {
+            // Clear dictionaries
+            _questionDictionary.Clear();
+            _explanationDictionary.Clear();
+            _content.Clear();
+
+            // Clear textboxes
+            txtLanguageQuestionValue.Clear();
+            txtLanguageExplanationValue.Clear();
+            txtPropertyName.Clear();
+            txtPropertyValue.Clear();
+
+            // Clear combobox selections
+            //cbLanguageCodeQuestion.SelectedIndex = -1;
+            //cbLanguageCodeExplanation.SelectedIndex = -1;
+            //cbPropertyType.SelectedIndex = -1;
+
+            // Refresh grids để hiển thị empty
+            RefreshQuestionGrid();
+            RefreshExplanationGrid();
+            RefreshContentGrid();
         }
     }
 }

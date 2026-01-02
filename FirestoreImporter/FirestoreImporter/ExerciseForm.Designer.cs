@@ -81,6 +81,8 @@
             numLesson = new NumericUpDown();
             numExercise = new NumericUpDown();
             label20 = new Label();
+            btnSaveAndAddNew = new Button();
+            btnClear = new Button();
             ((System.ComponentModel.ISupportInitialize)grvQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPoints).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimeLimit).BeginInit();
@@ -370,7 +372,7 @@
             // 
             // btnExportJsonFireStore
             // 
-            btnExportJsonFireStore.Location = new Point(649, 719);
+            btnExportJsonFireStore.Location = new Point(647, 746);
             btnExportJsonFireStore.Name = "btnExportJsonFireStore";
             btnExportJsonFireStore.Size = new Size(134, 23);
             btnExportJsonFireStore.TabIndex = 26;
@@ -380,7 +382,7 @@
             // 
             // btnExportJson
             // 
-            btnExportJson.Location = new Point(568, 719);
+            btnExportJson.Location = new Point(568, 746);
             btnExportJson.Name = "btnExportJson";
             btnExportJson.Size = new Size(75, 23);
             btnExportJson.TabIndex = 25;
@@ -519,7 +521,7 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(568, 690);
+            btnSave.Location = new Point(568, 659);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(213, 23);
             btnSave.TabIndex = 27;
@@ -576,6 +578,26 @@
             label20.TabIndex = 22;
             label20.Text = "Exercise Id";
             // 
+            // btnSaveAndAddNew
+            // 
+            btnSaveAndAddNew.Location = new Point(568, 688);
+            btnSaveAndAddNew.Name = "btnSaveAndAddNew";
+            btnSaveAndAddNew.Size = new Size(213, 23);
+            btnSaveAndAddNew.TabIndex = 27;
+            btnSaveAndAddNew.Text = "Save && Add New";
+            btnSaveAndAddNew.UseVisualStyleBackColor = true;
+            btnSaveAndAddNew.Click += btnSaveAndAddNew_Click;
+            // 
+            // btnClear
+            // 
+            btnClear.Location = new Point(568, 717);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(213, 23);
+            btnClear.TabIndex = 27;
+            btnClear.Text = "Clear";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
+            // 
             // ExerciseForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -585,6 +607,8 @@
             Controls.Add(label20);
             Controls.Add(numLesson);
             Controls.Add(numUnit);
+            Controls.Add(btnClear);
+            Controls.Add(btnSaveAndAddNew);
             Controls.Add(btnSave);
             Controls.Add(tabControl1);
             Controls.Add(btnExportJsonFireStore);
@@ -687,5 +711,7 @@
         private NumericUpDown numLesson;
         private NumericUpDown numExercise;
         private Label label20;
+        private Button btnSaveAndAddNew;
+        private Button btnClear;
     }
 }
