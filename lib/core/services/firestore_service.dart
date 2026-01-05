@@ -7,6 +7,20 @@ import '../../models/placement_test_model.dart';
 import '../../models/progress_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../core/utils/progress_comparator.dart';
+import 'level_progression_service.dart';
+
+/// Result của saveExerciseProgress
+class SaveExerciseProgressResult {
+  final bool levelUp;
+  final String? oldLevel;
+  final String? newLevel;
+
+  SaveExerciseProgressResult({
+    this.levelUp = false,
+    this.oldLevel,
+    this.newLevel,
+  });
+}
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -59,17 +73,35 @@ class FirestoreService {
   }
 
   // Get all units sorted by level order and unit order
+  // Tối ưu: 1 query thay vì N+1 queries
   Future<List<UnitModel>> getAllUnits() async {
     try {
-      // Lấy tất cả levels để sắp xếp
-      final levels = await getLevels();
+      // Load tất cả units trong 1 query (không filter theo levelId)
+      final snapshot = await _firestore
+          .collection(FirebaseConstants.unitsCollection)
+          .orderBy('order')
+          .get();
       
-      // Lấy tất cả units từ tất cả levels
-      final allUnits = <UnitModel>[];
-      for (final level in levels) {
-        final units = await getUnitsByLevel(level.id);
-        allUnits.addAll(units);
+      final allUnits = snapshot.docs
+          .map((doc) => UnitModel.fromFirestore(doc.data(), doc.id))
+          .toList();
+      
+      // Lấy levels để sort theo level order
+      final levels = await getLevels();
+      final levelOrderMap = <String, int>{};
+      for (int i = 0; i < levels.length; i++) {
+        levelOrderMap[levels[i].id] = levels[i].order;
       }
+      
+      // Sort: theo level order trước, sau đó theo unit order
+      allUnits.sort((a, b) {
+        final aLevelOrder = levelOrderMap[a.levelId] ?? 999;
+        final bLevelOrder = levelOrderMap[b.levelId] ?? 999;
+        if (aLevelOrder != bLevelOrder) {
+          return aLevelOrder.compareTo(bLevelOrder);
+        }
+        return a.order.compareTo(b.order);
+      });
       
       return allUnits;
     } catch (e) {
@@ -285,8 +317,21 @@ class FirestoreService {
     }
   }
 
+  /// Update user level
+  Future<void> updateUserLevel(String userId, String newLevel) async {
+    try {
+      await _firestore
+          .collection(FirebaseConstants.usersCollection)
+          .doc(userId)
+          .update({'currentLevel': newLevel});
+    } catch (e) {
+      throw Exception('Error updating user level: $e');
+    }
+  }
+
   /// Lưu exercise progress với logic chỉ lưu khi cao hơn
-  Future<void> saveExerciseProgress(
+  /// Trả về SaveExerciseProgressResult để indicate nếu có level-up
+  Future<SaveExerciseProgressResult> saveExerciseProgress(
     String userId,
     ExerciseModel exercise,
     bool isCorrect,
@@ -390,6 +435,36 @@ class FirestoreService {
       // Lưu lên Firestore
       await updateUserProgress(userId, updatedProgress);
       print('✅ Progress updated successfully in Firestore');
+
+      // Check level completion và level-up
+      final levelProgressionService = LevelProgressionService();
+      final currentLevel = exercise.levelId;
+      final isLevelCompleted = await levelProgressionService.checkLevelCompletion(
+        userId,
+        currentLevel,
+      );
+
+      if (isLevelCompleted) {
+        // Get next level
+        final nextLevel = levelProgressionService.getNextLevel(currentLevel);
+        if (nextLevel != null) {
+          print('🎉 Level $currentLevel completed! Leveling up to $nextLevel');
+          
+          // Level up
+          await levelProgressionService.levelUp(userId, nextLevel);
+          
+          // Refresh user data trong AuthProvider (sẽ cần implement)
+          // Có thể dùng callback hoặc event để notify UI
+          
+          return SaveExerciseProgressResult(
+            levelUp: true,
+            oldLevel: currentLevel,
+            newLevel: nextLevel,
+          );
+        }
+      }
+
+      return SaveExerciseProgressResult(levelUp: false);
     } catch (e, stackTrace) {
       print('❌ Exception in saveExerciseProgress: $e');
       print('Stack trace: $stackTrace');

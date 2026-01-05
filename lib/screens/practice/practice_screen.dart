@@ -20,7 +20,14 @@ import 'group_exercise_screen.dart';
 import '../../core/services/unit_group_service.dart';
 
 class PracticeScreen extends StatefulWidget {
-  const PracticeScreen({super.key});
+  final bool reviewMode;
+  final String? reviewLevel; // Level để ôn tập (chỉ dùng khi reviewMode = true)
+  
+  const PracticeScreen({
+    super.key,
+    this.reviewMode = false,
+    this.reviewLevel,
+  });
 
   @override
   State<PracticeScreen> createState() => _PracticeScreenState();
@@ -59,30 +66,47 @@ class _PracticeScreenState extends State<PracticeScreen> {
         _isLoading = true;
       });
 
-      // Load levels và units
-      final levels = await _firestoreService.getLevels();
-      final units = await _firestoreService.getAllUnits();
-
-      // Tạo keys cho mỗi unit để scroll đến
-      final keys = <String, GlobalKey>{};
-      for (final unit in units) {
-        keys[unit.id] = GlobalKey();
+      // Xác định level cần load
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      String? targetLevel;
+      
+      if (widget.reviewMode && widget.reviewLevel != null) {
+        targetLevel = widget.reviewLevel!;
+      } else if (authProvider.isAuthenticated && authProvider.user != null) {
+        targetLevel = authProvider.user!.currentLevel;
       }
 
+      // Parallel loading: load levels và units song song
+      final results = await Future.wait([
+        _firestoreService.getLevels(),
+        targetLevel != null
+            ? _firestoreService.getUnitsByLevel(targetLevel)
+            : _firestoreService.getAllUnits(),
+      ]);
+
+      final levels = results[0] as List<LevelModel>;
+      final units = results[1] as List<UnitModel>;
+
+      // Tạo keys cho mỗi unit để scroll đến (lazy loading - chỉ tạo khi cần)
+      final keys = <String, GlobalKey>{};
+      // Không tạo keys cho tất cả units ngay, sẽ tạo on-demand
+
       setState(() {
-        _levels = levels;
-        _allUnits = units;
+        _levels = levels.cast();
+        _allUnits = units.cast();
         _unitKeys = keys;
       });
 
-      // Nếu user đã đăng nhập, load userProgress và unit groups TRƯỚC KHI set _isLoading = false
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      if (authProvider.isAuthenticated && authProvider.user != null) {
+      // Nếu user đã đăng nhập và không phải review mode, load userProgress và unit groups
+      if (authProvider.isAuthenticated && authProvider.user != null && !widget.reviewMode) {
         final userId = authProvider.user!.id;
         final currentLevel = authProvider.user!.currentLevel;
-        await _loadUserProgress(userId);
         
-        // Load unit groups cho level hiện tại
+        // Parallel loading: load userProgress và unit groups
+        final progressResults = await Future.wait([
+          _loadUserProgress(userId),
+        ]);
+        
         // Tạo progress mới nếu chưa có
         final progress = _userProgress ?? UserProgressModel(
           userId: userId,
@@ -98,11 +122,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
           );
           
           debugPrint('Loaded ${groups.length} unit groups for level $currentLevel');
-          
-          // Debug: In thông tin từng group
-          for (final group in groups) {
-            debugPrint('Group: ${group.group}, Type: ${group.type}, IsUnlocked: ${group.isUnlocked}, DisplayName: ${group.displayName}');
-          }
           
           if (mounted) {
             setState(() {
@@ -121,7 +140,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
           }
         }
       } else {
-        // Guest user: không cần load groups, set loading = false ngay
+        // Guest user hoặc review mode: không cần load groups, set loading = false ngay
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -265,7 +284,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.practice),
+        title: Text(widget.reviewMode 
+            ? 'Ôn Tập - ${widget.reviewLevel ?? ""}' 
+            : AppLocalizations.of(context)!.practice),
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

@@ -7,6 +7,9 @@ import 'firestore_service.dart';
 /// Service để quản lý nhóm unit và logic unlock
 class UnitGroupService {
   final FirestoreService _firestoreService = FirestoreService();
+  
+  // Cache units của level để tránh query lại
+  final Map<String, List<UnitModel>> _cachedUnitsByLevel = {};
 
   /// So sánh 2 exercise IDs để xem exercise nào cao hơn
   /// Format: exercise_a1_1_2_4 -> [exercise, a1, 1, 2, 4]
@@ -54,13 +57,22 @@ class UnitGroupService {
     }
   }
 
+  /// Lấy units của level (có cache)
+  Future<List<UnitModel>> _getUnitsByLevelCached(String levelId) async {
+    if (!_cachedUnitsByLevel.containsKey(levelId)) {
+      _cachedUnitsByLevel[levelId] = await _firestoreService.getUnitsByLevel(levelId);
+    }
+    return _cachedUnitsByLevel[levelId]!;
+  }
+
   /// Lấy tất cả units trong một group
   Future<List<UnitModel>> getUnitsByGroup(
     String levelId,
     String group,
   ) async {
     try {
-      final allUnits = await _firestoreService.getUnitsByLevel(levelId);
+      // Sử dụng cache thay vì query lại
+      final allUnits = await _getUnitsByLevelCached(levelId);
       return allUnits
           .where((unit) => unit.group == group)
           .toList()
@@ -73,7 +85,8 @@ class UnitGroupService {
   /// Lấy danh sách tất cả groups trong một level, sắp xếp theo order
   Future<List<String>> getAllGroups(String levelId) async {
     try {
-      final allUnits = await _firestoreService.getUnitsByLevel(levelId);
+      // Sử dụng cache thay vì query lại
+      final allUnits = await _getUnitsByLevelCached(levelId);
       final groups = allUnits
           .where((unit) => unit.group != null && unit.group!.isNotEmpty)
           .map((unit) => unit.group!)
@@ -383,31 +396,49 @@ class UnitGroupService {
     HighestProgress? highestProgress,
   ) async {
     try {
-      final groups = await getAllGroups(levelId);
+      // Load units của level một lần và cache
+      await _getUnitsByLevelCached(levelId);
+      
+      // Parallel loading: load groups, reviewGroup, continueGroup song song
+      final groupResults = await Future.wait([
+        getAllGroups(levelId),
+        getReviewGroup(levelId, highestProgress),
+        getContinueGroup(levelId, highestProgress),
+      ]);
+      
+      final groups = groupResults[0] as List<String>;
+      final reviewGroup = groupResults[1] as String?;
+      final continueGroup = groupResults[2] as String?;
+      
       if (groups.isEmpty) return [];
 
-      final reviewGroup = await getReviewGroup(levelId, highestProgress);
-      final continueGroup = await getContinueGroup(levelId, highestProgress);
+      // Parallel loading: load units cho tất cả groups cùng lúc
+      final unitsFutures = groups.map((group) => getUnitsByGroup(levelId, group));
+      final allUnitsList = await Future.wait(unitsFutures);
+
+      // Parallel loading: check unlock và completed cho tất cả groups cùng lúc
+      final unlockFutures = groups.asMap().entries.map((entry) {
+        final index = entry.key;
+        final group = entry.value;
+        return isGroupUnlocked(levelId, group, progress, highestProgress);
+      });
+      
+      final completedFutures = groups.asMap().entries.map((entry) {
+        final index = entry.key;
+        final group = entry.value;
+        return isGroupCompleted(levelId, group, progress, highestProgress);
+      });
+      
+      final unlockResults = await Future.wait(unlockFutures);
+      final completedResults = await Future.wait(completedFutures);
 
       final unitGroups = <UnitGroup>[];
 
       for (int i = 0; i < groups.length; i++) {
         final group = groups[i];
-        final units = await getUnitsByGroup(levelId, group);
-        
-        final isUnlocked = await isGroupUnlocked(
-          levelId,
-          group,
-          progress,
-          highestProgress,
-        );
-        
-        final isCompleted = await isGroupCompleted(
-          levelId,
-          group,
-          progress,
-          highestProgress,
-        );
+        final units = allUnitsList[i];
+        final isUnlocked = unlockResults[i];
+        final isCompleted = completedResults[i];
 
         // Xác định type
         GroupType type;

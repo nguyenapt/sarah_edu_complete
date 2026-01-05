@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/services/firestore_service.dart';
 import '../auth/login_screen.dart';
+import '../level_up/level_up_screen.dart';
 
 class ExerciseScreen extends StatefulWidget {
   final ExerciseModel exercise;
@@ -1350,16 +1351,39 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         widget.exercise,
         isCorrect,
         timeSpent,
-      ).then((_) {
+      ).then((result) {
         print('✅ Progress saved successfully!');
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Đã lưu tiến trình học tập'),
-              backgroundColor: Colors.green,
-              duration: Duration(seconds: 2),
-            ),
-          );
+        
+        // Check nếu có level-up
+        if (result is SaveExerciseProgressResult && 
+            result.levelUp && 
+            result.oldLevel != null && 
+            result.newLevel != null) {
+          // Refresh user data trong AuthProvider
+          authProvider.refreshUser();
+          
+          // Show level-up screen
+          if (mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => LevelUpScreen(
+                  oldLevel: result.oldLevel!,
+                  newLevel: result.newLevel!,
+                ),
+              ),
+            );
+          }
+        } else {
+          // Normal success message
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Đã lưu tiến trình học tập'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         }
       }).catchError((error) {
         // Log error nhưng không block UI

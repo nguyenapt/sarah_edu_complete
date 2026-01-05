@@ -177,5 +177,12 @@ class AuthProvider with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
   }
+
+  /// Refresh user data từ Firestore (dùng khi level-up hoặc data thay đổi)
+  Future<void> refreshUser() async {
+    if (_user != null) {
+      await _loadUserData(_user!.id);
+    }
+  }
 }
 
