@@ -166,6 +166,9 @@
   "currentLevelText": "Cấp độ hiện tại",
   "completed": "Đã hoàn thành",
   "notUnlocked": "Chưa mở khóa",
-  "continueButton": "Tiếp tục"
+  "continueButton": "Tiếp tục",
+  "xp": "XP",
+  "levelLabel": "Level",
+  "user": "User"
 }
 

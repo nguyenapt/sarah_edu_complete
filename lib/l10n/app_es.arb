@@ -165,6 +165,9 @@
   "currentLevelText": "Nivel actual",
   "completed": "Completado",
   "notUnlocked": "No desbloqueado",
-  "continueButton": "Continuar"
+  "continueButton": "Continuar",
+  "xp": "XP",
+  "levelLabel": "Nivel",
+  "user": "Usuario"
 }
 

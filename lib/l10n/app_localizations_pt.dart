@@ -403,4 +403,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get continueButton => 'Continuar';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'Nível';
+
+  @override
+  String get user => 'Usuário';
 }

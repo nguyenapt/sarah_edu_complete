@@ -403,4 +403,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get continueButton => 'Weiter';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'Niveau';
+
+  @override
+  String get user => 'Benutzer';
 }

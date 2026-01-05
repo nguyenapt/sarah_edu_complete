@@ -859,6 +859,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue'**
   String get continueButton;
+
+  /// No description provided for @xp.
+  ///
+  /// In en, this message translates to:
+  /// **'XP'**
+  String get xp;
+
+  /// No description provided for @levelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get levelLabel;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
 }
 
 class _AppLocalizationsDelegate

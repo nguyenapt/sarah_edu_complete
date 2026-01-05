@@ -165,6 +165,9 @@
   "currentLevelText": "現在のレベル",
   "completed": "完了",
   "notUnlocked": "ロック解除されていません",
-  "continueButton": "続ける"
+  "continueButton": "続ける",
+  "xp": "XP",
+  "levelLabel": "レベル",
+  "user": "ユーザー"
 }
 

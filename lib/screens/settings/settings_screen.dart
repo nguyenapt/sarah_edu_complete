@@ -138,7 +138,7 @@ class SettingsScreen extends StatelessWidget {
                       Text(
                         user?.displayName != null && user!.displayName!.isNotEmpty
                             ? user.displayName!
-                            : 'User',
+                            : AppLocalizations.of(context)!.user,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -167,7 +167,7 @@ class SettingsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Thống kê',
+                  AppLocalizations.of(context)!.stats,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -180,7 +180,7 @@ class SettingsScreen extends StatelessWidget {
                         context,
                         Icons.local_fire_department,
                         '${user?.streak ?? 0}',
-                        'Ngày liên tiếp',
+                        AppLocalizations.of(context)!.daysStreak,
                       ),
                     ),
                     Expanded(
@@ -188,7 +188,7 @@ class SettingsScreen extends StatelessWidget {
                         context,
                         Icons.star,
                         '${user?.totalXP ?? 0}',
-                        'XP',
+                        AppLocalizations.of(context)!.xp,
                       ),
                     ),
                     Expanded(
@@ -196,7 +196,7 @@ class SettingsScreen extends StatelessWidget {
                         context,
                         Icons.school,
                         user?.currentLevel ?? 'A1',
-                        'Level',
+                        AppLocalizations.of(context)!.levelLabel,
                       ),
                     ),
                   ],
@@ -211,7 +211,7 @@ class SettingsScreen extends StatelessWidget {
         _buildSettingsTile(
           context,
           icon: Icons.person,
-          title: 'Thông tin tài khoản',
+          title: AppLocalizations.of(context)!.accountInfo,
           onTap: () {
             // Navigate to profile
           },
@@ -219,7 +219,7 @@ class SettingsScreen extends StatelessWidget {
         _buildSettingsTile(
           context,
           icon: Icons.notifications,
-          title: 'Thông báo',
+          title: AppLocalizations.of(context)!.notifications,
           onTap: () {
             // Navigate to notifications settings
           },
@@ -228,7 +228,7 @@ class SettingsScreen extends StatelessWidget {
         _buildSettingsTile(
           context,
           icon: Icons.dark_mode,
-          title: 'Giao diện',
+          title: AppLocalizations.of(context)!.theme,
           onTap: () {
             // Navigate to theme settings
           },
@@ -236,7 +236,7 @@ class SettingsScreen extends StatelessWidget {
         _buildSettingsTile(
           context,
           icon: Icons.help_outline,
-          title: 'Trợ giúp',
+          title: AppLocalizations.of(context)!.help,
           onTap: () {
             // Navigate to help
           },
@@ -244,7 +244,7 @@ class SettingsScreen extends StatelessWidget {
         _buildSettingsTile(
           context,
           icon: Icons.info_outline,
-          title: 'Về ứng dụng',
+          title: AppLocalizations.of(context)!.about,
           onTap: () {
             // Show about dialog
           },
@@ -253,22 +253,25 @@ class SettingsScreen extends StatelessWidget {
         _buildSettingsTile(
           context,
           icon: Icons.logout,
-          title: 'Đăng xuất',
+          title: AppLocalizations.of(context)!.logout,
           titleColor: Colors.red,
           onTap: () async {
             final confirm = await showDialog<bool>(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Đăng xuất'),
-                content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
+                title: Text(AppLocalizations.of(context)!.logout),
+                content: Text(AppLocalizations.of(context)!.logoutConfirm),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Hủy'),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(context, true),
-                    child: const Text('Đăng xuất', style: TextStyle(color: Colors.red)),
+                    child: Text(
+                      AppLocalizations.of(context)!.logout,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
               ),

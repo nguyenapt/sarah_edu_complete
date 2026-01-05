@@ -400,4 +400,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get continueButton => 'Tiếp tục';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'Level';
+
+  @override
+  String get user => 'User';
 }

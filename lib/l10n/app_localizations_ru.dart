@@ -403,4 +403,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get continueButton => 'Продолжить';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'Уровень';
+
+  @override
+  String get user => 'Пользователь';
 }

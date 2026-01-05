@@ -391,4 +391,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get continueButton => '继续';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => '级别';
+
+  @override
+  String get user => '用户';
 }

@@ -391,4 +391,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get continueButton => '계속';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => '레벨';
+
+  @override
+  String get user => '사용자';
 }

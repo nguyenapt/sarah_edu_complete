@@ -165,6 +165,9 @@
   "currentLevelText": "Текущий уровень",
   "completed": "Завершено",
   "notUnlocked": "Не разблокировано",
-  "continueButton": "Продолжить"
+  "continueButton": "Продолжить",
+  "xp": "XP",
+  "levelLabel": "Уровень",
+  "user": "Пользователь"
 }
 

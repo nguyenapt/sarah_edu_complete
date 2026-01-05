@@ -401,4 +401,13 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get continueButton => 'जारी रखें';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'स्तर';
+
+  @override
+  String get user => 'उपयोगकर्ता';
 }

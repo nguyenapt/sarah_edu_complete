@@ -391,4 +391,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get continueButton => '続ける';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'レベル';
+
+  @override
+  String get user => 'ユーザー';
 }

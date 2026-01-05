@@ -399,4 +399,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueButton => 'Continue';
+
+  @override
+  String get xp => 'XP';
+
+  @override
+  String get levelLabel => 'Level';
+
+  @override
+  String get user => 'User';
 }

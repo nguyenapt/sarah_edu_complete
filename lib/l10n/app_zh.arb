@@ -165,6 +165,9 @@
   "currentLevelText": "当前级别",
   "completed": "已完成",
   "notUnlocked": "未解锁",
-  "continueButton": "继续"
+  "continueButton": "继续",
+  "xp": "XP",
+  "levelLabel": "级别",
+  "user": "用户"
 }
 

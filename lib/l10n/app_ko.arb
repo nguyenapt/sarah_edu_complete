@@ -165,6 +165,9 @@
   "currentLevelText": "현재 레벨",
   "completed": "완료됨",
   "notUnlocked": "잠금 해제되지 않음",
-  "continueButton": "계속"
+  "continueButton": "계속",
+  "xp": "XP",
+  "levelLabel": "레벨",
+  "user": "사용자"
 }
 

@@ -165,6 +165,9 @@
   "currentLevelText": "वर्तमान स्तर",
   "completed": "पूर्ण",
   "notUnlocked": "अनलॉक नहीं किया गया",
-  "continueButton": "जारी रखें"
+  "continueButton": "जारी रखें",
+  "xp": "XP",
+  "levelLabel": "स्तर",
+  "user": "उपयोगकर्ता"
 }
 
