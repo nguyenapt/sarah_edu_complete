@@ -8,6 +8,52 @@ import 'firestore_service.dart';
 class UnitGroupService {
   final FirestoreService _firestoreService = FirestoreService();
 
+  /// So sánh 2 exercise IDs để xem exercise nào cao hơn
+  /// Format: exercise_a1_1_2_4 -> [exercise, a1, 1, 2, 4]
+  /// Trả về: -1 nếu exercise1 < exercise2, 0 nếu bằng, 1 nếu exercise1 > exercise2
+  int _compareExerciseIds(String exerciseId1, String exerciseId2) {
+    final parts1 = exerciseId1.split('_');
+    final parts2 = exerciseId2.split('_');
+    
+    // Cần ít nhất 5 parts: exercise_level_unit_lesson_exercise
+    if (parts1.length < 5 || parts2.length < 5) {
+      return exerciseId1.compareTo(exerciseId2);
+    }
+    
+    // So sánh level (index 1)
+    final levelCompare = parts1[1].compareTo(parts2[1]);
+    if (levelCompare != 0) return levelCompare;
+    
+    // So sánh unit (index 2)
+    final unit1 = int.tryParse(parts1[2]) ?? 0;
+    final unit2 = int.tryParse(parts2[2]) ?? 0;
+    if (unit1 != unit2) return unit1.compareTo(unit2);
+    
+    // So sánh lesson (index 3)
+    final lesson1 = int.tryParse(parts1[3]) ?? 0;
+    final lesson2 = int.tryParse(parts2[3]) ?? 0;
+    if (lesson1 != lesson2) return lesson1.compareTo(lesson2);
+    
+    // So sánh exercise (index 4)
+    final exercise1 = int.tryParse(parts1[4]) ?? 0;
+    final exercise2 = int.tryParse(parts2[4]) ?? 0;
+    return exercise1.compareTo(exercise2);
+  }
+  
+  /// Lấy exercise ID cao nhất trong một group
+  Future<String?> _getHighestExerciseIdInGroup(String levelId, String group) async {
+    try {
+      final exercises = await getExercisesByGroup(levelId, group);
+      if (exercises.isEmpty) return null;
+      
+      // Sắp xếp và lấy exercise cuối cùng (cao nhất)
+      exercises.sort((a, b) => _compareExerciseIds(a.id, b.id));
+      return exercises.last.id;
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Lấy tất cả units trong một group
   Future<List<UnitModel>> getUnitsByGroup(
     String levelId,
@@ -126,7 +172,7 @@ class UnitGroupService {
     }
   }
 
-  /// Xác định group "Ôn tập" (group trước group hiện tại, hoặc group đầu tiên nếu chưa có progress)
+  /// Xác định group "Ôn tập" (group đã hoàn thành - group trước group "Tiếp tục luyện tập")
   Future<String?> getReviewGroup(
     String levelId,
     HighestProgress? highestProgress,
@@ -135,31 +181,32 @@ class UnitGroupService {
       final allGroups = await getAllGroups(levelId);
       if (allGroups.isEmpty) return null;
 
-      // Nếu chưa có progress, trả về group đầu tiên
+      // Nếu chưa có progress, không có group để ôn tập
       if (highestProgress == null) {
-        return allGroups.isNotEmpty ? allGroups.first : null;
+        return null;
       }
 
-      // Lấy group hiện tại
-      final currentGroup = await getCurrentGroup(highestProgress, levelId);
-      if (currentGroup == null) {
-        return allGroups.first;
+      // Lấy group "Tiếp tục luyện tập"
+      final continueGroup = await getContinueGroup(levelId, highestProgress);
+      if (continueGroup == null) {
+        return null;
       }
-
-      // Tìm group trước group hiện tại
-      final currentIndex = allGroups.indexOf(currentGroup);
-      if (currentIndex <= 0) {
+      
+      // Tìm group trước group "Tiếp tục luyện tập"
+      final continueIndex = allGroups.indexOf(continueGroup);
+      if (continueIndex <= 0) {
         // Đang ở group đầu tiên, không có group để ôn tập
         return null;
       }
 
-      return allGroups[currentIndex - 1];
+      return allGroups[continueIndex - 1];
     } catch (e) {
       return null;
     }
   }
 
-  /// Xác định group "Tiếp tục luyện tập" (group chứa unit trong highestProgress.unitId)
+  /// Xác định group "Tiếp tục luyện tập" 
+  /// Group hiện tại nếu chưa hoàn thành, hoặc group tiếp theo nếu đã hoàn thành group hiện tại
   Future<String?> getContinueGroup(
     String levelId,
     HighestProgress? highestProgress,
@@ -175,7 +222,32 @@ class UnitGroupService {
 
       // Lấy group hiện tại
       final currentGroup = await getCurrentGroup(highestProgress, levelId);
-      return currentGroup ?? allGroups.first;
+      if (currentGroup == null) {
+        return allGroups.first;
+      }
+      
+      // Kiểm tra xem group hiện tại đã hoàn thành chưa
+      final highestExerciseInCurrentGroup = await _getHighestExerciseIdInGroup(levelId, currentGroup);
+      if (highestExerciseInCurrentGroup == null) {
+        // Group không có exercises, trả về group hiện tại
+        return currentGroup;
+      }
+      
+      // So sánh highestProgress với exercise cao nhất trong group hiện tại
+      final comparison = _compareExerciseIds(highestProgress.exerciseId, highestExerciseInCurrentGroup);
+      
+      if (comparison >= 0) {
+        // Đã hoàn thành group hiện tại, trả về group tiếp theo
+        final currentIndex = allGroups.indexOf(currentGroup);
+        if (currentIndex >= 0 && currentIndex < allGroups.length - 1) {
+          return allGroups[currentIndex + 1];
+        }
+        // Đã ở group cuối cùng, trả về group hiện tại
+        return currentGroup;
+      } else {
+        // Chưa hoàn thành group hiện tại, trả về group hiện tại
+        return currentGroup;
+      }
     } catch (e) {
       return null;
     }
@@ -195,58 +267,74 @@ class UnitGroupService {
       final groupIndex = allGroups.indexOf(group);
       
       // Group đầu tiên luôn unlock
-      if (groupIndex == 0) return true;
+      if (groupIndex == 0) {
+        print('DEBUG isGroupUnlocked: Group $group is first group, unlocking');
+        return true;
+      }
 
-      // Nếu không có group trước đó, unlock
-      if (groupIndex < 0) return false;
+      // Nếu không tìm thấy group trong danh sách, khóa
+      if (groupIndex < 0) {
+        print('DEBUG isGroupUnlocked: Group $group not found in groups list, locking');
+        return false;
+      }
 
       final previousGroup = allGroups[groupIndex - 1];
+      print('DEBUG isGroupUnlocked: Checking group $group (index $groupIndex), previousGroup: $previousGroup');
 
-      // Tối ưu: Nếu highestProgress đã vượt qua tất cả units trong group trước đó
+      // Kiểm tra dựa vào highestProgress: so sánh với exercise cao nhất trong previousGroup
       if (highestProgress != null) {
-        final previousUnits = await getUnitsByGroup(levelId, previousGroup);
-        if (previousUnits.isNotEmpty) {
-          // Lấy unit hiện tại từ highestProgress
-          final currentUnit = await _firestoreService.getUnit(highestProgress.unitId);
-          if (currentUnit != null && currentUnit.levelId == levelId) {
-            // Kiểm tra xem highestProgress đã vượt qua tất cả units trong previousGroup chưa
-            final previousUnitsOrder = previousUnits.map((u) => u.order).toList()..sort();
-            final maxPreviousOrder = previousUnitsOrder.isNotEmpty 
-                ? previousUnitsOrder.last 
-                : 0;
-            
-            // Nếu unit hiện tại có order lớn hơn tất cả units trong previousGroup
-            if (currentUnit.order > maxPreviousOrder) {
-              return true;
-            }
+        final highestExerciseInPreviousGroup = await _getHighestExerciseIdInGroup(levelId, previousGroup);
+        
+        if (highestExerciseInPreviousGroup != null) {
+          // So sánh highestProgress với exercise cao nhất trong group trước
+          final comparison = _compareExerciseIds(highestProgress.exerciseId, highestExerciseInPreviousGroup);
+          
+          print('DEBUG isGroupUnlocked: highestProgress.exerciseId: ${highestProgress.exerciseId}, highestExerciseInPreviousGroup: $highestExerciseInPreviousGroup, comparison: $comparison');
+          
+          // Nếu highestProgress >= exercise cao nhất trong previousGroup → unlock
+          if (comparison >= 0) {
+            print('DEBUG isGroupUnlocked: Unlocking $group because highestProgress >= highestExerciseInPreviousGroup');
+            return true;
+          } else {
+            print('DEBUG isGroupUnlocked: Locking $group because highestProgress < highestExerciseInPreviousGroup');
+            return false;
           }
         }
       }
 
-      // Fallback: Check exerciseHistory để đếm số exercises đã hoàn thành trong previousGroup
+      // Fallback: Nếu không có highestProgress hoặc không tìm thấy exercise cao nhất
+      // Kiểm tra dựa vào exerciseHistory
       final previousUnits = await getUnitsByGroup(levelId, previousGroup);
-      if (previousUnits.isEmpty) return true;
+      if (previousUnits.isEmpty) {
+        print('DEBUG isGroupUnlocked: previousUnits is empty, unlocking $group (may be incorrect)');
+        return true;
+      }
 
       final previousUnitIds = previousUnits.map((u) => u.id).toSet();
       final previousExercises = await getExercisesByGroup(levelId, previousGroup);
       
-      if (previousExercises.isEmpty) return true;
+      if (previousExercises.isEmpty) {
+        print('DEBUG isGroupUnlocked: previousExercises is empty, unlocking $group (may be incorrect)');
+        return true;
+      }
 
-      // Đếm số exercises đã hoàn thành trong previousGroup
-      final completedExerciseIds = progress.exerciseHistory
-          .where((item) => previousUnitIds.contains(item.unitId))
-          .map((item) => item.exerciseId)
-          .toSet();
-
-      // Unlock nếu đã hoàn thành tất cả exercises trong previousGroup
-      final allExerciseIds = previousExercises.map((e) => e.id).toSet();
-      return completedExerciseIds.length >= allExerciseIds.length;
+      // Lấy exercise cao nhất trong previousGroup để so sánh
+      previousExercises.sort((a, b) => _compareExerciseIds(a.id, b.id));
+      final highestExerciseId = previousExercises.last.id;
+      
+      // Kiểm tra xem đã hoàn thành exercise cao nhất chưa
+      final hasCompletedHighestExercise = progress.exerciseHistory
+          .any((item) => item.exerciseId == highestExerciseId && previousUnitIds.contains(item.unitId));
+      
+      print('DEBUG isGroupUnlocked: highestExerciseId: $highestExerciseId, hasCompletedHighestExercise: $hasCompletedHighestExercise');
+      return hasCompletedHighestExercise;
     } catch (e) {
       return false;
     }
   }
 
   /// Kiểm tra group đã hoàn thành chưa
+  /// Group được coi là hoàn thành khi highestProgress >= exercise cao nhất trong group
   Future<bool> isGroupCompleted(
     String levelId,
     String group,
@@ -257,31 +345,32 @@ class UnitGroupService {
       final units = await getUnitsByGroup(levelId, group);
       if (units.isEmpty) return false;
 
-      // Tối ưu: Nếu highestProgress đã vượt qua tất cả units trong group
+      // Kiểm tra dựa vào highestProgress: so sánh với exercise cao nhất trong group
       if (highestProgress != null) {
-        final currentUnit = await _firestoreService.getUnit(highestProgress.unitId);
-        if (currentUnit != null && currentUnit.levelId == levelId) {
-          final groupUnitsOrder = units.map((u) => u.order).toList()..sort();
-          final maxGroupOrder = groupUnitsOrder.isNotEmpty ? groupUnitsOrder.last : 0;
+        final highestExerciseInGroup = await _getHighestExerciseIdInGroup(levelId, group);
+        
+        if (highestExerciseInGroup != null) {
+          // So sánh highestProgress với exercise cao nhất trong group
+          final comparison = _compareExerciseIds(highestProgress.exerciseId, highestExerciseInGroup);
           
-          // Nếu highestProgress đã vượt qua tất cả units trong group
-          if (currentUnit.order > maxGroupOrder) {
-            return true;
-          }
+          // Nếu highestProgress >= exercise cao nhất trong group → group đã hoàn thành
+          return comparison >= 0;
         }
       }
 
-      // Fallback: Check tất cả exercises trong group đã có trong exerciseHistory
+      // Fallback: Check xem đã hoàn thành exercise cao nhất trong group chưa
       final exercises = await getExercisesByGroup(levelId, group);
       if (exercises.isEmpty) return false;
 
-      final completedExerciseIds = progress.exerciseHistory
-          .where((item) => units.any((u) => u.id == item.unitId))
-          .map((item) => item.exerciseId)
-          .toSet();
-
-      final allExerciseIds = exercises.map((e) => e.id).toSet();
-      return completedExerciseIds.length >= allExerciseIds.length;
+      // Sắp xếp và lấy exercise cao nhất
+      exercises.sort((a, b) => _compareExerciseIds(a.id, b.id));
+      final highestExerciseId = exercises.last.id;
+      
+      final unitIds = units.map((u) => u.id).toSet();
+      final hasCompletedHighestExercise = progress.exerciseHistory
+          .any((item) => item.exerciseId == highestExerciseId && unitIds.contains(item.unitId));
+      
+      return hasCompletedHighestExercise;
     } catch (e) {
       return false;
     }
@@ -331,6 +420,9 @@ class UnitGroupService {
         } else {
           type = GroupType.normal;
         }
+        
+        // Debug log
+        print('Group: $group, isUnlocked: $isUnlocked, type: $type, reviewGroup: $reviewGroup, continueGroup: $continueGroup');
 
         final unitGroup = UnitGroup.fromUnits(
           levelId: levelId,

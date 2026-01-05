@@ -99,6 +99,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
           
           debugPrint('Loaded ${groups.length} unit groups for level $currentLevel');
           
+          // Debug: In thông tin từng group
+          for (final group in groups) {
+            debugPrint('Group: ${group.group}, Type: ${group.type}, IsUnlocked: ${group.isUnlocked}, DisplayName: ${group.displayName}');
+          }
+          
           if (mounted) {
             setState(() {
               _unitGroups = groups;
@@ -415,10 +420,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   // Widget để build mỗi practice module
   Widget _buildPracticeModule(UnitGroup group, String levelId) {
-    const double pentagonSize = 64.0; // Kích thước pentagon
-    const double pentagonPadding = 8.0; // Padding của pentagon
-    const double pentagonTotalSize = pentagonSize + (pentagonPadding * 2); // 64 + 16 = 80
-    const double moduleHeight = pentagonTotalSize - 4; // Chiều cao module = chiều cao pentagon với padding - 4px
+    const double gradeSize = 64.0; // Kích thước grade (ngôi sao)
+    const double gradePadding = 8.0; // Padding của grade
+    const double gradeTotalSize = gradeSize + (gradePadding * 2); // 64 + 16 = 80
+    const double moduleHeight = gradeTotalSize - 4; // Chiều cao module = chiều cao grade với padding - 4px
     
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -428,7 +433,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
         children: [
           // Container chính với border
           Positioned(
-            left: 32, // Chừa chỗ cho pentagon (một nửa kích thước)
+            left: 32, // Chừa chỗ cho grade (một nửa kích thước)
             right: 0,
             top: 0,
             bottom: 0,
@@ -441,7 +446,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Spacer để căn giữa với pentagon
+                  // Spacer để căn giữa với grade
                   const SizedBox(width: 32),
                   // Text ở giữa - có thể click
                   Expanded(
@@ -459,13 +464,13 @@ class _PracticeScreenState extends State<PracticeScreen> {
               ),
             ),
           ),
-          // Pentagon icon bên trái - di chuyển sang trái 6px và xuống dưới 2px
+          // Grade icon (ngôi sao) bên trái - di chuyển sang trái 6px và xuống dưới 2px
           Positioned(
             left: -6, // Di chuyển sang trái 6px
             top: 2, // Di chuyển xuống dưới 2px
             bottom: -2, // Điều chỉnh bottom để giữ chiều cao
             child: Center(
-              child: _buildPentagonIcon(group, levelId),
+              child: _buildGradeIcon(group, levelId),
             ),
           ),
         ],
@@ -473,15 +478,15 @@ class _PracticeScreenState extends State<PracticeScreen> {
     );
   }
 
-  // Widget pentagon icon - có thể click, to hơn và tràn ra ngoài border
-  Widget _buildPentagonIcon(UnitGroup group, String levelId) {
+  // Widget grade icon (ngôi sao) - có thể click, to hơn và tràn ra ngoài border
+  Widget _buildGradeIcon(UnitGroup group, String levelId) {
     Color iconColor;
     if (group.type == GroupType.locked) {
       iconColor = Colors.grey;
     } else if (group.type == GroupType.review) {
-      iconColor = Colors.green;
+      iconColor = const Color(0xFFB5E48C); // Màu xanh lá nhạt cho ôn tập
     } else if (group.type == GroupType.continuePractice) {
-      iconColor = Colors.blue;
+      iconColor = const Color(0xFFFFA726); // Màu cam cho tiếp tục luyện tập
     } else {
       iconColor = AppTheme.primaryColor;
     }
@@ -506,7 +511,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
         padding: const EdgeInsets.all(8),
         child: CustomPaint(
           size: const Size(64, 64),
-          painter: PentagonPainter(color: iconColor),
+          painter: GradePainter(color: iconColor),
         ),
       ),
     );
@@ -550,9 +555,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: group.type == GroupType.review 
-                ? Colors.green[700] 
+                ? const Color(0xFFB5E48C) // Màu xanh lá nhạt cho ôn tập
                 : group.type == GroupType.continuePractice 
-                    ? Colors.orange[700] 
+                    ? const Color(0xFFFFA726) // Màu cam cho tiếp tục luyện tập
                     : Colors.black,
           ),
         ),
@@ -803,16 +808,30 @@ class _PracticeScreenState extends State<PracticeScreen> {
         
         if (units.isEmpty) return const SizedBox.shrink();
 
+        // Sắp xếp units theo order để xác định unit đầu tiên
+        final sortedUnits = List<UnitModel>.from(units)
+          ..sort((a, b) => a.order.compareTo(b.order));
+
+        // Chỉ áp dụng logic khóa cho guest user (khi highlightCurrentLevel == null)
+        final isGuestUser = highlightCurrentLevel == null;
+
         return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
             // Units list (không có level header khi chọn "All")
-            ...units.map((unit) => _buildUnitCard(
-                  unit,
-                  highlightCurrentLevel != null && 
-                  level.id == highlightCurrentLevel && 
-                  (unit.id == _currentUnitId || (_currentUnitId == null && unit == units.first)),
-                )),
+            ...sortedUnits.asMap().entries.map((entry) {
+              final unitIndex = entry.key;
+              final unit = entry.value;
+              final isLocked = isGuestUser && unitIndex > 0; // Unit đầu tiên (index 0) unlock, các unit khác bị khóa (chỉ cho guest user)
+              return _buildUnitCard(
+                unit,
+                highlightCurrentLevel != null && 
+                level.id == highlightCurrentLevel && 
+                (unit.id == _currentUnitId || (_currentUnitId == null && unit == sortedUnits.first)),
+                isLocked: isLocked,
+                unitIndex: unitIndex,
+              );
+            }),
           ],
         );
       },
@@ -1039,7 +1058,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   }
 
   // Unit card
-  Widget _buildUnitCard(UnitModel unit, bool isHighlighted) {
+  Widget _buildUnitCard(UnitModel unit, bool isHighlighted, {bool isLocked = false, int? unitIndex}) {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
     final levelColor = AppTheme.levelColors[unit.levelId] ?? AppTheme.primaryColor;
     
@@ -1054,14 +1073,16 @@ class _PracticeScreenState extends State<PracticeScreen> {
             : BorderSide.none,
             ),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UnitListScreen(unit: unit),
-            ),
-          );
-        },
+        onTap: isLocked
+            ? null
+            : () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UnitListScreen(unit: unit),
+                  ),
+                );
+              },
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
@@ -1082,37 +1103,44 @@ class _PracticeScreenState extends State<PracticeScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Level badge với gradient
+                // Level badge với gradient hoặc lock icon
                 Container(
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        levelColor,
-                        levelColor.withOpacity(0.8),
-                      ],
-                    ),
+                    gradient: isLocked
+                        ? null
+                        : LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              levelColor,
+                              levelColor.withOpacity(0.8),
+                            ],
+                          ),
+                    color: isLocked ? Colors.grey[300] : null,
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: levelColor.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    boxShadow: isLocked
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: levelColor.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                   ),
                   child: Center(
-                    child: Text(
-                      unit.levelId,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: isLocked
+                        ? Icon(Icons.lock, color: Colors.grey[600], size: 24)
+                        : Text(
+                            unit.levelId,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -1125,7 +1153,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
                         style: TextStyle(
                           fontSize: 18,
                             fontWeight: FontWeight.bold,
-                          color: isHighlighted ? levelColor : null,
+                          color: isLocked 
+                              ? Colors.grey 
+                              : (isHighlighted ? levelColor : null),
                           ),
                     ),
                       if (unit.getDescription(languageCode).isNotEmpty) ...[
@@ -1134,7 +1164,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                           unit.getDescription(languageCode),
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: isLocked ? Colors.grey[500] : Colors.grey[600],
                             height: 1.4,
                           ),
                           maxLines: 2,
@@ -1147,10 +1177,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
-                              color: levelColor.withOpacity(0.1),
+                              color: isLocked 
+                                  ? Colors.grey[200] 
+                                  : levelColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: levelColor.withOpacity(0.2),
+                                color: isLocked 
+                                    ? Colors.grey[300]! 
+                                    : levelColor.withOpacity(0.2),
                                 width: 1,
                               ),
                             ),
@@ -1160,14 +1194,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                 Icon(
                                   Icons.menu_book,
                                   size: 14,
-                                  color: levelColor,
+                                  color: isLocked ? Colors.grey[600] : levelColor,
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
                                   '${unit.lessons.length} ${AppLocalizations.of(context)!.lessons}',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: levelColor,
+                                    color: isLocked ? Colors.grey[600] : levelColor,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -1178,10 +1212,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
-                              color: levelColor.withOpacity(0.1),
+                              color: isLocked 
+                                  ? Colors.grey[200] 
+                                  : levelColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: levelColor.withOpacity(0.2),
+                                color: isLocked 
+                                    ? Colors.grey[300]! 
+                                    : levelColor.withOpacity(0.2),
                                 width: 1,
                               ),
                             ),
@@ -1191,14 +1229,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                 Icon(
                                   Icons.access_time,
                                   size: 14,
-                                  color: levelColor,
+                                  color: isLocked ? Colors.grey[600] : levelColor,
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
                                   '${unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: levelColor,
+                                    color: isLocked ? Colors.grey[600] : levelColor,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -1212,7 +1250,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 ),
               const SizedBox(width: 12),
               // Continue learning badge nếu highlighted
-              if (isHighlighted)
+              if (isHighlighted && !isLocked)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
@@ -1252,9 +1290,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 ),
               ),
               Icon(
-                Icons.chevron_right,
+                isLocked ? Icons.lock : Icons.chevron_right,
                 size: 24,
-                color: isHighlighted ? levelColor : Colors.grey[400],
+                color: isLocked 
+                    ? Colors.grey[400] 
+                    : (isHighlighted ? levelColor : Colors.grey[400]),
             ),
           ],
           ),
@@ -1265,11 +1305,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
   }
 }
 
-// Custom painter để vẽ hình ngũ giác
-class PentagonPainter extends CustomPainter {
+// Custom painter để vẽ hình ngôi sao (grade)
+class GradePainter extends CustomPainter {
   final Color color;
 
-  PentagonPainter({required this.color});
+  GradePainter({required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1279,11 +1319,13 @@ class PentagonPainter extends CustomPainter {
 
     final path = Path();
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
+    final outerRadius = size.width / 2;
+    final innerRadius = outerRadius * 0.4; // Bán kính trong cho ngôi sao 5 cánh
 
-    // Vẽ ngũ giác (5 cạnh)
-    for (int i = 0; i < 5; i++) {
-      final angle = (i * 2 * math.pi / 5) - (math.pi / 2); // Bắt đầu từ trên
+    // Vẽ ngôi sao 5 cánh
+    for (int i = 0; i < 10; i++) {
+      final angle = (i * math.pi / 5) - (math.pi / 2); // Bắt đầu từ trên
+      final radius = i.isEven ? outerRadius : innerRadius;
       final x = center.dx + radius * math.cos(angle);
       final y = center.dy + radius * math.sin(angle);
       
