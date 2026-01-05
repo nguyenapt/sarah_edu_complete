@@ -59,7 +59,7 @@ class _MainNavigationState extends State<MainNavigation> {
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.refresh, color: isAuthenticated ? null : Colors.grey[400]),
-        label: 'Ôn Tập', // TODO: Thêm vào localization
+        label: AppLocalizations.of(context)!.review,
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.trending_up, color: isAuthenticated ? null : Colors.grey[400]),
@@ -108,9 +108,9 @@ class _MainNavigationState extends State<MainNavigation> {
               // Hiển thị thông báo yêu cầu đăng nhập
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text('Vui lòng đăng nhập để sử dụng tính năng này'),
+                  content: Text(AppLocalizations.of(context)!.pleaseLoginToUseFeature),
                   action: SnackBarAction(
-                    label: 'Đăng nhập',
+                    label: AppLocalizations.of(context)!.login,
                     onPressed: () {
                       Navigator.push(
                         context,

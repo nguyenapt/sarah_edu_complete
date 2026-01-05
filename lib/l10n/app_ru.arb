@@ -138,6 +138,33 @@
   "learningProgress": "Прогресс обучения",
   "overview": "Обзор",
   "featureComingSoon": "Функция скоро появится",
-  "all": "Все"
+  "all": "Все",
+  "review": "Повторение",
+  "continuePractice": "Продолжить практику",
+  "pleaseLoginToUseFeature": "Пожалуйста, войдите, чтобы использовать эту функцию",
+  "pleaseLogin": "Пожалуйста, войдите",
+  "loginToUseReviewFeature": "Войдите, чтобы использовать функцию повторения",
+  "reviewLevel": "Повторение - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "Поздравляем!",
+  "youReachedLevel": "Вы достигли уровня {level}!",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "Продолжайте учиться, чтобы улучшить свой уровень",
+  "currentLevelText": "Текущий уровень",
+  "completed": "Завершено",
+  "notUnlocked": "Не разблокировано",
+  "continueButton": "Продолжить"
 }
 

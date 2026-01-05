@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 
 class LevelUpScreen extends StatelessWidget {
   final String oldLevel;
@@ -28,9 +29,9 @@ class LevelUpScreen extends StatelessWidget {
             const SizedBox(height: 32),
             
             // Text chào mừng
-            const Text(
-              'Chúc mừng!',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.congratulations,
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -57,7 +58,7 @@ class LevelUpScreen extends StatelessWidget {
             const SizedBox(height: 24),
             
             Text(
-              'Bạn đã lên cấp độ $newLevel!',
+              AppLocalizations.of(context)!.youReachedLevel(newLevel),
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -66,9 +67,9 @@ class LevelUpScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Tiếp tục học tập để nâng cao trình độ',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.continueLearningToImprove,
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white70,
               ),
@@ -94,9 +95,9 @@ class LevelUpScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Tiếp tục',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.continueButton,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

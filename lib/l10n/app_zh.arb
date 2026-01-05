@@ -138,6 +138,33 @@
   "learningProgress": "学习进度",
   "overview": "概览",
   "featureComingSoon": "功能即将推出",
-  "all": "全部"
+  "all": "全部",
+  "review": "复习",
+  "continuePractice": "继续练习",
+  "pleaseLoginToUseFeature": "请登录以使用此功能",
+  "pleaseLogin": "请登录",
+  "loginToUseReviewFeature": "登录以使用复习功能",
+  "reviewLevel": "复习 - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "恭喜！",
+  "youReachedLevel": "您已达到 {level} 级别！",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "继续学习以提高您的水平",
+  "currentLevelText": "当前级别",
+  "completed": "已完成",
+  "notUnlocked": "未解锁",
+  "continueButton": "继续"
 }
 

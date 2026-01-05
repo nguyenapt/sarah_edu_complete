@@ -355,4 +355,49 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get all => 'Tất cả';
+
+  @override
+  String get review => 'Ôn Tập';
+
+  @override
+  String get continuePractice => 'Tiếp tục luyện tập';
+
+  @override
+  String get pleaseLoginToUseFeature =>
+      'Vui lòng đăng nhập để sử dụng tính năng này';
+
+  @override
+  String get pleaseLogin => 'Vui lòng đăng nhập';
+
+  @override
+  String get loginToUseReviewFeature => 'Đăng nhập để sử dụng tính năng ôn tập';
+
+  @override
+  String reviewLevel(String level) {
+    return 'Ôn Tập - $level';
+  }
+
+  @override
+  String get congratulations => 'Chúc mừng!';
+
+  @override
+  String youReachedLevel(String level) {
+    return 'Bạn đã lên cấp độ $level!';
+  }
+
+  @override
+  String get continueLearningToImprove =>
+      'Tiếp tục học tập để nâng cao trình độ';
+
+  @override
+  String get currentLevelText => 'Cấp độ hiện tại';
+
+  @override
+  String get completed => 'Đã hoàn thành';
+
+  @override
+  String get notUnlocked => 'Chưa mở khóa';
+
+  @override
+  String get continueButton => 'Tiếp tục';
 }

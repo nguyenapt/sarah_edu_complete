@@ -139,6 +139,33 @@
   "learningProgress": "Tiến độ học tập",
   "overview": "Tổng quan",
   "featureComingSoon": "Tính năng sắp ra mắt",
-  "all": "Tất cả"
+  "all": "Tất cả",
+  "review": "Ôn Tập",
+  "continuePractice": "Tiếp tục luyện tập",
+  "pleaseLoginToUseFeature": "Vui lòng đăng nhập để sử dụng tính năng này",
+  "pleaseLogin": "Vui lòng đăng nhập",
+  "loginToUseReviewFeature": "Đăng nhập để sử dụng tính năng ôn tập",
+  "reviewLevel": "Ôn Tập - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "Chúc mừng!",
+  "youReachedLevel": "Bạn đã lên cấp độ {level}!",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "Tiếp tục học tập để nâng cao trình độ",
+  "currentLevelText": "Cấp độ hiện tại",
+  "completed": "Đã hoàn thành",
+  "notUnlocked": "Chưa mở khóa",
+  "continueButton": "Tiếp tục"
 }
 

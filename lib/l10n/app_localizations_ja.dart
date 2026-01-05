@@ -348,4 +348,47 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get all => 'すべて';
+
+  @override
+  String get review => '復習';
+
+  @override
+  String get continuePractice => '練習を続ける';
+
+  @override
+  String get pleaseLoginToUseFeature => 'この機能を使用するにはログインしてください';
+
+  @override
+  String get pleaseLogin => 'ログインしてください';
+
+  @override
+  String get loginToUseReviewFeature => '復習機能を使用するにはログインしてください';
+
+  @override
+  String reviewLevel(String level) {
+    return '復習 - $level';
+  }
+
+  @override
+  String get congratulations => 'おめでとうございます！';
+
+  @override
+  String youReachedLevel(String level) {
+    return 'レベル $level に到達しました！';
+  }
+
+  @override
+  String get continueLearningToImprove => 'レベルを向上させるために学習を続けましょう';
+
+  @override
+  String get currentLevelText => '現在のレベル';
+
+  @override
+  String get completed => '完了';
+
+  @override
+  String get notUnlocked => 'ロック解除されていません';
+
+  @override
+  String get continueButton => '続ける';
 }

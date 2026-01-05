@@ -348,4 +348,47 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get all => '全部';
+
+  @override
+  String get review => '复习';
+
+  @override
+  String get continuePractice => '继续练习';
+
+  @override
+  String get pleaseLoginToUseFeature => '请登录以使用此功能';
+
+  @override
+  String get pleaseLogin => '请登录';
+
+  @override
+  String get loginToUseReviewFeature => '登录以使用复习功能';
+
+  @override
+  String reviewLevel(String level) {
+    return '复习 - $level';
+  }
+
+  @override
+  String get congratulations => '恭喜！';
+
+  @override
+  String youReachedLevel(String level) {
+    return '您已达到 $level 级别！';
+  }
+
+  @override
+  String get continueLearningToImprove => '继续学习以提高您的水平';
+
+  @override
+  String get currentLevelText => '当前级别';
+
+  @override
+  String get completed => '已完成';
+
+  @override
+  String get notUnlocked => '未解锁';
+
+  @override
+  String get continueButton => '继续';
 }

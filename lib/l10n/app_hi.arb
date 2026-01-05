@@ -138,6 +138,33 @@
   "learningProgress": "सीखने की प्रगति",
   "overview": "अवलोकन",
   "featureComingSoon": "जल्द ही सुविधा आ रही है",
-  "all": "सभी"
+  "all": "सभी",
+  "review": "समीक्षा",
+  "continuePractice": "अभ्यास जारी रखें",
+  "pleaseLoginToUseFeature": "कृपया इस सुविधा का उपयोग करने के लिए लॉगिन करें",
+  "pleaseLogin": "कृपया लॉगिन करें",
+  "loginToUseReviewFeature": "समीक्षा सुविधा का उपयोग करने के लिए लॉगिन करें",
+  "reviewLevel": "समीक्षा - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "बधाई हो!",
+  "youReachedLevel": "आपने स्तर {level} तक पहुंच गए हैं!",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "अपने स्तर को सुधारने के लिए सीखना जारी रखें",
+  "currentLevelText": "वर्तमान स्तर",
+  "completed": "पूर्ण",
+  "notUnlocked": "अनलॉक नहीं किया गया",
+  "continueButton": "जारी रखें"
 }
 

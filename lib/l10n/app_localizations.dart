@@ -781,6 +781,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get all;
+
+  /// No description provided for @review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get review;
+
+  /// No description provided for @continuePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Practice'**
+  String get continuePractice;
+
+  /// No description provided for @pleaseLoginToUseFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Please login to use this feature'**
+  String get pleaseLoginToUseFeature;
+
+  /// No description provided for @pleaseLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Please login'**
+  String get pleaseLogin;
+
+  /// No description provided for @loginToUseReviewFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to use review feature'**
+  String get loginToUseReviewFeature;
+
+  /// No description provided for @reviewLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Review - {level}'**
+  String reviewLevel(String level);
+
+  /// No description provided for @congratulations.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get congratulations;
+
+  /// No description provided for @youReachedLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'You reached level {level}!'**
+  String youReachedLevel(String level);
+
+  /// No description provided for @continueLearningToImprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue learning to improve your level'**
+  String get continueLearningToImprove;
+
+  /// No description provided for @currentLevelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Current level'**
+  String get currentLevelText;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @notUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not unlocked'**
+  String get notUnlocked;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
 }
 
 class _AppLocalizationsDelegate

@@ -138,6 +138,33 @@
   "learningProgress": "学習進捗",
   "overview": "概要",
   "featureComingSoon": "機能は間もなく公開されます",
-  "all": "すべて"
+  "all": "すべて",
+  "review": "復習",
+  "continuePractice": "練習を続ける",
+  "pleaseLoginToUseFeature": "この機能を使用するにはログインしてください",
+  "pleaseLogin": "ログインしてください",
+  "loginToUseReviewFeature": "復習機能を使用するにはログインしてください",
+  "reviewLevel": "復習 - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "おめでとうございます！",
+  "youReachedLevel": "レベル {level} に到達しました！",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "レベルを向上させるために学習を続けましょう",
+  "currentLevelText": "現在のレベル",
+  "completed": "完了",
+  "notUnlocked": "ロック解除されていません",
+  "continueButton": "続ける"
 }
 

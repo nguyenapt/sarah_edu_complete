@@ -348,4 +348,47 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get all => '전체';
+
+  @override
+  String get review => '복습';
+
+  @override
+  String get continuePractice => '연습 계속하기';
+
+  @override
+  String get pleaseLoginToUseFeature => '이 기능을 사용하려면 로그인하세요';
+
+  @override
+  String get pleaseLogin => '로그인하세요';
+
+  @override
+  String get loginToUseReviewFeature => '복습 기능을 사용하려면 로그인하세요';
+
+  @override
+  String reviewLevel(String level) {
+    return '복습 - $level';
+  }
+
+  @override
+  String get congratulations => '축하합니다!';
+
+  @override
+  String youReachedLevel(String level) {
+    return '레벨 $level에 도달했습니다!';
+  }
+
+  @override
+  String get continueLearningToImprove => '레벨을 향상시키기 위해 계속 학습하세요';
+
+  @override
+  String get currentLevelText => '현재 레벨';
+
+  @override
+  String get completed => '완료됨';
+
+  @override
+  String get notUnlocked => '잠금 해제되지 않음';
+
+  @override
+  String get continueButton => '계속';
 }

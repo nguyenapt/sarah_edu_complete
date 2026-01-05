@@ -355,4 +355,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all => 'All';
+
+  @override
+  String get review => 'Review';
+
+  @override
+  String get continuePractice => 'Continue Practice';
+
+  @override
+  String get pleaseLoginToUseFeature => 'Please login to use this feature';
+
+  @override
+  String get pleaseLogin => 'Please login';
+
+  @override
+  String get loginToUseReviewFeature => 'Login to use review feature';
+
+  @override
+  String reviewLevel(String level) {
+    return 'Review - $level';
+  }
+
+  @override
+  String get congratulations => 'Congratulations!';
+
+  @override
+  String youReachedLevel(String level) {
+    return 'You reached level $level!';
+  }
+
+  @override
+  String get continueLearningToImprove =>
+      'Continue learning to improve your level';
+
+  @override
+  String get currentLevelText => 'Current level';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get notUnlocked => 'Not unlocked';
+
+  @override
+  String get continueButton => 'Continue';
 }

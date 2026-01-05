@@ -138,6 +138,33 @@
   "learningProgress": "Progreso de aprendizaje",
   "overview": "Resumen",
   "featureComingSoon": "Función próximamente",
-  "all": "Todos"
+  "all": "Todos",
+  "review": "Revisar",
+  "continuePractice": "Continuar practicando",
+  "pleaseLoginToUseFeature": "Por favor, inicia sesión para usar esta función",
+  "pleaseLogin": "Por favor, inicia sesión",
+  "loginToUseReviewFeature": "Inicia sesión para usar la función de revisión",
+  "reviewLevel": "Revisar - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "¡Felicidades!",
+  "youReachedLevel": "¡Has alcanzado el nivel {level}!",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "Continúa aprendiendo para mejorar tu nivel",
+  "currentLevelText": "Nivel actual",
+  "completed": "Completado",
+  "notUnlocked": "No desbloqueado",
+  "continueButton": "Continuar"
 }
 

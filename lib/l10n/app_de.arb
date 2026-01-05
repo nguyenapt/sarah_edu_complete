@@ -138,6 +138,33 @@
   "learningProgress": "Lernfortschritt",
   "overview": "Übersicht",
   "featureComingSoon": "Funktion kommt bald",
-  "all": "Alle"
+  "all": "Alle",
+  "review": "Wiederholung",
+  "continuePractice": "Weiter üben",
+  "pleaseLoginToUseFeature": "Bitte melden Sie sich an, um diese Funktion zu verwenden",
+  "pleaseLogin": "Bitte melden Sie sich an",
+  "loginToUseReviewFeature": "Melden Sie sich an, um die Wiederholungsfunktion zu verwenden",
+  "reviewLevel": "Wiederholung - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "Glückwunsch!",
+  "youReachedLevel": "Sie haben das Niveau {level} erreicht!",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "Lernen Sie weiter, um Ihr Niveau zu verbessern",
+  "currentLevelText": "Aktuelles Niveau",
+  "completed": "Abgeschlossen",
+  "notUnlocked": "Nicht freigeschaltet",
+  "continueButton": "Weiter"
 }
 

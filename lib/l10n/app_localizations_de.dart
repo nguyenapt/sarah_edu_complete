@@ -357,4 +357,50 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get all => 'Alle';
+
+  @override
+  String get review => 'Wiederholung';
+
+  @override
+  String get continuePractice => 'Weiter üben';
+
+  @override
+  String get pleaseLoginToUseFeature =>
+      'Bitte melden Sie sich an, um diese Funktion zu verwenden';
+
+  @override
+  String get pleaseLogin => 'Bitte melden Sie sich an';
+
+  @override
+  String get loginToUseReviewFeature =>
+      'Melden Sie sich an, um die Wiederholungsfunktion zu verwenden';
+
+  @override
+  String reviewLevel(String level) {
+    return 'Wiederholung - $level';
+  }
+
+  @override
+  String get congratulations => 'Glückwunsch!';
+
+  @override
+  String youReachedLevel(String level) {
+    return 'Sie haben das Niveau $level erreicht!';
+  }
+
+  @override
+  String get continueLearningToImprove =>
+      'Lernen Sie weiter, um Ihr Niveau zu verbessern';
+
+  @override
+  String get currentLevelText => 'Aktuelles Niveau';
+
+  @override
+  String get completed => 'Abgeschlossen';
+
+  @override
+  String get notUnlocked => 'Nicht freigeschaltet';
+
+  @override
+  String get continueButton => 'Weiter';
 }

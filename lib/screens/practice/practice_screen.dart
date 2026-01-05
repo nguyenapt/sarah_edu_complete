@@ -285,7 +285,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.reviewMode 
-            ? 'Ôn Tập - ${widget.reviewLevel ?? ""}' 
+            ? AppLocalizations.of(context)!.reviewLevel(widget.reviewLevel ?? "") 
             : AppLocalizations.of(context)!.practice),
       ),
       body: Consumer<AuthProvider>(
@@ -366,11 +366,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // "Tiếp tục học" section ở phía trên cùng
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: _buildContinueLearningCard(currentLevel),
-          ),
+          // "Tiếp tục học" section ở phía trên cùng (chỉ hiển thị khi không phải review mode)
+          if (!widget.reviewMode)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _buildContinueLearningCard(currentLevel),
+            ),
           // Danh sách practice modules với separator
           ..._unitGroups.asMap().entries.map((entry) {
             final index = entry.key;
@@ -426,11 +427,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
     return Column(
       children: [
-        // "Học tiếp" section - style giống trang chủ (background màu xanh)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: _buildContinueLearningCard(currentLevel),
-        ),
+        // "Học tiếp" section - style giống trang chủ (background màu xanh) (chỉ hiển thị khi không phải review mode)
+        if (!widget.reviewMode)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: _buildContinueLearningCard(currentLevel),
+          ),
         // Danh sách units
         Expanded(
           child: _buildUnitsList(highlightCurrentLevel: currentLevel),
@@ -521,7 +523,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   builder: (context) => GroupExerciseScreen(
                     levelId: levelId,
                     group: group.group,
-                    displayName: group.displayName,
+                    displayName: _getGroupDisplayName(group.type),
                   ),
                 ),
               );
@@ -560,7 +562,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   builder: (context) => GroupExerciseScreen(
                     levelId: levelId,
                     group: group.group,
-                    displayName: group.displayName,
+                    displayName: _getGroupDisplayName(group.type),
                   ),
                 ),
               );
@@ -570,7 +572,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         alignment: Alignment.center,
         child: Text(
-          group.displayName,
+          _getGroupDisplayName(group.type),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18,
@@ -584,6 +586,21 @@ class _PracticeScreenState extends State<PracticeScreen> {
         ),
       ),
     );
+  }
+
+  // Helper method để lấy display name đã được localized
+  String _getGroupDisplayName(GroupType type) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (type) {
+      case GroupType.review:
+        return localizations.review;
+      case GroupType.continuePractice:
+        return localizations.continuePractice;
+      case GroupType.locked:
+        return localizations.locked;
+      case GroupType.normal:
+        return localizations.practice;
+    }
   }
 
   // Widget menu icon bên phải - có thể click
@@ -1046,7 +1063,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                      'Học tiếp',
+                      AppLocalizations.of(context)!.continueLearning,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -1086,10 +1103,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
     return Card(
       key: _unitKeys[unit.id],
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: isHighlighted ? 6 : 3,
+      elevation: isHighlighted && !widget.reviewMode ? 6 : 3,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: isHighlighted 
+        // Trong review mode, không áp dụng border highlight
+        side: isHighlighted && !widget.reviewMode
             ? BorderSide(color: levelColor.withOpacity(0.3), width: 2)
             : BorderSide.none,
             ),
@@ -1108,7 +1126,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            gradient: isHighlighted
+            // Trong review mode, không áp dụng gradient background
+            gradient: isHighlighted && !widget.reviewMode
                 ? LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -1270,8 +1289,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   ),
                 ),
               const SizedBox(width: 12),
-              // Continue learning badge nếu highlighted
-              if (isHighlighted && !isLocked)
+              // Continue learning badge nếu highlighted (chỉ hiển thị khi không phải review mode)
+              if (isHighlighted && !isLocked && !widget.reviewMode)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
@@ -1300,7 +1319,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Học tiếp',
+                        AppLocalizations.of(context)!.continueLearning,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 11,

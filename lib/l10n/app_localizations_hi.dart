@@ -355,4 +355,50 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get all => 'सभी';
+
+  @override
+  String get review => 'समीक्षा';
+
+  @override
+  String get continuePractice => 'अभ्यास जारी रखें';
+
+  @override
+  String get pleaseLoginToUseFeature =>
+      'कृपया इस सुविधा का उपयोग करने के लिए लॉगिन करें';
+
+  @override
+  String get pleaseLogin => 'कृपया लॉगिन करें';
+
+  @override
+  String get loginToUseReviewFeature =>
+      'समीक्षा सुविधा का उपयोग करने के लिए लॉगिन करें';
+
+  @override
+  String reviewLevel(String level) {
+    return 'समीक्षा - $level';
+  }
+
+  @override
+  String get congratulations => 'बधाई हो!';
+
+  @override
+  String youReachedLevel(String level) {
+    return 'आपने स्तर $level तक पहुंच गए हैं!';
+  }
+
+  @override
+  String get continueLearningToImprove =>
+      'अपने स्तर को सुधारने के लिए सीखना जारी रखें';
+
+  @override
+  String get currentLevelText => 'वर्तमान स्तर';
+
+  @override
+  String get completed => 'पूर्ण';
+
+  @override
+  String get notUnlocked => 'अनलॉक नहीं किया गया';
+
+  @override
+  String get continueButton => 'जारी रखें';
 }

@@ -139,6 +139,33 @@
   "learningProgress": "Learning Progress",
   "overview": "Overview",
   "featureComingSoon": "Feature coming soon",
-  "all": "All"
+  "all": "All",
+  "review": "Review",
+  "continuePractice": "Continue Practice",
+  "pleaseLoginToUseFeature": "Please login to use this feature",
+  "pleaseLogin": "Please login",
+  "loginToUseReviewFeature": "Login to use review feature",
+  "reviewLevel": "Review - {level}",
+  "@reviewLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "congratulations": "Congratulations!",
+  "youReachedLevel": "You reached level {level}!",
+  "@youReachedLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLearningToImprove": "Continue learning to improve your level",
+  "currentLevelText": "Current level",
+  "completed": "Completed",
+  "notUnlocked": "Not unlocked",
+  "continueButton": "Continue"
 }
 

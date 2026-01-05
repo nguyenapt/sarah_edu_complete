@@ -357,4 +357,50 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get all => 'Все';
+
+  @override
+  String get review => 'Повторение';
+
+  @override
+  String get continuePractice => 'Продолжить практику';
+
+  @override
+  String get pleaseLoginToUseFeature =>
+      'Пожалуйста, войдите, чтобы использовать эту функцию';
+
+  @override
+  String get pleaseLogin => 'Пожалуйста, войдите';
+
+  @override
+  String get loginToUseReviewFeature =>
+      'Войдите, чтобы использовать функцию повторения';
+
+  @override
+  String reviewLevel(String level) {
+    return 'Повторение - $level';
+  }
+
+  @override
+  String get congratulations => 'Поздравляем!';
+
+  @override
+  String youReachedLevel(String level) {
+    return 'Вы достигли уровня $level!';
+  }
+
+  @override
+  String get continueLearningToImprove =>
+      'Продолжайте учиться, чтобы улучшить свой уровень';
+
+  @override
+  String get currentLevelText => 'Текущий уровень';
+
+  @override
+  String get completed => 'Завершено';
+
+  @override
+  String get notUnlocked => 'Не разблокировано';
+
+  @override
+  String get continueButton => 'Продолжить';
 }

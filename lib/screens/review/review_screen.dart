@@ -4,6 +4,7 @@ import '../../core/services/firestore_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/level_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../practice/practice_screen.dart';
 import '../auth/login_screen.dart';
 
@@ -70,7 +71,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
     if (!authProvider.isAuthenticated) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Ôn Tập'),
+          title: Text(AppLocalizations.of(context)!.review),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -85,7 +86,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Vui lòng đăng nhập',
+                  AppLocalizations.of(context)!.pleaseLogin,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Colors.grey[600],
                         fontWeight: FontWeight.bold,
@@ -94,7 +95,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Đăng nhập để sử dụng tính năng ôn tập',
+                  AppLocalizations.of(context)!.loginToUseReviewFeature,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[500],
@@ -111,7 +112,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     );
                   },
                   icon: const Icon(Icons.login),
-                  label: const Text('Đăng nhập'),
+                  label: Text(AppLocalizations.of(context)!.login),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     backgroundColor: AppTheme.primaryColor,
@@ -131,7 +132,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Ôn Tập'),
+          title: Text(AppLocalizations.of(context)!.review),
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -141,7 +142,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ôn Tập'),
+        title: Text(AppLocalizations.of(context)!.review),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
@@ -176,10 +177,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ),
               subtitle: Text(
                 isCurrentLevel
-                    ? 'Cấp độ hiện tại'
+                    ? AppLocalizations.of(context)!.currentLevelText
                     : isCompleted
-                        ? 'Đã hoàn thành'
-                        : 'Chưa mở khóa',
+                        ? AppLocalizations.of(context)!.completed
+                        : AppLocalizations.of(context)!.notUnlocked,
                 style: TextStyle(
                   color: isEnabled ? Colors.grey[600] : Colors.grey[400],
                 ),
