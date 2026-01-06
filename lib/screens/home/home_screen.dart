@@ -254,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       _buildStatItem(Icons.local_fire_department, '$streak', AppLocalizations.of(context)!.daysStreak),
                       const SizedBox(width: 24),
-                      _buildStatItem(Icons.star, '$xp', 'XP'),
+                      _buildStatItem(Icons.star, '$xp', AppLocalizations.of(context)!.xp),
                     ],
                   ),
                 ] else ...[

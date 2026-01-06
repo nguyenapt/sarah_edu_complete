@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/user_model.dart';
 import '../../models/placement_test_model.dart';
+import '../../models/progress_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import 'firestore_service.dart';
 import 'placement_storage_service.dart';
@@ -238,12 +239,56 @@ class AuthService {
           'currentLevel': result.assessedLevel.toString(),
         });
 
+        // Tạo userProgress với highestProgress nếu chưa có
+        await _createUserProgressIfNotExists(userId, result.assessedLevel);
+
         // Clear local storage
         await PlacementStorageService.clearPlacementTestResult();
       }
     } catch (e) {
       // Ignore errors during sync - don't block login
       print('Error syncing placement test result: $e');
+    }
+  }
+
+  // Tạo userProgress với highestProgress khởi đầu nếu chưa có
+  Future<void> _createUserProgressIfNotExists(String userId, PlacementTestLevel assessedLevel) async {
+    try {
+      // Kiểm tra xem đã có userProgress chưa
+      final existingProgress = await _firestoreService.getUserProgress(userId);
+      
+      // Nếu đã có userProgress, không tạo mới (tránh ghi đè)
+      if (existingProgress != null && existingProgress.highestProgress != null) {
+        return;
+      }
+
+      // Tạo highestProgress với các giá trị khởi đầu
+      final levelId = assessedLevel.toString().toLowerCase(); // "b1"
+      final unitId = 'unit_${levelId}_1'; // "unit_b1_1"
+      final lessonId = 'lesson_${levelId}_1_1'; // "lesson_b1_1_1"
+      final exerciseId = 'exercise_${levelId}_1_1_0'; // "exercise_b1_1_1_0"
+
+      final highestProgress = HighestProgress(
+        levelId: assessedLevel.toString(), // "B1" (uppercase)
+        unitId: unitId,
+        lessonId: lessonId,
+        exerciseId: exerciseId,
+        updatedAt: DateTime.now(),
+      );
+
+      // Tạo userProgress mới với highestProgress
+      final userProgress = UserProgressModel(
+        userId: userId,
+        weakPoints: WeakPoints(),
+        highestProgress: highestProgress,
+        lastUpdated: DateTime.now(),
+      );
+
+      // Lưu vào Firestore
+      await _firestoreService.updateUserProgress(userId, userProgress);
+    } catch (e) {
+      // Ignore errors - don't block login
+      print('Error creating user progress: $e');
     }
   }
 

@@ -102,40 +102,49 @@ class _PracticeScreenState extends State<PracticeScreen> {
         final userId = authProvider.user!.id;
         final currentLevel = authProvider.user!.currentLevel;
         
-        // Parallel loading: load userProgress và unit groups
-        final progressResults = await Future.wait([
-          _loadUserProgress(userId),
-        ]);
+        // Load userProgress (không throw error nếu null)
+        await _loadUserProgress(userId);
         
-        // Tạo progress mới nếu chưa có
-        final progress = _userProgress ?? UserProgressModel(
-          userId: userId,
-          weakPoints: WeakPoints(),
-          lastUpdated: DateTime.now(),
-        );
+        // Kiểm tra xem có userProgress và highestProgress không
+        final hasUserProgress = _userProgress != null && _userProgress!.highestProgress != null;
         
-        try {
-          final groups = await _unitGroupService.getAllUnitGroups(
-            currentLevel,
-            progress,
-            progress.highestProgress,
-          );
+        if (hasUserProgress) {
+          // Có userProgress và highestProgress: load unit groups
+          final progress = _userProgress!;
           
-          debugPrint('Loaded ${groups.length} unit groups for level $currentLevel');
-          
-          if (mounted) {
-            setState(() {
-              _unitGroups = groups;
-              _isLoading = false; // Chỉ set false sau khi load groups xong
-            });
+          try {
+            final groups = await _unitGroupService.getAllUnitGroups(
+              currentLevel,
+              progress,
+              progress.highestProgress,
+            );
+            
+            debugPrint('Loaded ${groups.length} unit groups for level $currentLevel');
+            
+            if (mounted) {
+              setState(() {
+                _unitGroups = groups;
+                _isLoading = false;
+              });
+            }
+          } catch (e) {
+            // Nếu có lỗi load groups, log và tiếp tục với fallback view
+            debugPrint('Error loading unit groups: $e');
+            if (mounted) {
+              setState(() {
+                _unitGroups = [];
+                _isLoading = false; // Vẫn set false để hiển thị fallback view
+              });
+            }
           }
-        } catch (e) {
-          // Nếu có lỗi load groups, log và tiếp tục với fallback view
-          debugPrint('Error loading unit groups: $e');
+        } else {
+          // Chưa có userProgress hoặc highestProgress: sử dụng backup logic
+          // Units đã được load theo currentLevel ở trên, chỉ cần set loading = false
+          debugPrint('No userProgress or highestProgress, using backup logic with units for level $currentLevel');
           if (mounted) {
             setState(() {
-              _unitGroups = [];
-              _isLoading = false; // Vẫn set false để hiển thị fallback view
+              _unitGroups = []; // Empty để trigger fallback view
+              _isLoading = false;
             });
           }
         }

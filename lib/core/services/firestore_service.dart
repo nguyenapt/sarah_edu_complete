@@ -5,9 +5,11 @@ import '../../models/lesson_model.dart';
 import '../../models/exercise_model.dart';
 import '../../models/placement_test_model.dart';
 import '../../models/progress_model.dart';
+import '../../models/user_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../core/utils/progress_comparator.dart';
 import 'level_progression_service.dart';
+import 'stats_service.dart';
 
 /// Result của saveExerciseProgress
 class SaveExerciseProgressResult {
@@ -329,6 +331,42 @@ class FirestoreService {
     }
   }
 
+  /// Get user từ Firestore
+  Future<UserModel?> getUser(String userId) async {
+    try {
+      final doc = await _firestore
+          .collection(FirebaseConstants.usersCollection)
+          .doc(userId)
+          .get();
+      
+      if (!doc.exists) return null;
+      return UserModel.fromFirestore(doc);
+    } catch (e) {
+      throw Exception('Error fetching user: $e');
+    }
+  }
+
+  /// Update user stats (totalXP, streak, lastActiveDate)
+  Future<void> updateUserStats(
+    String userId,
+    int totalXP,
+    int streak,
+    DateTime lastActiveDate,
+  ) async {
+    try {
+      await _firestore
+          .collection(FirebaseConstants.usersCollection)
+          .doc(userId)
+          .update({
+        'totalXP': totalXP,
+        'streak': streak,
+        'lastActiveDate': Timestamp.fromDate(lastActiveDate),
+      });
+    } catch (e) {
+      throw Exception('Error updating user stats: $e');
+    }
+  }
+
   /// Lưu exercise progress với logic chỉ lưu khi cao hơn
   /// Trả về SaveExerciseProgressResult để indicate nếu có level-up
   Future<SaveExerciseProgressResult> saveExerciseProgress(
@@ -435,6 +473,16 @@ class FirestoreService {
       // Lưu lên Firestore
       await updateUserProgress(userId, updatedProgress);
       print('✅ Progress updated successfully in Firestore');
+
+      // Tính toán và cập nhật stats (streak, XP)
+      try {
+        final statsService = StatsService();
+        await statsService.updateUserStats(userId, isCorrect);
+        print('✅ User stats (streak, XP) updated successfully');
+      } catch (e) {
+        print('⚠️ Error updating user stats: $e');
+        // Không throw error để không ảnh hưởng đến việc lưu progress
+      }
 
       // Check level completion và level-up
       final levelProgressionService = LevelProgressionService();

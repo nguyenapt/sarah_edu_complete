@@ -1354,14 +1354,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       ).then((result) {
         print('✅ Progress saved successfully!');
         
+        // Refresh user data để cập nhật streak và XP
+        authProvider.refreshUser();
+        
         // Check nếu có level-up
         if (result is SaveExerciseProgressResult && 
             result.levelUp && 
             result.oldLevel != null && 
             result.newLevel != null) {
-          // Refresh user data trong AuthProvider
-          authProvider.refreshUser();
-          
           // Show level-up screen
           if (mounted) {
             Navigator.of(context).push(
