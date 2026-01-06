@@ -458,7 +458,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     const double moduleHeight = gradeTotalSize - 4; // Chiều cao module = chiều cao grade với padding - 4px
     
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 8),
       height: moduleHeight,
       child: Stack(
         clipBehavior: Clip.none,
@@ -541,9 +541,22 @@ class _PracticeScreenState extends State<PracticeScreen> {
       borderRadius: BorderRadius.circular(8),
       child: Container(
         padding: const EdgeInsets.all(8),
-        child: CustomPaint(
-          size: const Size(64, 64),
-          painter: GradePainter(color: iconColor),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Star icon
+            CustomPaint(
+              size: const Size(64, 64),
+              painter: GradePainter(color: iconColor),
+            ),
+            // Lock icon ở giữa star (chỉ hiển thị khi locked)
+            if (group.type == GroupType.locked)
+              Icon(
+                Icons.lock,
+                color: Colors.grey[700],
+                size: 24,
+              ),
+          ],
         ),
       ),
     );
@@ -551,16 +564,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   // Widget content ở giữa - có thể click
   Widget _buildModuleContent(UnitGroup group, String levelId) {
-    if (group.type == GroupType.locked) {
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        child: Icon(
-          Icons.lock,
-          color: Colors.grey[600],
-          size: 24,
-        ),
-      );
-    }
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    
+    // Lấy danh sách unit titles
+    final unitTitles = group.units.map((unit) => unit.getTitle(languageCode)).toList();
+    final unitTitlesText = unitTitles.join(', ');
 
     return InkWell(
       onTap: group.isUnlocked
@@ -578,20 +586,43 @@ class _PracticeScreenState extends State<PracticeScreen> {
             }
           : null,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        alignment: Alignment.center,
-        child: Text(
-          _getGroupDisplayName(group.type),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: group.type == GroupType.review 
-                ? const Color(0xFFB5E48C) // Màu xanh lá nhạt cho ôn tập
-                : group.type == GroupType.continuePractice 
-                    ? const Color(0xFFFFA726) // Màu cam cho tiếp tục luyện tập
-                    : Colors.black,
-          ),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        alignment: Alignment.topLeft,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Group type name (bỏ qua nếu locked)
+            if (group.type != GroupType.locked)
+              Text(
+                _getGroupDisplayName(group.type),
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: group.type == GroupType.review 
+                      ? const Color(0xFFB5E48C) // Màu xanh lá nhạt cho ôn tập
+                      : group.type == GroupType.continuePractice 
+                          ? const Color(0xFFFFA726) // Màu cam cho tiếp tục luyện tập
+                          : Colors.black,
+                ),
+              ),
+            // Unit titles
+            if (unitTitles.isNotEmpty) ...[
+              if (group.type != GroupType.locked) const SizedBox(height: 2),
+              Text(
+                unitTitlesText,
+                textAlign: TextAlign.left,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );
@@ -631,11 +662,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
         bottomRight: Radius.circular(12),
       ),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         child: Icon(
           Icons.menu,
           color: group.isUnlocked ? Colors.grey[700] : Colors.grey[400],
-          size: 24,
+          size: 20,
         ),
       ),
     );
