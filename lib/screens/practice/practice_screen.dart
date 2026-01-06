@@ -13,6 +13,8 @@ import '../../models/unit_model.dart';
 import '../../models/level_model.dart';
 import '../../models/progress_model.dart';
 import '../../models/unit_group_model.dart';
+import '../../models/multilanguage_content.dart';
+import 'package:flutter_html/flutter_html.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../learning/unit_list_screen.dart';
 import '../learning/exercise_screen.dart';
@@ -102,24 +104,37 @@ class _PracticeScreenState extends State<PracticeScreen> {
         final userId = authProvider.user!.id;
         final currentLevel = authProvider.user!.currentLevel;
         
+        debugPrint('🔍 Loading data for authenticated user: userId=$userId, currentLevel=$currentLevel');
+        
         // Load userProgress (không throw error nếu null)
         await _loadUserProgress(userId);
         
         // Kiểm tra xem có userProgress và highestProgress không
         final hasUserProgress = _userProgress != null && _userProgress!.highestProgress != null;
         
+        debugPrint('🔍 UserProgress status: hasUserProgress=$hasUserProgress, highestProgress=${_userProgress?.highestProgress?.groupId}');
+        
         if (hasUserProgress) {
           // Có userProgress và highestProgress: load unit groups
           final progress = _userProgress!;
-          
+        
           try {
+            debugPrint('🔍 Loading unit groups from groupUnits collection for level $currentLevel');
             final groups = await _unitGroupService.getAllUnitGroups(
               currentLevel,
               progress,
               progress.highestProgress,
             );
             
-            debugPrint('Loaded ${groups.length} unit groups for level $currentLevel');
+            debugPrint('✅ Loaded ${groups.length} unit groups for level $currentLevel');
+            if (groups.isNotEmpty) {
+              debugPrint('📋 Group details:');
+              for (var group in groups) {
+                debugPrint('  - ${group.group}: type=${group.type}, unlocked=${group.isUnlocked}, units=${group.units.length}');
+              }
+            } else {
+              debugPrint('⚠️ No groups found! This will trigger fallback to units view.');
+            }
             
             if (mounted) {
               setState(() {
@@ -127,9 +142,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 _isLoading = false;
               });
             }
-          } catch (e) {
+          } catch (e, stackTrace) {
             // Nếu có lỗi load groups, log và tiếp tục với fallback view
-            debugPrint('Error loading unit groups: $e');
+            debugPrint('❌ Error loading unit groups: $e');
+            debugPrint('Stack trace: $stackTrace');
             if (mounted) {
               setState(() {
                 _unitGroups = [];
@@ -140,7 +156,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
         } else {
           // Chưa có userProgress hoặc highestProgress: sử dụng backup logic
           // Units đã được load theo currentLevel ở trên, chỉ cần set loading = false
-          debugPrint('No userProgress or highestProgress, using backup logic with units for level $currentLevel');
+          debugPrint('⚠️ No userProgress or highestProgress, using backup logic with units for level $currentLevel');
           if (mounted) {
             setState(() {
               _unitGroups = []; // Empty để trigger fallback view
@@ -381,23 +397,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
               padding: const EdgeInsets.only(bottom: 16),
               child: _buildContinueLearningCard(currentLevel),
             ),
-          // Danh sách practice modules với separator
-          ..._unitGroups.asMap().entries.map((entry) {
-            final index = entry.key;
-            final group = entry.value;
-            return Column(
-              children: [
-                _buildPracticeModule(group, currentLevel),
-                // Vạch phân cách (trừ module cuối cùng)
-                if (index < _unitGroups.length - 1)
-                  Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.grey[300],
-                    indent: 48, // Bắt đầu từ sau pentagon
-                  ),
-              ],
-            );
+          // Danh sách practice modules
+          ..._unitGroups.map((group) {
+            return _buildPracticeModule(group, currentLevel);
           }),
         ],
       );
@@ -455,7 +457,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     const double gradeSize = 64.0; // Kích thước grade (ngôi sao)
     const double gradePadding = 8.0; // Padding của grade
     const double gradeTotalSize = gradeSize + (gradePadding * 2); // 64 + 16 = 80
-    const double moduleHeight = gradeTotalSize - 4; // Chiều cao module = chiều cao grade với padding - 4px
+    const double moduleHeight = 120.0; // Tăng chiều cao để đủ hiển thị HTML content (tránh overflow)
     
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -546,8 +548,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
           children: [
             // Star icon
             CustomPaint(
-              size: const Size(64, 64),
-              painter: GradePainter(color: iconColor),
+          size: const Size(64, 64),
+          painter: GradePainter(color: iconColor),
             ),
             // Lock icon ở giữa star (chỉ hiển thị khi locked)
             if (group.type == GroupType.locked)
@@ -566,9 +568,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
   Widget _buildModuleContent(UnitGroup group, String levelId) {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
     
-    // Lấy danh sách unit titles
-    final unitTitles = group.units.map((unit) => unit.getTitle(languageCode)).toList();
-    final unitTitlesText = unitTitles.join(', ');
+    // Lấy group title từ groupUnits collection
+    final groupTitle = group.title != null 
+        ? MultilanguageContent.getText(group.title, languageCode)
+        : '';
 
     return InkWell(
       onTap: group.isUnlocked
@@ -586,7 +589,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
             }
           : null,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         alignment: Alignment.topLeft,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -608,18 +611,26 @@ class _PracticeScreenState extends State<PracticeScreen> {
                           : Colors.black,
                 ),
               ),
-            // Unit titles
-            if (unitTitles.isNotEmpty) ...[
+            // Group title (HTML formatted)
+            if (groupTitle.isNotEmpty) ...[
               if (group.type != GroupType.locked) const SizedBox(height: 2),
-              Text(
-                unitTitlesText,
-                textAlign: TextAlign.left,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+              Html(
+                data: groupTitle,
+                style: {
+                  "body": Style(
+                    margin: Margins.zero,
+                    padding: HtmlPaddings.zero,
+                    fontSize: FontSize(12),
+                    color: Colors.grey[600],
+                    textAlign: TextAlign.left,
+                  ),
+                  "p": Style(
+                    margin: Margins.only(bottom: 4),
+                    padding: HtmlPaddings.zero,
+                    fontSize: FontSize(12),
+                    color: Colors.grey[600],
+                  ),
+                },
               ),
             ],
           ],

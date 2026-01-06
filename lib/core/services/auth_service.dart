@@ -7,6 +7,7 @@ import '../../models/progress_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import 'firestore_service.dart';
 import 'placement_storage_service.dart';
+import 'group_unit_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -268,11 +269,28 @@ class AuthService {
       final lessonId = 'lesson_${levelId}_1_1'; // "lesson_b1_1_1"
       final exerciseId = 'exercise_${levelId}_1_1_0'; // "exercise_b1_1_1_0"
 
+      // Tìm groupId từ unit
+      String? groupId;
+      try {
+        final groupUnitService = GroupUnitService();
+        final groupUnit = await groupUnitService.getGroupUnitByUnitId(unitId);
+        groupId = groupUnit?.id;
+        
+        // Nếu không tìm thấy qua groupUnits, thử lấy từ unit.groupId
+        if (groupId == null) {
+          final unit = await _firestoreService.getUnit(unitId);
+          groupId = unit?.groupId;
+        }
+      } catch (e) {
+        print('⚠️ Error finding groupId for unit $unitId: $e');
+      }
+
       final highestProgress = HighestProgress(
         levelId: assessedLevel.toString(), // "B1" (uppercase)
         unitId: unitId,
         lessonId: lessonId,
         exerciseId: exerciseId,
+        groupId: groupId,
         updatedAt: DateTime.now(),
       );
 

@@ -1,12 +1,16 @@
+import 'package:flutter/foundation.dart';
 import '../../models/unit_model.dart';
 import '../../models/unit_group_model.dart';
 import '../../models/exercise_model.dart';
 import '../../models/progress_model.dart';
+import '../../models/group_unit_model.dart';
 import 'firestore_service.dart';
+import 'group_unit_service.dart';
 
 /// Service để quản lý nhóm unit và logic unlock
 class UnitGroupService {
   final FirestoreService _firestoreService = FirestoreService();
+  final GroupUnitService _groupUnitService = GroupUnitService();
   
   // Cache units của level để tránh query lại
   final Map<String, List<UnitModel>> _cachedUnitsByLevel = {};
@@ -181,15 +185,36 @@ class UnitGroupService {
   }
 
   /// Lấy tất cả units trong một group
+  /// Hỗ trợ cả groupUnits collection (groupId) và logic cũ (unit.group)
   Future<List<UnitModel>> getUnitsByGroup(
     String levelId,
     String group,
   ) async {
     try {
-      // Sử dụng cache thay vì query lại
+      // Thử lấy từ groupUnits collection trước
+      final groupUnit = await _groupUnitService.getGroupUnit(group);
+      if (groupUnit != null) {
+        // Lấy units từ groupUnit
+        final allUnits = await _getUnitsByLevelCached(levelId);
+        final unitMap = <String, UnitModel>{};
+        for (final unit in allUnits) {
+          unitMap[unit.id] = unit;
+        }
+        
+        final units = groupUnit.units
+            .map((unitId) => unitMap[unitId])
+            .where((unit) => unit != null)
+            .cast<UnitModel>()
+            .toList();
+        
+        units.sort((a, b) => a.order.compareTo(b.order));
+        return units;
+      }
+      
+      // Fallback: sử dụng logic cũ (unit.groupId)
       final allUnits = await _getUnitsByLevelCached(levelId);
       return allUnits
-          .where((unit) => unit.group == group)
+          .where((unit) => unit.groupId == group)
           .toList()
         ..sort((a, b) => a.order.compareTo(b.order));
     } catch (e) {
@@ -198,18 +223,29 @@ class UnitGroupService {
   }
 
   /// Lấy danh sách tất cả groups trong một level, sắp xếp theo order
+  /// Ưu tiên lấy từ groupUnits collection, fallback về unit.groupId/group
   Future<List<String>> getAllGroups(String levelId) async {
     try {
-      // Sử dụng cache thay vì query lại
+      // Thử lấy từ groupUnits collection trước
+      final groupUnits = await _groupUnitService.getGroupUnitsByLevel(levelId);
+      if (groupUnits.isNotEmpty) {
+        return groupUnits.map((gu) => gu.id).toList();
+      }
+      
+      // Fallback: sử dụng logic cũ từ units
       final allUnits = await _getUnitsByLevelCached(levelId);
-      final groups = allUnits
-          .where((unit) => unit.group != null && unit.group!.isNotEmpty)
-          .map((unit) => unit.group!)
-          .toSet()
-          .toList();
+      final groups = <String>{};
+      
+      for (final unit in allUnits) {
+        if (unit.groupId != null && unit.groupId!.isNotEmpty) {
+          groups.add(unit.groupId!);
+        }
+      }
+      
+      final groupsList = groups.toList();
       
       // Sắp xếp groups theo số (nếu là số) hoặc alphabet
-      groups.sort((a, b) {
+      groupsList.sort((a, b) {
         final aNum = int.tryParse(a);
         final bNum = int.tryParse(b);
         if (aNum != null && bNum != null) {
@@ -218,7 +254,7 @@ class UnitGroupService {
         return a.compareTo(b);
       });
       
-      return groups;
+      return groupsList;
     } catch (e) {
       throw Exception('Error fetching all groups: $e');
     }
@@ -283,7 +319,7 @@ class UnitGroupService {
     }
   }
 
-  /// Xác định group hiện tại dựa vào highestProgress.unitId
+  /// Xác định group hiện tại dựa vào highestProgress.groupId hoặc unit.groupId
   Future<String?> getCurrentGroup(
     HighestProgress? highestProgress,
     String levelId,
@@ -291,10 +327,16 @@ class UnitGroupService {
     if (highestProgress == null) return null;
 
     try {
+      // Ưu tiên sử dụng groupId từ highestProgress
+      if (highestProgress.groupId != null) {
+        return highestProgress.groupId;
+      }
+      
+      // Fallback: lấy từ unit.groupId
       final unit = await _firestoreService.getUnit(highestProgress.unitId);
       if (unit == null || unit.levelId != levelId) return null;
       
-      return unit.group;
+      return unit.groupId;
     } catch (e) {
       return null;
     }
@@ -527,83 +569,118 @@ class UnitGroupService {
   }
 
   /// Lấy tất cả UnitGroups cho một level với thông tin unlock và type
+  /// Sử dụng collection groupUnits thay vì tính toán từ units
   Future<List<UnitGroup>> getAllUnitGroups(
     String levelId,
     UserProgressModel progress,
     HighestProgress? highestProgress,
   ) async {
     try {
-      // Load units của level một lần và cache
-      await _getUnitsByLevelCached(levelId);
+      // Load groupUnits từ collection
+      debugPrint('🔍 getAllUnitGroups: Loading groupUnits for level $levelId');
+      List<GroupUnitModel> groupUnits;
+      try {
+        groupUnits = await _groupUnitService.getGroupUnitsByLevel(levelId);
+        debugPrint('🔍 getAllUnitGroups: Found ${groupUnits.length} groupUnits');
+      } catch (e) {
+        debugPrint('❌ getAllUnitGroups: Error loading groupUnits: $e');
+        // Nếu là lỗi permission, có thể do security rules chưa được cấu hình
+        // Trả về empty list để fallback về units view
+        if (e.toString().contains('permission-denied') || e.toString().contains('permissions')) {
+          debugPrint('⚠️ getAllUnitGroups: Permission denied - Firestore security rules may need to be updated for groupUnits collection');
+        }
+        return [];
+      }
       
-      // Parallel loading: load groups, reviewGroup, continueGroup song song
-      final groupResults = await Future.wait([
-        getAllGroups(levelId),
-        getReviewGroup(levelId, highestProgress),
-        getContinueGroup(levelId, highestProgress),
-      ]);
-      
-      final groups = groupResults[0] as List<String>;
-      final reviewGroup = groupResults[1] as String?;
-      final continueGroup = groupResults[2] as String?;
-      
-      if (groups.isEmpty) return [];
+      if (groupUnits.isEmpty) {
+        debugPrint('⚠️ getAllUnitGroups: No groupUnits found in collection for level $levelId');
+        return [];
+      }
 
-      // Parallel loading: load units cho tất cả groups cùng lúc
-      final unitsFutures = groups.map((group) => getUnitsByGroup(levelId, group));
-      final allUnitsList = await Future.wait(unitsFutures);
+      // Xác định currentGroupIndex từ highestProgress.groupId
+      int? currentGroupIndex;
+      if (highestProgress?.groupId != null) {
+        currentGroupIndex = await _groupUnitService.getGroupIndex(highestProgress!.groupId!);
+      }
 
-      // Parallel loading: check unlock và completed cho tất cả groups cùng lúc
-      final unlockFutures = groups.asMap().entries.map((entry) {
-        final index = entry.key;
-        final group = entry.value;
-        return isGroupUnlocked(levelId, group, progress, highestProgress);
-      });
-      
-      final completedFutures = groups.asMap().entries.map((entry) {
-        final index = entry.key;
-        final group = entry.value;
-        return isGroupCompleted(levelId, group, progress, highestProgress);
-      });
-      
-      final unlockResults = await Future.wait(unlockFutures);
-      final completedResults = await Future.wait(completedFutures);
+      // Load units cho tất cả groups
+      final allUnits = await _getUnitsByLevelCached(levelId);
+      final unitMap = <String, UnitModel>{};
+      for (final unit in allUnits) {
+        unitMap[unit.id] = unit;
+      }
 
       final unitGroups = <UnitGroup>[];
 
-      for (int i = 0; i < groups.length; i++) {
-        final group = groups[i];
-        final units = allUnitsList[i];
-        final isUnlocked = unlockResults[i];
-        final isCompleted = completedResults[i];
-
-        // Xác định type
-        GroupType type;
-        if (group == reviewGroup) {
-          type = GroupType.review;
-        } else if (group == continueGroup) {
-          type = GroupType.continuePractice;
-        } else if (!isUnlocked) {
-          type = GroupType.locked;
-        } else {
-          type = GroupType.normal;
-        }
+      for (final groupUnit in groupUnits) {
+        debugPrint('🔍 Processing groupUnit: id=${groupUnit.id}, index=${groupUnit.index}, units=${groupUnit.units.length}');
         
-        // Debug log
-        print('Group: $group, isUnlocked: $isUnlocked, type: $type, reviewGroup: $reviewGroup, continueGroup: $continueGroup');
+        // Lấy units từ groupUnit
+        final units = groupUnit.units
+            .map((unitId) => unitMap[unitId])
+            .where((unit) => unit != null)
+            .cast<UnitModel>()
+            .toList();
+
+        debugPrint('  ✅ Found ${units.length} units for group ${groupUnit.id} (expected ${groupUnit.units.length})');
+        
+        // Nếu không có units nào match, log warning nhưng vẫn tạo group
+        if (units.isEmpty && groupUnit.units.isNotEmpty) {
+          debugPrint('  ⚠️ Warning: No units found for group ${groupUnit.id}. Expected units: ${groupUnit.units.join(", ")}');
+        }
+
+        // Xác định type và unlock status dựa trên index
+        GroupType type;
+        bool isUnlocked;
+
+        if (currentGroupIndex == null) {
+          // Không có groupId → group đầu tiên enable
+          isUnlocked = groupUnit.index == 0;
+          type = groupUnit.index == 0 ? GroupType.continuePractice : GroupType.locked;
+          debugPrint('  📌 No currentGroupIndex: group ${groupUnit.id} isUnlocked=$isUnlocked, type=$type');
+        } else {
+          // Có groupId: so sánh index
+          if (groupUnit.index < currentGroupIndex) {
+            type = GroupType.review;
+            isUnlocked = true;
+          } else if (groupUnit.index == currentGroupIndex) {
+            type = GroupType.continuePractice;
+            isUnlocked = true;
+          } else {
+            type = GroupType.locked;
+            isUnlocked = false;
+          }
+          debugPrint('  📌 currentGroupIndex=$currentGroupIndex: group ${groupUnit.id} (index=${groupUnit.index}) isUnlocked=$isUnlocked, type=$type');
+        }
+
+        // Kiểm tra completed (dựa trên highestProgress)
+        bool isCompleted = false;
+        if (highestProgress != null) {
+          // Group được coi là completed nếu highestProgress >= exercise cao nhất trong group
+          try {
+            isCompleted = await isGroupCompleted(levelId, groupUnit.id, progress, highestProgress);
+          } catch (e) {
+            debugPrint('  ⚠️ Error checking isGroupCompleted for ${groupUnit.id}: $e');
+            // Ignore error
+          }
+        }
 
         final unitGroup = UnitGroup.fromUnits(
           levelId: levelId,
-          group: group,
+          group: groupUnit.id, // Use groupUnit.id instead of group string
           units: units,
-          order: i + 1,
+          order: groupUnit.index + 1,
           isUnlocked: isUnlocked,
           isCompleted: isCompleted,
           type: type,
+          title: groupUnit.title, // Pass group title from GroupUnitModel
         );
 
+        debugPrint('  ✅ Created UnitGroup: ${unitGroup.group}, type=${unitGroup.type}, units=${unitGroup.units.length}');
         unitGroups.add(unitGroup);
       }
+      
+      debugPrint('✅ Total unitGroups created: ${unitGroups.length}');
 
       return unitGroups;
     } catch (e) {

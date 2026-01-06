@@ -58,7 +58,18 @@ Click **Create**
 
 Click **Create**
 
-#### Index 4: UserProgress Collection (Optional - cho tương lai)
+#### Index 4: GroupUnits Collection
+**Collection ID**: `groupUnits`
+
+**Fields to index**:
+1. `levelId` - Ascending
+2. `index` - Ascending
+
+**Query scope**: Collection
+
+Click **Create**
+
+#### Index 5: UserProgress Collection (Optional - cho tương lai)
 **Collection ID**: `userProgress`
 
 **Fields to index**:
@@ -93,7 +104,15 @@ Fields:
   - lessonId (Ascending)
 ```
 
-### 4. UserProgress Index (Optional)
+### 4. GroupUnits Index
+```
+Collection: groupUnits
+Fields:
+  - levelId (Ascending)
+  - index (Ascending)
+```
+
+### 5. UserProgress Index (Optional)
 ```
 Collection: userProgress
 Fields:
@@ -143,6 +162,20 @@ Tạo file trong thư mục root của project:
       "fields": [
         {
           "fieldPath": "lessonId",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "groupUnits",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "levelId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "index",
           "order": "ASCENDING"
         }
       ]

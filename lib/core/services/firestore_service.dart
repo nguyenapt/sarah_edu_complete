@@ -10,6 +10,7 @@ import '../../core/constants/firebase_constants.dart';
 import '../../core/utils/progress_comparator.dart';
 import 'level_progression_service.dart';
 import 'stats_service.dart';
+import 'group_unit_service.dart';
 
 /// Result của saveExerciseProgress
 class SaveExerciseProgressResult {
@@ -414,14 +415,25 @@ class FirestoreService {
 
       // Kiểm tra xem có cần cập nhật highestProgress không
       HighestProgress? updatedHighestProgress = currentProgress.highestProgress;
+      final groupUnitService = GroupUnitService();
 
       if (currentProgress.highestProgress == null) {
         // Nếu chưa có highestProgress, tạo mới
+        // Tìm groupId từ unit
+        String? groupId;
+        try {
+          final groupUnit = await groupUnitService.getGroupUnitByUnitId(exercise.unitId);
+          groupId = groupUnit?.id;
+        } catch (e) {
+          print('⚠️ Error finding groupId for unit ${exercise.unitId}: $e');
+        }
+
         updatedHighestProgress = HighestProgress(
           levelId: exercise.levelId,
           unitId: exercise.unitId,
           lessonId: exercise.lessonId,
           exerciseId: exercise.id,
+          groupId: groupId,
           updatedAt: DateTime.now(),
         );
       } else {
@@ -448,12 +460,24 @@ class FirestoreService {
         );
 
         if (isHigher) {
+          // Tìm groupId từ unit mới
+          String? groupId;
+          try {
+            final groupUnit = await groupUnitService.getGroupUnitByUnitId(exercise.unitId);
+            groupId = groupUnit?.id;
+          } catch (e) {
+            print('⚠️ Error finding groupId for unit ${exercise.unitId}: $e');
+            // Fallback: giữ nguyên groupId cũ nếu không tìm thấy
+            groupId = currentProgress.highestProgress!.groupId;
+          }
+
           // Cập nhật highestProgress
           updatedHighestProgress = HighestProgress(
             levelId: exercise.levelId,
             unitId: exercise.unitId,
             lessonId: exercise.lessonId,
             exerciseId: exercise.id,
+            groupId: groupId,
             updatedAt: DateTime.now(),
           );
         }

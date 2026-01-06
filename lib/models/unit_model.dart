@@ -9,7 +9,7 @@ class UnitModel {
   final int estimatedTime; // minutes
   final List<String> lessons;
   final List<String> prerequisites; // Unit IDs cần hoàn thành trước
-  final String? group; // THÊM MỚI
+  final String? groupId; // Changed from group to groupId
 
   UnitModel({
     required this.id,
@@ -20,7 +20,7 @@ class UnitModel {
     required this.estimatedTime,
     this.lessons = const [],
     this.prerequisites = const [],
-    this.group, // THÊM MỚI
+    this.groupId,
   });
 
   /// Get title theo language code
@@ -62,7 +62,7 @@ class UnitModel {
       estimatedTime: data['estimatedTime'] ?? 0,
       lessons: List<String>.from(data['lessons'] ?? []),
       prerequisites: List<String>.from(data['prerequisites'] ?? []),
-      group: data['group'], // THÊM MỚI
+      groupId: data['groupId'] ?? data['group'], // Support both groupId and group for backward compatibility
     );
   }
 
@@ -75,7 +75,7 @@ class UnitModel {
       'estimatedTime': estimatedTime,
       'lessons': lessons,
       'prerequisites': prerequisites,
-      'group': group, // THÊM MỚI
+      'groupId': groupId,
     };
   }
 }

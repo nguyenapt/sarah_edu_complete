@@ -62,6 +62,18 @@ service cloud.firestore {
       allow write: if false; // Only admin
     }
     
+    // GroupUnits - Public read, no write
+    match /groupUnits/{groupId} {
+      allow read: if true; // Anyone can read
+      allow write: if false; // Only admin
+    }
+    
+    // Placement Test - Public read, no write
+    match /placementTest/{testId} {
+      allow read: if true; // Anyone can read
+      allow write: if false; // Only admin
+    }
+    
     // ============================================
     // USER-SPECIFIC COLLECTIONS (Require auth)
     // ============================================
@@ -101,7 +113,7 @@ service cloud.firestore {
 
 ## Giải Thích Rules
 
-### Public Collections (levels, units, lessons, exercises)
+### Public Collections (levels, units, lessons, exercises, groupUnits, placementTest)
 - `allow read: if true` - Bất kỳ ai cũng có thể đọc (kể cả chưa đăng nhập)
 - `allow write: if false` - Không ai có thể ghi (chỉ admin qua Cloud Functions)
 

@@ -16,6 +16,7 @@ class UnitGroup {
   final bool isCompleted; // Group đã hoàn thành chưa (dựa vào highestProgress hoặc exerciseHistory)
   final String displayName; // "Ôn tập", "Tiếp tục luyện tập", etc.
   final GroupType type; // REVIEW, CONTINUE, LOCKED, NORMAL
+  final Map<String, dynamic>? title; // Group title (multi-language) from groupUnits collection
 
   UnitGroup({
     required this.levelId,
@@ -26,6 +27,7 @@ class UnitGroup {
     required this.isCompleted,
     required this.displayName,
     required this.type,
+    this.title,
   });
 
   /// Tạo UnitGroup từ danh sách units
@@ -37,6 +39,7 @@ class UnitGroup {
     required bool isUnlocked,
     required bool isCompleted,
     required GroupType type,
+    Map<String, dynamic>? title,
   }) {
     // Xác định displayName dựa vào type
     String displayName;
@@ -64,6 +67,7 @@ class UnitGroup {
       isCompleted: isCompleted,
       displayName: displayName,
       type: type,
+      title: title,
     );
   }
 }

@@ -81,6 +81,7 @@ class HighestProgress {
   final String unitId;
   final String lessonId;
   final String exerciseId;
+  final String? groupId; // Group ID from groupUnits collection
   final DateTime updatedAt;
 
   HighestProgress({
@@ -88,6 +89,7 @@ class HighestProgress {
     required this.unitId,
     required this.lessonId,
     required this.exerciseId,
+    this.groupId,
     required this.updatedAt,
   });
 
@@ -97,6 +99,7 @@ class HighestProgress {
       unitId: map['unitId'] ?? '',
       lessonId: map['lessonId'] ?? '',
       exerciseId: map['exerciseId'] ?? '',
+      groupId: map['groupId'],
       updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -107,6 +110,7 @@ class HighestProgress {
       'unitId': unitId,
       'lessonId': lessonId,
       'exerciseId': exerciseId,
+      'groupId': groupId,
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
@@ -116,6 +120,7 @@ class HighestProgress {
     String? unitId,
     String? lessonId,
     String? exerciseId,
+    String? groupId,
     DateTime? updatedAt,
   }) {
     return HighestProgress(
@@ -123,6 +128,7 @@ class HighestProgress {
       unitId: unitId ?? this.unitId,
       lessonId: lessonId ?? this.lessonId,
       exerciseId: exerciseId ?? this.exerciseId,
+      groupId: groupId ?? this.groupId,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

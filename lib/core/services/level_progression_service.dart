@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../../models/exercise_model.dart';
 import '../../models/progress_model.dart';
 import '../../core/services/firestore_service.dart';
+import 'group_unit_service.dart';
 
 class LevelProgressionService {
   final FirestoreService _firestoreService = FirestoreService();
@@ -172,12 +173,29 @@ class LevelProgressionService {
         throw Exception('Cannot find first exercise of level $newLevel');
       }
 
-      // 3. Tạo highestProgress mới với exercise đầu tiên (index 0)
+      // 3. Tìm groupId từ unit
+      String? groupId;
+      try {
+        final groupUnitService = GroupUnitService();
+        final groupUnit = await groupUnitService.getGroupUnitByUnitId(firstExercise.unitId);
+        groupId = groupUnit?.id;
+        
+        // Nếu không tìm thấy qua groupUnits, thử lấy từ unit.groupId
+        if (groupId == null) {
+          final unit = await _firestoreService.getUnit(firstExercise.unitId);
+          groupId = unit?.groupId;
+        }
+      } catch (e) {
+        print('⚠️ Error finding groupId for unit ${firstExercise.unitId}: $e');
+      }
+
+      // 4. Tạo highestProgress mới với exercise đầu tiên (index 0)
       final newHighestProgress = HighestProgress(
         levelId: firstExercise.levelId,
         unitId: firstExercise.unitId,
         lessonId: firstExercise.lessonId,
         exerciseId: firstExercise.id,
+        groupId: groupId,
         updatedAt: DateTime.now(),
       );
 
