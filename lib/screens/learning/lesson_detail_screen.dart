@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html_table/flutter_html_table.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/lesson_model.dart';
 import '../../core/services/firestore_service.dart';
@@ -88,6 +89,52 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     );
   }
 
+  /// Fixes HTML table by adding tbody if missing and removing problematic inline styles
+  String _fixTableHtml(String html) {
+    if (!html.contains('<table')) {
+      return html;
+    }
+    
+    var fixedHtml = html;
+    
+    // Remove inline width styles from td/th tags that might cause rendering issues
+    fixedHtml = fixedHtml.replaceAllMapped(
+      RegExp(r'<td[^>]*style="[^"]*width:[^"]*"[^>]*>', caseSensitive: false),
+      (match) {
+        final tag = match.group(0)!;
+        // Remove width from style attribute
+        var newTag = tag.replaceAll(RegExp(r'width\s*:\s*[^;"]*;?\s*', caseSensitive: false), '');
+        newTag = newTag.replaceAll(RegExp(r'style="\s*;"'), '');
+        newTag = newTag.replaceAll(RegExp(r'style=""'), '');
+        return newTag;
+      },
+    );
+    
+    // Check if table already has tbody
+    if (fixedHtml.contains('<tbody') || fixedHtml.contains('<thead') || fixedHtml.contains('<tfoot')) {
+      return fixedHtml;
+    }
+    
+    // Use regex to find table tags and add tbody
+    final tableRegex = RegExp(r'(<table[^>]*>)(.*?)(</table>)', dotAll: true);
+    
+    return fixedHtml.replaceAllMapped(tableRegex, (match) {
+      final tableOpen = match.group(1)!;
+      final tableContent = match.group(2)!;
+      final tableClose = match.group(3)!;
+      
+      // Skip if content is empty or already has tbody/thead/tfoot
+      if (tableContent.trim().isEmpty || 
+          tableContent.contains('<tbody') || 
+          tableContent.contains('<thead') || 
+          tableContent.contains('<tfoot')) {
+        return match.group(0)!;
+      }
+      
+      return '$tableOpen<tbody>$tableContent</tbody>$tableClose';
+    });
+  }
+
   Widget _buildTheorySection() {
     final theory = widget.lesson.theory!;
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
@@ -118,21 +165,74 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                   ),
             ),
             const SizedBox(height: 8),
-            Html(
-              data: theory.getDescription(languageCode),
-              style: {
-                "body": Style(
-                  margin: Margins.zero,
-                  padding: HtmlPaddings.zero,
-                  fontSize: FontSize(Theme.of(context).textTheme.bodyLarge?.fontSize ?? 16),
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-                "p": Style(
-                  margin: Margins.only(bottom: 8),
-                ),
-                "strong": Style(
-                  fontWeight: FontWeight.bold,
-                ),
+            Builder(
+              builder: (context) {
+                final htmlContent = theory.getDescription(languageCode);
+                final fixedHtmlContent = _fixTableHtml(htmlContent);
+                
+                // Debug: Print HTML content to console
+                print('=== HTML Description Debug ===');
+                print('HTML Length: ${htmlContent.length}');
+                print('Contains <table>: ${htmlContent.contains('<table')}');
+                print('Contains </table>: ${htmlContent.contains('</table>')}');
+                print('Contains <tbody>: ${htmlContent.contains('<tbody')}');
+                print('Contains <td>: ${htmlContent.contains('<td')}');
+                print('Contains <th>: ${htmlContent.contains('<th')}');
+                print('Contains <tr>: ${htmlContent.contains('<tr')}');
+                print('Fixed HTML contains <tbody>: ${fixedHtmlContent.contains('<tbody')}');
+                print('Full HTML Content:');
+                print(htmlContent);
+                print('Fixed HTML Content:');
+                print(fixedHtmlContent);
+                print('================================');
+                
+                return Html(
+                  data: fixedHtmlContent,
+                  extensions: [
+                    TableHtmlExtension(),
+                  ],
+                  style: {
+                    "body": Style(
+                      margin: Margins.zero,
+                      padding: HtmlPaddings.zero,
+                      fontSize: FontSize(Theme.of(context).textTheme.bodyLarge?.fontSize ?? 16),
+                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+                    ),
+                    "p": Style(
+                      margin: Margins.only(bottom: 8),
+                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+                    ),
+                    "strong": Style(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+                    ),
+                    "span": Style(
+                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+                    ),
+                    "table": Style(
+                      border: Border.all(color: Colors.grey[400]!, width: 1),
+                      margin: Margins.only(bottom: 16),
+                    ),
+                    "tr": Style(
+                      border: Border.all(color: Colors.grey[400]!, width: 1),
+                    ),
+                    "td": Style(
+                      border: Border.all(color: Colors.grey[400]!, width: 1),
+                      padding: HtmlPaddings.all(8),
+                      fontSize: FontSize(13),
+                      backgroundColor: Colors.white,
+                      color: Colors.black,
+                    ),
+                    "th": Style(
+                      border: Border.all(color: Colors.grey[400]!, width: 1),
+                      padding: HtmlPaddings.all(8),
+                      fontSize: FontSize(13),
+                      fontWeight: FontWeight.bold,
+                      backgroundColor: Colors.grey[100],
+                      color: Colors.black,
+                    ),
+                  },
+                );
               },
             ),
             if (theory.usage != null && theory.usage!.isNotEmpty) ...[
@@ -206,18 +306,48 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
           ...forms.asMap().entries.map((entry) {
             return Padding(
               padding: const EdgeInsets.only(left: 28, bottom: 4),
-              child: Html(
-                data: entry.value,
-                style: {
-                  "body": Style(
-                    margin: Margins.zero,
-                    padding: HtmlPaddings.zero,
-                    color: Colors.grey[700],
-                    fontStyle: FontStyle.italic,
-                  ),
-                  "strong": Style(
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                      child: Html(
+                        data: entry.value,
+                        extensions: [
+                          TableHtmlExtension(),
+                        ],
+                        style: {
+                          "body": Style(
+                            margin: Margins.zero,
+                            padding: HtmlPaddings.zero,
+                            color: Colors.grey[700],
+                            fontStyle: FontStyle.italic,
+                          ),
+                          "strong": Style(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          "table": Style(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            margin: Margins.symmetric(vertical: 8),
+                          ),
+                          "tr": Style(
+                            border: Border.all(color: Colors.grey, width: 1),
+                          ),
+                          "td": Style(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            padding: HtmlPaddings.all(8),
+                          ),
+                          "th": Style(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            padding: HtmlPaddings.all(8),
+                            backgroundColor: Colors.grey[200],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        },
+                      ),
+                    ),
+                  );
                 },
               ),
             );

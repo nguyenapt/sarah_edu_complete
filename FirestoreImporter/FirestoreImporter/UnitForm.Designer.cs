@@ -31,6 +31,7 @@
             label1 = new Label();
             txtId = new TextBox();
             groupBox1 = new GroupBox();
+            btnTitleAddAndNext = new Button();
             grvTitle = new DataGridView();
             btnAddTitle = new Button();
             txtLanguageValue = new TextBox();
@@ -38,6 +39,7 @@
             cbLanguageCodeTitle = new ComboBox();
             label3 = new Label();
             groupBox2 = new GroupBox();
+            btnAddDescriptionAndNext = new Button();
             grvDescription = new DataGridView();
             btnAddDescription = new Button();
             txtDescriptionValue = new TextBox();
@@ -60,6 +62,7 @@
             label18 = new Label();
             cbLevelId = new ComboBox();
             label12 = new Label();
+            btnExportJsonFireStoreAndAddNew = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).BeginInit();
             groupBox2.SuspendLayout();
@@ -87,6 +90,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnTitleAddAndNext);
             groupBox1.Controls.Add(grvTitle);
             groupBox1.Controls.Add(btnAddTitle);
             groupBox1.Controls.Add(txtLanguageValue);
@@ -100,6 +104,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Title";
             // 
+            // btnTitleAddAndNext
+            // 
+            btnTitleAddAndNext.Location = new Point(553, 20);
+            btnTitleAddAndNext.Name = "btnTitleAddAndNext";
+            btnTitleAddAndNext.Size = new Size(97, 23);
+            btnTitleAddAndNext.TabIndex = 25;
+            btnTitleAddAndNext.Text = "Add && Next";
+            btnTitleAddAndNext.UseVisualStyleBackColor = true;
+            btnTitleAddAndNext.Click += btnTitleAddAndNext_Click;
+            // 
             // grvTitle
             // 
             grvTitle.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -110,7 +124,7 @@
             // 
             // btnAddTitle
             // 
-            btnAddTitle.Location = new Point(553, 22);
+            btnAddTitle.Location = new Point(656, 20);
             btnAddTitle.Name = "btnAddTitle";
             btnAddTitle.Size = new Size(75, 23);
             btnAddTitle.TabIndex = 6;
@@ -154,6 +168,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(btnAddDescriptionAndNext);
             groupBox2.Controls.Add(grvDescription);
             groupBox2.Controls.Add(btnAddDescription);
             groupBox2.Controls.Add(txtDescriptionValue);
@@ -167,6 +182,16 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "Description";
             // 
+            // btnAddDescriptionAndNext
+            // 
+            btnAddDescriptionAndNext.Location = new Point(553, 20);
+            btnAddDescriptionAndNext.Name = "btnAddDescriptionAndNext";
+            btnAddDescriptionAndNext.Size = new Size(97, 23);
+            btnAddDescriptionAndNext.TabIndex = 10;
+            btnAddDescriptionAndNext.Text = "Add && Next";
+            btnAddDescriptionAndNext.UseVisualStyleBackColor = true;
+            btnAddDescriptionAndNext.Click += btnAddDescriptionAndNext_Click;
+            // 
             // grvDescription
             // 
             grvDescription.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -177,7 +202,7 @@
             // 
             // btnAddDescription
             // 
-            btnAddDescription.Location = new Point(553, 22);
+            btnAddDescription.Location = new Point(656, 20);
             btnAddDescription.Name = "btnAddDescription";
             btnAddDescription.Size = new Size(75, 23);
             btnAddDescription.TabIndex = 9;
@@ -353,6 +378,16 @@
             label12.TabIndex = 23;
             label12.Text = "Level";
             // 
+            // btnExportJsonFireStoreAndAddNew
+            // 
+            btnExportJsonFireStoreAndAddNew.Location = new Point(571, 729);
+            btnExportJsonFireStoreAndAddNew.Name = "btnExportJsonFireStoreAndAddNew";
+            btnExportJsonFireStoreAndAddNew.Size = new Size(215, 23);
+            btnExportJsonFireStoreAndAddNew.TabIndex = 16;
+            btnExportJsonFireStoreAndAddNew.Text = "Export && Add New Json FireStore";
+            btnExportJsonFireStoreAndAddNew.UseVisualStyleBackColor = true;
+            btnExportJsonFireStoreAndAddNew.Click += btnExportJsonFireStoreAndAddNew_Click;
+            // 
             // UnitForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -362,6 +397,7 @@
             Controls.Add(label18);
             Controls.Add(cbLevelId);
             Controls.Add(label12);
+            Controls.Add(btnExportJsonFireStoreAndAddNew);
             Controls.Add(btnExportJsonFireStore);
             Controls.Add(btnExportJson);
             Controls.Add(numOrder);
@@ -427,5 +463,8 @@
         private Label label18;
         private ComboBox cbLevelId;
         private Label label12;
+        private Button btnExportJsonFireStoreAndAddNew;
+        private Button btnTitleAddAndNext;
+        private Button btnAddDescriptionAndNext;
     }
 }

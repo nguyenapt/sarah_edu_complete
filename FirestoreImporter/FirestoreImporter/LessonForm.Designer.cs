@@ -254,9 +254,9 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(8, 36);
+            dataGridView1.Location = new Point(8, 94);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(739, 378);
+            dataGridView1.Size = new Size(739, 320);
             dataGridView1.TabIndex = 12;
             // 
             // btnAddDescription
@@ -272,8 +272,9 @@
             // txtLanguageDescriptionValue
             // 
             txtLanguageDescriptionValue.Location = new Point(267, 10);
+            txtLanguageDescriptionValue.Multiline = true;
             txtLanguageDescriptionValue.Name = "txtLanguageDescriptionValue";
-            txtLanguageDescriptionValue.Size = new Size(282, 23);
+            txtLanguageDescriptionValue.Size = new Size(282, 78);
             txtLanguageDescriptionValue.TabIndex = 14;
             // 
             // label8
@@ -645,9 +646,9 @@
             // grvUsageLanguage
             // 
             grvUsageLanguage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvUsageLanguage.Location = new Point(6, 90);
+            grvUsageLanguage.Location = new Point(6, 121);
             grvUsageLanguage.Name = "grvUsageLanguage";
-            grvUsageLanguage.Size = new Size(741, 141);
+            grvUsageLanguage.Size = new Size(741, 110);
             grvUsageLanguage.TabIndex = 22;
             // 
             // btnAddLanguageUsage
@@ -663,8 +664,9 @@
             // txtUsageExample
             // 
             txtUsageExample.Location = new Point(109, 61);
+            txtUsageExample.Multiline = true;
             txtUsageExample.Name = "txtUsageExample";
-            txtUsageExample.Size = new Size(434, 23);
+            txtUsageExample.Size = new Size(434, 54);
             txtUsageExample.TabIndex = 24;
             // 
             // label22

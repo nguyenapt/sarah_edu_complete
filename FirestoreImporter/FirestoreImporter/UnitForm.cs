@@ -44,7 +44,7 @@ namespace FirestoreImporter
         {
             // Lấy level ID (lowercase)
             string levelId = cbLevelId.SelectedItem?.ToString()?.ToLower() ?? "";
-            
+
             // Lấy giá trị numeric
             int unitValue = (int)numUnit.Value;
 
@@ -60,7 +60,7 @@ namespace FirestoreImporter
             // Setup grvTitle
             grvTitle.AutoGenerateColumns = false;
             grvTitle.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumnTitle = new DataGridViewButtonColumn
             {
@@ -72,7 +72,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvTitle.Columns.Add(deleteColumnTitle);
-            
+
             grvTitle.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -98,7 +98,7 @@ namespace FirestoreImporter
             // Setup grvDescription
             grvDescription.AutoGenerateColumns = false;
             grvDescription.Columns.Clear();
-            
+
             // Delete button column
             var deleteColumnDescription = new DataGridViewButtonColumn
             {
@@ -110,7 +110,7 @@ namespace FirestoreImporter
                 ReadOnly = true
             };
             grvDescription.Columns.Add(deleteColumnDescription);
-            
+
             grvDescription.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "colLanguageCode",
@@ -204,21 +204,26 @@ namespace FirestoreImporter
                 File.WriteAllText(filePath, jsonContent, Encoding.UTF8);
 
                 // Show success message
-                MessageBox.Show($"Đã export JSON thành công!\nFile đã được lưu tại: {filePath}", 
-                    "Thành công", 
-                    MessageBoxButtons.OK, 
+                MessageBox.Show($"Đã export JSON thành công!\nFile đã được lưu tại: {filePath}",
+                    "Thành công",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi export JSON: {ex.Message}", 
-                    "Lỗi", 
-                    MessageBoxButtons.OK, 
+                MessageBox.Show($"Lỗi khi export JSON: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
 
         private async void btnExportJsonFireStore_Click(object sender, EventArgs e)
+        {
+            await ExportJsonFireStore();
+        }
+
+        private async Task<bool> ExportJsonFireStore()
         {
             try
             {
@@ -226,13 +231,13 @@ namespace FirestoreImporter
                 if (string.IsNullOrWhiteSpace(txtId.Text))
                 {
                     MessageBox.Show("Vui lòng nhập ID!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    return false;
                 }
 
                 if (cbLevelId.SelectedItem == null)
                 {
                     MessageBox.Show("Vui lòng chọn Level ID!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    return false;
                 }
 
                 // Kiểm tra xem có file serviceAccountKey.json trong thư mục ứng dụng không
@@ -257,7 +262,7 @@ namespace FirestoreImporter
 
                     if (openFileDialog.ShowDialog() != DialogResult.OK)
                     {
-                        return; // User đã hủy
+                        return false; // User đã hủy
                     }
 
                     credentialsPath = openFileDialog.FileName;
@@ -324,14 +329,14 @@ namespace FirestoreImporter
 
                     if (inputDialog.ShowDialog() != DialogResult.OK)
                     {
-                        return; // User đã hủy
+                        return false; // User đã hủy
                     }
 
                     projectId = txtProjectId.Text.Trim();
                     if (string.IsNullOrWhiteSpace(projectId))
                     {
                         MessageBox.Show("Vui lòng nhập Project ID!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        return false;
                     }
                 }
 
@@ -347,11 +352,11 @@ namespace FirestoreImporter
                 bool isConnected = await firestoreService.TestConnectionAsync();
                 if (!isConnected)
                 {
-                    MessageBox.Show("Không thể kết nối đến Firestore. Vui lòng kiểm tra Project ID và Credentials.", 
-                        "Lỗi", 
-                        MessageBoxButtons.OK, 
+                    MessageBox.Show("Không thể kết nối đến Firestore. Vui lòng kiểm tra Project ID và Credentials.",
+                        "Lỗi",
+                        MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
-                    return;
+                    return false;
                 }
 
                 // Tạo UnitModel từ dữ liệu form
@@ -403,17 +408,20 @@ namespace FirestoreImporter
                 await firestoreService.ImportUnitAsync(unit);
 
                 // Thông báo thành công
-                MessageBox.Show($"Đã upload Unit lên Firestore thành công!\nUnit ID: {unit.Id}", 
-                    "Thành công", 
-                    MessageBoxButtons.OK, 
+                MessageBox.Show($"Đã upload Unit lên Firestore thành công!\nUnit ID: {unit.Id}",
+                    "Thành công",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+                
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi upload lên Firestore: {ex.Message}", 
-                    "Lỗi", 
-                    MessageBoxButtons.OK, 
+                MessageBox.Show($"Lỗi khi upload lên Firestore: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+                return false;
             }
             finally
             {
@@ -497,10 +505,10 @@ namespace FirestoreImporter
 
             // Update hoặc thêm mới
             _titleDictionary[languageCode] = value;
-            
+
             // Refresh grid
             RefreshTitleGrid();
-            
+
             // Clear input
             txtLanguageValue.Clear();
         }
@@ -524,14 +532,127 @@ namespace FirestoreImporter
 
             // Update hoặc thêm mới
             _descriptionDictionary[languageCode] = value;
-            
+
             // Refresh grid
             RefreshDescriptionGrid();
-            
+
             // Clear input
             txtDescriptionValue.Clear();
         }
+
+        private void btnTitleAddAndNext_Click(object sender, EventArgs e)
+        {
+            if (cbLanguageCodeTitle.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtLanguageValue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Title!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbLanguageCodeTitle.SelectedItem.ToString()!;
+            string value = txtLanguageValue.Text.Trim();
+
+            // Update hoặc thêm mới
+            _titleDictionary[languageCode] = value;
+
+            // Refresh grid
+            RefreshTitleGrid();
+
+            // Clear input
+            txtLanguageValue.Clear();
+
+            // Clear input
+            if (cbLanguageCodeTitle.SelectedIndex != cbLanguageCodeTitle.Items.Count - 1)
+            {
+                cbLanguageCodeTitle.SelectedIndex += 1;
+            }
+        }
+
+        private void btnAddDescriptionAndNext_Click(object sender, EventArgs e)
+        {
+            if (cbLanguageCodeDescription.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtDescriptionValue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Description!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbLanguageCodeDescription.SelectedItem.ToString()!;
+            string value = txtDescriptionValue.Text.Trim();
+
+            // Update hoặc thêm mới
+            _descriptionDictionary[languageCode] = value;
+
+            // Refresh grid
+            RefreshDescriptionGrid();
+
+            // Clear input
+            txtDescriptionValue.Clear();
+
+            // Clear input
+            if (cbLanguageCodeDescription.SelectedIndex != cbLanguageCodeDescription.Items.Count - 1)
+            {
+                cbLanguageCodeDescription.SelectedIndex += 1;
+            }
+        }
+
+        private async void btnExportJsonFireStoreAndAddNew_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Disable button để tránh click nhiều lần
+                btnExportJsonFireStoreAndAddNew.Enabled = false;
+                btnExportJsonFireStoreAndAddNew.Text = "Đang upload...";
+
+                // Export lên Firestore
+                bool success = await ExportJsonFireStore();
+
+                // Nếu thành công, tăng numUnit và numOrder lên 1
+                if (success)
+                {
+                    txtPrerequisites.Text = txtId.Text;
+
+                    numUnit.Value += 1;
+                    numOrder.Value += 1;
+                    
+                    // Clear các fields để chuẩn bị cho unit mới
+                    _titleDictionary.Clear();
+                    _descriptionDictionary.Clear();
+                    txtLessons.Clear();
+                    
+                    //txtGroup.Clear();
+                    //numEstimatedTime.Value = 0;
+                    
+                    // Refresh grids
+                    RefreshTitleGrid();
+                    RefreshDescriptionGrid();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Restore button
+                btnExportJsonFireStoreAndAddNew.Enabled = true;
+                btnExportJsonFireStoreAndAddNew.Text = "Export && Add New Json FireStore";
+            }
+        }
     }
 
-      
+
 }
