@@ -89,13 +89,25 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     );
   }
 
-  /// Fixes HTML table by adding tbody if missing and removing problematic inline styles
+  /// Fixes HTML table by removing tbody tags and problematic inline styles
   String _fixTableHtml(String html) {
     if (!html.contains('<table')) {
       return html;
     }
     
     var fixedHtml = html;
+    
+    // Remove all style attributes from table tags
+    fixedHtml = fixedHtml.replaceAllMapped(
+      RegExp(r'<table[^>]*>', caseSensitive: false),
+      (match) {
+        final tag = match.group(0)!;
+        // Remove style attribute completely (handle both double and single quotes)
+        var newTag = tag.replaceAll(RegExp(r'\s*style\s*=\s*"[^"]*"', caseSensitive: false), '');
+        newTag = newTag.replaceAll(RegExp(r"\s*style\s*=\s*'[^']*'", caseSensitive: false), '');
+        return newTag;
+      },
+    );
     
     // Remove inline width styles from td/th tags that might cause rendering issues
     fixedHtml = fixedHtml.replaceAllMapped(
@@ -110,29 +122,10 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
       },
     );
     
-    // Check if table already has tbody
-    if (fixedHtml.contains('<tbody') || fixedHtml.contains('<thead') || fixedHtml.contains('<tfoot')) {
-      return fixedHtml;
-    }
+    // Remove tbody tags if present (keep the content inside)
+    fixedHtml = fixedHtml.replaceAll(RegExp(r'</?tbody[^>]*>', caseSensitive: false), '');
     
-    // Use regex to find table tags and add tbody
-    final tableRegex = RegExp(r'(<table[^>]*>)(.*?)(</table>)', dotAll: true);
-    
-    return fixedHtml.replaceAllMapped(tableRegex, (match) {
-      final tableOpen = match.group(1)!;
-      final tableContent = match.group(2)!;
-      final tableClose = match.group(3)!;
-      
-      // Skip if content is empty or already has tbody/thead/tfoot
-      if (tableContent.trim().isEmpty || 
-          tableContent.contains('<tbody') || 
-          tableContent.contains('<thead') || 
-          tableContent.contains('<tfoot')) {
-        return match.group(0)!;
-      }
-      
-      return '$tableOpen<tbody>$tableContent</tbody>$tableClose';
-    });
+    return fixedHtml;
   }
 
   Widget _buildTheorySection() {
