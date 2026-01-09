@@ -161,23 +161,8 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             Builder(
               builder: (context) {
                 final htmlContent = theory.getDescription(languageCode);
-                final fixedHtmlContent = _fixTableHtml(htmlContent);
-                
-                // Debug: Print HTML content to console
-                print('=== HTML Description Debug ===');
-                print('HTML Length: ${htmlContent.length}');
-                print('Contains <table>: ${htmlContent.contains('<table')}');
-                print('Contains </table>: ${htmlContent.contains('</table>')}');
-                print('Contains <tbody>: ${htmlContent.contains('<tbody')}');
-                print('Contains <td>: ${htmlContent.contains('<td')}');
-                print('Contains <th>: ${htmlContent.contains('<th')}');
-                print('Contains <tr>: ${htmlContent.contains('<tr')}');
-                print('Fixed HTML contains <tbody>: ${fixedHtmlContent.contains('<tbody')}');
-                print('Full HTML Content:');
-                print(htmlContent);
-                print('Fixed HTML Content:');
-                print(fixedHtmlContent);
-                print('================================');
+                final fixedHtmlContent = _fixTableHtml(htmlContent);               
+               
                 
                 return Html(
                   data: fixedHtmlContent,
@@ -203,11 +188,8 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                       color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
                     ),
                     "table": Style(
-                      border: Border.all(color: Colors.grey[400]!, width: 1),
+                      //border: Border.all(color: Colors.grey[400]!, width: 1),
                       margin: Margins.only(bottom: 16),
-                    ),
-                    "tr": Style(
-                      border: Border.all(color: Colors.grey[400]!, width: 1),
                     ),
                     "td": Style(
                       border: Border.all(color: Colors.grey[400]!, width: 1),

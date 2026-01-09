@@ -1213,7 +1213,7 @@ namespace FirestoreImporter
 
             if (cbLanguageCodeDescription.SelectedIndex != cbLanguageCodeDescription.Items.Count - 1)
             {
-                txtLanguageDescriptionValue.SelectionStart += 1;
+                cbLanguageCodeDescription.SelectedIndex += 1;
             }
 
             // Clear input
