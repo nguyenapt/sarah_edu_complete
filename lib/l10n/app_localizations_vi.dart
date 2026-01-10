@@ -180,6 +180,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matching => 'Nối';
 
   @override
+  String get crossword => 'Ô chữ';
+
+  @override
   String get easy => 'Dễ';
 
   @override

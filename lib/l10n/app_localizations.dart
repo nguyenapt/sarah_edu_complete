@@ -458,6 +458,12 @@ abstract class AppLocalizations {
   /// **'Matching'**
   String get matching;
 
+  /// No description provided for @crossword.
+  ///
+  /// In en, this message translates to:
+  /// **'Crossword'**
+  String get crossword;
+
   /// No description provided for @easy.
   ///
   /// In en, this message translates to:

@@ -5,7 +5,8 @@ enum ExerciseType {
   matching,
   listening,
   speaking,
-  buttonSingleChoice;
+  buttonSingleChoice,
+  crossword;
 
   static ExerciseType fromString(String value) {
     // Normalize value: convert snake_case to camelCase
@@ -397,6 +398,107 @@ class ButtonSingleChoiceContent {
   }
 }
 
+// Content cho Crossword
+class CrosswordWord {
+  final int number;              // Số thứ tự (1, 2, 3...)
+  final String direction;        // "across" hoặc "down"
+  final int startRow;            // Row bắt đầu (0-indexed)
+  final int startCol;            // Col bắt đầu (0-indexed)
+  final String clue;             // Clue text (String, KHÔNG multi-language)
+  final String answer;           // Đáp án (Uppercase, no spaces)
+  final int length;              // Độ dài của từ
+
+  CrosswordWord({
+    required this.number,
+    required this.direction,
+    required this.startRow,
+    required this.startCol,
+    required this.clue,
+    required this.answer,
+    required this.length,
+  });
+
+  factory CrosswordWord.fromMap(Map<String, dynamic> map) {
+    return CrosswordWord(
+      number: map['number'] ?? 0,
+      direction: map['direction'] ?? 'across',
+      startRow: map['startRow'] ?? 0,
+      startCol: map['startCol'] ?? 0,
+      clue: map['clue']?.toString() ?? '',
+      answer: map['answer']?.toString().toUpperCase() ?? '',
+      length: map['length'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'number': number,
+      'direction': direction,
+      'startRow': startRow,
+      'startCol': startCol,
+      'clue': clue,
+      'answer': answer,
+      'length': length,
+    };
+  }
+}
+
+class CrosswordContent {
+  final int rows;
+  final int cols;
+  final List<CrosswordWord> words;
+  final List<List<int?>> grid; // Matrix: null = block, int = word number tại ô bắt đầu
+
+  CrosswordContent({
+    required this.rows,
+    required this.cols,
+    required this.words,
+    required this.grid,
+  });
+
+  factory CrosswordContent.fromMap(Map<String, dynamic> map) {
+    // Parse grid
+    List<List<int?>> gridList = [];
+    if (map['grid'] != null) {
+      final gridData = map['grid'] as List<dynamic>;
+      gridList = gridData.map((row) {
+        if (row is List) {
+          return row.map((cell) {
+            if (cell == null) return null;
+            return cell is int ? cell : int.tryParse(cell.toString());
+          }).toList();
+        }
+        return <int?>[];
+      }).toList();
+    }
+
+    // Parse words
+    List<CrosswordWord> wordsList = [];
+    if (map['words'] != null) {
+      final wordsData = map['words'] as List<dynamic>;
+      wordsList = wordsData
+          .map((word) => CrosswordWord.fromMap(word as Map<String, dynamic>))
+          .toList();
+    }
+
+    return CrosswordContent(
+      rows: map['rows'] ?? 0,
+      cols: map['cols'] ?? 0,
+      words: wordsList,
+      grid: gridList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'rows': rows,
+      'cols': cols,
+      'grid': grid,
+      'words': words.map((w) => w.toMap()).toList(),
+    };
+  }
+}
+
 // Group Question - cho exercise có nhiều câu hỏi
 class GroupQuestion {
   final String question; // Question với placeholder {0}, {1}, {2}...
@@ -452,6 +554,10 @@ class GroupQuestion {
         final contentData = map['content'] ?? {};
         content = FillBlankContent.fromMap(contentData);
         break;
+      case ExerciseType.crossword:
+        final contentData = map['content'] ?? {};
+        content = CrosswordContent.fromMap(contentData);
+        break;
       default:
         content = null;
     }
@@ -503,6 +609,10 @@ class GroupQuestion {
       contentMap = (content as ButtonSingleChoiceContent).toMap();
     } else if (content is ChoiceContent) {
       contentMap = (content as ChoiceContent).toMap();
+    } else if (content is FillBlankContent) {
+      contentMap = (content as FillBlankContent).toMap();
+    } else if (content is CrosswordContent) {
+      contentMap = (content as CrosswordContent).toMap();
     }
 
     return {
@@ -647,6 +757,9 @@ class ExerciseModel {
       case ExerciseType.buttonSingleChoice:
         content = ButtonSingleChoiceContent.fromMap(data['content'] ?? {});
         break;
+      case ExerciseType.crossword:
+        content = CrosswordContent.fromMap(data['content'] ?? {});
+        break;
     }
 
     // Group Questions
@@ -744,6 +857,8 @@ class ExerciseModel {
       contentMap = (content as SpeakingContent).toMap();
     } else if (content is ButtonSingleChoiceContent) {
       contentMap = (content as ButtonSingleChoiceContent).toMap();
+    } else if (content is CrosswordContent) {
+      contentMap = (content as CrosswordContent).toMap();
     }
 
     return {

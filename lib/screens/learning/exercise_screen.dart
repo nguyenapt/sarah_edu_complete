@@ -35,6 +35,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   // Cho fill_blank
   Map<int, String> _fillBlankAnswers = {}; // Map<placeholderIndex, userInput>
   
+  // Cho crossword
+  Map<String, String> _crosswordAnswers = {}; // Map<"row_col", userInput>
+  String? _activeWord; // Track word đang được focus (format: "across_1" hoặc "down_2")
+  
   // Cho groupQuestions - chỉ hiển thị 1 question tại một thời điểm
   int _currentGroupQuestionIndex = 0;
   Map<int, bool> _questionResults = {}; // Map<questionIndex, isCorrect> - lưu kết quả từng question
@@ -195,6 +199,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         return _buildMatching();
       case ExerciseType.buttonSingleChoice:
         return _buildButtonSingleChoice();
+      case ExerciseType.crossword:
+        return _buildCrossword();
       case ExerciseType.listening:
       case ExerciseType.speaking:
       default:
@@ -847,6 +853,28 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       return true;
     }
     
+    // Nếu là crossword - kiểm tra tất cả words đã được điền đầy đủ
+    if (widget.exercise.type == ExerciseType.crossword) {
+      final content = widget.exercise.content as CrosswordContent;
+      for (final word in content.words) {
+        for (int i = 0; i < word.length; i++) {
+          int row = word.startRow;
+          int col = word.startCol;
+          if (word.direction == 'across') {
+            col += i;
+          } else {
+            row += i;
+          }
+          final key = '${row}_$col';
+          final answer = _crosswordAnswers[key];
+          if (answer == null || answer.trim().isEmpty) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    
     // Các loại khác
     return _selectedAnswer != null;
   }
@@ -1146,6 +1174,223 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     );
   }
 
+  Widget _buildCrossword() {
+    final content = widget.exercise.content as CrosswordContent;
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Grid
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(content.rows, (row) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(content.cols, (col) {
+                          final cellValue = content.grid[row][col];
+                          final key = '${row}_$col';
+                          final userInput = _crosswordAnswers[key] ?? '';
+                          
+                          // Nếu là block (null), hiển thị ô đen
+                          if (cellValue == null) {
+                            return Container(
+                              width: 32,
+                              height: 32,
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                border: Border.all(color: Colors.grey),
+                              ),
+                            );
+                          }
+                          
+                          // Nếu là ô có thể điền
+                          final isStartCell = cellValue != null;
+                          final wordNumber = isStartCell ? cellValue : null;
+                          
+                          return Container(
+                            width: 32,
+                            height: 32,
+                            margin: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey),
+                            ),
+                            child: Stack(
+                              children: [
+                                // Word number ở góc trên bên trái
+                                if (wordNumber != null)
+                                  Positioned(
+                                    top: 2,
+                                    left: 2,
+                                    child: Text(
+                                      '$wordNumber',
+                                      style: const TextStyle(
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                // TextField để nhập
+                                Center(
+                                  child: TextField(
+                                    key: ValueKey(key),
+                                    textAlign: TextAlign.center,
+                                    maxLength: 1,
+                                    enabled: !_isSubmitted,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    decoration: InputDecoration(
+                                      counterText: '',
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.zero,
+                                      fillColor: _isSubmitted ? Colors.grey[200] : Colors.white,
+                                      filled: _isSubmitted,
+                                    ),
+                                    controller: TextEditingController(text: userInput)
+                                      ..selection = TextSelection.collapsed(offset: userInput.length),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value.isNotEmpty) {
+                                          _crosswordAnswers[key] = value.toUpperCase();
+                                        } else {
+                                          _crosswordAnswers.remove(key);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Clues section
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Across clues
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Across',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          itemCount: content.words.where((w) => w.direction == 'across').length,
+                          itemBuilder: (context, index) {
+                            final acrossWords = content.words.where((w) => w.direction == 'across').toList()..sort((a, b) => a.number.compareTo(b.number));
+                            final word = acrossWords[index];
+                            final isActive = _activeWord == 'across_${word.number}';
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _activeWord = 'across_${word.number}';
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                color: isActive ? Colors.blue.withOpacity(0.2) : Colors.transparent,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${word.number}. ',
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    Expanded(
+                                      child: Text(word.clue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Down clues
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Down',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          itemCount: content.words.where((w) => w.direction == 'down').length,
+                          itemBuilder: (context, index) {
+                            final downWords = content.words.where((w) => w.direction == 'down').toList()..sort((a, b) => a.number.compareTo(b.number));
+                            final word = downWords[index];
+                            final isActive = _activeWord == 'down_${word.number}';
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _activeWord = 'down_${word.number}';
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                color: isActive ? Colors.blue.withOpacity(0.2) : Colors.transparent,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${word.number}. ',
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    Expanded(
+                                      child: Text(word.clue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handleSubmit() {
     bool isCorrect = false;
 
@@ -1311,6 +1556,30 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                 isCorrect = false;
                 break;
               }
+            }
+          }
+          break;
+        case ExerciseType.crossword:
+          final content = widget.exercise.content as CrosswordContent;
+          isCorrect = true;
+          for (final word in content.words) {
+            String userAnswer = '';
+            for (int i = 0; i < word.length; i++) {
+              int row = word.startRow;
+              int col = word.startCol;
+              if (word.direction == 'across') {
+                col += i;
+              } else {
+                row += i;
+              }
+              final key = '${row}_$col';
+              final char = _crosswordAnswers[key] ?? '';
+              userAnswer += char;
+            }
+            final correctAnswer = word.answer.toUpperCase();
+            if (userAnswer.trim().toUpperCase() != correctAnswer) {
+              isCorrect = false;
+              break;
             }
           }
           break;
@@ -1533,6 +1802,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         return localizations.speaking;
       case ExerciseType.buttonSingleChoice:
         return localizations.selectOneAnswerShort;
+      case ExerciseType.crossword:
+        return localizations.crossword;
     }
   }
 

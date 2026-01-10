@@ -180,6 +180,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matching => 'マッチング';
 
   @override
+  String get crossword => 'クロスワード';
+
+  @override
   String get easy => '簡単';
 
   @override

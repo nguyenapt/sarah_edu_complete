@@ -180,6 +180,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matching => 'मिलान';
 
   @override
+  String get crossword => 'क्रॉसवर्ड';
+
+  @override
   String get easy => 'आसान';
 
   @override

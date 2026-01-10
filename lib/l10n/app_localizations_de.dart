@@ -181,6 +181,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matching => 'Zuordnung';
 
   @override
+  String get crossword => 'Kreuzworträtsel';
+
+  @override
   String get easy => 'Einfach';
 
   @override

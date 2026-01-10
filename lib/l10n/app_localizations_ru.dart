@@ -181,6 +181,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get matching => 'Сопоставление';
 
   @override
+  String get crossword => 'Кроссворд';
+
+  @override
   String get easy => 'Легко';
 
   @override

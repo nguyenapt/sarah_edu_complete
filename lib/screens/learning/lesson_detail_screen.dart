@@ -596,6 +596,8 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         return localizations.speaking;
       case ExerciseType.buttonSingleChoice:
         return localizations.selectOneAnswerShort;
+      case ExerciseType.crossword:
+        return localizations.crossword;
     }
   }
 }

@@ -262,6 +262,108 @@
           }
         ]
       }
+    },
+    "exercise_crossword_sample": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "crossword",
+      "question": "Complete the crossword",
+      "points": 20,
+      "timeLimit": 300,
+      "difficulty": "medium",
+      "explanation": "Fill in all the words correctly",
+      "content": {
+        "rows": 11,
+        "cols": 10,
+        "grid": [
+          [1, 2, null, 3, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null, null, null],
+          [4, null, null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null, null, null],
+          [5, null, null, null, null, null, null, null, null, null],
+          [6, null, null, null, 7, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null, null, null],
+          [8, null, null, null, null, null, null, null, null, null]
+        ],
+        "words": [
+          {
+            "number": 1,
+            "direction": "across",
+            "startRow": 0,
+            "startCol": 0,
+            "clue": "If he wins this match, he'll be the world _________!",
+            "answer": "CHAMPION",
+            "length": 8
+          },
+          {
+            "number": 2,
+            "direction": "down",
+            "startRow": 0,
+            "startCol": 1,
+            "clue": "I'm sorry, but you have to be a _________ of the golf club to play here.",
+            "answer": "MEMBER",
+            "length": 6
+          },
+          {
+            "number": 3,
+            "direction": "down",
+            "startRow": 0,
+            "startCol": 3,
+            "clue": "My _________ was a brilliant player and I didn't manage to win the match.",
+            "answer": "OPPONENT",
+            "length": 8
+          },
+          {
+            "number": 4,
+            "direction": "across",
+            "startRow": 4,
+            "startCol": 0,
+            "clue": "I'm thinking of joining a _________ to get more exercise.",
+            "answer": "GYM",
+            "length": 3
+          },
+          {
+            "number": 5,
+            "direction": "across",
+            "startRow": 7,
+            "startCol": 0,
+            "clue": "Our basketball _________ said that I can play on Saturday!",
+            "answer": "COACH",
+            "length": 5
+          },
+          {
+            "number": 6,
+            "direction": "across",
+            "startRow": 8,
+            "startCol": 0,
+            "clue": "The _________ blew his whistle and the game started.",
+            "answer": "REFEREE",
+            "length": 7
+          },
+          {
+            "number": 7,
+            "direction": "down",
+            "startRow": 8,
+            "startCol": 4,
+            "clue": "I took a big _________ by doing the parachute jump, but I loved every second of it!",
+            "answer": "RISK",
+            "length": 4
+          },
+          {
+            "number": 8,
+            "direction": "across",
+            "startRow": 10,
+            "startCol": 0,
+            "clue": "Which team do you _________?",
+            "answer": "SUPPORT",
+            "length": 7
+          }
+        ]
+      }
     }
   }
 }

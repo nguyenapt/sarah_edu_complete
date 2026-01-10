@@ -180,6 +180,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get matching => '匹配';
 
   @override
+  String get crossword => '填字游戏';
+
+  @override
   String get easy => '简单';
 
   @override

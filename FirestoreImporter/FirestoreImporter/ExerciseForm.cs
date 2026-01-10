@@ -19,8 +19,10 @@ namespace FirestoreImporter
         private Dictionary<string, string> _questionDictionary;
         private Dictionary<string, string> _explanationDictionary;
         private Dictionary<string, dynamic> _content;
+        private List<List<int?>> _contentGrid;
+        private Dictionary<string, dynamic> _contentWordsDictionary;
         private bool _isGroupQuestionMode;
-        
+
         // Event để gửi GroupQuestion về form cha khi Save and Add New
         public event EventHandler<GroupQuestion>? GroupQuestionSaved;
 
@@ -31,6 +33,8 @@ namespace FirestoreImporter
             _questionDictionary = new Dictionary<string, string>();
             _explanationDictionary = new Dictionary<string, string>();
             _content = new Dictionary<string, dynamic>();
+            _contentGrid = new List<List<int?>>();
+            _contentWordsDictionary = new Dictionary<string, dynamic>();
             SetupDataGridViews();
             SetupGroupQuestionMode();
             SetupAutoBuildIds();
@@ -630,7 +634,19 @@ namespace FirestoreImporter
             }
 
             // Content từ dictionary
-            if (_content.Count > 0)
+            // Nếu là crossword type, build content với grid và words
+            if (exercise.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
+            {
+                var crosswordContent = new Dictionary<string, object>
+                {
+                    { "rows", (int)numRows.Value },
+                    { "cols", (int)numCols.Value },
+                    { "grid", _contentGrid },
+                    { "words", _contentWordsDictionary.Values.ToList() }
+                };
+                exercise.Content = crosswordContent;
+            }
+            else if (_content.Count > 0)
             {
                 exercise.Content = new Dictionary<string, object>();
                 foreach (var kvp in _content)
@@ -791,7 +807,19 @@ namespace FirestoreImporter
             }
 
             // Content từ dictionary
-            if (_content.Count > 0)
+            // Nếu là crossword type, build content với grid và words
+            if (groupQuestion.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
+            {
+                var crosswordContent = new Dictionary<string, object>
+                {
+                    { "rows", (int)numRows.Value },
+                    { "cols", (int)numCols.Value },
+                    { "grid", _contentGrid },
+                    { "words", _contentWordsDictionary.Values.ToList() }
+                };
+                groupQuestion.Content = crosswordContent;
+            }
+            else if (_content.Count > 0)
             {
                 groupQuestion.Content = new Dictionary<string, object>();
                 foreach (var kvp in _content)
@@ -818,10 +846,10 @@ namespace FirestoreImporter
 
                     // Tạo GroupQuestion từ dữ liệu form
                     var groupQuestion = CreateGroupQuestionFromInputs();
-                    
+
                     // Trigger event để gửi về form cha
                     GroupQuestionSaved?.Invoke(this, groupQuestion);
-                    
+
                     // Clear các controls trong tab question, explanation, content
                     ClearQuestionExplanationContentTabs();
                 }
@@ -894,12 +922,17 @@ namespace FirestoreImporter
             _questionDictionary.Clear();
             _explanationDictionary.Clear();
             _content.Clear();
+            _contentGrid?.Clear();
+            _contentWordsDictionary?.Clear();
 
             // Clear textboxes
             txtLanguageQuestionValue.Clear();
             txtLanguageExplanationValue.Clear();
             txtPropertyName.Clear();
             txtPropertyValue.Clear();
+            txtGridArrayValue.Clear();
+            txtClue.Clear();
+            txtAnswer.Clear();
 
             // Clear combobox selections
             //cbLanguageCodeQuestion.SelectedIndex = -1;
@@ -910,6 +943,225 @@ namespace FirestoreImporter
             RefreshQuestionGrid();
             RefreshExplanationGrid();
             RefreshContentGrid();
+            RefreshGridDisplay();
+            RefreshWordDisplay();
+        }
+
+        private void btnAddGridValue_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtGridArrayValue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập giá trị Grid Row!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Parse string input: "1, 2, null, 3, null, null, null, null, null, null"
+                string input = txtGridArrayValue.Text.Trim();
+                
+                // Remove brackets if present
+                input = input.TrimStart('[').TrimEnd(']');
+                
+                // Split by comma
+                string[] parts = input.Split(',');
+                
+                List<int?> row = new List<int?>();
+                foreach (string part in parts)
+                {
+                    string trimmedPart = part.Trim();
+                    if (string.IsNullOrWhiteSpace(trimmedPart))
+                        continue;
+                    
+                    if (trimmedPart.Equals("null", StringComparison.OrdinalIgnoreCase))
+                    {
+                        row.Add(null);
+                    }
+                    else if (int.TryParse(trimmedPart, out int value))
+                    {
+                        row.Add(value);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Giá trị không hợp lệ: {trimmedPart}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+                
+                // Add row to grid
+                _contentGrid.Add(row);
+                
+                // Update content dictionary với grid mới
+                UpdateCrosswordContent();
+                
+                // Refresh grid display
+                RefreshGridDisplay();
+                
+                // Clear input
+                txtGridArrayValue.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi parse grid row: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UpdateCrosswordContent()
+        {
+            if (_contentGrid == null || _contentGrid.Count == 0)
+                return;
+            
+            // Tạo content dictionary cho crossword
+            var crosswordContent = new Dictionary<string, object>
+            {
+                { "rows", (int)numRows.Value },
+                { "cols", (int)numCols.Value },
+                { "grid", _contentGrid },
+                { "words", _contentWordsDictionary.Values.ToList() }
+            };
+            
+            // Update _content dictionary
+            _content["rows"] = (int)numRows.Value;
+            _content["cols"] = (int)numCols.Value;
+            _content["grid"] = _contentGrid;
+            _content["words"] = _contentWordsDictionary.Values.ToList();
+            
+            // Refresh content grid
+            RefreshContentGrid();
+        }
+
+        private void RefreshGridDisplay()
+        {
+            grvGrid.DataSource = null;
+            if (_contentGrid != null && _contentGrid.Count > 0)
+            {
+                // Convert to display format
+                var displayData = _contentGrid.Select((row, index) => new
+                {
+                    Row = index,
+                    Values = string.Join(", ", row.Select(cell => cell.HasValue ? cell.Value.ToString() : "null"))
+                }).ToList();
+                
+                grvGrid.DataSource = displayData;
+            }
+        }
+
+        private void btnAddWordValue_Click(object sender, EventArgs e)
+        {
+            // Validate required fields
+            if (numNumber.Value <= 0)
+            {
+                MessageBox.Show("Vui lòng nhập Number (phải > 0)!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            if (cbDirection.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Direction!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            if (string.IsNullOrWhiteSpace(txtClue.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Clue!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            if (string.IsNullOrWhiteSpace(txtAnswer.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Answer!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            try
+            {
+                int number = (int)numNumber.Value;
+                string direction = cbDirection.SelectedItem.ToString()!;
+                int startRow = (int)numStartRow.Value;
+                int startCol = (int)numStartCol.Value;
+                string clue = txtClue.Text.Trim();
+                string answer = txtAnswer.Text.Trim().ToUpper();
+                int length = answer.Length;
+                
+                // Tạo word dictionary
+                var wordDict = new Dictionary<string, object>
+                {
+                    { "number", number },
+                    { "direction", direction },
+                    { "startRow", startRow },
+                    { "startCol", startCol },
+                    { "clue", clue },
+                    { "answer", answer },
+                    { "length", length }
+                };
+                
+                // Add vào dictionary với key là number để dễ quản lý
+                string key = $"word_{number}";
+                _contentWordsDictionary[key] = wordDict;
+                
+                // Update crossword content
+                UpdateCrosswordContent();
+                
+                // Refresh word display
+                RefreshWordDisplay();
+                
+                // Clear inputs (optional - có thể giữ lại để add word tiếp theo)
+                // numNumber.Value = numNumber.Value + 1;
+                // txtClue.Clear();
+                // txtAnswer.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi add word: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void RefreshWordDisplay()
+        {
+            grvWord.DataSource = null;
+            if (_contentWordsDictionary != null && _contentWordsDictionary.Count > 0)
+            {
+                // Helper class để hiển thị
+                var displayList = new List<WordDisplayItem>();
+                
+                foreach (var wordObj in _contentWordsDictionary.Values)
+                {
+                    if (wordObj is Dictionary<string, object> word)
+                    {
+                        string clueText = word.ContainsKey("clue") ? (word["clue"]?.ToString() ?? "") : "";
+                        if (clueText.Length > 50)
+                            clueText = clueText.Substring(0, 50) + "...";
+                        
+                        displayList.Add(new WordDisplayItem
+                        {
+                            Number = word.ContainsKey("number") ? Convert.ToInt32(word["number"]) : 0,
+                            Direction = word.ContainsKey("direction") ? word["direction"]?.ToString() ?? "" : "",
+                            StartRow = word.ContainsKey("startRow") ? Convert.ToInt32(word["startRow"]) : 0,
+                            StartCol = word.ContainsKey("startCol") ? Convert.ToInt32(word["startCol"]) : 0,
+                            Clue = clueText,
+                            Answer = word.ContainsKey("answer") ? word["answer"]?.ToString() ?? "" : "",
+                            Length = word.ContainsKey("length") ? Convert.ToInt32(word["length"]) : 0
+                        });
+                    }
+                }
+                
+                // Sort by number
+                displayList = displayList.OrderBy(w => w.Number).ToList();
+                
+                grvWord.DataSource = displayList;
+            }
+        }
+        
+        // Helper class để bind vào DataGridView
+        private class WordDisplayItem
+        {
+            public int Number { get; set; }
+            public string Direction { get; set; } = string.Empty;
+            public int StartRow { get; set; }
+            public int StartCol { get; set; }
+            public string Clue { get; set; } = string.Empty;
+            public string Answer { get; set; } = string.Empty;
+            public int Length { get; set; }
         }
     }
 }

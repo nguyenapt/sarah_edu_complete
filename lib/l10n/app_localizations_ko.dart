@@ -180,6 +180,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matching => '매칭';
 
   @override
+  String get crossword => '십자말풀이';
+
+  @override
   String get easy => '쉬움';
 
   @override

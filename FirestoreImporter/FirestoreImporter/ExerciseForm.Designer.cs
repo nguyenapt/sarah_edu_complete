@@ -74,6 +74,31 @@
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
             tabPage3 = new TabPage();
+            tabPage4 = new TabPage();
+            groupBox2 = new GroupBox();
+            txtAnswer = new TextBox();
+            grvWord = new DataGridView();
+            label29 = new Label();
+            btnAddWordValue = new Button();
+            txtClue = new TextBox();
+            label28 = new Label();
+            cbDirection = new ComboBox();
+            label25 = new Label();
+            numStartCol = new NumericUpDown();
+            label27 = new Label();
+            numStartRow = new NumericUpDown();
+            label26 = new Label();
+            numNumber = new NumericUpDown();
+            label24 = new Label();
+            groupBox1 = new GroupBox();
+            txtGridArrayValue = new TextBox();
+            grvGrid = new DataGridView();
+            label23 = new Label();
+            btnAddGridValue = new Button();
+            numCols = new NumericUpDown();
+            label22 = new Label();
+            numRows = new NumericUpDown();
+            label21 = new Label();
             btnSave = new Button();
             label18 = new Label();
             label19 = new Label();
@@ -92,6 +117,16 @@
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
+            tabPage4.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvWord).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numStartCol).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numStartRow).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numNumber).BeginInit();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numCols).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numRows).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numExercise).BeginInit();
@@ -178,7 +213,7 @@
             // cbType
             // 
             cbType.FormattingEnabled = true;
-            cbType.Items.AddRange(new object[] { "single_choice", "multiple_choice", "fill_blank", "matching", "listening", "speaking", "button_single_choice" });
+            cbType.Items.AddRange(new object[] { "single_choice", "multiple_choice", "fill_blank", "matching", "listening", "speaking", "button_single_choice", "crossword" });
             cbType.Location = new Point(563, 141);
             cbType.Name = "cbType";
             cbType.Size = new Size(228, 23);
@@ -238,7 +273,7 @@
             // 
             // numPoints
             // 
-            numPoints.Location = new Point(143, 593);
+            numPoints.Location = new Point(143, 772);
             numPoints.Name = "numPoints";
             numPoints.Size = new Size(173, 23);
             numPoints.TabIndex = 22;
@@ -246,7 +281,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(64, 601);
+            label11.Location = new Point(64, 780);
             label11.Name = "label11";
             label11.Size = new Size(35, 15);
             label11.TabIndex = 12;
@@ -255,7 +290,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(64, 630);
+            label8.Location = new Point(64, 809);
             label8.Name = "label8";
             label8.Size = new Size(61, 15);
             label8.TabIndex = 12;
@@ -263,7 +298,7 @@
             // 
             // numTimeLimit
             // 
-            numTimeLimit.Location = new Point(143, 622);
+            numTimeLimit.Location = new Point(143, 801);
             numTimeLimit.Name = "numTimeLimit";
             numTimeLimit.Size = new Size(173, 23);
             numTimeLimit.TabIndex = 23;
@@ -272,7 +307,7 @@
             // 
             cbDifficulty.FormattingEnabled = true;
             cbDifficulty.Items.AddRange(new object[] { "easy", "medium", "hard" });
-            cbDifficulty.Location = new Point(143, 651);
+            cbDifficulty.Location = new Point(143, 830);
             cbDifficulty.Name = "cbDifficulty";
             cbDifficulty.Size = new Size(121, 23);
             cbDifficulty.TabIndex = 24;
@@ -280,7 +315,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(66, 659);
+            label9.Location = new Point(66, 838);
             label9.Name = "label9";
             label9.Size = new Size(55, 15);
             label9.TabIndex = 6;
@@ -372,7 +407,7 @@
             // 
             // btnExportJsonFireStore
             // 
-            btnExportJsonFireStore.Location = new Point(647, 746);
+            btnExportJsonFireStore.Location = new Point(653, 859);
             btnExportJsonFireStore.Name = "btnExportJsonFireStore";
             btnExportJsonFireStore.Size = new Size(134, 23);
             btnExportJsonFireStore.TabIndex = 26;
@@ -382,7 +417,7 @@
             // 
             // btnExportJson
             // 
-            btnExportJson.Location = new Point(568, 746);
+            btnExportJson.Location = new Point(574, 859);
             btnExportJson.Name = "btnExportJson";
             btnExportJson.Size = new Size(75, 23);
             btnExportJson.TabIndex = 25;
@@ -463,10 +498,11 @@
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
+            tabControl1.Controls.Add(tabPage4);
             tabControl1.Location = new Point(60, 237);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(731, 350);
+            tabControl1.Size = new Size(731, 529);
             tabControl1.TabIndex = 16;
             // 
             // tabPage1
@@ -480,7 +516,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(723, 322);
+            tabPage1.Size = new Size(723, 501);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Questions";
             tabPage1.UseVisualStyleBackColor = true;
@@ -496,7 +532,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(723, 322);
+            tabPage2.Size = new Size(723, 501);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Explanation";
             tabPage2.UseVisualStyleBackColor = true;
@@ -514,14 +550,248 @@
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(723, 322);
+            tabPage3.Size = new Size(723, 501);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Content";
             tabPage3.UseVisualStyleBackColor = true;
             // 
+            // tabPage4
+            // 
+            tabPage4.Controls.Add(groupBox2);
+            tabPage4.Controls.Add(groupBox1);
+            tabPage4.Controls.Add(numCols);
+            tabPage4.Controls.Add(label22);
+            tabPage4.Controls.Add(numRows);
+            tabPage4.Controls.Add(label21);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Padding = new Padding(3);
+            tabPage4.Size = new Size(723, 501);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Crossword Content";
+            tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(txtAnswer);
+            groupBox2.Controls.Add(grvWord);
+            groupBox2.Controls.Add(label29);
+            groupBox2.Controls.Add(btnAddWordValue);
+            groupBox2.Controls.Add(txtClue);
+            groupBox2.Controls.Add(label28);
+            groupBox2.Controls.Add(cbDirection);
+            groupBox2.Controls.Add(label25);
+            groupBox2.Controls.Add(numStartCol);
+            groupBox2.Controls.Add(label27);
+            groupBox2.Controls.Add(numStartRow);
+            groupBox2.Controls.Add(label26);
+            groupBox2.Controls.Add(numNumber);
+            groupBox2.Controls.Add(label24);
+            groupBox2.Location = new Point(12, 278);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(705, 217);
+            groupBox2.TabIndex = 21;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Words";
+            // 
+            // txtAnswer
+            // 
+            txtAnswer.Location = new Point(523, 54);
+            txtAnswer.Name = "txtAnswer";
+            txtAnswer.Size = new Size(87, 23);
+            txtAnswer.TabIndex = 6;
+            // 
+            // grvWord
+            // 
+            grvWord.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvWord.Location = new Point(6, 84);
+            grvWord.Name = "grvWord";
+            grvWord.Size = new Size(693, 127);
+            grvWord.TabIndex = 6;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new Point(466, 57);
+            label29.Name = "label29";
+            label29.Size = new Size(46, 15);
+            label29.TabIndex = 5;
+            label29.Text = "Answer";
+            // 
+            // btnAddWordValue
+            // 
+            btnAddWordValue.Location = new Point(616, 53);
+            btnAddWordValue.Name = "btnAddWordValue";
+            btnAddWordValue.Size = new Size(83, 23);
+            btnAddWordValue.TabIndex = 19;
+            btnAddWordValue.Text = "Add Word";
+            btnAddWordValue.UseVisualStyleBackColor = true;
+            btnAddWordValue.Click += btnAddWordValue_Click;
+            // 
+            // txtClue
+            // 
+            txtClue.Location = new Point(63, 51);
+            txtClue.Name = "txtClue";
+            txtClue.Size = new Size(397, 23);
+            txtClue.TabIndex = 6;
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Location = new Point(6, 54);
+            label28.Name = "label28";
+            label28.Size = new Size(29, 15);
+            label28.TabIndex = 5;
+            label28.Text = "clue";
+            // 
+            // cbDirection
+            // 
+            cbDirection.FormattingEnabled = true;
+            cbDirection.Items.AddRange(new object[] { "across", "down" });
+            cbDirection.Location = new Point(241, 22);
+            cbDirection.Name = "cbDirection";
+            cbDirection.Size = new Size(61, 23);
+            cbDirection.TabIndex = 4;
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Location = new Point(156, 24);
+            label25.Name = "label25";
+            label25.Size = new Size(55, 15);
+            label25.TabIndex = 3;
+            label25.Text = "Direction";
+            // 
+            // numStartCol
+            // 
+            numStartCol.Location = new Point(523, 24);
+            numStartCol.Name = "numStartCol";
+            numStartCol.Size = new Size(87, 23);
+            numStartCol.TabIndex = 2;
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(466, 26);
+            label27.Name = "label27";
+            label27.Size = new Size(50, 15);
+            label27.TabIndex = 2;
+            label27.Text = "Start col";
+            // 
+            // numStartRow
+            // 
+            numStartRow.Location = new Point(373, 24);
+            numStartRow.Name = "numStartRow";
+            numStartRow.Size = new Size(87, 23);
+            numStartRow.TabIndex = 2;
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new Point(316, 26);
+            label26.Name = "label26";
+            label26.Size = new Size(54, 15);
+            label26.TabIndex = 2;
+            label26.Text = "Start row";
+            // 
+            // numNumber
+            // 
+            numNumber.Location = new Point(63, 22);
+            numNumber.Name = "numNumber";
+            numNumber.Size = new Size(87, 23);
+            numNumber.TabIndex = 2;
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new Point(6, 24);
+            label24.Name = "label24";
+            label24.Size = new Size(51, 15);
+            label24.TabIndex = 2;
+            label24.Text = "Number";
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(txtGridArrayValue);
+            groupBox1.Controls.Add(grvGrid);
+            groupBox1.Controls.Add(label23);
+            groupBox1.Controls.Add(btnAddGridValue);
+            groupBox1.Location = new Point(6, 64);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(711, 208);
+            groupBox1.TabIndex = 20;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Grid";
+            // 
+            // txtGridArrayValue
+            // 
+            txtGridArrayValue.Location = new Point(73, 22);
+            txtGridArrayValue.Name = "txtGridArrayValue";
+            txtGridArrayValue.Size = new Size(543, 23);
+            txtGridArrayValue.TabIndex = 18;
+            // 
+            // grvGrid
+            // 
+            grvGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvGrid.Location = new Point(6, 51);
+            grvGrid.Name = "grvGrid";
+            grvGrid.Size = new Size(711, 147);
+            grvGrid.TabIndex = 6;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new Point(6, 29);
+            label23.Name = "label23";
+            label23.Size = new Size(35, 15);
+            label23.TabIndex = 3;
+            label23.Text = "Value";
+            // 
+            // btnAddGridValue
+            // 
+            btnAddGridValue.Location = new Point(622, 22);
+            btnAddGridValue.Name = "btnAddGridValue";
+            btnAddGridValue.Size = new Size(83, 23);
+            btnAddGridValue.TabIndex = 19;
+            btnAddGridValue.Text = "Add";
+            btnAddGridValue.UseVisualStyleBackColor = true;
+            btnAddGridValue.Click += btnAddGridValue_Click;
+            // 
+            // numCols
+            // 
+            numCols.Location = new Point(79, 35);
+            numCols.Name = "numCols";
+            numCols.Size = new Size(279, 23);
+            numCols.TabIndex = 2;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(6, 37);
+            label22.Name = "label22";
+            label22.Size = new Size(30, 15);
+            label22.TabIndex = 2;
+            label22.Text = "Cols";
+            // 
+            // numRows
+            // 
+            numRows.Location = new Point(79, 6);
+            numRows.Name = "numRows";
+            numRows.Size = new Size(279, 23);
+            numRows.TabIndex = 2;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(6, 8);
+            label21.Name = "label21";
+            label21.Size = new Size(35, 15);
+            label21.TabIndex = 2;
+            label21.Text = "Rows";
+            // 
             // btnSave
             // 
-            btnSave.Location = new Point(568, 659);
+            btnSave.Location = new Point(574, 772);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(213, 23);
             btnSave.TabIndex = 27;
@@ -580,7 +850,7 @@
             // 
             // btnSaveAndAddNew
             // 
-            btnSaveAndAddNew.Location = new Point(568, 688);
+            btnSaveAndAddNew.Location = new Point(574, 801);
             btnSaveAndAddNew.Name = "btnSaveAndAddNew";
             btnSaveAndAddNew.Size = new Size(213, 23);
             btnSaveAndAddNew.TabIndex = 27;
@@ -590,7 +860,7 @@
             // 
             // btnClear
             // 
-            btnClear.Location = new Point(568, 717);
+            btnClear.Location = new Point(574, 830);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(213, 23);
             btnClear.TabIndex = 27;
@@ -602,7 +872,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(866, 860);
+            ClientSize = new Size(866, 894);
             Controls.Add(numExercise);
             Controls.Add(label20);
             Controls.Add(numLesson);
@@ -649,6 +919,19 @@
             tabPage2.PerformLayout();
             tabPage3.ResumeLayout(false);
             tabPage3.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            tabPage4.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvWord).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numStartCol).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numStartRow).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numNumber).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numCols).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numRows).EndInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).EndInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).EndInit();
             ((System.ComponentModel.ISupportInitialize)numExercise).EndInit();
@@ -713,5 +996,30 @@
         private Label label20;
         private Button btnSaveAndAddNew;
         private Button btnClear;
+        private TabPage tabPage4;
+        private NumericUpDown numCols;
+        private Label label22;
+        private NumericUpDown numRows;
+        private Label label21;
+        private TextBox txtGridArrayValue;
+        private Button btnAddGridValue;
+        private DataGridView grvGrid;
+        private GroupBox groupBox1;
+        private Label label23;
+        private GroupBox groupBox2;
+        private ComboBox cbDirection;
+        private Label label25;
+        private NumericUpDown numNumber;
+        private Label label24;
+        private NumericUpDown numStartCol;
+        private Label label27;
+        private NumericUpDown numStartRow;
+        private Label label26;
+        private TextBox txtAnswer;
+        private DataGridView grvWord;
+        private Label label29;
+        private Button btnAddWordValue;
+        private TextBox txtClue;
+        private Label label28;
     }
 }
