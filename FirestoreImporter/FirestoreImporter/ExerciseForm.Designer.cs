@@ -628,6 +628,7 @@
             btnAddWordValue.UseVisualStyleBackColor = true;
             btnAddWordValue.Click += btnAddWordValue_Click;
             // 
+            // 
             // txtClue
             // 
             txtClue.Location = new Point(63, 51);
@@ -756,6 +757,7 @@
             btnAddGridValue.Text = "Add";
             btnAddGridValue.UseVisualStyleBackColor = true;
             btnAddGridValue.Click += btnAddGridValue_Click;
+            // 
             // 
             // numCols
             // 

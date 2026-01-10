@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 enum ExerciseType {
   singleChoice,
   multipleChoice,
@@ -458,18 +460,55 @@ class CrosswordContent {
 
   factory CrosswordContent.fromMap(Map<String, dynamic> map) {
     // Parse grid
+    // Firestore không hỗ trợ nested arrays, nên grid được serialize thành JSON string
     List<List<int?>> gridList = [];
     if (map['grid'] != null) {
-      final gridData = map['grid'] as List<dynamic>;
-      gridList = gridData.map((row) {
-        if (row is List) {
-          return row.map((cell) {
-            if (cell == null) return null;
-            return cell is int ? cell : int.tryParse(cell.toString());
+      if (map['grid'] is String) {
+        // Grid là JSON string, parse lại
+        try {
+          final gridJson = map['grid'] as String;
+          final gridData = jsonDecode(gridJson) as List<dynamic>;
+          gridList = gridData.map((row) {
+            if (row is List) {
+              return row.map((cell) {
+                final cellValue = cell is int ? cell : int.tryParse(cell.toString());
+                // Convert -1 (từ Firestore) thành null
+                if (cellValue == -1) return null;
+                return cellValue;
+              }).toList();
+            }
+            return <int?>[];
+          }).toList();
+        } catch (e) {
+          // Fallback: nếu parse JSON fail, giữ nguyên format cũ (nested array)
+          final gridData = map['grid'] as List<dynamic>;
+          gridList = gridData.map((row) {
+            if (row is List) {
+              return row.map((cell) {
+                if (cell == null) return null;
+                final cellValue = cell is int ? cell : int.tryParse(cell.toString());
+                if (cellValue == -1) return null;
+                return cellValue;
+              }).toList();
+            }
+            return <int?>[];
           }).toList();
         }
-        return <int?>[];
-      }).toList();
+      } else {
+        // Fallback: format cũ (nested array) - để backward compatibility
+        final gridData = map['grid'] as List<dynamic>;
+        gridList = gridData.map((row) {
+          if (row is List) {
+            return row.map((cell) {
+              if (cell == null) return null;
+              final cellValue = cell is int ? cell : int.tryParse(cell.toString());
+              if (cellValue == -1) return null;
+              return cellValue;
+            }).toList();
+          }
+          return <int?>[];
+        }).toList();
+      }
     }
 
     // Parse words

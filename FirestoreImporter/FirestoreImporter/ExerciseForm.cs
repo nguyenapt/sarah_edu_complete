@@ -38,6 +38,67 @@ namespace FirestoreImporter
             SetupDataGridViews();
             SetupGroupQuestionMode();
             SetupAutoBuildIds();
+            SetupTypeChangedHandler();
+        }
+        
+        private void SetupTypeChangedHandler()
+        {
+            cbType.SelectedIndexChanged += CbType_SelectedIndexChanged;
+            // Set initial state
+            CbType_SelectedIndexChanged(null, EventArgs.Empty);
+        }
+        
+        private void CbType_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            string? selectedType = cbType.SelectedItem?.ToString();
+            bool isCrossword = selectedType == "crossword";
+            
+            // Ẩn/hiện tabs
+            if (isCrossword)
+            {
+                // Ẩn Questions, Explanation, Content tabs
+                if (tabControl1.TabPages.Contains(tabPage1))
+                    tabControl1.TabPages.Remove(tabPage1);
+                if (tabControl1.TabPages.Contains(tabPage2))
+                    tabControl1.TabPages.Remove(tabPage2);
+                if (tabControl1.TabPages.Contains(tabPage3))
+                    tabControl1.TabPages.Remove(tabPage3);
+                
+                // Hiển thị Crossword Content tab
+                if (!tabControl1.TabPages.Contains(tabPage4))
+                {
+                    tabControl1.TabPages.Add(tabPage4);
+                    tabControl1.SelectedTab = tabPage4;
+                }
+            }
+            else
+            {
+                // Ẩn Crossword Content tab
+                if (tabControl1.TabPages.Contains(tabPage4))
+                    tabControl1.TabPages.Remove(tabPage4);
+                
+                // Hiển thị Questions, Explanation, Content tabs (thêm lại theo thứ tự)
+                if (!tabControl1.TabPages.Contains(tabPage1))
+                {
+                    tabControl1.TabPages.Insert(0, tabPage1);
+                }
+                if (!tabControl1.TabPages.Contains(tabPage2))
+                {
+                    int index = tabControl1.TabPages.IndexOf(tabPage1);
+                    tabControl1.TabPages.Insert(index + 1, tabPage2);
+                }
+                if (!tabControl1.TabPages.Contains(tabPage3))
+                {
+                    int index = tabControl1.TabPages.IndexOf(tabPage2);
+                    tabControl1.TabPages.Insert(index + 1, tabPage3);
+                }
+                
+                // Set selected tab về tab đầu tiên nếu không có tab nào được chọn
+                if (tabControl1.SelectedTab == null && tabControl1.TabPages.Count > 0)
+                {
+                    tabControl1.SelectedIndex = 0;
+                }
+            }
         }
 
         private void SetupAutoBuildIds()
@@ -234,6 +295,122 @@ namespace FirestoreImporter
             grvContent.ReadOnly = true;
             grvContent.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grvContent.CellContentClick += GrvContent_CellContentClick;
+
+            // Setup grvGrid (Crossword Grid)
+            grvGrid.AutoGenerateColumns = false;
+            grvGrid.Columns.Clear();
+
+            // Delete button column
+            var deleteColumnGrid = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvGrid.Columns.Add(deleteColumnGrid);
+
+            grvGrid.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colRow",
+                HeaderText = "Row",
+                DataPropertyName = "Row",
+                Width = 60,
+                ReadOnly = true
+            });
+            grvGrid.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colValues",
+                HeaderText = "Values",
+                DataPropertyName = "Values",
+                Width = 600,
+                ReadOnly = true
+            });
+            grvGrid.AllowUserToAddRows = false;
+            grvGrid.AllowUserToDeleteRows = false;
+            grvGrid.ReadOnly = true;
+            grvGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvGrid.CellContentClick += GrvGrid_CellContentClick;
+
+            // Setup grvWord (Crossword Words)
+            grvWord.AutoGenerateColumns = false;
+            grvWord.Columns.Clear();
+
+            // Delete button column
+            var deleteColumnWord = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvWord.Columns.Add(deleteColumnWord);
+
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colNumber",
+                HeaderText = "Number",
+                DataPropertyName = "Number",
+                Width = 70,
+                ReadOnly = true
+            });
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDirection",
+                HeaderText = "Direction",
+                DataPropertyName = "Direction",
+                Width = 80,
+                ReadOnly = true
+            });
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colStartRow",
+                HeaderText = "Start Row",
+                DataPropertyName = "StartRow",
+                Width = 80,
+                ReadOnly = true
+            });
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colStartCol",
+                HeaderText = "Start Col",
+                DataPropertyName = "StartCol",
+                Width = 80,
+                ReadOnly = true
+            });
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colClue",
+                HeaderText = "Clue",
+                DataPropertyName = "Clue",
+                Width = 200,
+                ReadOnly = true
+            });
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colAnswer",
+                HeaderText = "Answer",
+                DataPropertyName = "Answer",
+                Width = 100,
+                ReadOnly = true
+            });
+            grvWord.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLength",
+                HeaderText = "Length",
+                DataPropertyName = "Length",
+                Width = 70,
+                ReadOnly = true
+            });
+            grvWord.AllowUserToAddRows = false;
+            grvWord.AllowUserToDeleteRows = false;
+            grvWord.ReadOnly = true;
+            grvWord.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvWord.CellContentClick += GrvWord_CellContentClick;
         }
 
         // Helper class để bind vào DataGridView
@@ -635,13 +812,21 @@ namespace FirestoreImporter
 
             // Content từ dictionary
             // Nếu là crossword type, build content với grid và words
+            // LƯU Ý: Convert List<List<int?>> thành List<List<object>> nhưng GIỮ NGUYÊN null values
+            // ToFirestore() sẽ xử lý conversion null -> -1
             if (exercise.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
             {
+                // Convert List<List<int?>> thành List<object> (outer list)
+                // Mỗi inner list sẽ là List<object> với null values được giữ nguyên
+                var gridAsObjects = _contentGrid.Select(row => 
+                    (object)row.Select(cell => cell.HasValue ? (object)cell.Value : (object?)null).ToList<object?>()
+                ).ToList<object>();
+                
                 var crosswordContent = new Dictionary<string, object>
                 {
                     { "rows", (int)numRows.Value },
                     { "cols", (int)numCols.Value },
-                    { "grid", _contentGrid },
+                    { "grid", gridAsObjects },
                     { "words", _contentWordsDictionary.Values.ToList() }
                 };
                 exercise.Content = crosswordContent;
@@ -808,13 +993,21 @@ namespace FirestoreImporter
 
             // Content từ dictionary
             // Nếu là crossword type, build content với grid và words
+            // LƯU Ý: Convert List<List<int?>> thành List<List<object>> nhưng GIỮ NGUYÊN null values
+            // ToFirestore() sẽ xử lý conversion null -> -1
             if (groupQuestion.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
             {
+                // Convert List<List<int?>> thành List<object> (outer list)
+                // Mỗi inner list sẽ là List<object> với null values được giữ nguyên
+                var gridAsObjects = _contentGrid.Select(row => 
+                    (object)row.Select(cell => (object?)(cell.HasValue ? (object)cell.Value : null)).ToList<object?>()
+                ).ToList<object>();
+                
                 var crosswordContent = new Dictionary<string, object>
                 {
                     { "rows", (int)numRows.Value },
                     { "cols", (int)numCols.Value },
-                    { "grid", _contentGrid },
+                    { "grid", gridAsObjects },
                     { "words", _contentWordsDictionary.Values.ToList() }
                 };
                 groupQuestion.Content = crosswordContent;
@@ -914,6 +1107,22 @@ namespace FirestoreImporter
         {
             // Clear các controls trong tab question, explanation, content
             ClearQuestionExplanationContentTabs();
+        }
+
+        private List<List<object>> ConvertGridForFirestore(List<List<int?>> grid)
+        {
+            // Convert List<List<int?>> thành List<List<object>> với null -> -1
+            // Firestore không hỗ trợ null values trong arrays
+            return grid.Select(row =>
+            {
+                return row.Select(cell =>
+                {
+                    if (cell.HasValue)
+                        return (object)cell.Value;
+                    else
+                        return (object)(-1); // Convert null thành -1
+                }).ToList<object>();
+            }).ToList();
         }
 
         private void ClearQuestionExplanationContentTabs()
@@ -1036,7 +1245,7 @@ namespace FirestoreImporter
             if (_contentGrid != null && _contentGrid.Count > 0)
             {
                 // Convert to display format
-                var displayData = _contentGrid.Select((row, index) => new
+                var displayData = _contentGrid.Select((row, index) => new GridDisplayItem
                 {
                     Row = index,
                     Values = string.Join(", ", row.Select(cell => cell.HasValue ? cell.Value.ToString() : "null"))
@@ -1044,6 +1253,13 @@ namespace FirestoreImporter
                 
                 grvGrid.DataSource = displayData;
             }
+        }
+
+        // Helper class để bind vào DataGridView
+        private class GridDisplayItem
+        {
+            public int Row { get; set; }
+            public string Values { get; set; } = string.Empty;
         }
 
         private void btnAddWordValue_Click(object sender, EventArgs e)
@@ -1151,6 +1367,40 @@ namespace FirestoreImporter
                 grvWord.DataSource = displayList;
             }
         }
+
+        private void GrvGrid_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
+            {
+                if (grvGrid.Rows[e.RowIndex].DataBoundItem is GridDisplayItem item)
+                {
+                    if (item.Row >= 0 && item.Row < _contentGrid.Count)
+                    {
+                        _contentGrid.RemoveAt(item.Row);
+                        UpdateCrosswordContent();
+                        RefreshGridDisplay();
+                    }
+                }
+            }
+        }
+
+        private void GrvWord_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
+            {
+                if (grvWord.Rows[e.RowIndex].DataBoundItem is WordDisplayItem item)
+                {
+                    string keyToRemove = $"word_{item.Number}";
+                    if (_contentWordsDictionary.ContainsKey(keyToRemove))
+                    {
+                        _contentWordsDictionary.Remove(keyToRemove);
+                        UpdateCrosswordContent();
+                        RefreshWordDisplay();
+                    }
+                }
+            }
+        }
+
         
         // Helper class để bind vào DataGridView
         private class WordDisplayItem

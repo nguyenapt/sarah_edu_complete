@@ -1198,8 +1198,34 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                           final key = '${row}_$col';
                           final userInput = _crosswordAnswers[key] ?? '';
                           
-                          // Nếu là block (null), hiển thị ô đen
-                          if (cellValue == null) {
+                          // Kiểm tra xem ô này có nằm trong word nào không
+                          bool isCellInWord = false;
+                          int? wordNumberAtStart = cellValue; // Số ở ô bắt đầu (nếu có)
+                          
+                          for (final word in content.words) {
+                            for (int i = 0; i < word.length; i++) {
+                              int wordRow = word.startRow;
+                              int wordCol = word.startCol;
+                              if (word.direction == 'across') {
+                                wordCol += i;
+                              } else {
+                                wordRow += i;
+                              }
+                              
+                              if (wordRow == row && wordCol == col) {
+                                isCellInWord = true;
+                                // Nếu là ô bắt đầu, lấy số của word
+                                if (i == 0) {
+                                  wordNumberAtStart = word.number;
+                                }
+                                break;
+                              }
+                            }
+                            if (isCellInWord) break;
+                          }
+                          
+                          // Nếu không nằm trong word nào, là blocker (ô đen)
+                          if (!isCellInWord) {
                             return Container(
                               width: 32,
                               height: 32,
@@ -1211,9 +1237,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                             );
                           }
                           
-                          // Nếu là ô có thể điền
-                          final isStartCell = cellValue != null;
-                          final wordNumber = isStartCell ? cellValue : null;
+                          // Nếu là ô có thể điền (nằm trong word)
+                          final wordNumber = wordNumberAtStart;
                           
                           return Container(
                             width: 32,
