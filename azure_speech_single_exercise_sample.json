@@ -1,0 +1,102 @@
+{
+  "lessonId": "lesson_001",
+  "unitId": "unit_001",
+  "levelId": "level_b1",
+  "type": "sequentialQuestions",
+  "question": "Listen to the conversation and answer the questions.",
+  "content": {},
+  "points": 20,
+  "timeLimit": 300,
+  "difficulty": "medium",
+  "explanation": "This exercise tests your listening comprehension through a dialogue.",
+  "speakerVoices": {
+    "Jane": {
+      "gender": "female",
+      "age": "young",
+      "languageCode": "en-US",
+      "rate": 1.0,
+      "pitch": 0.0
+    },
+    "Mike": {
+      "gender": "male",
+      "age": "adult",
+      "languageCode": "en-US",
+      "rate": 1.0,
+      "pitch": 0.0
+    }
+  },
+  "defaultVoice": {
+    "gender": "female",
+    "age": "young",
+    "languageCode": "en-US",
+    "rate": 1.0,
+    "pitch": 0.0
+  },
+  "groupQuestions": [
+    {
+      "question": "Jane: Hello, how are you?",
+      "type": "single_choice",
+      "content": {
+        "options": [
+          "I'm fine, thanks",
+          "Nice to meet you",
+          "Good morning",
+          "See you later"
+        ],
+        "correctAnswers": ["I'm fine, thanks"]
+      },
+      "point": 5,
+      "timeLimit": 30,
+      "difficulty": "easy"
+    },
+    {
+      "question": "Mike: I'm fine, thanks, and you?",
+      "type": "single_choice",
+      "content": {
+        "options": [
+          "I'm great, thanks for asking",
+          "Goodbye",
+          "Nice weather today",
+          "How old are you?"
+        ],
+        "correctAnswers": ["I'm great, thanks for asking"]
+      },
+      "point": 5,
+      "timeLimit": 30,
+      "difficulty": "easy"
+    },
+    {
+      "question": "Jane: Great! What are you doing this weekend?",
+      "type": "single_choice",
+      "content": {
+        "options": [
+          "I'm going to the beach",
+          "I'm watching TV",
+          "I'm playing games",
+          "I'm studying"
+        ],
+        "correctAnswers": ["I'm going to the beach"]
+      },
+      "point": 10,
+      "timeLimit": 60,
+      "difficulty": "medium"
+    },
+    {
+      "question": "Mike: I'm {0} the beach and {1} my family.",
+      "type": "button_single_choice",
+      "content": {
+        "options": [
+          "going to",
+          "visiting",
+          "watching",
+          "playing"
+        ],
+        "correctAnswers": ["going to", "visiting"]
+      },
+      "point": 10,
+      "timeLimit": 60,
+      "difficulty": "medium"
+    }
+  ]
+}
+

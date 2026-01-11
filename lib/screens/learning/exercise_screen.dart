@@ -5,6 +5,7 @@ import '../../models/exercise_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/services/firestore_service.dart';
+import '../../widgets/learning/question_audio_player.dart';
 import '../auth/login_screen.dart';
 import '../level_up/level_up_screen.dart';
 
@@ -733,42 +734,60 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final lines = paragraph.split('\n');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: lines.map((line) {
-        if (line.trim().isEmpty) {
-          return const SizedBox(height: 8);
-        }
-        final (speaker, dialogue) = _parseSpeaker(line.trim());
-        if (speaker != null) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$speaker:',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: lines.map((line) {
+                  if (line.trim().isEmpty) {
+                    return const SizedBox(height: 8);
+                  }
+                  final (speaker, dialogue) = _parseSpeaker(line.trim());
+                  if (speaker != null) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$speaker:',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryColor,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            dialogue,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
                       ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  dialogue,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        line,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    );
+                  }
+                }).toList(),
+              ),
             ),
-          );
-        } else {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              line,
-              style: Theme.of(context).textTheme.bodyLarge,
+            QuestionAudioPlayer(
+              questionText: paragraph,
+              speakerVoices: widget.exercise.speakerVoices,
+              defaultVoice: widget.exercise.defaultVoice,
+              autoPlay: false,
             ),
-          );
-        }
-      }).toList(),
+          ],
+        ),
+      ],
     );
   }
 
@@ -820,18 +839,32 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final placeholderCount = _countPlaceholders(dialogue);
     final parts = dialogue.split(RegExp(r'\{(\d+)\}'));
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
+    final questionText = '$speaker: $dialogue';
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$speaker:',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.primaryColor,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  '$speaker:',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
                 ),
+              ),
+              QuestionAudioPlayer(
+                questionText: questionText,
+                speakerVoices: widget.exercise.speakerVoices,
+                defaultVoice: widget.exercise.defaultVoice,
+                autoPlay: false,
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -940,12 +973,44 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (speaker != null) ...[
-            Text(
-              '$speaker:',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$speaker:',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
                   ),
+                ),
+                QuestionAudioPlayer(
+                  questionText: question,
+                  speakerVoices: widget.exercise.speakerVoices,
+                  defaultVoice: widget.exercise.defaultVoice,
+                  autoPlay: false,
+                ),
+              ],
+            ),
+          ] else ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: const SizedBox.shrink()),
+                QuestionAudioPlayer(
+                  questionText: question,
+                  speakerVoices: widget.exercise.speakerVoices,
+                  defaultVoice: widget.exercise.defaultVoice,
+                  autoPlay: false,
+                ),
+              ],
             ),
             const SizedBox(height: 8),
           ],
@@ -1492,21 +1557,39 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (speaker != null) ...[
-                  Text(
-                    '$speaker:',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-                Text(
-                  dialogue,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (speaker != null) ...[
+                            Text(
+                              '$speaker:',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.primaryColor,
+                                  ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                          Text(
+                            dialogue,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
                       ),
+                    ),
+                    QuestionAudioPlayer(
+                      questionText: groupQuestion.question,
+                      speakerVoices: widget.exercise.speakerVoices,
+                      defaultVoice: widget.exercise.defaultVoice,
+                      autoPlay: false,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1611,21 +1694,39 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (speaker != null) ...[
-                  Text(
-                    '$speaker:',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-                Text(
-                  dialogue,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (speaker != null) ...[
+                            Text(
+                              '$speaker:',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.primaryColor,
+                                  ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                          Text(
+                            dialogue,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
                       ),
+                    ),
+                    QuestionAudioPlayer(
+                      questionText: groupQuestion.question,
+                      speakerVoices: widget.exercise.speakerVoices,
+                      defaultVoice: widget.exercise.defaultVoice,
+                      autoPlay: false,
+                    ),
+                  ],
                 ),
               ],
             ),

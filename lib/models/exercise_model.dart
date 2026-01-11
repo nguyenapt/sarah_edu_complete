@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'voice_config.dart';
 
 enum ExerciseType {
   singleChoice,
@@ -736,6 +737,8 @@ class ExerciseModel {
   final String? imageUrl;
   final String? audioUrl;
   final Map<String, dynamic>? title; // Multi-language: Map<String, String>
+  final Map<String, VoiceConfig>? speakerVoices; // Map speaker name -> VoiceConfig
+  final VoiceConfig? defaultVoice; // Default voice for text without speaker name
 
   ExerciseModel({
     required this.id,
@@ -753,6 +756,8 @@ class ExerciseModel {
     this.imageUrl,
     this.audioUrl,
     this.title,
+    this.speakerVoices,
+    this.defaultVoice,
   });
 
   /// Get title theo language code
@@ -813,6 +818,21 @@ class ExerciseModel {
       groupQuestionsData = groupQuestionsList
           .map((e) => GroupQuestion.fromMap(e as Map<String, dynamic>, languageCode: languageCode))
           .toList();
+    }
+
+    // Speaker Voices
+    Map<String, VoiceConfig>? speakerVoicesData;
+    if (data['speakerVoices'] != null) {
+      final speakerVoicesMap = data['speakerVoices'] as Map<String, dynamic>;
+      speakerVoicesData = speakerVoicesMap.map(
+        (key, value) => MapEntry(key, VoiceConfig.fromMap(value as Map<String, dynamic>)),
+      );
+    }
+
+    // Default Voice
+    VoiceConfig? defaultVoiceData;
+    if (data['defaultVoice'] != null) {
+      defaultVoiceData = VoiceConfig.fromMap(data['defaultVoice'] as Map<String, dynamic>);
     }
 
     // Question - luôn là String
@@ -883,6 +903,8 @@ class ExerciseModel {
       imageUrl: data['imageUrl'],
       audioUrl: data['audioUrl'],
       title: titleData,
+      speakerVoices: speakerVoicesData,
+      defaultVoice: defaultVoiceData,
     );
   }
 
@@ -920,6 +942,8 @@ class ExerciseModel {
       'imageUrl': imageUrl,
       'audioUrl': audioUrl,
       'title': title,
+      'speakerVoices': speakerVoices?.map((key, value) => MapEntry(key, value.toMap())),
+      'defaultVoice': defaultVoice?.toMap(),
     };
   }
 }

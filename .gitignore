@@ -46,3 +46,8 @@ app.*.map.json
 FirestoreImporter/FirestoreImporter/bin/
 FirestoreImporter/FirestoreImporter/obj/
 FirestoreImporter/FirestoreImporter/.vs/
+
+# Keystore files
+*.keystore
+android/app/release.keystore
+android/key.properties
