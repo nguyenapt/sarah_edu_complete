@@ -64,7 +64,6 @@
             btnExportJson = new Button();
             cbPropertyType = new ComboBox();
             label17 = new Label();
-            txtPropertyName = new TextBox();
             grvContent = new DataGridView();
             btnContentAdd = new Button();
             txtPropertyValue = new TextBox();
@@ -108,6 +107,7 @@
             label20 = new Label();
             btnSaveAndAddNew = new Button();
             btnClear = new Button();
+            cbPropertyName = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)grvQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPoints).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimeLimit).BeginInit();
@@ -443,13 +443,6 @@
             label17.TabIndex = 6;
             label17.Text = "Type";
             // 
-            // txtPropertyName
-            // 
-            txtPropertyName.Location = new Point(83, 9);
-            txtPropertyName.Name = "txtPropertyName";
-            txtPropertyName.Size = new Size(124, 23);
-            txtPropertyName.TabIndex = 14;
-            // 
             // grvContent
             // 
             grvContent.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -539,13 +532,13 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(cbPropertyName);
             tabPage3.Controls.Add(cbPropertyType);
             tabPage3.Controls.Add(grvContent);
             tabPage3.Controls.Add(label16);
             tabPage3.Controls.Add(label17);
             tabPage3.Controls.Add(label15);
             tabPage3.Controls.Add(txtPropertyValue);
-            tabPage3.Controls.Add(txtPropertyName);
             tabPage3.Controls.Add(btnContentAdd);
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
@@ -627,7 +620,6 @@
             btnAddWordValue.Text = "Add Word";
             btnAddWordValue.UseVisualStyleBackColor = true;
             btnAddWordValue.Click += btnAddWordValue_Click;
-            // 
             // 
             // txtClue
             // 
@@ -758,7 +750,6 @@
             btnAddGridValue.UseVisualStyleBackColor = true;
             btnAddGridValue.Click += btnAddGridValue_Click;
             // 
-            // 
             // numCols
             // 
             numCols.Location = new Point(79, 35);
@@ -870,6 +861,15 @@
             btnClear.UseVisualStyleBackColor = true;
             btnClear.Click += btnClear_Click;
             // 
+            // cbPropertyName
+            // 
+            cbPropertyName.FormattingEnabled = true;
+            cbPropertyName.Items.AddRange(new object[] { "options", "correctAnswers" });
+            cbPropertyName.Location = new Point(97, 7);
+            cbPropertyName.Name = "cbPropertyName";
+            cbPropertyName.Size = new Size(121, 23);
+            cbPropertyName.TabIndex = 18;
+            // 
             // ExerciseForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -977,7 +977,6 @@
         private TextBox txtImageUrl;
         private Button btnExportJsonFireStore;
         private Button btnExportJson;
-        private TextBox txtPropertyName;
         private DataGridView grvContent;
         private Button btnContentAdd;
         private TextBox txtPropertyValue;
@@ -1023,5 +1022,6 @@
         private Button btnAddWordValue;
         private TextBox txtClue;
         private Label label28;
+        private ComboBox cbPropertyName;
     }
 }

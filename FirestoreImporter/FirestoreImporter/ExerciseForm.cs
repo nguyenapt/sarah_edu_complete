@@ -858,7 +858,7 @@ namespace FirestoreImporter
 
         private void btnContentAdd_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtPropertyName.Text))
+            if (string.IsNullOrWhiteSpace(cbPropertyName.Text))
             {
                 MessageBox.Show("Vui lòng nhập Property Name!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -876,7 +876,7 @@ namespace FirestoreImporter
                 return;
             }
 
-            string propertyName = txtPropertyName.Text.Trim();
+            string propertyName = cbPropertyName.Text.Trim();
             string propertyType = cbPropertyType.SelectedItem.ToString()!;
             string propertyValue = txtPropertyValue.Text.Trim();
 
@@ -903,7 +903,7 @@ namespace FirestoreImporter
             RefreshContentGrid();
 
             // Clear input
-            txtPropertyName.Clear();
+            cbPropertyName.SelectedIndex = 0;
             txtPropertyValue.Clear();
         }
 
@@ -1137,7 +1137,7 @@ namespace FirestoreImporter
             // Clear textboxes
             txtLanguageQuestionValue.Clear();
             txtLanguageExplanationValue.Clear();
-            txtPropertyName.Clear();
+            cbPropertyName.SelectedIndex = 0;
             txtPropertyValue.Clear();
             txtGridArrayValue.Clear();
             txtClue.Clear();

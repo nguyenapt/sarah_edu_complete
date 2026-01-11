@@ -38,10 +38,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   // Cho crossword
   Map<String, String> _crosswordAnswers = {}; // Map<"row_col", userInput>
   String? _activeWord; // Track word đang được focus (format: "across_1" hoặc "down_2")
+  Map<String, FocusNode> _crosswordFocusNodes = {}; // Map<"row_col", FocusNode>
   
   // Cho groupQuestions - chỉ hiển thị 1 question tại một thời điểm
   int _currentGroupQuestionIndex = 0;
   Map<int, bool> _questionResults = {}; // Map<questionIndex, isCorrect> - lưu kết quả từng question
+  Map<int, dynamic> _groupQuestionAnswers = {}; // Map<groupIndex, selectedAnswer> - cho singleChoice và multipleChoice
   
   // Tracking time spent
   DateTime? _startTime;
@@ -164,17 +166,19 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     for (var controller in _animationControllers.values) {
       controller.dispose();
     }
+    for (var focusNode in _crosswordFocusNodes.values) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
   /// Kiểm tra xem có nên hiển thị section thông tin exercise không
   /// Bỏ section này cho button_single_choice và fill_blank
+  /// Với groupQuestions, không hiển thị section này vì mỗi question sẽ có Card riêng
   bool _shouldShowExerciseInfo() {
-    // Nếu có groupQuestions, kiểm tra type của question đầu tiên
+    // Nếu có groupQuestions, không hiển thị Card thông tin exercise
     if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
-      final firstQuestion = widget.exercise.groupQuestions![0];
-      return firstQuestion.type != ExerciseType.buttonSingleChoice && 
-             firstQuestion.type != ExerciseType.fillBlank;
+      return false;
     }
     
     // Nếu không có groupQuestions, kiểm tra type của exercise
@@ -224,7 +228,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         if (currentQuestion.type == ExerciseType.buttonSingleChoice)
           _buildButtonSingleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex)
         else if (currentQuestion.type == ExerciseType.fillBlank)
-          _buildFillBlankForGroup(currentQuestion, _currentGroupQuestionIndex),
+          _buildFillBlankForGroup(currentQuestion, _currentGroupQuestionIndex)
+        else if (currentQuestion.type == ExerciseType.singleChoice)
+          _buildSingleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex)
+        else if (currentQuestion.type == ExerciseType.multipleChoice)
+          _buildMultipleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex),
         
         const SizedBox(height: 24),
         
@@ -322,6 +330,16 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
       print('User answers: $userAnswers');
       print('Correct answers: ${content.correctAnswers}');
+    } else if (currentQuestion.type == ExerciseType.singleChoice) {
+      final content = currentQuestion.content as ChoiceContent;
+      final userAnswer = _groupQuestionAnswers[_currentGroupQuestionIndex] as String?;
+      print('User answer: "$userAnswer"');
+      print('Correct answers: ${content.correctAnswers}');
+    } else if (currentQuestion.type == ExerciseType.multipleChoice) {
+      final content = currentQuestion.content as ChoiceContent;
+      final userAnswers = (_groupQuestionAnswers[_currentGroupQuestionIndex] as List<String>?) ?? [];
+      print('User answers: $userAnswers');
+      print('Correct answers: ${content.correctAnswers}');
     }
     
     final isCorrect = _checkQuestionAnswer(currentQuestion, _currentGroupQuestionIndex);
@@ -359,6 +377,18 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         }
       }
       return true;
+    } else if (groupQuestion.type == ExerciseType.singleChoice) {
+      final content = groupQuestion.content as ChoiceContent;
+      final userAnswer = _groupQuestionAnswers[questionIndex] as String?;
+      return content.correctAnswers.contains(userAnswer);
+    } else if (groupQuestion.type == ExerciseType.multipleChoice) {
+      final content = groupQuestion.content as ChoiceContent;
+      final userAnswers = (_groupQuestionAnswers[questionIndex] as List<String>?) ?? [];
+      if (userAnswers.length != content.correctAnswers.length) {
+        return false;
+      }
+      return userAnswers.every((answer) => content.correctAnswers.contains(answer)) &&
+             content.correctAnswers.every((answer) => userAnswers.contains(answer));
     } else if (groupQuestion.type == ExerciseType.fillBlank) {
       // Lấy correctAnswers từ content
       Map<int, String> correctAnswersMap = {};
@@ -443,6 +473,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         }
       }
       return true;
+    } else if (currentQuestion.type == ExerciseType.singleChoice) {
+      return _groupQuestionAnswers[_currentGroupQuestionIndex] != null;
+    } else if (currentQuestion.type == ExerciseType.multipleChoice) {
+      final selectedAnswers = _groupQuestionAnswers[_currentGroupQuestionIndex] as List<String>?;
+      return selectedAnswers != null && selectedAnswers.isNotEmpty;
     }
     
     return false;
@@ -821,6 +856,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
               return false;
             }
           }
+        } else if (groupQuestion.type == ExerciseType.singleChoice) {
+          if (_groupQuestionAnswers[i] == null) {
+            return false;
+          }
+        } else if (groupQuestion.type == ExerciseType.multipleChoice) {
+          final selectedAnswers = _groupQuestionAnswers[i] as List<String>?;
+          if (selectedAnswers == null || selectedAnswers.isEmpty) {
+            return false;
+          }
         }
       }
       return true;
@@ -885,13 +929,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${AppLocalizations.of(context)!.selectOneAnswer}:',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 16),
         ...content.options.asMap().entries.map((entry) {
           final index = entry.key;
           final option = entry.value;
@@ -899,33 +936,72 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           final isCorrectAnswer = content.correctAnswers.contains(option);
 
           Color? backgroundColor;
+          Color? foregroundColor;
+          IconData? iconData;
+          Color? iconColor;
+
           if (_isSubmitted) {
             if (isCorrectAnswer) {
               backgroundColor = Colors.green.withOpacity(0.2);
+              foregroundColor = Colors.green[900];
+              iconData = Icons.check_circle;
+              iconColor = Colors.green;
             } else if (isSelected && !isCorrectAnswer) {
               backgroundColor = Colors.red.withOpacity(0.2);
+              foregroundColor = Colors.red[900];
+              iconData = Icons.cancel;
+              iconColor = Colors.red;
+            } else {
+              backgroundColor = Colors.grey[200];
+              foregroundColor = Colors.grey[600];
+            }
+          } else {
+            if (isSelected) {
+              backgroundColor = AppTheme.primaryColor;
+              foregroundColor = Colors.white;
+            } else {
+              backgroundColor = Colors.grey[200];
+              foregroundColor = Colors.black87;
             }
           }
 
-          return Card(
+          return Container(
+            width: double.infinity,
             margin: const EdgeInsets.only(bottom: 12),
-            color: backgroundColor,
-            child: RadioListTile<String>(
-              title: Text(option),
-              value: option,
-              groupValue: _selectedAnswer,
-              onChanged: _isSubmitted
+            child: ElevatedButton(
+              onPressed: _isSubmitted
                   ? null
-                  : (value) {
+                  : () {
                       setState(() {
-                        _selectedAnswer = value;
+                        _selectedAnswer = option;
                       });
                     },
-              secondary: _isSubmitted && isCorrectAnswer
-                  ? const Icon(Icons.check_circle, color: Colors.green)
-                  : _isSubmitted && isSelected && !isCorrectAnswer
-                      ? const Icon(Icons.cancel, color: Colors.red)
-                      : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: backgroundColor,
+                foregroundColor: foregroundColor,
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: Row(
+                children: [
+                  if (iconData != null) ...[
+                    Icon(iconData, color: iconColor, size: 20),
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }),
@@ -984,6 +1060,217 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                   : _isSubmitted && isSelected && !isCorrectAnswer
                       ? const Icon(Icons.cancel, color: Colors.red)
                       : null,
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildSingleChoiceForGroup(GroupQuestion groupQuestion, int groupIndex) {
+    final content = groupQuestion.content as ChoiceContent;
+    final selectedAnswer = _groupQuestionAnswers[groupIndex] as String?;
+    final isSubmitted = _questionResults.containsKey(groupIndex);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Card hiển thị question text
+        Card(
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              groupQuestion.question,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Options buttons
+        ...content.options.asMap().entries.map((entry) {
+          final index = entry.key;
+          final option = entry.value;
+          final isSelected = selectedAnswer == option;
+          final isCorrectAnswer = content.correctAnswers.contains(option);
+
+          Color? backgroundColor;
+          Color? foregroundColor;
+          IconData? iconData;
+          Color? iconColor;
+
+          if (isSubmitted) {
+            if (isCorrectAnswer) {
+              backgroundColor = Colors.green.withOpacity(0.2);
+              foregroundColor = Colors.green[900];
+              iconData = Icons.check_circle;
+              iconColor = Colors.green;
+            } else if (isSelected && !isCorrectAnswer) {
+              backgroundColor = Colors.red.withOpacity(0.2);
+              foregroundColor = Colors.red[900];
+              iconData = Icons.cancel;
+              iconColor = Colors.red;
+            } else {
+              backgroundColor = Colors.grey[200];
+              foregroundColor = Colors.grey[600];
+            }
+          } else {
+            if (isSelected) {
+              backgroundColor = AppTheme.primaryColor;
+              foregroundColor = Colors.white;
+            } else {
+              backgroundColor = Colors.grey[200];
+              foregroundColor = Colors.black87;
+            }
+          }
+
+          return Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 12),
+            child: ElevatedButton(
+              onPressed: isSubmitted
+                  ? null
+                  : () {
+                      setState(() {
+                        _groupQuestionAnswers[groupIndex] = option;
+                      });
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: backgroundColor,
+                foregroundColor: foregroundColor,
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: Row(
+                children: [
+                  if (iconData != null) ...[
+                    Icon(iconData, color: iconColor, size: 20),
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildMultipleChoiceForGroup(GroupQuestion groupQuestion, int groupIndex) {
+    final content = groupQuestion.content as ChoiceContent;
+    final selectedAnswers = (_groupQuestionAnswers[groupIndex] as List<String>?) ?? [];
+    final isSubmitted = _questionResults.containsKey(groupIndex);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Card hiển thị question text
+        Card(
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              groupQuestion.question,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Options buttons
+        ...content.options.map((option) {
+          final isSelected = selectedAnswers.contains(option);
+          final isCorrectAnswer = content.correctAnswers.contains(option);
+
+          Color? backgroundColor;
+          Color? foregroundColor;
+          IconData? iconData;
+          Color? iconColor;
+
+          if (isSubmitted) {
+            if (isCorrectAnswer) {
+              backgroundColor = Colors.green.withOpacity(0.2);
+              foregroundColor = Colors.green[900];
+              iconData = Icons.check_circle;
+              iconColor = Colors.green;
+            } else if (isSelected && !isCorrectAnswer) {
+              backgroundColor = Colors.red.withOpacity(0.2);
+              foregroundColor = Colors.red[900];
+              iconData = Icons.cancel;
+              iconColor = Colors.red;
+            } else {
+              backgroundColor = Colors.grey[200];
+              foregroundColor = Colors.grey[600];
+            }
+          } else {
+            backgroundColor = Colors.grey[200];
+            foregroundColor = Colors.black87;
+          }
+
+          return Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 12),
+            child: ElevatedButton(
+              onPressed: isSubmitted
+                  ? null
+                  : () {
+                      setState(() {
+                        final current = List<String>.from(selectedAnswers);
+                        if (isSelected) {
+                          current.remove(option);
+                        } else {
+                          current.add(option);
+                        }
+                        _groupQuestionAnswers[groupIndex] = current;
+                      });
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: backgroundColor,
+                foregroundColor: foregroundColor,
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: Row(
+                children: [
+                  if (iconData != null) ...[
+                    Icon(iconData, color: iconColor, size: 20),
+                    const SizedBox(width: 8),
+                  ],
+                  Icon(
+                    isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: isSelected ? AppTheme.primaryColor : Colors.grey[600],
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }),
@@ -1174,6 +1461,114 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     );
   }
 
+  // Helper method để lấy FocusNode cho một cell
+  FocusNode _getFocusNode(String key) {
+    if (!_crosswordFocusNodes.containsKey(key)) {
+      _crosswordFocusNodes[key] = FocusNode();
+    }
+    return _crosswordFocusNodes[key]!;
+  }
+
+  // Helper method để focus vào ô đầu tiên của word
+  void _focusWordFirstCell(CrosswordContent content, String direction, int number) {
+    final word = content.words.firstWhere(
+      (w) => w.direction == direction && w.number == number,
+      orElse: () => content.words.first,
+    );
+    
+    final firstKey = '${word.startRow}_${word.startCol}';
+    final focusNode = _getFocusNode(firstKey);
+    Future.microtask(() => focusNode.requestFocus());
+  }
+
+  // Helper method để chuyển focus sang ô tiếp theo trong word
+  void _moveToNextCell(CrosswordContent content, int currentRow, int currentCol, String direction, int wordNumber) {
+    final word = content.words.firstWhere(
+      (w) => w.direction == direction && w.number == wordNumber,
+      orElse: () => content.words.first,
+    );
+    
+    // Tìm vị trí hiện tại trong word
+    int currentIndex = -1;
+    if (direction == 'across') {
+      currentIndex = currentCol - word.startCol;
+    } else {
+      currentIndex = currentRow - word.startRow;
+    }
+    
+    // Nếu chưa đến cuối word, chuyển sang ô tiếp theo
+    if (currentIndex >= 0 && currentIndex < word.length - 1) {
+      int nextRow = word.startRow;
+      int nextCol = word.startCol;
+      if (direction == 'across') {
+        nextCol = word.startCol + currentIndex + 1;
+      } else {
+        nextRow = word.startRow + currentIndex + 1;
+      }
+      
+      final nextKey = '${nextRow}_$nextCol';
+      final nextFocusNode = _getFocusNode(nextKey);
+      Future.microtask(() => nextFocusNode.requestFocus());
+    }
+  }
+
+  // Helper method để chuyển focus về ô trước trong word (khi backspace)
+  void _moveToPreviousCell(CrosswordContent content, int currentRow, int currentCol, String direction, int wordNumber) {
+    final word = content.words.firstWhere(
+      (w) => w.direction == direction && w.number == wordNumber,
+      orElse: () => content.words.first,
+    );
+    
+    // Tìm vị trí hiện tại trong word
+    int currentIndex = -1;
+    if (direction == 'across') {
+      currentIndex = currentCol - word.startCol;
+    } else {
+      currentIndex = currentRow - word.startRow;
+    }
+    
+    // Nếu chưa ở đầu word, chuyển về ô trước
+    if (currentIndex > 0) {
+      int prevRow = word.startRow;
+      int prevCol = word.startCol;
+      if (direction == 'across') {
+        prevCol = word.startCol + currentIndex - 1;
+      } else {
+        prevRow = word.startRow + currentIndex - 1;
+      }
+      
+      final prevKey = '${prevRow}_$prevCol';
+      final prevFocusNode = _getFocusNode(prevKey);
+      Future.microtask(() {
+        prevFocusNode.requestFocus();
+        // Xóa nội dung ô trước
+        setState(() {
+          _crosswordAnswers.remove(prevKey);
+        });
+      });
+    }
+  }
+
+  // Helper method để tìm word chứa một cell
+  CrosswordWord? _findWordContainingCell(CrosswordContent content, int row, int col) {
+    for (final word in content.words) {
+      for (int i = 0; i < word.length; i++) {
+        int wordRow = word.startRow;
+        int wordCol = word.startCol;
+        if (word.direction == 'across') {
+          wordCol += i;
+        } else {
+          wordRow += i;
+        }
+        
+        if (wordRow == row && wordCol == col) {
+          return word;
+        }
+      }
+    }
+    return null;
+  }
+
   Widget _buildCrossword() {
     final content = widget.exercise.content as CrosswordContent;
     
@@ -1267,6 +1662,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                                 Center(
                                   child: TextField(
                                     key: ValueKey(key),
+                                    focusNode: _getFocusNode(key),
                                     textAlign: TextAlign.center,
                                     maxLength: 1,
                                     enabled: !_isSubmitted,
@@ -1286,9 +1682,23 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                                     onChanged: (value) {
                                       setState(() {
                                         if (value.isNotEmpty) {
-                                          _crosswordAnswers[key] = value.toUpperCase();
+                                          final upperValue = value.toUpperCase();
+                                          _crosswordAnswers[key] = upperValue;
+                                          
+                                          // Tìm word chứa cell này
+                                          final word = _findWordContainingCell(content, row, col);
+                                          if (word != null) {
+                                            // Tự động chuyển sang ô tiếp theo
+                                            _moveToNextCell(content, row, col, word.direction, word.number);
+                                          }
                                         } else {
                                           _crosswordAnswers.remove(key);
+                                          
+                                          // Khi backspace, chuyển về ô trước
+                                          final word = _findWordContainingCell(content, row, col);
+                                          if (word != null) {
+                                            _moveToPreviousCell(content, row, col, word.direction, word.number);
+                                          }
                                         }
                                       });
                                     },
@@ -1333,6 +1743,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                               onTap: () {
                                 setState(() {
                                   _activeWord = 'across_${word.number}';
+                                  _focusWordFirstCell(content, 'across', word.number);
                                 });
                               },
                               child: Container(
@@ -1383,6 +1794,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                               onTap: () {
                                 setState(() {
                                   _activeWord = 'down_${word.number}';
+                                  _focusWordFirstCell(content, 'down', word.number);
                                 });
                               },
                               child: Container(
@@ -1481,6 +1893,16 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             final correctAnswer = j < content.correctAnswers.length ? content.correctAnswers[j] : null;
             print('    Placeholder $j: User answer = "${answer ?? "null"}", Correct answer = "$correctAnswer"');
           }
+        } else if (lastQuestion.type == ExerciseType.singleChoice) {
+          final content = lastQuestion.content as ChoiceContent;
+          final userAnswer = _groupQuestionAnswers[lastQuestionIndex] as String?;
+          print('    User answer: "$userAnswer"');
+          print('    Correct answers: ${content.correctAnswers}');
+        } else if (lastQuestion.type == ExerciseType.multipleChoice) {
+          final content = lastQuestion.content as ChoiceContent;
+          final userAnswers = (_groupQuestionAnswers[lastQuestionIndex] as List<String>?) ?? [];
+          print('    User answers: $userAnswers');
+          print('    Correct answers: ${content.correctAnswers}');
         }
         
         final lastQuestionCorrect = _checkQuestionAnswer(lastQuestion, lastQuestionIndex);
