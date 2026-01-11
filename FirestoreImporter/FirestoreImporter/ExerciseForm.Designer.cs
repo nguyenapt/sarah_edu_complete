@@ -73,6 +73,7 @@
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
             tabPage3 = new TabPage();
+            cbPropertyName = new ComboBox();
             tabPage4 = new TabPage();
             groupBox2 = new GroupBox();
             txtAnswer = new TextBox();
@@ -107,7 +108,6 @@
             label20 = new Label();
             btnSaveAndAddNew = new Button();
             btnClear = new Button();
-            cbPropertyName = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)grvQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPoints).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimeLimit).BeginInit();
@@ -222,7 +222,7 @@
             // grvQuestion
             // 
             grvQuestion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvQuestion.Location = new Point(6, 36);
+            grvQuestion.Location = new Point(6, 106);
             grvQuestion.Name = "grvQuestion";
             grvQuestion.Size = new Size(711, 280);
             grvQuestion.TabIndex = 5;
@@ -240,8 +240,9 @@
             // txtLanguageQuestionValue
             // 
             txtLanguageQuestionValue.Location = new Point(265, 7);
+            txtLanguageQuestionValue.Multiline = true;
             txtLanguageQuestionValue.Name = "txtLanguageQuestionValue";
-            txtLanguageQuestionValue.Size = new Size(282, 23);
+            txtLanguageQuestionValue.Size = new Size(282, 93);
             txtLanguageQuestionValue.TabIndex = 9;
             // 
             // label6
@@ -324,7 +325,7 @@
             // grvExplanation
             // 
             grvExplanation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvExplanation.Location = new Point(6, 36);
+            grvExplanation.Location = new Point(6, 109);
             grvExplanation.Name = "grvExplanation";
             grvExplanation.Size = new Size(711, 280);
             grvExplanation.TabIndex = 5;
@@ -342,8 +343,9 @@
             // txtLanguageExplanationValue
             // 
             txtLanguageExplanationValue.Location = new Point(265, 7);
+            txtLanguageExplanationValue.Multiline = true;
             txtLanguageExplanationValue.Name = "txtLanguageExplanationValue";
-            txtLanguageExplanationValue.Size = new Size(282, 23);
+            txtLanguageExplanationValue.Size = new Size(282, 96);
             txtLanguageExplanationValue.TabIndex = 12;
             // 
             // label10
@@ -547,6 +549,15 @@
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Content";
             tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // cbPropertyName
+            // 
+            cbPropertyName.FormattingEnabled = true;
+            cbPropertyName.Items.AddRange(new object[] { "options", "correctAnswers" });
+            cbPropertyName.Location = new Point(97, 7);
+            cbPropertyName.Name = "cbPropertyName";
+            cbPropertyName.Size = new Size(121, 23);
+            cbPropertyName.TabIndex = 18;
             // 
             // tabPage4
             // 
@@ -860,15 +871,6 @@
             btnClear.Text = "Clear";
             btnClear.UseVisualStyleBackColor = true;
             btnClear.Click += btnClear_Click;
-            // 
-            // cbPropertyName
-            // 
-            cbPropertyName.FormattingEnabled = true;
-            cbPropertyName.Items.AddRange(new object[] { "options", "correctAnswers" });
-            cbPropertyName.Location = new Point(97, 7);
-            cbPropertyName.Name = "cbPropertyName";
-            cbPropertyName.Size = new Size(121, 23);
-            cbPropertyName.TabIndex = 18;
             // 
             // ExerciseForm
             // 

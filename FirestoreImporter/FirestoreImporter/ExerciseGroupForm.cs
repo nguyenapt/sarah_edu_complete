@@ -455,7 +455,7 @@ namespace FirestoreImporter
                 LessonId = txtLessonId.Text.Trim(),
                 UnitId = txtUnitId.Text.Trim(),
                 LevelId = cbLevelId.SelectedItem?.ToString() ?? string.Empty,
-                //Type = cbType.SelectedItem?.ToString() ?? "single_choice",
+                Type = cbType.SelectedItem?.ToString() ?? "single_choice",
                 Points = (int)numPoints.Value,
                 Difficulty = cbDifficulty.SelectedItem?.ToString() ?? "easy"
             };

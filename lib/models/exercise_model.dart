@@ -8,7 +8,8 @@ enum ExerciseType {
   listening,
   speaking,
   buttonSingleChoice,
-  crossword;
+  crossword,
+  sequentialQuestions;
 
   static ExerciseType fromString(String value) {
     // Normalize value: convert snake_case to camelCase
@@ -798,6 +799,10 @@ class ExerciseModel {
         break;
       case ExerciseType.crossword:
         content = CrosswordContent.fromMap(data['content'] ?? {});
+        break;
+      case ExerciseType.sequentialQuestions:
+        // sequentialQuestions uses groupQuestions, content can be empty
+        content = {};
         break;
     }
 

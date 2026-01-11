@@ -27,8 +27,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   
   // Cho button_single_choice
   Map<int, String?> _selectedAnswers = {}; // Map<placeholderIndex, selectedOption>
-  List<GlobalKey> _optionKeys = [];
-  List<GlobalKey> _placeholderKeys = [];
+  Map<String, GlobalKey> _optionKeys = {}; // Map<"groupIndex_optionIndex", GlobalKey>
+  Map<String, GlobalKey> _placeholderKeys = {}; // Map<"groupIndex_placeholderIndex", GlobalKey>
   Map<String, AnimationController> _animationControllers = {};
   Map<String, Animation<Offset>> _animations = {};
   
@@ -176,6 +176,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   /// Bỏ section này cho button_single_choice và fill_blank
   /// Với groupQuestions, không hiển thị section này vì mỗi question sẽ có Card riêng
   bool _shouldShowExerciseInfo() {
+    // Không hiển thị Card thông tin cho sequentialQuestions
+    if (widget.exercise.type == ExerciseType.sequentialQuestions) {
+      return false;
+    }
+    
     // Nếu có groupQuestions, không hiển thị Card thông tin exercise
     if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
       return false;
@@ -187,6 +192,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   }
 
   Widget _buildAnswerSection() {
+    // Nếu là sequentialQuestions, hiển thị sequential questions
+    if (widget.exercise.type == ExerciseType.sequentialQuestions) {
+      return _buildSequentialQuestions();
+    }
+    
     // Nếu có groupQuestions, hiển thị groupQuestions
     if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
       return _buildGroupQuestions();
@@ -262,6 +272,125 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           ),
       ],
     );
+  }
+
+  Widget _buildSequentialQuestions() {
+    final groupQuestions = widget.exercise.groupQuestions!;
+    
+    // Tính số question đã unlock: question đầu tiên luôn unlock, 
+    // question tiếp theo unlock khi question trước đó đã có đáp án
+    int lastUnlockedIndex = 0;
+    for (int i = 0; i < groupQuestions.length; i++) {
+      final question = groupQuestions[i];
+      bool hasAnswer = false;
+      
+      if (question.type == ExerciseType.buttonSingleChoice) {
+        final placeholderCount = _countPlaceholders(question.question);
+        bool hasAllAnswers = true;
+        for (int j = 0; j < placeholderCount; j++) {
+          final key = i * 1000 + j;
+          if (_selectedAnswers[key] == null) {
+            hasAllAnswers = false;
+            break;
+          }
+        }
+        hasAnswer = hasAllAnswers;
+      } else if (question.type == ExerciseType.singleChoice) {
+        hasAnswer = _groupQuestionAnswers[i] != null;
+      } else if (question.type == ExerciseType.multipleChoice) {
+        final selectedAnswers = _groupQuestionAnswers[i] as List<String>?;
+        hasAnswer = selectedAnswers != null && selectedAnswers.isNotEmpty;
+      }
+      
+      if (hasAnswer && i < groupQuestions.length - 1) {
+        lastUnlockedIndex = i + 1;
+      } else if (!hasAnswer) {
+        break;
+      }
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Hiển thị paragraph nếu có (từ exercise.question)
+        if (widget.exercise.question.isNotEmpty) ...[
+          Card(
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: _buildParagraphWithSpeakers(widget.exercise.question),
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
+        // Hiển thị tất cả questions đã unlock
+        ...List.generate(lastUnlockedIndex + 1, (index) {
+          final question = groupQuestions[index];
+          
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (question.type == ExerciseType.buttonSingleChoice)
+                _buildButtonSingleChoiceForGroup(question, index)
+              else if (question.type == ExerciseType.singleChoice)
+                _buildSingleChoiceForGroup(question, index)
+              else if (question.type == ExerciseType.multipleChoice)
+                _buildMultipleChoiceForGroup(question, index),
+              if (index < lastUnlockedIndex) const SizedBox(height: 24),
+            ],
+          );
+        }),
+        
+        // Nút Submit khi tất cả questions đã được trả lời
+        if (lastUnlockedIndex == groupQuestions.length - 1 && !_isSubmitted) ...[
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _canSubmitSequentialQuestions() ? _handleSubmit : null,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.submit,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  bool _canSubmitSequentialQuestions() {
+    final groupQuestions = widget.exercise.groupQuestions!;
+    for (int i = 0; i < groupQuestions.length; i++) {
+      final question = groupQuestions[i];
+      if (question.type == ExerciseType.buttonSingleChoice) {
+        final placeholderCount = _countPlaceholders(question.question);
+        for (int j = 0; j < placeholderCount; j++) {
+          final key = i * 1000 + j;
+          if (_selectedAnswers[key] == null) {
+            return false;
+          }
+        }
+      } else if (question.type == ExerciseType.singleChoice) {
+        if (_groupQuestionAnswers[i] == null) {
+          return false;
+        }
+      } else if (question.type == ExerciseType.multipleChoice) {
+        final selectedAnswers = _groupQuestionAnswers[i] as List<String>?;
+        if (selectedAnswers == null || selectedAnswers.isEmpty) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
   
   void _goToNextQuestion() {
@@ -488,17 +617,31 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     
     // Initialize keys và animations cho group này
     final placeholderCount = _countPlaceholders(groupQuestion.question);
-    if (_optionKeys.length < content.options.length) {
-      _optionKeys = List.generate(content.options.length, (i) => GlobalKey());
+    for (int i = 0; i < content.options.length; i++) {
+      final key = '${groupIndex}_option_$i';
+      if (!_optionKeys.containsKey(key)) {
+        _optionKeys[key] = GlobalKey();
+      }
     }
-    if (_placeholderKeys.length < placeholderCount) {
-      _placeholderKeys = List.generate(placeholderCount, (i) => GlobalKey());
+    for (int i = 0; i < placeholderCount; i++) {
+      final key = '${groupIndex}_placeholder_$i';
+      if (!_placeholderKeys.containsKey(key)) {
+        _placeholderKeys[key] = GlobalKey();
+      }
     }
     
-    // Initialize selected answers cho group này
-    final groupKey = 'group_$groupIndex';
-    if (!_selectedAnswers.containsKey(groupIndex)) {
-      _selectedAnswers[groupIndex] = null;
+    // Kiểm tra xem question này đã có đáp án chưa (cho sequential questions)
+    bool isQuestionAnswered = false;
+    if (widget.exercise.type == ExerciseType.sequentialQuestions) {
+      bool hasAllAnswers = true;
+      for (int j = 0; j < placeholderCount; j++) {
+        final key = groupIndex * 1000 + j;
+        if (_selectedAnswers[key] == null) {
+          hasAllAnswers = false;
+          break;
+        }
+      }
+      isQuestionAnswered = hasAllAnswers;
     }
     
     return Card(
@@ -510,9 +653,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           children: [
             // Question với placeholders (không có Card wrapper)
             _buildQuestionContent(groupQuestion.question, groupIndex, content),
-            const SizedBox(height: 24),
-            // Options buttons
-            _buildOptionsButtons(content.options, groupIndex, content),
+            // Options buttons - chỉ hiển thị khi chưa có đáp án (trong sequential questions)
+            if (!isQuestionAnswered) ...[
+              const SizedBox(height: 24),
+              _buildOptionsButtons(content.options, groupIndex, content),
+            ],
           ],
         ),
       ),
@@ -523,9 +668,19 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final content = widget.exercise.content as ButtonSingleChoiceContent;
     final placeholderCount = _countPlaceholders(widget.exercise.question);
     
-    // Initialize keys
-    _optionKeys = List.generate(content.options.length, (i) => GlobalKey());
-    _placeholderKeys = List.generate(placeholderCount, (i) => GlobalKey());
+    // Initialize keys (groupIndex = -1 cho standalone)
+    for (int i = 0; i < content.options.length; i++) {
+      final key = '-1_option_$i';
+      if (!_optionKeys.containsKey(key)) {
+        _optionKeys[key] = GlobalKey();
+      }
+    }
+    for (int i = 0; i < placeholderCount; i++) {
+      final key = '-1_placeholder_$i';
+      if (!_placeholderKeys.containsKey(key)) {
+        _placeholderKeys[key] = GlobalKey();
+      }
+    }
     
     return Card(
       margin: EdgeInsets.zero,
@@ -551,6 +706,158 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     if (matches.isEmpty) return 0;
     final maxIndex = matches.map((m) => int.parse(m.group(1)!)).reduce((a, b) => a > b ? a : b);
     return maxIndex + 1;
+  }
+
+  // Parse speaker từ question text (format: "SpeakerName: dialogue text" hoặc "SpeakerName:")
+  // Returns: (speaker, dialogue) hoặc (null, question) nếu không có speaker
+  (String?, String) _parseSpeaker(String question) {
+    // Check format có dialogue: "SpeakerName: dialogue text"
+    final speakerWithDialogueRegex = RegExp(r'^([A-Za-z][A-Za-z\s]*?):\s+(.+)$');
+    final matchWithDialogue = speakerWithDialogueRegex.firstMatch(question);
+    if (matchWithDialogue != null) {
+      return (matchWithDialogue.group(1)?.trim(), matchWithDialogue.group(2) ?? '');
+    }
+    
+    // Check format chỉ có speaker name: "SpeakerName:"
+    final speakerOnlyRegex = RegExp(r'^([A-Za-z][A-Za-z\s]*?):\s*$');
+    final matchOnly = speakerOnlyRegex.firstMatch(question);
+    if (matchOnly != null) {
+      return (matchOnly.group(1)?.trim(), '');
+    }
+    
+    return (null, question);
+  }
+
+  // Build paragraph với speakers (có thể có nhiều dòng, mỗi dòng có thể có speaker)
+  Widget _buildParagraphWithSpeakers(String paragraph) {
+    final lines = paragraph.split('\n');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: lines.map((line) {
+        if (line.trim().isEmpty) {
+          return const SizedBox(height: 8);
+        }
+        final (speaker, dialogue) = _parseSpeaker(line.trim());
+        if (speaker != null) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$speaker:',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  dialogue,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              line,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          );
+        }
+      }).toList(),
+    );
+  }
+
+  // Build content cho multiple speakers (xử lý trường hợp dòng chỉ có speaker name)
+  List<Widget> _buildMultipleSpeakerContent(List<String> lines, int groupIndex, ButtonSingleChoiceContent content) {
+    List<Widget> widgets = [];
+    String? currentSpeaker;
+    List<String> currentDialogue = [];
+    
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      final (speaker, dialogue) = _parseSpeaker(line);
+      
+      if (speaker != null) {
+        // Nếu có speaker mới, render speaker cũ trước (nếu có)
+        if (currentSpeaker != null && currentDialogue.isNotEmpty) {
+          widgets.add(_buildSpeakerDialogueWidget(currentSpeaker!, currentDialogue.join(' '), groupIndex, content));
+          widgets.add(const SizedBox(height: 12));
+          currentDialogue.clear();
+        }
+        currentSpeaker = speaker;
+        if (dialogue.isNotEmpty && dialogue != line) {
+          currentDialogue.add(dialogue);
+        }
+      } else if (currentSpeaker != null) {
+        // Nếu đang có speaker, thêm dòng này vào dialogue
+        currentDialogue.add(line);
+      } else {
+        // Không có speaker, chỉ hiển thị text
+        widgets.add(Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            line,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ));
+      }
+    }
+    
+    // Render speaker cuối cùng (nếu có)
+    if (currentSpeaker != null && currentDialogue.isNotEmpty) {
+      widgets.add(_buildSpeakerDialogueWidget(currentSpeaker!, currentDialogue.join(' '), groupIndex, content));
+    }
+    
+    return widgets;
+  }
+  
+  Widget _buildSpeakerDialogueWidget(String speaker, String dialogue, int groupIndex, ButtonSingleChoiceContent content) {
+    final placeholderCount = _countPlaceholders(dialogue);
+    final parts = dialogue.split(RegExp(r'\{(\d+)\}'));
+    final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
+    
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$speaker:',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primaryColor,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 4,
+            runSpacing: 8,
+            children: [
+              for (int i = 0; i < parts.length; i++) ...[
+                Text(
+                  parts[i],
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                if (i < placeholders.length)
+                  _buildPlaceholderWidget(
+                    int.parse(placeholders[i].group(1)!),
+                    groupIndex,
+                    content,
+                  ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildQuestionWithPlaceholders(String question, int groupIndex, ButtonSingleChoiceContent content) {
@@ -590,9 +897,37 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
   // Question content không có Card wrapper (dùng khi đã có Card bên ngoài)
   Widget _buildQuestionContent(String question, int groupIndex, ButtonSingleChoiceContent content) {
-    final placeholderCount = _countPlaceholders(question);
-    final parts = question.split(RegExp(r'\{(\d+)\}'));
-    final placeholders = RegExp(r'\{(\d+)\}').allMatches(question).toList();
+    // Kiểm tra xem question có nhiều dòng với nhiều speakers không
+    final lines = question.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
+    int speakerCount = 0;
+    for (final line in lines) {
+      final (speaker, _) = _parseSpeaker(line);
+      if (speaker != null) {
+        speakerCount++;
+      }
+    }
+    
+    // Nếu có từ 2 speakers trở lên, xử lý như paragraph
+    if (speakerCount >= 2) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _buildMultipleSpeakerContent(lines, groupIndex, content),
+        ),
+      );
+    }
+    
+    // Logic cũ cho single speaker
+    final (speaker, dialogue) = _parseSpeaker(question);
+    final placeholderCount = _countPlaceholders(dialogue);
+    final parts = dialogue.split(RegExp(r'\{(\d+)\}'));
+    final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
     
     return Container(
       width: double.infinity,
@@ -601,25 +936,40 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 4,
-        runSpacing: 8,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (int i = 0; i < parts.length; i++) ...[
+          if (speaker != null) ...[
             Text(
-              parts[i],
+              '$speaker:',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryColor,
                   ),
             ),
-            if (i < placeholders.length)
-              _buildPlaceholderWidget(
-                int.parse(placeholders[i].group(1)!),
-                groupIndex,
-                content,
-              ),
+            const SizedBox(height: 8),
           ],
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 4,
+            runSpacing: 8,
+            children: [
+              for (int i = 0; i < parts.length; i++) ...[
+                Text(
+                  parts[i],
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                if (i < placeholders.length)
+                  _buildPlaceholderWidget(
+                    int.parse(placeholders[i].group(1)!),
+                    groupIndex,
+                    content,
+                  ),
+              ],
+            ],
+          ),
         ],
       ),
     );
@@ -630,10 +980,37 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         ? _selectedAnswers[placeholderIndex]
         : _selectedAnswers[groupIndex * 1000 + placeholderIndex];
     
+    // Lấy key cho placeholder này
+    final placeholderKeyStr = groupIndex == -1 
+        ? '-1_placeholder_$placeholderIndex'
+        : '${groupIndex}_placeholder_$placeholderIndex';
+    if (!_placeholderKeys.containsKey(placeholderKeyStr)) {
+      _placeholderKeys[placeholderKeyStr] = GlobalKey();
+    }
+    final placeholderKey = _placeholderKeys[placeholderKeyStr]!;
+    
+    // Kiểm tra xem question này đã có đáp án chưa (cho sequential questions)
+    bool isQuestionAnswered = false;
+    if (widget.exercise.type == ExerciseType.sequentialQuestions && groupIndex >= 0) {
+      final question = widget.exercise.groupQuestions![groupIndex];
+      if (question.type == ExerciseType.buttonSingleChoice) {
+        final placeholderCount = _countPlaceholders(question.question);
+        bool hasAllAnswers = true;
+        for (int j = 0; j < placeholderCount; j++) {
+          final key = groupIndex * 1000 + j;
+          if (_selectedAnswers[key] == null) {
+            hasAllAnswers = false;
+            break;
+          }
+        }
+        isQuestionAnswered = hasAllAnswers;
+      }
+    }
+    
     // Nếu chưa chọn, hiển thị vùng màu xám
     if (selectedOption == null) {
       return Container(
-        key: _placeholderKeys[placeholderIndex],
+        key: placeholderKey,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         width: 80,
         height: 32,
@@ -663,8 +1040,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
     }
     
+    final isDisabled = _isSubmitted || isQuestionAnswered;
+    
     return Container(
-      key: _placeholderKeys[placeholderIndex],
+      key: placeholderKey,
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -684,7 +1063,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             Icon(Icons.cancel, color: Colors.red, size: 16),
           if (_isSubmitted) const SizedBox(width: 4),
           GestureDetector(
-            onTap: _isSubmitted ? null : () => _removeFromPlaceholder(placeholderIndex, groupIndex, selectedOption),
+            onTap: isDisabled ? null : () => _removeFromPlaceholder(placeholderIndex, groupIndex, selectedOption),
             child: Text(
               selectedOption,
               style: TextStyle(
@@ -703,6 +1082,24 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   }
 
   Widget _buildOptionsButtons(List<String> options, int groupIndex, ButtonSingleChoiceContent content) {
+    // Kiểm tra xem question này đã có đáp án chưa (cho sequential questions)
+    bool isQuestionAnswered = false;
+    if (widget.exercise.type == ExerciseType.sequentialQuestions && groupIndex >= 0) {
+      final question = widget.exercise.groupQuestions![groupIndex];
+      if (question.type == ExerciseType.buttonSingleChoice) {
+        final placeholderCount = _countPlaceholders(question.question);
+        bool hasAllAnswers = true;
+        for (int j = 0; j < placeholderCount; j++) {
+          final key = groupIndex * 1000 + j;
+          if (_selectedAnswers[key] == null) {
+            hasAllAnswers = false;
+            break;
+          }
+        }
+        isQuestionAnswered = hasAllAnswers;
+      }
+    }
+    
     return SizedBox(
       width: double.infinity,
       child: Wrap(
@@ -713,14 +1110,23 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           final option = entry.value;
           final isSelected = _isOptionSelected(option, groupIndex);
           
-          return _buildOptionButton(option, index, isSelected, groupIndex, content);
+          return _buildOptionButton(option, index, isSelected, groupIndex, content, isQuestionAnswered);
         }).toList(),
       ),
     );
   }
 
-  Widget _buildOptionButton(String option, int index, bool isSelected, int groupIndex, ButtonSingleChoiceContent content) {
+  Widget _buildOptionButton(String option, int index, bool isSelected, int groupIndex, ButtonSingleChoiceContent content, bool isQuestionAnswered) {
     final buttonKey = '${groupIndex}_$index';
+    
+    // Lấy key cho option button này
+    final optionKeyStr = groupIndex == -1 
+        ? '-1_option_$index'
+        : '${groupIndex}_option_$index';
+    if (!_optionKeys.containsKey(optionKeyStr)) {
+      _optionKeys[optionKeyStr] = GlobalKey();
+    }
+    final optionKey = _optionKeys[optionKeyStr]!;
     
     // Initialize animation controller nếu chưa có
     if (!_animationControllers.containsKey(buttonKey)) {
@@ -754,12 +1160,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
     }
     
+    final isDisabled = _isSubmitted || isQuestionAnswered;
+    
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       child: ElevatedButton(
-        key: _optionKeys[index],
-        onPressed: _isSubmitted ? null : () => _handleOptionTap(option, index, groupIndex, content),
+        key: optionKey,
+        onPressed: isDisabled ? null : () => _handleOptionTap(option, index, groupIndex, content),
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
@@ -1071,6 +1479,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final content = groupQuestion.content as ChoiceContent;
     final selectedAnswer = _groupQuestionAnswers[groupIndex] as String?;
     final isSubmitted = _questionResults.containsKey(groupIndex);
+    final (speaker, dialogue) = _parseSpeaker(groupQuestion.question);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1080,11 +1489,26 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Text(
-              groupQuestion.question,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (speaker != null) ...[
+                  Text(
+                    '$speaker:',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryColor,
+                        ),
                   ),
+                  const SizedBox(height: 8),
+                ],
+                Text(
+                  dialogue,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
             ),
           ),
         ),
@@ -1174,6 +1598,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final content = groupQuestion.content as ChoiceContent;
     final selectedAnswers = (_groupQuestionAnswers[groupIndex] as List<String>?) ?? [];
     final isSubmitted = _questionResults.containsKey(groupIndex);
+    final (speaker, dialogue) = _parseSpeaker(groupQuestion.question);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1183,11 +1608,26 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Text(
-              groupQuestion.question,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (speaker != null) ...[
+                  Text(
+                    '$speaker:',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryColor,
+                        ),
                   ),
+                  const SizedBox(height: 8),
+                ],
+                Text(
+                  dialogue,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
             ),
           ),
         ),
@@ -1831,8 +2271,29 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   void _handleSubmit() {
     bool isCorrect = false;
 
-    // Nếu có groupQuestions
-    if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
+    // Nếu là sequentialQuestions
+    if (widget.exercise.type == ExerciseType.sequentialQuestions) {
+      print('=== SUBMIT - Sequential Questions ===');
+      
+      final groupQuestions = widget.exercise.groupQuestions!;
+      _questionResults.clear();
+      
+      // Check tất cả questions
+      for (int i = 0; i < groupQuestions.length; i++) {
+        final question = groupQuestions[i];
+        final isQuestionCorrect = _checkQuestionAnswer(question, i);
+        _questionResults[i] = isQuestionCorrect;
+        print('Question ${i + 1}: ${question.question}');
+        print('  Result: ${isQuestionCorrect ? "ĐÚNG" : "SAI"}');
+      }
+      
+      // Tổng hợp kết quả: tất cả questions phải đúng
+      isCorrect = _questionResults.values.every((result) => result == true) && 
+                  _questionResults.length == groupQuestions.length;
+      
+      print('Tổng hợp: ${isCorrect ? "ĐÚNG" : "SAI"}');
+      print('==========================================\n');
+    } else if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
       print('=== SUBMIT - Tất cả questions ===');
       
       // Check question cuối cùng (question hiện tại) nếu chưa check
@@ -2251,6 +2712,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         return localizations.selectOneAnswerShort;
       case ExerciseType.crossword:
         return localizations.crossword;
+      case ExerciseType.sequentialQuestions:
+        return 'Sequential Questions';
     }
   }
 

@@ -65,6 +65,8 @@
             label18 = new Label();
             label5 = new Label();
             numExercise = new NumericUpDown();
+            cbType = new ComboBox();
+            label10 = new Label();
             ((System.ComponentModel.ISupportInitialize)grvQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPoints).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimeLimit).BeginInit();
@@ -156,7 +158,7 @@
             // 
             // numPoints
             // 
-            numPoints.Location = new Point(143, 834);
+            numPoints.Location = new Point(143, 862);
             numPoints.Name = "numPoints";
             numPoints.Size = new Size(173, 23);
             numPoints.TabIndex = 11;
@@ -164,7 +166,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(64, 842);
+            label11.Location = new Point(64, 870);
             label11.Name = "label11";
             label11.Size = new Size(35, 15);
             label11.TabIndex = 12;
@@ -173,7 +175,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(64, 871);
+            label8.Location = new Point(64, 899);
             label8.Name = "label8";
             label8.Size = new Size(61, 15);
             label8.TabIndex = 12;
@@ -181,7 +183,7 @@
             // 
             // numTimeLimit
             // 
-            numTimeLimit.Location = new Point(143, 863);
+            numTimeLimit.Location = new Point(143, 891);
             numTimeLimit.Name = "numTimeLimit";
             numTimeLimit.Size = new Size(173, 23);
             numTimeLimit.TabIndex = 12;
@@ -190,7 +192,7 @@
             // 
             cbDifficulty.FormattingEnabled = true;
             cbDifficulty.Items.AddRange(new object[] { "easy", "medium", "hard" });
-            cbDifficulty.Location = new Point(143, 892);
+            cbDifficulty.Location = new Point(143, 920);
             cbDifficulty.Name = "cbDifficulty";
             cbDifficulty.Size = new Size(121, 23);
             cbDifficulty.TabIndex = 13;
@@ -198,7 +200,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(66, 900);
+            label9.Location = new Point(66, 928);
             label9.Name = "label9";
             label9.Size = new Size(55, 15);
             label9.TabIndex = 6;
@@ -402,11 +404,31 @@
             numExercise.Size = new Size(279, 23);
             numExercise.TabIndex = 4;
             // 
+            // cbType
+            // 
+            cbType.FormattingEnabled = true;
+            cbType.Items.AddRange(new object[] { "single_choice", "multiple_choice", "fill_blank", "matching", "listening", "speaking", "button_single_choice", "crossword", "sequentialQuestions" });
+            cbType.Location = new Point(143, 833);
+            cbType.Name = "cbType";
+            cbType.Size = new Size(173, 23);
+            cbType.TabIndex = 21;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(66, 836);
+            label10.Name = "label10";
+            label10.Size = new Size(76, 15);
+            label10.TabIndex = 22;
+            label10.Text = "Exercise Type";
+            // 
             // ExerciseGroupForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(854, 990);
+            Controls.Add(label10);
+            Controls.Add(cbType);
             Controls.Add(numExercise);
             Controls.Add(numLesson);
             Controls.Add(label5);
@@ -491,5 +513,7 @@
         private Label label18;
         private Label label5;
         private NumericUpDown numExercise;
+        private ComboBox cbType;
+        private Label label10;
     }
 }

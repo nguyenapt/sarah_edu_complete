@@ -294,6 +294,8 @@ class _GroupExerciseScreenState extends State<GroupExerciseScreen> {
         return localizations.selectOneAnswerShort;
       case ExerciseType.crossword:
         return localizations.crossword;
+      case ExerciseType.sequentialQuestions:
+        return 'Sequential Questions';
     }
   }
 }
