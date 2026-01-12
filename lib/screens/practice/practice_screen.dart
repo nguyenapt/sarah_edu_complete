@@ -440,65 +440,42 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   // Widget để build mỗi practice module
   Widget _buildPracticeModule(UnitGroup group, String levelId) {
-    const double gradeSize = 64.0; // Kích thước grade (ngôi sao)
-    const double gradePadding = 8.0; // Padding của grade
-    const double gradeTotalSize = gradeSize + (gradePadding * 2); // 64 + 16 = 80
     const double moduleHeight = 120.0; // Tăng chiều cao để đủ hiển thị HTML content (tránh overflow)
     
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 16),
       height: moduleHeight,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // Container chính với border
-          Positioned(
-            left: 32, // Chừa chỗ cho grade (một nửa kích thước)
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[300]!, width: 1),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Spacer để căn giữa với grade
-                  const SizedBox(width: 32),
-                  // Text ở giữa - có thể click
-                  Expanded(
-                    child: _buildModuleContent(group, levelId),
-                  ),
-                  // Vạch phân cách dọc
-                  Container(
-                    width: 1,
-                    height: double.infinity,
-                    color: Colors.grey[300],
-                  ),
-                  // Menu icon bên phải - có thể click
-                  _buildMenuIcon(group, levelId),
-                ],
-              ),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!, width: 1),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Star icon bên trái - có thể click
+            _buildGradeIcon(group, levelId),
+            // Text ở giữa - có thể click
+            Expanded(
+              child: _buildModuleContent(group, levelId),
             ),
-          ),
-          // Grade icon (ngôi sao) bên trái - di chuyển sang trái 6px và xuống dưới 2px
-          Positioned(
-            left: -6, // Di chuyển sang trái 6px
-            top: 2, // Di chuyển xuống dưới 2px
-            bottom: -2, // Điều chỉnh bottom để giữ chiều cao
-            child: Center(
-              child: _buildGradeIcon(group, levelId),
+            // Vạch phân cách dọc
+            Container(
+              width: 1,
+              height: double.infinity,
+              color: Colors.grey[300],
             ),
-          ),
-        ],
+            // Menu icon bên phải - có thể click
+            _buildMenuIcon(group, levelId),
+          ],
+        ),
       ),
     );
   }
 
-  // Widget grade icon (ngôi sao) - có thể click, to hơn và tràn ra ngoài border
+  // Widget grade icon (ngôi sao) - có thể click
   Widget _buildGradeIcon(UnitGroup group, String levelId) {
     Color iconColor;
     if (group.type == GroupType.locked) {
@@ -511,8 +488,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
       iconColor = AppTheme.primaryColor;
     }
 
+    // Trong review mode, tất cả items đều enable nhưng vẫn hiển thị lock icon nếu locked
+    final isEnabled = widget.reviewMode || group.isUnlocked;
+
     return InkWell(
-      onTap: group.isUnlocked
+      onTap: isEnabled
           ? () {
               Navigator.push(
                 context,
@@ -526,7 +506,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
               );
             }
           : null,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+      ),
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Stack(
@@ -534,7 +517,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
           children: [
             // Star icon
             CustomPaint(
-          size: const Size(64, 64),
+          size: const Size(48, 48),
           painter: GradePainter(color: iconColor),
             ),
             // Lock icon ở giữa star (chỉ hiển thị khi locked)
@@ -542,7 +525,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
               Icon(
                 Icons.lock,
                 color: Colors.grey[700],
-                size: 24,
+                size: 16,
               ),
           ],
         ),

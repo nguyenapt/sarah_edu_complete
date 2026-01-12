@@ -17,15 +17,21 @@ class StatsService {
 
   /// Tính streak mới dựa vào lastActiveDate và ngày hiện tại
   /// Logic:
+  /// - Nếu chưa có lastActiveDate hoặc streak = 0 → đây là lần đầu tiên → return 1
   /// - Nếu hôm nay đã làm exercise → streak giữ nguyên
   /// - Nếu hôm qua đã làm exercise → streak + 1
-  /// - Nếu không làm trong 1 ngày → reset về 1 (hoặc 0 nếu muốn)
+  /// - Nếu không làm trong 1 ngày → reset về 1
   int calculateStreak(int currentStreak, DateTime? lastActiveDate) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     
     // Nếu chưa có lastActiveDate, đây là lần đầu tiên
     if (lastActiveDate == null) {
+      return 1;
+    }
+    
+    // Nếu streak = 0, đây có thể là lần đầu tiên làm exercise (kể cả khi lastActiveDate đã được set khi tạo account)
+    if (currentStreak == 0) {
       return 1;
     }
     
