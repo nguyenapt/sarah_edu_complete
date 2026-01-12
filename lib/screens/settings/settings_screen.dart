@@ -4,6 +4,7 @@ import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../auth/login_screen.dart';
 import '../auth/register_screen.dart';
 
@@ -225,14 +226,7 @@ class SettingsScreen extends StatelessWidget {
           },
         ),
         _buildLanguageTile(context),
-        _buildSettingsTile(
-          context,
-          icon: Icons.dark_mode,
-          title: AppLocalizations.of(context)!.theme,
-          onTap: () {
-            // Navigate to theme settings
-          },
-        ),
+        _buildThemeTile(context),
         _buildSettingsTile(
           context,
           icon: Icons.help_outline,
@@ -350,6 +344,32 @@ class SettingsScreen extends StatelessWidget {
       },
     );
   }
+
+  Widget _buildThemeTile(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        final availableThemes = [
+          {'mode': 'light', 'name': 'Sáng', 'icon': Icons.light_mode},
+          {'mode': 'dark', 'name': 'Tối', 'icon': Icons.dark_mode},
+          {'mode': 'system', 'name': 'Hệ thống', 'icon': Icons.phone_android},
+        ];
+
+        final currentTheme = availableThemes.firstWhere(
+          (theme) => theme['mode'] == themeProvider.currentThemeModeString,
+          orElse: () => availableThemes[2],
+        );
+
+        return _ThemeSelectorTile(
+          currentTheme: currentTheme,
+          availableThemes: availableThemes,
+          currentThemeModeString: themeProvider.currentThemeModeString,
+          onThemeSelected: (themeMode) async {
+            await themeProvider.setThemeMode(themeMode);
+          },
+        );
+      },
+    );
+  }
 }
 
 // Separate StatefulWidget để quản lý ExpansionTile state
@@ -413,6 +433,74 @@ class _LanguageSelectorTileState extends State<_LanguageSelectorTile> {
             // Đổi ngôn ngữ
             if (mounted) {
               await widget.onLanguageSelected(lang['code']!);
+            }
+          },
+        );
+      }).toList(),
+    );
+  }
+}
+
+// Separate StatefulWidget để quản lý Theme ExpansionTile state
+class _ThemeSelectorTile extends StatefulWidget {
+  final Map<String, dynamic> currentTheme;
+  final List<Map<String, dynamic>> availableThemes;
+  final String currentThemeModeString;
+  final Function(String) onThemeSelected;
+
+  const _ThemeSelectorTile({
+    required this.currentTheme,
+    required this.availableThemes,
+    required this.currentThemeModeString,
+    required this.onThemeSelected,
+  });
+
+  @override
+  State<_ThemeSelectorTile> createState() => _ThemeSelectorTileState();
+}
+
+class _ThemeSelectorTileState extends State<_ThemeSelectorTile> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      key: ValueKey('theme_tile_$_isExpanded'),
+      leading: Icon(Icons.dark_mode, color: AppTheme.primaryColor),
+      title: Text(AppLocalizations.of(context)!.theme),
+      subtitle: Text(widget.currentTheme['name'] ?? ''),
+      initiallyExpanded: _isExpanded,
+      onExpansionChanged: (expanded) {
+        if (mounted) {
+          setState(() {
+            _isExpanded = expanded;
+          });
+        }
+      },
+      children: widget.availableThemes.map((theme) {
+        final isSelected = theme['mode'] == widget.currentThemeModeString;
+        return ListTile(
+          leading: Icon(
+            theme['icon'] as IconData,
+            color: isSelected ? AppTheme.primaryColor : null,
+          ),
+          title: Text(theme['name'] ?? ''),
+          trailing: isSelected
+              ? Icon(Icons.check, color: AppTheme.primaryColor)
+              : null,
+          selected: isSelected,
+          onTap: () async {
+            // Đóng ExpansionTile ngay lập tức
+            if (_isExpanded && mounted) {
+              setState(() {
+                _isExpanded = false;
+              });
+              // Đợi một chút để animation đóng hoàn thành
+              await Future.delayed(const Duration(milliseconds: 300));
+            }
+            // Đổi theme
+            if (mounted) {
+              await widget.onThemeSelected(theme['mode'] as String);
             }
           },
         );
