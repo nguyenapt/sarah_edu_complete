@@ -597,11 +597,43 @@ class UnitGroupService {
         return [];
       }
 
-      // Xác định currentGroupIndex từ highestProgress.groupId
-      int? currentGroupIndex;
-      if (highestProgress?.groupId != null) {
-        currentGroupIndex = await _groupUnitService.getGroupIndex(highestProgress!.groupId!);
+      // Logic mới: Tìm group đã hoàn thành dựa trên highestExerciseId
+      // CHỈ dùng highestProgress nếu levelId khớp với level đang load
+      GroupUnitModel? completedGroup;
+      int? continueGroupIndex;
+      
+      if (highestProgress != null && highestProgress.levelId == levelId) {
+        // Tìm group có highestExerciseId đã hoàn thành
+        for (final groupUnit in groupUnits) {
+          if (groupUnit.highestExerciseId != null && 
+              groupUnit.highestExerciseId == highestProgress.exerciseId) {
+            completedGroup = groupUnit;
+            debugPrint('🔍 Found completedGroup: ${groupUnit.id} (index=${groupUnit.index})');
+            break;
+          }
+        }
+        
+        // Xác định group tiếp theo (continueGroup)
+        if (completedGroup != null) {
+          // Group tiếp theo là group có index = completedGroup.index + 1
+          continueGroupIndex = completedGroup.index + 1;
+          debugPrint('🔍 continueGroupIndex=$continueGroupIndex (after completedGroup ${completedGroup.id})');
+        } else {
+          // Không có group nào hoàn thành → group đầu tiên (index 0) là "Tiếp tục luyện tập"
+          continueGroupIndex = 0;
+          debugPrint('🔍 No completedGroup found, continueGroupIndex=0');
+        }
+      } else {
+        // Không có highestProgress hoặc levelId khác → group đầu tiên (index 0) là "Tiếp tục luyện tập"
+        if (highestProgress != null) {
+          debugPrint('🔍 highestProgress.levelId (${highestProgress.levelId}) != levelId ($levelId), treating as new level - unlock first group');
+        } else {
+          debugPrint('🔍 No highestProgress, unlock first group');
+        }
+        continueGroupIndex = 0;
       }
+      
+      debugPrint('🔍 Final continueGroupIndex=$continueGroupIndex for level $levelId');
 
       // Load units cho tất cả groups
       final allUnits = await _getUnitsByLevelCached(levelId);
@@ -629,74 +661,41 @@ class UnitGroupService {
           debugPrint('  ⚠️ Warning: No units found for group ${groupUnit.id}. Expected units: ${groupUnit.units.join(", ")}');
         }
 
-        // Kiểm tra completed (dựa trên highestProgress) - cần check trước khi xác định unlock
+        // Logic mới: Kiểm tra completed dựa trên highestExerciseId
         bool isCompleted = false;
-        if (highestProgress != null) {
-          // Group được coi là completed nếu highestProgress >= exercise cao nhất trong group
-          try {
-            isCompleted = await isGroupCompleted(levelId, groupUnit.id, progress, highestProgress);
-          } catch (e) {
-            debugPrint('  ⚠️ Error checking isGroupCompleted for ${groupUnit.id}: $e');
-            // Ignore error
-          }
+        if (completedGroup != null && groupUnit.id == completedGroup.id) {
+          isCompleted = true;
         }
 
-        // Xác định type và unlock status dựa trên index và completion status
+        // Xác định type và unlock status dựa trên logic mới
         GroupType type;
         bool isUnlocked;
 
-        if (currentGroupIndex == null) {
-          // Không có groupId → group đầu tiên enable
+        if (continueGroupIndex == null) {
+          // Không có continueGroupIndex → group đầu tiên enable
           isUnlocked = groupUnit.index == 0;
           type = groupUnit.index == 0 ? GroupType.continuePractice : GroupType.locked;
-          debugPrint('  📌 No currentGroupIndex: group ${groupUnit.id} isUnlocked=$isUnlocked, type=$type');
+          debugPrint('  📌 No continueGroupIndex: group ${groupUnit.id} isUnlocked=$isUnlocked, type=$type');
         } else {
-          // Kiểm tra xem group hiện tại (currentGroupIndex) đã hoàn thành chưa
-          final currentGroupUnit = groupUnits.firstWhere(
-            (gu) => gu.index == currentGroupIndex,
-            orElse: () => groupUnit,
-          );
-          bool currentGroupCompleted = false;
-          if (highestProgress != null) {
-            try {
-              currentGroupCompleted = await isGroupCompleted(levelId, currentGroupUnit.id, progress, highestProgress);
-            } catch (e) {
-              debugPrint('  ⚠️ Error checking currentGroupCompleted: $e');
-            }
-          }
-          
-          // Có groupId: so sánh index
-          if (groupUnit.index < currentGroupIndex) {
-            // Group trước group hiện tại → review
+          // Phân loại groups dựa trên index so với continueGroupIndex
+          if (completedGroup != null && groupUnit.id == completedGroup.id) {
+            // Group đã hoàn thành → review
             type = GroupType.review;
             isUnlocked = true;
-          } else if (groupUnit.index == currentGroupIndex) {
-            // Group hiện tại
-            if (currentGroupCompleted) {
-              // Group hiện tại đã hoàn thành → chuyển thành review
-              type = GroupType.review;
-            } else {
-              // Group hiện tại chưa hoàn thành → continuePractice
-              type = GroupType.continuePractice;
-            }
+          } else if (groupUnit.index == continueGroupIndex) {
+            // Group tiếp theo (sau group đã hoàn thành hoặc group đầu tiên) → continuePractice
+            type = GroupType.continuePractice;
             isUnlocked = true;
-          } else if (groupUnit.index == currentGroupIndex + 1) {
-            // Group tiếp theo: unlock nếu group hiện tại đã hoàn thành
-            if (currentGroupCompleted) {
-              // Group hiện tại đã hoàn thành → unlock group tiếp theo và đặt là continuePractice
-              type = GroupType.continuePractice;
-              isUnlocked = true;
-            } else {
-              // Group hiện tại chưa hoàn thành → lock group tiếp theo
-              type = GroupType.locked;
-              isUnlocked = false;
-            }
+          } else if (groupUnit.index < continueGroupIndex) {
+            // Group trước continueGroup → review (nếu không phải completedGroup)
+            type = GroupType.review;
+            isUnlocked = true;
           } else {
-            // Group xa hơn → locked
+            // Group sau continueGroup → locked
             type = GroupType.locked;
             isUnlocked = false;
           }
-          debugPrint('  📌 currentGroupIndex=$currentGroupIndex, currentGroupCompleted=$currentGroupCompleted: group ${groupUnit.id} (index=${groupUnit.index}) isUnlocked=$isUnlocked, type=$type, isCompleted=$isCompleted');
+          debugPrint('  📌 continueGroupIndex=$continueGroupIndex, completedGroup=${completedGroup?.id}: group ${groupUnit.id} (index=${groupUnit.index}) isUnlocked=$isUnlocked, type=$type, isCompleted=$isCompleted');
         }
 
         final unitGroup = UnitGroup.fromUnits(

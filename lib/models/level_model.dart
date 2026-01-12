@@ -8,6 +8,7 @@ class LevelModel {
   final int totalUnits;
   final int estimatedHours;
   final String? iconUrl;
+  final String? highestExerciseId; // Exercise ID cao nhất trong level
 
   LevelModel({
     required this.id,
@@ -17,6 +18,7 @@ class LevelModel {
     required this.totalUnits,
     required this.estimatedHours,
     this.iconUrl,
+    this.highestExerciseId,
   });
 
   /// Get name theo language code
@@ -59,6 +61,7 @@ class LevelModel {
       totalUnits: data['totalUnits'] ?? 0,
       estimatedHours: data['estimatedHours'] ?? 0,
       iconUrl: data['iconUrl'],
+      highestExerciseId: data['highestExerciseId'],
     );
   }
 
@@ -70,6 +73,7 @@ class LevelModel {
       'totalUnits': totalUnits,
       'estimatedHours': estimatedHours,
       'iconUrl': iconUrl,
+      'highestExerciseId': highestExerciseId,
     };
   }
 }

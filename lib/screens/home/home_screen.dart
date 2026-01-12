@@ -333,21 +333,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildContinueLearning() {
-    // Lấy highestProgress để hiển thị thông tin
-    final highestProgress = _userProgress?.highestProgress;
-    String displayText = 'Bắt đầu học';
-    
-    if (highestProgress != null) {
-      // Parse để hiển thị thông tin
-      final parts = highestProgress.exerciseId.split('_');
-      if (parts.length >= 5) {
-        final level = parts[1].toUpperCase();
-        final unit = parts[2];
-        final lesson = parts[3];
-        displayText = 'Level $level - Unit $unit - Lesson $lesson';
-      }
-    }
-
     return Card(
       color: AppTheme.primaryColor,
       child: InkWell(
@@ -364,6 +349,9 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           try {
+            // Lấy highestProgress để tìm exercise tiếp theo
+            final highestProgress = _userProgress?.highestProgress;
+            
             // Tìm exercise tiếp theo
             final nextExercise = highestProgress != null
                 ? await _nextExerciseService.getNextExercise(highestProgress)
@@ -413,28 +401,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.continueLearning,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      displayText,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                child: Text(
+                  AppLocalizations.of(context)!.continueLearning,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const Icon(Icons.arrow_forward_ios, 

@@ -109,58 +109,52 @@ class _PracticeScreenState extends State<PracticeScreen> {
         // Load userProgress (không throw error nếu null)
         await _loadUserProgress(userId);
         
-        // Kiểm tra xem có userProgress và highestProgress không
-        final hasUserProgress = _userProgress != null && _userProgress!.highestProgress != null;
-        
-        debugPrint('🔍 UserProgress status: hasUserProgress=$hasUserProgress, highestProgress=${_userProgress?.highestProgress?.groupId}');
-        
-        if (hasUserProgress) {
-          // Có userProgress và highestProgress: load unit groups
-          final progress = _userProgress!;
-        
-          try {
-            debugPrint('🔍 Loading unit groups from groupUnits collection for level $currentLevel');
-            final groups = await _unitGroupService.getAllUnitGroups(
-              currentLevel,
-              progress,
-              progress.highestProgress,
-            );
-            
-            debugPrint('✅ Loaded ${groups.length} unit groups for level $currentLevel');
-            if (groups.isNotEmpty) {
-              debugPrint('📋 Group details:');
-              for (var group in groups) {
-                debugPrint('  - ${group.group}: type=${group.type}, unlocked=${group.isUnlocked}, units=${group.units.length}');
-              }
-            } else {
-              debugPrint('⚠️ No groups found! This will trigger fallback to units view.');
+        // Luôn load unit groups, ngay cả khi chưa có userProgress
+        // Logic mới của getAllUnitGroups() đã xử lý trường hợp highestProgress == null
+        // (sẽ unlock group đầu tiên - index 0)
+        try {
+          debugPrint('🔍 Loading unit groups from groupUnits collection for level $currentLevel');
+          
+          // Tạo progress object để pass vào getAllUnitGroups
+          // Nếu chưa có userProgress, tạo một UserProgressModel empty
+          final progress = _userProgress ?? UserProgressModel(
+            userId: userId,
+            weakPoints: WeakPoints(),
+            lastUpdated: DateTime.now(),
+          );
+          
+          debugPrint('🔍 UserProgress status: hasUserProgress=${_userProgress != null}, highestProgress=${progress.highestProgress?.exerciseId ?? "null"}');
+          
+          final groups = await _unitGroupService.getAllUnitGroups(
+            currentLevel,
+            progress,
+            progress.highestProgress,
+          );
+          
+          debugPrint('✅ Loaded ${groups.length} unit groups for level $currentLevel');
+          if (groups.isNotEmpty) {
+            debugPrint('📋 Group details:');
+            for (var group in groups) {
+              debugPrint('  - ${group.group}: type=${group.type}, unlocked=${group.isUnlocked}, units=${group.units.length}');
             }
-            
-            if (mounted) {
-              setState(() {
-                _unitGroups = groups;
-                _isLoading = false;
-              });
-            }
-          } catch (e, stackTrace) {
-            // Nếu có lỗi load groups, log và tiếp tục với fallback view
-            debugPrint('❌ Error loading unit groups: $e');
-            debugPrint('Stack trace: $stackTrace');
-            if (mounted) {
-              setState(() {
-                _unitGroups = [];
-                _isLoading = false; // Vẫn set false để hiển thị fallback view
-              });
-            }
+          } else {
+            debugPrint('⚠️ No groups found! This will trigger fallback to units view.');
           }
-        } else {
-          // Chưa có userProgress hoặc highestProgress: sử dụng backup logic
-          // Units đã được load theo currentLevel ở trên, chỉ cần set loading = false
-          debugPrint('⚠️ No userProgress or highestProgress, using backup logic with units for level $currentLevel');
+          
           if (mounted) {
             setState(() {
-              _unitGroups = []; // Empty để trigger fallback view
+              _unitGroups = groups;
               _isLoading = false;
+            });
+          }
+        } catch (e, stackTrace) {
+          // Nếu có lỗi load groups, log và tiếp tục với fallback view
+          debugPrint('❌ Error loading unit groups: $e');
+          debugPrint('Stack trace: $stackTrace');
+          if (mounted) {
+            setState(() {
+              _unitGroups = [];
+              _isLoading = false; // Vẫn set false để hiển thị fallback view
             });
           }
         }
@@ -287,24 +281,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
     return currentUnit.getTitle(languageCode);
   }
 
-  String _getContinueLearningText() {
-    final highestProgress = _userProgress?.highestProgress;
-    if (highestProgress == null) {
-      return 'Bắt đầu học';
-    }
-    
-    // Parse để hiển thị thông tin
-    final parts = highestProgress.exerciseId.split('_');
-    if (parts.length >= 5) {
-      final level = parts[1].toUpperCase();
-      final unit = parts[2];
-      final lesson = parts[3];
-      return 'Level $level - Unit $unit - Lesson $lesson';
-    }
-    
-    return AppLocalizations.of(context)!.continueLearning;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -392,19 +368,25 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
     // Nếu có unit groups, hiển thị modules
     if (_unitGroups.isNotEmpty) {
-      return ListView(
-        padding: const EdgeInsets.all(16),
+      return Column(
         children: [
-          // "Tiếp tục học" section ở phía trên cùng (chỉ hiển thị khi không phải review mode)
+          // "Tiếp tục học" section - cố định ở trên (chỉ hiển thị khi không phải review mode)
           if (!widget.reviewMode)
             Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: _buildContinueLearningCard(currentLevel),
             ),
-          // Danh sách practice modules
-          ..._unitGroups.map((group) {
-            return _buildPracticeModule(group, displayLevel);
-          }),
+          // Danh sách practice modules - scroll được
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                ..._unitGroups.map((group) {
+                  return _buildPracticeModule(group, displayLevel);
+                }),
+              ],
+            ),
+          ),
         ],
       );
     }
@@ -1114,28 +1096,13 @@ class _PracticeScreenState extends State<PracticeScreen> {
               ),
               const SizedBox(width: 16),
               Expanded(
-        child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                      AppLocalizations.of(context)!.continueLearning,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                child: Text(
+                  AppLocalizations.of(context)!.continueLearning,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-            ),
-                    const SizedBox(height: 4),
-            Text(
-                      _getContinueLearningText(),
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
                 ),
               ),
               const Icon(

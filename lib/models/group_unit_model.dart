@@ -8,6 +8,7 @@ class GroupUnitModel {
   final int previous;
   final Map<String, dynamic>? title; // Multi-language: Map<String, String> (HTML formatted)
   final List<String> units; // ["unit_a1_1", "unit_a1_2", ...]
+  final String? highestExerciseId; // Exercise ID cao nhất trong group
 
   GroupUnitModel({
     required this.id,
@@ -17,6 +18,7 @@ class GroupUnitModel {
     required this.previous,
     this.title,
     this.units = const [],
+    this.highestExerciseId,
   });
 
   /// Get title theo language code
@@ -43,6 +45,7 @@ class GroupUnitModel {
       previous: data['previous'] ?? 0,
       title: titleData,
       units: List<String>.from(data['units'] ?? []),
+      highestExerciseId: data['highestExerciseId'],
     );
   }
 
@@ -54,6 +57,7 @@ class GroupUnitModel {
       'previous': previous,
       'title': title,
       'units': units,
+      'highestExerciseId': highestExerciseId,
     };
   }
 }

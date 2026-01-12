@@ -121,13 +121,31 @@ class AuthService {
           initialLevel: initialLevel,
         );
       } else {
-        // Cập nhật thông tin user nếu có thay đổi (displayName, photoUrl)
-        await _updateUserProfile(
-          userCredential.user!.uid,
-          userCredential.user!.displayName,
-          userCredential.user!.photoURL,
-        );
-        await _updateLastActiveDate(userCredential.user!.uid);
+        // Kiểm tra xem user document có tồn tại không
+        final userDoc = await FirebaseFirestore.instance
+            .collection(FirebaseConstants.usersCollection)
+            .doc(userCredential.user!.uid)
+            .get();
+        
+        if (!userDoc.exists) {
+          // Document không tồn tại, tạo mới
+          final placementResult = await PlacementStorageService.loadPlacementTestResult();
+          final initialLevel = placementResult?.assessedLevel.toString();
+          
+          await _createUserDocument(
+            userCredential.user!,
+            userCredential.user!.displayName ?? '',
+            initialLevel: initialLevel,
+          );
+        } else {
+          // Document đã tồn tại, chỉ cập nhật
+          await _updateUserProfile(
+            userCredential.user!.uid,
+            userCredential.user!.displayName,
+            userCredential.user!.photoURL,
+          );
+          await _updateLastActiveDate(userCredential.user!.uid);
+        }
       }
 
       // Sync placement test result if exists
@@ -186,6 +204,7 @@ class AuthService {
   }
 
   // Update user profile (displayName, photoUrl)
+  // Sử dụng set với merge: true để tạo document nếu chưa tồn tại
   Future<void> _updateUserProfile(
     String userId,
     String? displayName,
@@ -202,20 +221,23 @@ class AuthService {
       updateData['photoUrl'] = photoUrl;
     }
 
+    // Sử dụng set với merge: true để tránh lỗi khi document chưa tồn tại
     await FirebaseFirestore.instance
         .collection(FirebaseConstants.usersCollection)
         .doc(userId)
-        .update(updateData);
+        .set(updateData, SetOptions(merge: true));
   }
 
   // Update last active date
+  // Sử dụng set với merge: true để tạo document nếu chưa tồn tại
   Future<void> _updateLastActiveDate(String userId) async {
+    // Sử dụng set với merge: true để tránh lỗi khi document chưa tồn tại
     await FirebaseFirestore.instance
         .collection(FirebaseConstants.usersCollection)
         .doc(userId)
-        .update({
+        .set({
       'lastActiveDate': Timestamp.fromDate(DateTime.now()),
-    });
+    }, SetOptions(merge: true));
   }
 
   // Sync placement test result from local storage to Firestore

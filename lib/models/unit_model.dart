@@ -10,6 +10,7 @@ class UnitModel {
   final List<String> lessons;
   final List<String> prerequisites; // Unit IDs cần hoàn thành trước
   final String? groupId; // Changed from group to groupId
+  final String? highestExerciseId; // Exercise ID cao nhất trong unit
 
   UnitModel({
     required this.id,
@@ -21,6 +22,7 @@ class UnitModel {
     this.lessons = const [],
     this.prerequisites = const [],
     this.groupId,
+    this.highestExerciseId,
   });
 
   /// Get title theo language code
@@ -63,6 +65,7 @@ class UnitModel {
       lessons: List<String>.from(data['lessons'] ?? []),
       prerequisites: List<String>.from(data['prerequisites'] ?? []),
       groupId: data['groupId'] ?? data['group'], // Support both groupId and group for backward compatibility
+      highestExerciseId: data['highestExerciseId'],
     );
   }
 
@@ -76,6 +79,7 @@ class UnitModel {
       'lessons': lessons,
       'prerequisites': prerequisites,
       'groupId': groupId,
+      'highestExerciseId': highestExerciseId,
     };
   }
 }

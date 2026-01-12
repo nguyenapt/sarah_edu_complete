@@ -87,28 +87,25 @@ class LevelProgressionService {
   }
 
   /// Check xem user đã hoàn thành level chưa
-  /// Level được coi là hoàn thành khi user đã hoàn thành exercise cuối cùng
+  /// Level được coi là hoàn thành khi highestProgress.exerciseId khớp với level.highestExerciseId
   Future<bool> checkLevelCompletion(
     String userId,
     String levelId,
   ) async {
     try {
-      // 1. Lấy tất cả exercises của level
-      final exercises = await getExercisesByLevel(levelId);
-      if (exercises.isEmpty) return false;
+      // 1. Lấy level từ Firestore
+      final level = await _firestoreService.getLevel(levelId);
+      if (level == null) return false;
 
-      // 2. Lấy exercise cuối cùng (cao nhất)
-      final lastExercise = exercises.last;
+      // 2. Nếu level không có highestExerciseId, return false
+      if (level.highestExerciseId == null) return false;
 
       // 3. Lấy user progress
       final progress = await _firestoreService.getUserProgress(userId);
-      if (progress == null) return false;
+      if (progress == null || progress.highestProgress == null) return false;
 
-      // 4. Check xem đã hoàn thành exercise cuối cùng chưa
-      final hasCompletedLast = progress.exerciseHistory
-          .any((item) => item.exerciseId == lastExercise.id);
-
-      return hasCompletedLast;
+      // 4. So sánh highestProgress.exerciseId với level.highestExerciseId
+      return progress.highestProgress!.exerciseId == level.highestExerciseId;
     } catch (e) {
       debugPrint('Error checking level completion: $e');
       return false;
