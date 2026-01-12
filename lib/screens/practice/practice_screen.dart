@@ -385,6 +385,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
   // View cho authenticated user
   Widget _buildAuthenticatedView(AuthProvider authProvider) {
     final currentLevel = authProvider.user?.currentLevel ?? 'A1';
+    // Trong review mode, dùng reviewLevel; không phải review mode thì dùng currentLevel
+    final displayLevel = widget.reviewMode && widget.reviewLevel != null 
+        ? widget.reviewLevel! 
+        : currentLevel;
 
     // Nếu có unit groups, hiển thị modules
     if (_unitGroups.isNotEmpty) {
@@ -399,7 +403,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
             ),
           // Danh sách practice modules
           ..._unitGroups.map((group) {
-            return _buildPracticeModule(group, currentLevel);
+            return _buildPracticeModule(group, displayLevel);
           }),
         ],
       );
@@ -407,8 +411,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
     // Fallback: hiển thị view cũ nếu chưa có groups
     // (Có thể do units chưa có field group hoặc chưa load xong)
-    // Kiểm tra xem có units trong level không
-    final unitsInLevel = _allUnits.where((u) => u.levelId == currentLevel).toList();
+    // Kiểm tra xem có units trong level không - dùng displayLevel (reviewLevel nếu là review mode)
+    final unitsInLevel = _allUnits.where((u) => u.levelId == displayLevel).toList();
     
     if (unitsInLevel.isEmpty) {
       return Center(
@@ -444,9 +448,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: _buildContinueLearningCard(currentLevel),
           ),
-        // Danh sách units
+        // Danh sách units - dùng displayLevel (reviewLevel nếu là review mode)
         Expanded(
-          child: _buildUnitsList(highlightCurrentLevel: currentLevel),
+          child: _buildUnitsList(highlightCurrentLevel: displayLevel),
         ),
       ],
     );
