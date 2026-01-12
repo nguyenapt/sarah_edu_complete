@@ -21,91 +21,99 @@ class WelcomeScreen3 extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const Spacer(),
-              // Icon/Illustration
-              Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.language,
-                  size: 100,
-                  color: AppTheme.primaryColor,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      // Icon/Illustration
+                      Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.language,
+                          size: 100,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      // Title
+                      Text(
+                        AppLocalizations.of(context)!.welcomeTitle3,
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      // Description
+                      Text(
+                        AppLocalizations.of(context)!.welcomeDescription3,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: Colors.grey[700],
+                              height: 1.5,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      // Language Selection
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.selectLanguage,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: languageProvider.availableLanguages.map((lang) {
+                                final isSelected = languageProvider.currentLanguageCode == lang['code'];
+                                return FilterChip(
+                                  selected: isSelected,
+                                  label: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(lang['flag']!),
+                                      const SizedBox(width: 8),
+                                      Text(lang['name']!),
+                                    ],
+                                  ),
+                                  onSelected: (selected) {
+                                    if (selected) {
+                                      languageProvider.setLanguage(lang['code']!);
+                                    }
+                                  },
+                                  selectedColor: AppTheme.primaryColor.withOpacity(0.2),
+                                  checkmarkColor: AppTheme.primaryColor,
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 48),
-              // Title
-              Text(
-                AppLocalizations.of(context)!.welcomeTitle3,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primaryColor,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              // Description
-              Text(
-                AppLocalizations.of(context)!.welcomeDescription3,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[700],
-                      height: 1.5,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
-              // Language Selection
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.selectLanguage,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: languageProvider.availableLanguages.map((lang) {
-                        final isSelected = languageProvider.currentLanguageCode == lang['code'];
-                        return FilterChip(
-                          selected: isSelected,
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(lang['flag']!),
-                              const SizedBox(width: 8),
-                              Text(lang['name']!),
-                            ],
-                          ),
-                          onSelected: (selected) {
-                            if (selected) {
-                              languageProvider.setLanguage(lang['code']!);
-                            }
-                          },
-                          selectedColor: AppTheme.primaryColor.withOpacity(0.2),
-                          checkmarkColor: AppTheme.primaryColor,
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
               // Navigation Buttons
               Row(
                 children: [
@@ -113,7 +121,7 @@ class WelcomeScreen3 extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: onPrevious,
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -137,7 +145,7 @@ class WelcomeScreen3 extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -147,7 +155,7 @@ class WelcomeScreen3 extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
             ],
           ),
         ),

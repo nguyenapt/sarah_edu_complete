@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../core/services/auth_service.dart';
@@ -10,6 +11,7 @@ class AuthProvider with ChangeNotifier {
   UserModel? _user;
   bool _isLoading = false;
   String? _errorMessage;
+  StreamSubscription<DocumentSnapshot>? _userSubscription;
 
   UserModel? get user => _user;
   bool get isLoading => _isLoading;
@@ -28,13 +30,17 @@ class AuthProvider with ChangeNotifier {
     // Listen to auth state changes
     _authService.authStateChanges.listen((User? firebaseUser) async {
       try {
+        // Cancel previous subscription if exists
+        await _userSubscription?.cancel();
+        _userSubscription = null;
+
         if (firebaseUser != null) {
-          await _loadUserData(firebaseUser.uid);
+          await _setupUserListener(firebaseUser.uid);
         } else {
           _user = null;
+          _isLoading = false;
+          notifyListeners();
         }
-        _isLoading = false;
-        notifyListeners();
       } catch (e) {
         debugPrint('Error in auth state listener: $e');
         _user = null;
@@ -49,6 +55,47 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
+  /// Setup Firestore snapshot listener cho user data (realtime updates)
+  Future<void> _setupUserListener(String userId) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      // Cancel previous subscription if exists
+      await _userSubscription?.cancel();
+
+      // Setup snapshot listener để tự động cập nhật khi có thay đổi trên Firestore
+      _userSubscription = FirebaseFirestore.instance
+          .collection(FirebaseConstants.usersCollection)
+          .doc(userId)
+          .snapshots()
+          .listen(
+        (DocumentSnapshot doc) {
+          if (doc.exists) {
+            _user = UserModel.fromFirestore(doc);
+            _isLoading = false;
+            notifyListeners();
+            debugPrint('✅ User data updated: streak=${_user?.streak}, XP=${_user?.totalXP}');
+          } else {
+            _user = null;
+            _isLoading = false;
+            notifyListeners();
+          }
+        },
+        onError: (error) {
+          debugPrint('Error in user data listener: $error');
+          _isLoading = false;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      debugPrint('Error setting up user listener: $e');
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// Load user data một lần (dùng khi cần force refresh)
   Future<void> _loadUserData(String userId) async {
     try {
       final doc = await FirebaseFirestore.instance
@@ -77,11 +124,13 @@ class AuthProvider with ChangeNotifier {
       );
 
       if (credential.user != null) {
-        await _loadUserData(credential.user!.uid);
-        _isLoading = false;
-        notifyListeners();
+        // Listener sẽ tự động được setup trong authStateChanges listener
+        // Nhưng chúng ta vẫn setup ngay để đảm bảo data được load
+        await _setupUserListener(credential.user!.uid);
         return true;
       }
+      _isLoading = false;
+      notifyListeners();
       return false;
     } catch (e) {
       _errorMessage = e.toString();
@@ -108,11 +157,13 @@ class AuthProvider with ChangeNotifier {
       );
 
       if (credential.user != null) {
-        await _loadUserData(credential.user!.uid);
-        _isLoading = false;
-        notifyListeners();
+        // Listener sẽ tự động được setup trong authStateChanges listener
+        // Nhưng chúng ta vẫn setup ngay để đảm bảo data được load
+        await _setupUserListener(credential.user!.uid);
         return true;
       }
+      _isLoading = false;
+      notifyListeners();
       return false;
     } catch (e) {
       _errorMessage = e.toString();
@@ -131,11 +182,13 @@ class AuthProvider with ChangeNotifier {
       final credential = await _authService.signInWithGoogle();
 
       if (credential.user != null) {
-        await _loadUserData(credential.user!.uid);
-        _isLoading = false;
-        notifyListeners();
+        // Listener sẽ tự động được setup trong authStateChanges listener
+        // Nhưng chúng ta vẫn setup ngay để đảm bảo data được load
+        await _setupUserListener(credential.user!.uid);
         return true;
       }
+      _isLoading = false;
+      notifyListeners();
       return false;
     } catch (e) {
       _errorMessage = e.toString();
@@ -147,6 +200,10 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signOut() async {
     try {
+      // Cancel user subscription
+      await _userSubscription?.cancel();
+      _userSubscription = null;
+
       await _authService.signOut();
       _user = null;
       notifyListeners();
@@ -179,10 +236,18 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Refresh user data từ Firestore (dùng khi level-up hoặc data thay đổi)
+  /// Lưu ý: Với snapshot listener, data sẽ tự động cập nhật, nhưng method này
+  /// vẫn hữu ích khi cần force refresh ngay lập tức
   Future<void> refreshUser() async {
     if (_user != null) {
       await _loadUserData(_user!.id);
     }
+  }
+
+  @override
+  void dispose() {
+    _userSubscription?.cancel();
+    super.dispose();
   }
 }
 

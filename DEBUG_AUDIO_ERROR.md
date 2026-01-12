@@ -93,3 +93,5 @@ if (audioBytes == null) {
 - **429**: Too Many Requests - Rate limit exceeded
 - **500**: Internal Server Error - Azure service issue
 
+
+

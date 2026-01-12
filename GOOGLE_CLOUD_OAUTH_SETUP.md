@@ -21,7 +21,7 @@
 
 ### Release SHA-1:
 ```
-60:66:97:B2:92:7B:64:59:DA:E5:03:14:0F:A1:BB:A3:76:6B:08:E2
+D3:D7:A2:D1:93:5A:8A:FB:95:C0:AE:2C:64:14:43:00:30:1F:4F:AA
 ```
 
 ## Bước 1: Truy Cập Google Cloud Console
@@ -52,7 +52,7 @@
 3. Click vào OAuth client để chỉnh sửa
 4. Trong phần **SHA-1 certificate fingerprints**, thêm:
    - **Debug SHA-1**: `80:D1:04:3E:52:98:52:6C:B2:3D:1E:DB:31:A1:62:7D:83:D8:3B:07`
-   - **Release SHA-1**: `60:66:97:B2:92:7B:64:59:DA:E5:03:14:0F:A1:BB:A3:76:6B:08:E2`
+   - **Release SHA-1**: `D3:D7:A2:D1:93:5A:8A:FB:95:C0:AE:2C:64:14:43:00:30:1F:4F:AA`
 5. Click **Save**
 
 **Lưu ý**: Nếu chưa có OAuth client cho Android, tạo mới:

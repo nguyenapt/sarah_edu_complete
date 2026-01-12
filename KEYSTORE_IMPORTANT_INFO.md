@@ -65,3 +65,5 @@ keytool -list -v -keystore app/release.keystore -alias release
 **NGÀY TẠO**: $(Get-Date -Format "yyyy-MM-dd")
 **LƯU Ý**: Giữ thông tin này ở nơi an toàn và KHÔNG chia sẻ với người khác!
 
+
+

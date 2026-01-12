@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../models/user_model.dart';
 import '../../models/placement_test_model.dart';
 import '../../models/progress_model.dart';
@@ -11,11 +12,19 @@ import 'group_unit_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // Google Sign-In với clientId cho web platform
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com',
-  );
   final FirestoreService _firestoreService = FirestoreService();
+  
+  // Google Sign-In: chỉ dùng clientId cho web, Android/iOS dùng cấu hình từ google-services.json
+  GoogleSignIn get _googleSignIn {
+    if (kIsWeb) {
+      return GoogleSignIn(
+        clientId: '595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com',
+      );
+    } else {
+      // Android và iOS: không truyền clientId, sử dụng cấu hình từ google-services.json/GoogleService-Info.plist
+      return GoogleSignIn();
+    }
+  }
 
   // Get current user
   User? get currentUser => _auth.currentUser;

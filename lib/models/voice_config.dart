@@ -16,6 +16,7 @@ enum VoiceGender {
 }
 
 enum VoiceAge {
+  kid,
   young,
   adult,
   senior;
@@ -74,6 +75,8 @@ class VoiceConfig {
     if (languageCode.startsWith('en-US')) {
       if (gender == VoiceGender.female) {
         switch (age) {
+          case VoiceAge.kid:
+            return 'en-US-JennyNeural'; // Kid female (using Jenny as young voice)
           case VoiceAge.young:
             return 'en-US-JennyNeural'; // Young female
           case VoiceAge.adult:
@@ -84,6 +87,8 @@ class VoiceConfig {
       } else {
         // male
         switch (age) {
+          case VoiceAge.kid:
+            return 'en-US-GuyNeural'; // Kid male (using Guy as young voice)
           case VoiceAge.young:
             return 'en-US-GuyNeural'; // Young male
           case VoiceAge.adult:
