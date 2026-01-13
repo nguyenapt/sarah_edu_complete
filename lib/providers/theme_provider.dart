@@ -37,3 +37,4 @@ class ThemeProvider with ChangeNotifier {
   String get currentThemeModeString => ThemeService.themeModeToString(_themeMode);
 }
 
+

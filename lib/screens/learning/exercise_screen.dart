@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/exercise_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../core/services/firestore_service.dart';
 import '../../widgets/learning/question_audio_player.dart';
 import '../auth/login_screen.dart';
@@ -70,13 +72,29 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             // Question - chỉ hiển thị cho các loại không phải button_single_choice và fill_blank
             // Kiểm tra cả standalone và groupQuestions
             if (_shouldShowExerciseInfo())
-            Card(
+            Container(
                 margin: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                      : Theme.of(context).cardTheme.color ?? Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Title and Image Section
+                    _buildTitleAndImageSection(),
+                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -102,6 +120,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                       widget.exercise.question,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                           ),
                     ),
                     const SizedBox(height: 8),
@@ -173,6 +192,175 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     super.dispose();
   }
 
+  /// Check if exercise has title or image
+  bool _hasTitleOrImage() {
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final exerciseTitle = widget.exercise.getTitle(languageCode);
+    final hasTitle = exerciseTitle.isNotEmpty;
+    final hasImage = widget.exercise.imageUrl != null && widget.exercise.imageUrl!.isNotEmpty;
+    return hasTitle || hasImage;
+  }
+
+  /// Build title and image section (without Card wrapper)
+  Widget _buildTitleAndImageSection({bool wrapInCard = false}) {
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final exerciseTitle = widget.exercise.getTitle(languageCode);
+    final hasTitle = exerciseTitle.isNotEmpty;
+    final hasImage = widget.exercise.imageUrl != null && widget.exercise.imageUrl!.isNotEmpty;
+
+    if (!hasTitle && !hasImage) {
+      return const SizedBox.shrink();
+    }
+    
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+            // Title
+            if (hasTitle) ...[
+              Text(
+                exerciseTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
+              ),
+              const SizedBox(height: 16),
+            ],
+        // Image
+        if (hasImage) ...[
+          Center(
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.exercise.imageUrl!,
+                    width: double.infinity,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) => Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.grey[200],
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.error, color: Colors.red),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      onTap: () => _showImageZoomDialog(widget.exercise.imageUrl!),
+                      borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: const Icon(
+                            Icons.fullscreen,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+    
+    if (wrapInCard) {
+      return Container(
+        margin: EdgeInsets.zero,
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+              : Theme.of(context).cardTheme.color ?? Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: content,
+        ),
+      );
+    }
+    
+    return content;
+  }
+
+  /// Show image zoom dialog
+  void _showImageZoomDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(16),
+        child: Stack(
+          children: [
+            Center(
+              child: InteractiveViewer(
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => Container(
+                    width: double.infinity,
+                    height: 400,
+                    color: Colors.grey[200],
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: double.infinity,
+                    height: 400,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.error, color: Colors.red, size: 48),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Material(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// Kiểm tra xem có nên hiển thị section thông tin exercise không
   /// Bỏ section này cho button_single_choice và fill_blank
   /// Với groupQuestions, không hiển thị section này vì mỗi question sẽ có Card riêng
@@ -235,6 +423,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     
     return Column(
       children: [
+        // Title and Image Section for group questions
+        _buildTitleAndImageSection(wrapInCard: true),
+        if (_hasTitleOrImage()) const SizedBox(height: 16),
         // Chỉ hiển thị question hiện tại
         if (currentQuestion.type == ExerciseType.buttonSingleChoice)
           _buildButtonSingleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex)
@@ -645,8 +836,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       isQuestionAnswered = hasAllAnswers;
     }
     
-    return Card(
+    return Container(
       margin: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+            : Theme.of(context).cardTheme.color ?? Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -683,8 +887,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
     }
     
-    return Card(
+    return Container(
       margin: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+            : Theme.of(context).cardTheme.color ?? Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -877,6 +1094,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                   parts[i],
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                 ),
                 if (i < placeholders.length)
@@ -898,9 +1116,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final parts = question.split(RegExp(r'\{(\d+)\}'));
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(question).toList();
     
-    return Card(
+    return Container(
       margin: EdgeInsets.zero,
-      color: Colors.grey[50],
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+            : Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Wrap(
@@ -946,7 +1176,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+              : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -966,7 +1198,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+            : Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -1024,6 +1258,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                   parts[i],
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                 ),
                 if (i < placeholders.length)
@@ -1550,8 +1785,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Card hiển thị question text
-        Card(
+        Container(
           margin: EdgeInsets.zero,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                : Theme.of(context).cardTheme.color ?? Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -1578,6 +1826,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                             dialogue,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).textTheme.bodyLarge?.color,
                                 ),
                           ),
                         ],
@@ -1687,8 +1936,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Card hiển thị question text
-        Card(
+        Container(
           margin: EdgeInsets.zero,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                : Theme.of(context).cardTheme.color ?? Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -1715,6 +1977,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                             dialogue,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).textTheme.bodyLarge?.color,
                                 ),
                           ),
                         ],
