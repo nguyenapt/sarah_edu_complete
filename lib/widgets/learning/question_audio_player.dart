@@ -196,7 +196,9 @@ class _QuestionAudioPlayerState extends State<QuestionAudioPlayer> {
                 : Icon(
                     _isPlaying ? Icons.volume_up : Icons.volume_up_outlined,
                     size: 24,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white // Màu sáng hơn cho dark mode
+                        : Theme.of(context).primaryColor,
                   ),
       ),
     );

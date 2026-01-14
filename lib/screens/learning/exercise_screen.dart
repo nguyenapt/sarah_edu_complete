@@ -73,6 +73,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             // Kiểm tra cả standalone và groupQuestions
             if (_shouldShowExerciseInfo())
             Container(
+                width: double.infinity,
                 margin: EdgeInsets.zero,
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.dark
@@ -280,6 +281,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     
     if (wrapInCard) {
       return Container(
+        width: double.infinity,
         margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.dark
@@ -506,12 +508,40 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       children: [
         // Hiển thị paragraph nếu có (từ exercise.question)
         if (widget.exercise.question.isNotEmpty) ...[
-          Card(
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: _buildParagraphWithSpeakers(widget.exercise.question),
-            ),
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                      : Theme.of(context).cardTheme.color ?? Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _buildParagraphWithSpeakers(widget.exercise.question),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: QuestionAudioPlayer(
+                  questionText: widget.exercise.question,
+                  speakerVoices: widget.exercise.speakerVoices,
+                  defaultVoice: widget.exercise.defaultVoice,
+                  autoPlay: false,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 24),
         ],
@@ -951,60 +981,42 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final lines = paragraph.split('\n');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: lines.map((line) {
-                  if (line.trim().isEmpty) {
-                    return const SizedBox(height: 8);
-                  }
-                  final (speaker, dialogue) = _parseSpeaker(line.trim());
-                  if (speaker != null) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '$speaker:',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.primaryColor,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            dialogue,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        ],
+      children: lines.map((line) {
+        if (line.trim().isEmpty) {
+          return const SizedBox(height: 8);
+        }
+        final (speaker, dialogue) = _parseSpeaker(line.trim());
+        if (speaker != null) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$speaker:',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
                       ),
-                    );
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        line,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    );
-                  }
-                }).toList(),
-              ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  dialogue,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
             ),
-            QuestionAudioPlayer(
-              questionText: paragraph,
-              speakerVoices: widget.exercise.speakerVoices,
-              defaultVoice: widget.exercise.defaultVoice,
-              autoPlay: false,
+          );
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              line,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-          ],
-        ),
-      ],
+          );
+        }
+      }).toList(),
     );
   }
 
@@ -1060,51 +1072,69 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   '$speaker:',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppTheme.primaryColor,
                       ),
                 ),
-              ),
-              QuestionAudioPlayer(
-                questionText: questionText,
-                speakerVoices: widget.exercise.speakerVoices,
-                defaultVoice: widget.exercise.defaultVoice,
-                autoPlay: false,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 4,
-            runSpacing: 8,
-            children: [
-              for (int i = 0; i < parts.length; i++) ...[
-                Text(
-                  parts[i],
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                const SizedBox(height: 8),
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
+                  runSpacing: 8,
+                  children: [
+                    for (int i = 0; i < parts.length; i++) ...[
+                      Text(
+                        parts[i],
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                            ),
                       ),
+                      if (i < placeholders.length)
+                        _buildPlaceholderWidget(
+                          int.parse(placeholders[i].group(1)!),
+                          groupIndex,
+                          content,
+                        ),
+                    ],
+                  ],
                 ),
-                if (i < placeholders.length)
-                  _buildPlaceholderWidget(
-                    int.parse(placeholders[i].group(1)!),
-                    groupIndex,
-                    content,
-                  ),
               ],
-            ],
+            ),
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: QuestionAudioPlayer(
+              questionText: questionText,
+              speakerVoices: widget.exercise.speakerVoices,
+              defaultVoice: widget.exercise.defaultVoice,
+              autoPlay: false,
+            ),
           ),
         ],
       ),
@@ -1117,6 +1147,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(question).toList();
     
     return Container(
+      width: double.infinity,
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
@@ -1194,84 +1225,66 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final parts = dialogue.split(RegExp(r'\{(\d+)\}'));
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
     
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-            : Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (speaker != null) ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '$speaker:',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.primaryColor,
-                            ),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
-                ),
-                QuestionAudioPlayer(
-                  questionText: question,
-                  speakerVoices: widget.exercise.speakerVoices,
-                  defaultVoice: widget.exercise.defaultVoice,
-                  autoPlay: false,
-                ),
-              ],
-            ),
-          ] else ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: const SizedBox.shrink()),
-                QuestionAudioPlayer(
-                  questionText: question,
-                  speakerVoices: widget.exercise.speakerVoices,
-                  defaultVoice: widget.exercise.defaultVoice,
-                  autoPlay: false,
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-          ],
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 4,
-            runSpacing: 8,
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                : Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (int i = 0; i < parts.length; i++) ...[
+              if (speaker != null) ...[
                 Text(
-                  parts[i],
+                  '$speaker:',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        color: AppTheme.primaryColor,
                       ),
                 ),
-                if (i < placeholders.length)
-                  _buildPlaceholderWidget(
-                    int.parse(placeholders[i].group(1)!),
-                    groupIndex,
-                    content,
-                  ),
+                const SizedBox(height: 8),
               ],
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 4,
+                runSpacing: 8,
+                children: [
+                  for (int i = 0; i < parts.length; i++) ...[
+                    Text(
+                      parts[i],
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                          ),
+                    ),
+                    if (i < placeholders.length)
+                      _buildPlaceholderWidget(
+                        int.parse(placeholders[i].group(1)!),
+                        groupIndex,
+                        content,
+                      ),
+                  ],
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: QuestionAudioPlayer(
+            questionText: question,
+            speakerVoices: widget.exercise.speakerVoices,
+            defaultVoice: widget.exercise.defaultVoice,
+            autoPlay: false,
+          ),
+        ),
+      ],
     );
   }
 
@@ -1785,64 +1798,61 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Card hiển thị question text
-        Container(
-          margin: EdgeInsets.zero,
-          decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-                : Theme.of(context).cardTheme.color ?? Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+        Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                    : Theme.of(context).cardTheme.color ?? Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (speaker != null) ...[
-                            Text(
-                              '$speaker:',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppTheme.primaryColor,
-                                  ),
+                    if (speaker != null) ...[
+                      Text(
+                        '$speaker:',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor,
                             ),
-                            const SizedBox(height: 8),
-                          ],
-                          Text(
-                            dialogue,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                                ),
-                          ),
-                        ],
                       ),
-                    ),
-                    QuestionAudioPlayer(
-                      questionText: groupQuestion.question,
-                      speakerVoices: widget.exercise.speakerVoices,
-                      defaultVoice: widget.exercise.defaultVoice,
-                      autoPlay: false,
+                      const SizedBox(height: 8),
+                    ],
+                    Text(
+                      dialogue,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                          ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: QuestionAudioPlayer(
+                questionText: groupQuestion.question,
+                speakerVoices: widget.exercise.speakerVoices,
+                defaultVoice: widget.exercise.defaultVoice,
+                autoPlay: false,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
         // Options buttons
@@ -1936,64 +1946,61 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Card hiển thị question text
-        Container(
-          margin: EdgeInsets.zero,
-          decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-                : Theme.of(context).cardTheme.color ?? Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+        Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
+                    : Theme.of(context).cardTheme.color ?? Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (speaker != null) ...[
-                            Text(
-                              '$speaker:',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppTheme.primaryColor,
-                                  ),
+                    if (speaker != null) ...[
+                      Text(
+                        '$speaker:',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor,
                             ),
-                            const SizedBox(height: 8),
-                          ],
-                          Text(
-                            dialogue,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                                ),
-                          ),
-                        ],
                       ),
-                    ),
-                    QuestionAudioPlayer(
-                      questionText: groupQuestion.question,
-                      speakerVoices: widget.exercise.speakerVoices,
-                      defaultVoice: widget.exercise.defaultVoice,
-                      autoPlay: false,
+                      const SizedBox(height: 8),
+                    ],
+                    Text(
+                      dialogue,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                          ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: QuestionAudioPlayer(
+                questionText: groupQuestion.question,
+                speakerVoices: widget.exercise.speakerVoices,
+                defaultVoice: widget.exercise.defaultVoice,
+                autoPlay: false,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
         // Options buttons
