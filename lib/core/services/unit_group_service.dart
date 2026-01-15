@@ -597,31 +597,61 @@ class UnitGroupService {
         return [];
       }
 
-      // Logic mới: Tìm group đã hoàn thành dựa trên highestExerciseId
+      // Logic mới: Xác định group hiện tại & group đã hoàn thành
       // CHỈ dùng highestProgress nếu levelId khớp với level đang load
       GroupUnitModel? completedGroup;
       int? continueGroupIndex;
       
       if (highestProgress != null && highestProgress.levelId == levelId) {
-        // Tìm group có highestExerciseId đã hoàn thành
-        for (final groupUnit in groupUnits) {
-          if (groupUnit.highestExerciseId != null && 
-              groupUnit.highestExerciseId == highestProgress.exerciseId) {
-            completedGroup = groupUnit;
-            debugPrint('🔍 Found completedGroup: ${groupUnit.id} (index=${groupUnit.index})');
-            break;
-          }
+        GroupUnitModel? currentGroup;
+
+        // Ưu tiên dùng groupId từ highestProgress
+        if (highestProgress.groupId != null) {
+          currentGroup = groupUnits
+              .where((groupUnit) => groupUnit.id == highestProgress.groupId)
+              .cast<GroupUnitModel?>()
+              .firstWhere((groupUnit) => groupUnit != null, orElse: () => null);
         }
-        
-        // Xác định group tiếp theo (continueGroup)
-        if (completedGroup != null) {
-          // Group tiếp theo là group có index = completedGroup.index + 1
-          continueGroupIndex = completedGroup.index + 1;
-          debugPrint('🔍 continueGroupIndex=$continueGroupIndex (after completedGroup ${completedGroup.id})');
+
+        // Fallback: tìm group theo unitId
+        if (currentGroup == null && highestProgress.unitId.isNotEmpty) {
+          currentGroup = groupUnits
+              .where((groupUnit) => groupUnit.units.contains(highestProgress.unitId))
+              .cast<GroupUnitModel?>()
+              .firstWhere((groupUnit) => groupUnit != null, orElse: () => null);
+        }
+
+        if (currentGroup != null) {
+          final highestExerciseId = currentGroup.highestExerciseId;
+          final isCompleted = highestExerciseId != null &&
+              _compareExerciseIds(highestProgress.exerciseId, highestExerciseId) >= 0;
+
+          if (isCompleted) {
+            completedGroup = currentGroup;
+            continueGroupIndex = currentGroup.index + 1;
+            debugPrint('🔍 currentGroup=${currentGroup.id} completed, continueGroupIndex=$continueGroupIndex');
+          } else {
+            continueGroupIndex = currentGroup.index;
+            debugPrint('🔍 currentGroup=${currentGroup.id} not completed, continueGroupIndex=$continueGroupIndex');
+          }
         } else {
-          // Không có group nào hoàn thành → group đầu tiên (index 0) là "Tiếp tục luyện tập"
-          continueGroupIndex = 0;
-          debugPrint('🔍 No completedGroup found, continueGroupIndex=0');
+          // Fallback cuối: tìm group có highestExerciseId khớp với highestProgress.exerciseId
+          for (final groupUnit in groupUnits) {
+            if (groupUnit.highestExerciseId != null &&
+                groupUnit.highestExerciseId == highestProgress.exerciseId) {
+              completedGroup = groupUnit;
+              debugPrint('🔍 Found completedGroup: ${groupUnit.id} (index=${groupUnit.index})');
+              break;
+            }
+          }
+
+          if (completedGroup != null) {
+            continueGroupIndex = completedGroup.index + 1;
+            debugPrint('🔍 continueGroupIndex=$continueGroupIndex (after completedGroup ${completedGroup.id})');
+          } else {
+            continueGroupIndex = 0;
+            debugPrint('🔍 No currentGroup/completedGroup found, continueGroupIndex=0');
+          }
         }
       } else {
         // Không có highestProgress hoặc levelId khác → group đầu tiên (index 0) là "Tiếp tục luyện tập"
