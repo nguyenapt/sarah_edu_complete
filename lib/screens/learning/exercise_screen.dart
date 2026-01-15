@@ -2960,9 +2960,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                           // Nếu không nằm trong word nào, là blocker (ô đen)
                           if (!isCellInWord) {
                             return Container(
-                              width: 32,
-                              height: 32,
-                              margin: const EdgeInsets.all(1),
+                              width: 31,
+                              height: 31,
+                              margin: const EdgeInsets.all(0.5),
                               decoration: BoxDecoration(
                                 color: Colors.black,
                                 border: Border.all(color: Colors.grey),
@@ -2974,9 +2974,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                           final wordNumber = wordNumberAtStart;
                           
                           return Container(
-                            width: 32,
-                            height: 32,
-                            margin: const EdgeInsets.all(1),
+                            width: 31,
+                            height: 31,
+                            margin: const EdgeInsets.all(0.5),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(color: Colors.grey),

@@ -922,7 +922,6 @@
             btnAddRightItem.TabIndex = 24;
             btnAddRightItem.Text = "Add Item";
             btnAddRightItem.UseVisualStyleBackColor = true;
-            
             // 
             // label30
             // 
@@ -1032,7 +1031,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1167, 1117);
+            ClientSize = new Size(869, 917);
             Controls.Add(numExercise);
             Controls.Add(label20);
             Controls.Add(numLesson);

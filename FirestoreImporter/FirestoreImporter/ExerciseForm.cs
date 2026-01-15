@@ -1014,6 +1014,8 @@ namespace FirestoreImporter
                 value = propertyValue;
             }
 
+
+
             // Update hoặc thêm mới
             _content[propertyName] = value;
 
@@ -1021,7 +1023,10 @@ namespace FirestoreImporter
             RefreshContentGrid();
 
             // Clear input
-            cbPropertyName.SelectedIndex = 0;
+            if (cbPropertyName.SelectedIndex != cbPropertyName.Items.Count - 1)
+            {
+                cbPropertyName.SelectedIndex += 1;
+            }
             txtPropertyValue.Clear();
         }
 
