@@ -90,6 +90,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get theme => '主题';
 
   @override
+  String get themeLight => '浅色';
+
+  @override
+  String get themeDark => '深色';
+
+  @override
+  String get themeSystem => '系统';
+
+  @override
   String get help => '帮助';
 
   @override
@@ -178,6 +187,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get matching => '匹配';
+
+  @override
+  String get matchItems => '匹配这些项目';
 
   @override
   String get crossword => '填字游戏';

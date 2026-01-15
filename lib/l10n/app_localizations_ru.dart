@@ -91,6 +91,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get theme => 'Тема';
 
   @override
+  String get themeLight => 'Светлая';
+
+  @override
+  String get themeDark => 'Темная';
+
+  @override
+  String get themeSystem => 'Системная';
+
+  @override
   String get help => 'Помощь';
 
   @override
@@ -179,6 +188,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get matching => 'Сопоставление';
+
+  @override
+  String get matchItems => 'Сопоставьте элементы';
 
   @override
   String get crossword => 'Кроссворд';

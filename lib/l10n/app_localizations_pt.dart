@@ -91,6 +91,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get theme => 'Tema';
 
   @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeDark => 'Escuro';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
   String get help => 'Ajuda';
 
   @override
@@ -179,6 +188,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get matching => 'Correspondência';
+
+  @override
+  String get matchItems => 'Combine os itens';
 
   @override
   String get crossword => 'Palavras cruzadas';

@@ -35,7 +35,7 @@ class AuthProvider with ChangeNotifier {
         _userSubscription = null;
 
         if (firebaseUser != null) {
-          await _setupUserListener(firebaseUser.uid);
+          await _setupUserListener(firebaseUser);
         } else {
           _user = null;
           _isLoading = false;
@@ -56,7 +56,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Setup Firestore snapshot listener cho user data (realtime updates)
-  Future<void> _setupUserListener(String userId) async {
+  Future<void> _setupUserListener(User firebaseUser) async {
     try {
       _isLoading = true;
       notifyListeners();
@@ -67,19 +67,20 @@ class AuthProvider with ChangeNotifier {
       // Setup snapshot listener để tự động cập nhật khi có thay đổi trên Firestore
       _userSubscription = FirebaseFirestore.instance
           .collection(FirebaseConstants.usersCollection)
-          .doc(userId)
+          .doc(firebaseUser.uid)
           .snapshots()
           .listen(
-        (DocumentSnapshot doc) {
+        (DocumentSnapshot doc) async {
           if (doc.exists) {
             _user = UserModel.fromFirestore(doc);
             _isLoading = false;
             notifyListeners();
             debugPrint('✅ User data updated: streak=${_user?.streak}, XP=${_user?.totalXP}');
           } else {
-            _user = null;
+            _user = _buildFallbackUser(firebaseUser);
             _isLoading = false;
             notifyListeners();
+            await _authService.ensureUserDocument(firebaseUser);
           }
         },
         onError: (error) {
@@ -93,6 +94,24 @@ class AuthProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  UserModel _buildFallbackUser(User firebaseUser) {
+    final email = firebaseUser.email ?? '';
+    final displayName =
+        firebaseUser.displayName ?? (email.isNotEmpty ? email.split('@').first : '');
+
+    return UserModel(
+      id: firebaseUser.uid,
+      email: email,
+      displayName: displayName.isNotEmpty ? displayName : null,
+      photoUrl: firebaseUser.photoURL,
+      createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+      currentLevel: 'A1',
+      totalXP: 0,
+      streak: 0,
+      lastActiveDate: DateTime.now(),
+    );
   }
 
   /// Load user data một lần (dùng khi cần force refresh)
@@ -126,7 +145,7 @@ class AuthProvider with ChangeNotifier {
       if (credential.user != null) {
         // Listener sẽ tự động được setup trong authStateChanges listener
         // Nhưng chúng ta vẫn setup ngay để đảm bảo data được load
-        await _setupUserListener(credential.user!.uid);
+        await _setupUserListener(credential.user!);
         return true;
       }
       _isLoading = false;
@@ -159,7 +178,7 @@ class AuthProvider with ChangeNotifier {
       if (credential.user != null) {
         // Listener sẽ tự động được setup trong authStateChanges listener
         // Nhưng chúng ta vẫn setup ngay để đảm bảo data được load
-        await _setupUserListener(credential.user!.uid);
+        await _setupUserListener(credential.user!);
         return true;
       }
       _isLoading = false;
@@ -184,7 +203,7 @@ class AuthProvider with ChangeNotifier {
       if (credential.user != null) {
         // Listener sẽ tự động được setup trong authStateChanges listener
         // Nhưng chúng ta vẫn setup ngay để đảm bảo data được load
-        await _setupUserListener(credential.user!.uid);
+        await _setupUserListener(credential.user!);
         return true;
       }
       _isLoading = false;

@@ -274,6 +274,238 @@
           }
         ]
       }
+    },
+    "exercise_word_matching_sample": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "word_matching",
+      "question": {
+        "en": "Match each word with its definition",
+        "vi": "Nối mỗi từ với định nghĩa của nó"
+      },
+      "content": {
+        "pairs": [
+          {
+            "word": "happy",
+            "definition": {
+              "en": "feeling or showing pleasure or contentment",
+              "vi": "cảm thấy hoặc thể hiện niềm vui hoặc sự hài lòng"
+            }
+          },
+          {
+            "word": "sad",
+            "definition": {
+              "en": "feeling or showing sorrow",
+              "vi": "cảm thấy hoặc thể hiện nỗi buồn"
+            }
+          },
+          {
+            "word": "angry",
+            "definition": {
+              "en": "feeling or showing strong annoyance or displeasure",
+              "vi": "cảm thấy hoặc thể hiện sự tức giận hoặc không hài lòng mạnh mẽ"
+            }
+          },
+          {
+            "word": "excited",
+            "definition": {
+              "en": "very enthusiastic and eager",
+              "vi": "rất nhiệt tình và háo hức"
+            }
+          },
+          {
+            "word": "tired",
+            "definition": {
+              "en": "in need of sleep or rest",
+              "vi": "cần ngủ hoặc nghỉ ngơi"
+            }
+          }
+        ],
+        "shuffleOptions": true
+      },
+      "points": 15,
+      "difficulty": "easy",
+      "explanation": {
+        "en": "Match each emotion word with its correct definition",
+        "vi": "Nối mỗi từ chỉ cảm xúc với định nghĩa đúng của nó"
+      }
+    },
+    "exercise_definition_matching_sample": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "definition_matching",
+      "question": {
+        "en": "Match each definition with the correct word",
+        "vi": "Nối mỗi định nghĩa với từ đúng"
+      },
+      "content": {
+        "pairs": [
+          {
+            "definition": {
+              "en": "a building where people live",
+              "vi": "một tòa nhà nơi mọi người sống"
+            },
+            "word": "house",
+            "example": "I live in a small house."
+          },
+          {
+            "definition": {
+              "en": "a vehicle with four wheels",
+              "vi": "một phương tiện có bốn bánh xe"
+            },
+            "word": "car",
+            "example": "She drives a red car."
+          },
+          {
+            "definition": {
+              "en": "a place where children learn",
+              "vi": "một nơi trẻ em học tập"
+            },
+            "word": "school",
+            "example": "Children go to school every day."
+          },
+          {
+            "definition": {
+              "en": "a large area of water",
+              "vi": "một vùng nước lớn"
+            },
+            "word": "ocean",
+            "example": "The ocean is very deep."
+          },
+          {
+            "definition": {
+              "en": "a tall plant with a trunk and branches",
+              "vi": "một cây cao có thân và cành"
+            },
+            "word": "tree",
+            "example": "The tree has green leaves."
+          }
+        ]
+      },
+      "points": 15,
+      "difficulty": "easy",
+      "explanation": {
+        "en": "Read each definition carefully and match it with the correct word",
+        "vi": "Đọc kỹ mỗi định nghĩa và nối nó với từ đúng"
+      }
+    },
+    "exercise_word_formation_sample": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "word_formation_exercise",
+      "question": {
+        "en": "Fill in the blank with the correct form of the word",
+        "vi": "Điền vào chỗ trống với dạng đúng của từ"
+      },
+      "content": {
+        "sentence": {
+          "en": "She showed great _____ (create) in her artwork.",
+          "vi": "Cô ấy thể hiện sự _____ (sáng tạo) lớn trong tác phẩm nghệ thuật của mình."
+        },
+        "baseWord": "create",
+        "correctForm": "creativity",
+        "options": ["create", "creative", "creativity", "creatively"],
+        "explanation": {
+          "en": "We need a noun form here. 'Create' is a verb, 'creative' is an adjective, 'creativity' is a noun, and 'creatively' is an adverb.",
+          "vi": "Chúng ta cần dạng danh từ ở đây. 'Create' là động từ, 'creative' là tính từ, 'creativity' là danh từ, và 'creatively' là trạng từ."
+        }
+      },
+      "points": 10,
+      "difficulty": "medium",
+      "explanation": {
+        "en": "Use the correct word form based on the sentence structure",
+        "vi": "Sử dụng dạng từ đúng dựa trên cấu trúc câu"
+      }
+    },
+    "exercise_word_pattern_sample": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "word_pattern_exercise",
+      "question": {
+        "en": "Choose the correct preposition to complete the pattern",
+        "vi": "Chọn giới từ đúng để hoàn thành pattern"
+      },
+      "content": {
+        "sentence": {
+          "en": "She is very good _____ playing the piano.",
+          "vi": "Cô ấy rất giỏi _____ chơi piano."
+        },
+        "word": "good",
+        "correctPreposition": "at",
+        "options": ["at", "in", "on", "with"],
+        "pattern": "good at"
+      },
+      "points": 10,
+      "difficulty": "medium",
+      "explanation": {
+        "en": "The pattern 'good at' is used to express skill or ability in doing something.",
+        "vi": "Pattern 'good at' được sử dụng để thể hiện kỹ năng hoặc khả năng làm việc gì đó."
+      }
+    },
+    "exercise_matching_sample": {
+      "lessonId": "lesson_a1_1_2",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "matching",
+      "question": {
+        "en": "Match the questions with the correct answers",
+        "vi": "Nối các câu hỏi với câu trả lời đúng"
+      },
+      "content": {
+        "leftItems": [
+          "Do you like coffee?",
+          "Does she work here?",
+          "Do they play football?"
+        ],
+        "rightItems": [
+          {
+            "en": "Yes, I do",
+            "vi": "Có, tôi thích"
+          },
+          {
+            "en": "Yes, she does",
+            "vi": "Có, cô ấy làm việc"
+          },
+          {
+            "en": "Yes, they do",
+            "vi": "Có, họ chơi"
+          }
+        ],
+        "correctPairs": [
+          {
+            "left": "Do you like coffee?",
+            "right": {
+              "en": "Yes, I do",
+              "vi": "Có, tôi thích"
+            }
+          },
+          {
+            "left": "Does she work here?",
+            "right": {
+              "en": "Yes, she does",
+              "vi": "Có, cô ấy làm việc"
+            }
+          },
+          {
+            "left": "Do they play football?",
+            "right": {
+              "en": "Yes, they do",
+              "vi": "Có, họ chơi"
+            }
+          }
+        ]
+      },
+      "points": 15,
+      "timeLimit": 45,
+      "difficulty": "easy",
+      "explanation": {
+        "en": "Questions with 'Do' are used for first person, second person, and plural subjects",
+        "vi": "Câu hỏi với 'Do' dùng cho ngôi thứ nhất, thứ hai và số nhiều"
+      }
     }
   }
 }

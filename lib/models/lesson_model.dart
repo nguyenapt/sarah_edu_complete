@@ -66,6 +66,7 @@ class TheoryContent {
   final List<Example> examples;
   final List<UsageItem>? usage; // Array of UsageItem
   final GrammarForms? forms;
+  final VocabularyContent? vocabulary;
 
   TheoryContent({
     this.title,
@@ -73,6 +74,7 @@ class TheoryContent {
     this.examples = const [],
     this.usage,
     this.forms,
+    this.vocabulary,
   });
 
   /// Get title theo language code
@@ -156,6 +158,9 @@ class TheoryContent {
       forms: map['forms'] != null
           ? GrammarForms.fromMap(map['forms'] as Map<String, dynamic>)
           : null,
+      vocabulary: map['vocabulary'] != null
+          ? VocabularyContent.fromMap(map['vocabulary'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -166,6 +171,7 @@ class TheoryContent {
       'examples': examples.map((e) => e.toMap()).toList(),
       'usage': usage?.map((e) => e.toMap()).toList(),
       'forms': forms?.toMap(),
+      'vocabulary': vocabulary?.toMap(),
     };
   }
 }
@@ -401,6 +407,335 @@ class LessonModel {
         'exercises': exercises,
       },
       'order': order,
+    };
+  }
+}
+
+// Vocabulary Content Classes
+class TopicVocabularyItem {
+  final String word;
+  final String partOfSpeech; // v, n, adj, adv, etc.
+  final Map<String, dynamic>? definitions; // Multi-language: Map<String, String>
+  final List<String> examples;
+  final String? audioUrl;
+  final String? imageUrl;
+
+  TopicVocabularyItem({
+    required this.word,
+    required this.partOfSpeech,
+    this.definitions,
+    this.examples = const [],
+    this.audioUrl,
+    this.imageUrl,
+  });
+
+  /// Get definition theo language code
+  String getDefinition(String languageCode) {
+    return MultilanguageContent.getText(definitions, languageCode);
+  }
+
+  factory TopicVocabularyItem.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic>? definitionsData;
+    if (map['definitions'] != null) {
+      if (map['definitions'] is Map) {
+        definitionsData = map['definitions'] as Map<String, dynamic>;
+      } else {
+        definitionsData = {'en': map['definitions'].toString()};
+      }
+    }
+
+    List<String> examplesList = [];
+    if (map['examples'] != null) {
+      if (map['examples'] is List) {
+        examplesList = (map['examples'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        examplesList = [map['examples'].toString()];
+      }
+    }
+
+    return TopicVocabularyItem(
+      word: map['word']?.toString() ?? '',
+      partOfSpeech: map['partOfSpeech']?.toString() ?? '',
+      definitions: definitionsData,
+      examples: examplesList,
+      audioUrl: map['audioUrl'],
+      imageUrl: map['imageUrl'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'word': word,
+      'partOfSpeech': partOfSpeech,
+      'definitions': definitions,
+      'examples': examples,
+      if (audioUrl != null) 'audioUrl': audioUrl,
+      if (imageUrl != null) 'imageUrl': imageUrl,
+    };
+  }
+}
+
+class PhrasalVerbItem {
+  final String verb;
+  final Map<String, dynamic>? definition; // Multi-language: Map<String, String>
+  final List<String> examples;
+
+  PhrasalVerbItem({
+    required this.verb,
+    this.definition,
+    this.examples = const [],
+  });
+
+  /// Get definition theo language code
+  String getDefinition(String languageCode) {
+    return MultilanguageContent.getText(definition, languageCode);
+  }
+
+  factory PhrasalVerbItem.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic>? definitionData;
+    if (map['definition'] != null) {
+      if (map['definition'] is Map) {
+        definitionData = map['definition'] as Map<String, dynamic>;
+      } else {
+        definitionData = {'en': map['definition'].toString()};
+      }
+    }
+
+    List<String> examplesList = [];
+    if (map['examples'] != null) {
+      if (map['examples'] is List) {
+        examplesList = (map['examples'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        examplesList = [map['examples'].toString()];
+      }
+    }
+
+    return PhrasalVerbItem(
+      verb: map['verb']?.toString() ?? '',
+      definition: definitionData,
+      examples: examplesList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'verb': verb,
+      'definition': definition,
+      'examples': examples,
+    };
+  }
+}
+
+class PrepositionalPhraseItem {
+  final String phrase;
+  final Map<String, dynamic>? definition; // Multi-language: Map<String, String>
+  final List<String> examples;
+
+  PrepositionalPhraseItem({
+    required this.phrase,
+    this.definition,
+    this.examples = const [],
+  });
+
+  /// Get definition theo language code
+  String getDefinition(String languageCode) {
+    return MultilanguageContent.getText(definition, languageCode);
+  }
+
+  factory PrepositionalPhraseItem.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic>? definitionData;
+    if (map['definition'] != null) {
+      if (map['definition'] is Map) {
+        definitionData = map['definition'] as Map<String, dynamic>;
+      } else {
+        definitionData = {'en': map['definition'].toString()};
+      }
+    }
+
+    List<String> examplesList = [];
+    if (map['examples'] != null) {
+      if (map['examples'] is List) {
+        examplesList = (map['examples'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        examplesList = [map['examples'].toString()];
+      }
+    }
+
+    return PrepositionalPhraseItem(
+      phrase: map['phrase']?.toString() ?? '',
+      definition: definitionData,
+      examples: examplesList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'phrase': phrase,
+      'definition': definition,
+      'examples': examples,
+    };
+  }
+}
+
+class WordFormationItem {
+  final String baseWord;
+  final List<String> relatedForms;
+  final List<String> examples;
+
+  WordFormationItem({
+    required this.baseWord,
+    this.relatedForms = const [],
+    this.examples = const [],
+  });
+
+  factory WordFormationItem.fromMap(Map<String, dynamic> map) {
+    List<String> relatedFormsList = [];
+    if (map['relatedForms'] != null) {
+      if (map['relatedForms'] is List) {
+        relatedFormsList = (map['relatedForms'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        relatedFormsList = [map['relatedForms'].toString()];
+      }
+    }
+
+    List<String> examplesList = [];
+    if (map['examples'] != null) {
+      if (map['examples'] is List) {
+        examplesList = (map['examples'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        examplesList = [map['examples'].toString()];
+      }
+    }
+
+    return WordFormationItem(
+      baseWord: map['baseWord']?.toString() ?? '',
+      relatedForms: relatedFormsList,
+      examples: examplesList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'baseWord': baseWord,
+      'relatedForms': relatedForms,
+      'examples': examples,
+    };
+  }
+}
+
+class WordPatternItem {
+  final String category; // adjective, verb, noun
+  final String pattern;
+  final String example;
+
+  WordPatternItem({
+    required this.category,
+    required this.pattern,
+    required this.example,
+  });
+
+  factory WordPatternItem.fromMap(Map<String, dynamic> map) {
+    return WordPatternItem(
+      category: map['category']?.toString() ?? '',
+      pattern: map['pattern']?.toString() ?? '',
+      example: map['example']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'category': category,
+      'pattern': pattern,
+      'example': example,
+    };
+  }
+}
+
+class VocabularyContent {
+  final List<TopicVocabularyItem>? topicVocabulary;
+  final List<PhrasalVerbItem>? phrasalVerbs;
+  final List<PrepositionalPhraseItem>? prepositionalPhrases;
+  final List<WordFormationItem>? wordFormation;
+  final List<WordPatternItem>? wordPatterns;
+
+  VocabularyContent({
+    this.topicVocabulary,
+    this.phrasalVerbs,
+    this.prepositionalPhrases,
+    this.wordFormation,
+    this.wordPatterns,
+  });
+
+  factory VocabularyContent.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return VocabularyContent();
+
+    List<TopicVocabularyItem>? topicVocabularyList;
+    if (map['topicVocabulary'] != null) {
+      topicVocabularyList = (map['topicVocabulary'] as List<dynamic>)
+          .map((e) => TopicVocabularyItem.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<PhrasalVerbItem>? phrasalVerbsList;
+    if (map['phrasalVerbs'] != null) {
+      phrasalVerbsList = (map['phrasalVerbs'] as List<dynamic>)
+          .map((e) => PhrasalVerbItem.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<PrepositionalPhraseItem>? prepositionalPhrasesList;
+    if (map['prepositionalPhrases'] != null) {
+      prepositionalPhrasesList = (map['prepositionalPhrases'] as List<dynamic>)
+          .map((e) => PrepositionalPhraseItem.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<WordFormationItem>? wordFormationList;
+    if (map['wordFormation'] != null) {
+      wordFormationList = (map['wordFormation'] as List<dynamic>)
+          .map((e) => WordFormationItem.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<WordPatternItem>? wordPatternsList;
+    if (map['wordPatterns'] != null) {
+      wordPatternsList = (map['wordPatterns'] as List<dynamic>)
+          .map((e) => WordPatternItem.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    return VocabularyContent(
+      topicVocabulary: topicVocabularyList,
+      phrasalVerbs: phrasalVerbsList,
+      prepositionalPhrases: prepositionalPhrasesList,
+      wordFormation: wordFormationList,
+      wordPatterns: wordPatternsList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      if (topicVocabulary != null)
+        'topicVocabulary': topicVocabulary!.map((e) => e.toMap()).toList(),
+      if (phrasalVerbs != null)
+        'phrasalVerbs': phrasalVerbs!.map((e) => e.toMap()).toList(),
+      if (prepositionalPhrases != null)
+        'prepositionalPhrases':
+            prepositionalPhrases!.map((e) => e.toMap()).toList(),
+      if (wordFormation != null)
+        'wordFormation': wordFormation!.map((e) => e.toMap()).toList(),
+      if (wordPatterns != null)
+        'wordPatterns': wordPatterns!.map((e) => e.toMap()).toList(),
     };
   }
 }

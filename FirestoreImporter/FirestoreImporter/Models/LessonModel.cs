@@ -97,6 +97,9 @@ public class TheoryContent
     [JsonProperty("forms")]
     public GrammarForms? Forms { get; set; }
 
+    [JsonProperty("vocabulary")]
+    public VocabularyContent? Vocabulary { get; set; }
+
     public Dictionary<string, object> ToFirestore()
     {
         var data = new Dictionary<string, object>();
@@ -124,6 +127,11 @@ public class TheoryContent
         if (Forms != null)
         {
             data["forms"] = Forms.ToFirestore();
+        }
+
+        if (Vocabulary != null)
+        {
+            data["vocabulary"] = Vocabulary.ToFirestore();
         }
 
         if (Hints != null && Hints.Count > 0)
@@ -195,6 +203,227 @@ public class GrammarForms
         if (Question != null)
         {
             data["question"] = Question;
+        }
+
+        return data;
+    }
+}
+
+// Vocabulary Content Classes
+public class TopicVocabularyItem
+{
+    [JsonProperty("word")]
+    public string Word { get; set; } = string.Empty;
+
+    [JsonProperty("partOfSpeech")]
+    public string PartOfSpeech { get; set; } = string.Empty;
+
+    [JsonProperty("definitions")]
+    public Dictionary<string, string>? Definitions { get; set; }
+
+    [JsonProperty("examples")]
+    public List<string> Examples { get; set; } = new();
+
+    [JsonProperty("audioUrl")]
+    public string? AudioUrl { get; set; }
+
+    [JsonProperty("imageUrl")]
+    public string? ImageUrl { get; set; }
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "word", Word },
+            { "partOfSpeech", PartOfSpeech }
+        };
+
+        if (Definitions != null)
+        {
+            data["definitions"] = Definitions;
+        }
+
+        if (Examples != null && Examples.Count > 0)
+        {
+            data["examples"] = Examples;
+        }
+
+        if (!string.IsNullOrEmpty(AudioUrl))
+        {
+            data["audioUrl"] = AudioUrl;
+        }
+
+        if (!string.IsNullOrEmpty(ImageUrl))
+        {
+            data["imageUrl"] = ImageUrl;
+        }
+
+        return data;
+    }
+}
+
+public class PhrasalVerbItem
+{
+    [JsonProperty("verb")]
+    public string Verb { get; set; } = string.Empty;
+
+    [JsonProperty("definition")]
+    public Dictionary<string, string>? Definition { get; set; }
+
+    [JsonProperty("examples")]
+    public List<string> Examples { get; set; } = new();
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "verb", Verb }
+        };
+
+        if (Definition != null)
+        {
+            data["definition"] = Definition;
+        }
+
+        if (Examples != null && Examples.Count > 0)
+        {
+            data["examples"] = Examples;
+        }
+
+        return data;
+    }
+}
+
+public class PrepositionalPhraseItem
+{
+    [JsonProperty("phrase")]
+    public string Phrase { get; set; } = string.Empty;
+
+    [JsonProperty("definition")]
+    public Dictionary<string, string>? Definition { get; set; }
+
+    [JsonProperty("examples")]
+    public List<string> Examples { get; set; } = new();
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "phrase", Phrase }
+        };
+
+        if (Definition != null)
+        {
+            data["definition"] = Definition;
+        }
+
+        if (Examples != null && Examples.Count > 0)
+        {
+            data["examples"] = Examples;
+        }
+
+        return data;
+    }
+}
+
+public class WordFormationItem
+{
+    [JsonProperty("baseWord")]
+    public string BaseWord { get; set; } = string.Empty;
+
+    [JsonProperty("relatedForms")]
+    public List<string> RelatedForms { get; set; } = new();
+
+    [JsonProperty("examples")]
+    public List<string> Examples { get; set; } = new();
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "baseWord", BaseWord }
+        };
+
+        if (RelatedForms != null && RelatedForms.Count > 0)
+        {
+            data["relatedForms"] = RelatedForms;
+        }
+
+        if (Examples != null && Examples.Count > 0)
+        {
+            data["examples"] = Examples;
+        }
+
+        return data;
+    }
+}
+
+public class WordPatternItem
+{
+    [JsonProperty("category")]
+    public string Category { get; set; } = string.Empty; // adjective, verb, noun
+
+    [JsonProperty("pattern")]
+    public string Pattern { get; set; } = string.Empty;
+
+    [JsonProperty("example")]
+    public string Example { get; set; } = string.Empty;
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        return new Dictionary<string, object>
+        {
+            { "category", Category },
+            { "pattern", Pattern },
+            { "example", Example }
+        };
+    }
+}
+
+public class VocabularyContent
+{
+    [JsonProperty("topicVocabulary")]
+    public List<TopicVocabularyItem>? TopicVocabulary { get; set; }
+
+    [JsonProperty("phrasalVerbs")]
+    public List<PhrasalVerbItem>? PhrasalVerbs { get; set; }
+
+    [JsonProperty("prepositionalPhrases")]
+    public List<PrepositionalPhraseItem>? PrepositionalPhrases { get; set; }
+
+    [JsonProperty("wordFormation")]
+    public List<WordFormationItem>? WordFormation { get; set; }
+
+    [JsonProperty("wordPatterns")]
+    public List<WordPatternItem>? WordPatterns { get; set; }
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        var data = new Dictionary<string, object>();
+
+        if (TopicVocabulary != null && TopicVocabulary.Count > 0)
+        {
+            data["topicVocabulary"] = TopicVocabulary.Select(e => e.ToFirestore()).ToList();
+        }
+
+        if (PhrasalVerbs != null && PhrasalVerbs.Count > 0)
+        {
+            data["phrasalVerbs"] = PhrasalVerbs.Select(e => e.ToFirestore()).ToList();
+        }
+
+        if (PrepositionalPhrases != null && PrepositionalPhrases.Count > 0)
+        {
+            data["prepositionalPhrases"] = PrepositionalPhrases.Select(e => e.ToFirestore()).ToList();
+        }
+
+        if (WordFormation != null && WordFormation.Count > 0)
+        {
+            data["wordFormation"] = WordFormation.Select(e => e.ToFirestore()).ToList();
+        }
+
+        if (WordPatterns != null && WordPatterns.Count > 0)
+        {
+            data["wordPatterns"] = WordPatterns.Select(e => e.ToFirestore()).ToList();
         }
 
         return data;

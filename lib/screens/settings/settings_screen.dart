@@ -348,10 +348,11 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildThemeTile(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
+        final localizations = AppLocalizations.of(context)!;
         final availableThemes = [
-          {'mode': 'light', 'name': 'Sáng', 'icon': Icons.light_mode},
-          {'mode': 'dark', 'name': 'Tối', 'icon': Icons.dark_mode},
-          {'mode': 'system', 'name': 'Hệ thống', 'icon': Icons.phone_android},
+          {'mode': 'light', 'name': localizations.themeLight, 'icon': Icons.light_mode},
+          {'mode': 'dark', 'name': localizations.themeDark, 'icon': Icons.dark_mode},
+          {'mode': 'system', 'name': localizations.themeSystem, 'icon': Icons.phone_android},
         ];
 
         final currentTheme = availableThemes.firstWhere(

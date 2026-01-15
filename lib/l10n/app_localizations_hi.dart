@@ -90,6 +90,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get theme => 'थीम';
 
   @override
+  String get themeLight => 'हल्का';
+
+  @override
+  String get themeDark => 'गहरा';
+
+  @override
+  String get themeSystem => 'सिस्टम';
+
+  @override
   String get help => 'मदद';
 
   @override
@@ -178,6 +187,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matching => 'मिलान';
+
+  @override
+  String get matchItems => 'वस्तुओं को मिलाएँ';
 
   @override
   String get crossword => 'क्रॉसवर्ड';

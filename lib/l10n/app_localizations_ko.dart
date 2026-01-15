@@ -90,6 +90,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get theme => '테마';
 
   @override
+  String get themeLight => '밝게';
+
+  @override
+  String get themeDark => '어둡게';
+
+  @override
+  String get themeSystem => '시스템';
+
+  @override
   String get help => '도움말';
 
   @override
@@ -178,6 +187,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matching => '매칭';
+
+  @override
+  String get matchItems => '항목을 연결하세요';
 
   @override
   String get crossword => '십자말풀이';

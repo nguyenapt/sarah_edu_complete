@@ -87,6 +87,41 @@
             label22 = new Label();
             cbUsageLanguageCode = new ComboBox();
             label23 = new Label();
+            tabPage6 = new TabPage();
+            tabControl2 = new TabControl();
+            tabPage7 = new TabPage();
+            cbTopicVocabularyPartOfSpeech = new ComboBox();
+            grvTopicVocabularyLanguage = new DataGridView();
+            grvTopicVocabulary = new DataGridView();
+            cbWordLanguageCode = new ComboBox();
+            label32 = new Label();
+            label24 = new Label();
+            txtTopicVocabularyWord = new TextBox();
+            btnAddLanguageWordDefinition = new Button();
+            btnAddTopicVocabulary = new Button();
+            label25 = new Label();
+            txtTopicVocabularyDefinition = new TextBox();
+            label31 = new Label();
+            tabPage8 = new TabPage();
+            grvPhrasalVerbLanguage = new DataGridView();
+            cbPhrasalVerbLanguageCode = new ComboBox();
+            label33 = new Label();
+            txtPhrasalVerbDefinition = new TextBox();
+            label34 = new Label();
+            label26 = new Label();
+            txtPhrasalVerb = new TextBox();
+            grvPhrasalVerbs = new DataGridView();
+            btnAddPhrasaVerbLanguageDefinition = new Button();
+            btnAddPhrasalVerb = new Button();
+            tabPage9 = new TabPage();
+            cbPrepositionalPhraseLanguageCode = new ComboBox();
+            label29 = new Label();
+            txtPrepositionalPhraseDefinition = new TextBox();
+            label28 = new Label();
+            label27 = new Label();
+            txtPrepositionalPhrase = new TextBox();
+            grvPrepositionalPhrases = new DataGridView();
+            btnAddPrepositionalPhrase = new Button();
             groupBox1 = new GroupBox();
             grvTitle = new DataGridView();
             btnTitleAddAndNext = new Button();
@@ -103,6 +138,8 @@
             cbType = new ComboBox();
             txtExercises = new TextBox();
             label5 = new Label();
+            grvPrepositionalPhrase = new DataGridView();
+            btnAddPrepositialPhrase = new Button();
             ((System.ComponentModel.ISupportInitialize)numOrder).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -117,10 +154,21 @@
             tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grvUsage).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).BeginInit();
+            tabPage6.SuspendLayout();
+            tabControl2.SuspendLayout();
+            tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvTopicVocabularyLanguage).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grvTopicVocabulary).BeginInit();
+            tabPage8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbLanguage).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbs).BeginInit();
+            tabPage9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrases).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrase).BeginInit();
             SuspendLayout();
             // 
             // txtLessonId
@@ -177,7 +225,7 @@
             // 
             // numOrder
             // 
-            numOrder.Location = new Point(149, 849);
+            numOrder.Location = new Point(147, 935);
             numOrder.Name = "numOrder";
             numOrder.Size = new Size(209, 23);
             numOrder.TabIndex = 11;
@@ -185,7 +233,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(66, 857);
+            label11.Location = new Point(64, 943);
             label11.Name = "label11";
             label11.Size = new Size(37, 15);
             label11.TabIndex = 12;
@@ -218,10 +266,11 @@
             tabControl1.Controls.Add(tabPage3);
             tabControl1.Controls.Add(tabPage4);
             tabControl1.Controls.Add(tabPage5);
+            tabControl1.Controls.Add(tabPage6);
             tabControl1.Location = new Point(66, 349);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(761, 465);
+            tabControl1.Size = new Size(761, 537);
             tabControl1.TabIndex = 16;
             // 
             // tabPage2
@@ -236,7 +285,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(753, 437);
+            tabPage2.Size = new Size(753, 509);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Description";
             tabPage2.UseVisualStyleBackColor = true;
@@ -314,7 +363,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(753, 437);
+            tabPage1.Size = new Size(753, 509);
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Example";
             tabPage1.UseVisualStyleBackColor = true;
@@ -442,7 +491,7 @@
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(753, 437);
+            tabPage3.Size = new Size(753, 509);
             tabPage3.TabIndex = 3;
             tabPage3.Text = "Form";
             tabPage3.UseVisualStyleBackColor = true;
@@ -510,7 +559,7 @@
             tabPage4.Location = new Point(4, 24);
             tabPage4.Name = "tabPage4";
             tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(753, 437);
+            tabPage4.Size = new Size(753, 509);
             tabPage4.TabIndex = 4;
             tabPage4.Text = "Hint";
             tabPage4.UseVisualStyleBackColor = true;
@@ -594,7 +643,7 @@
             tabPage5.Location = new Point(4, 24);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(753, 437);
+            tabPage5.Size = new Size(753, 509);
             tabPage5.TabIndex = 5;
             tabPage5.Text = "Usage";
             tabPage5.UseVisualStyleBackColor = true;
@@ -695,6 +744,350 @@
             label23.Size = new Size(85, 15);
             label23.TabIndex = 20;
             label23.Text = "language code";
+            // 
+            // tabPage6
+            // 
+            tabPage6.Controls.Add(tabControl2);
+            tabPage6.Location = new Point(4, 24);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Padding = new Padding(3);
+            tabPage6.Size = new Size(753, 509);
+            tabPage6.TabIndex = 6;
+            tabPage6.Text = "Vocabulary";
+            tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // tabControl2
+            // 
+            tabControl2.Controls.Add(tabPage7);
+            tabControl2.Controls.Add(tabPage8);
+            tabControl2.Controls.Add(tabPage9);
+            tabControl2.Location = new Point(14, 18);
+            tabControl2.Name = "tabControl2";
+            tabControl2.SelectedIndex = 0;
+            tabControl2.Size = new Size(733, 484);
+            tabControl2.TabIndex = 0;
+            // 
+            // tabPage7
+            // 
+            tabPage7.Controls.Add(cbTopicVocabularyPartOfSpeech);
+            tabPage7.Controls.Add(grvTopicVocabularyLanguage);
+            tabPage7.Controls.Add(grvTopicVocabulary);
+            tabPage7.Controls.Add(cbWordLanguageCode);
+            tabPage7.Controls.Add(label32);
+            tabPage7.Controls.Add(label24);
+            tabPage7.Controls.Add(txtTopicVocabularyWord);
+            tabPage7.Controls.Add(btnAddLanguageWordDefinition);
+            tabPage7.Controls.Add(btnAddTopicVocabulary);
+            tabPage7.Controls.Add(label25);
+            tabPage7.Controls.Add(txtTopicVocabularyDefinition);
+            tabPage7.Controls.Add(label31);
+            tabPage7.Location = new Point(4, 24);
+            tabPage7.Name = "tabPage7";
+            tabPage7.Padding = new Padding(3);
+            tabPage7.Size = new Size(725, 456);
+            tabPage7.TabIndex = 0;
+            tabPage7.Text = "Word";
+            tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // cbTopicVocabularyPartOfSpeech
+            // 
+            cbTopicVocabularyPartOfSpeech.FormattingEnabled = true;
+            cbTopicVocabularyPartOfSpeech.Items.AddRange(new object[] { "verb", "noun", "adjective", "adverb", "pronoun", "preposition", "conjunction", "interjection", "article" });
+            cbTopicVocabularyPartOfSpeech.Location = new Point(420, 16);
+            cbTopicVocabularyPartOfSpeech.Name = "cbTopicVocabularyPartOfSpeech";
+            cbTopicVocabularyPartOfSpeech.Size = new Size(218, 23);
+            cbTopicVocabularyPartOfSpeech.TabIndex = 27;
+            // 
+            // grvTopicVocabularyLanguage
+            // 
+            grvTopicVocabularyLanguage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvTopicVocabularyLanguage.Location = new Point(6, 126);
+            grvTopicVocabularyLanguage.Name = "grvTopicVocabularyLanguage";
+            grvTopicVocabularyLanguage.Size = new Size(712, 123);
+            grvTopicVocabularyLanguage.TabIndex = 26;
+            // 
+            // grvTopicVocabulary
+            // 
+            grvTopicVocabulary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvTopicVocabulary.Location = new Point(6, 287);
+            grvTopicVocabulary.Name = "grvTopicVocabulary";
+            grvTopicVocabulary.Size = new Size(712, 162);
+            grvTopicVocabulary.TabIndex = 0;
+            // 
+            // cbWordLanguageCode
+            // 
+            cbWordLanguageCode.FormattingEnabled = true;
+            cbWordLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbWordLanguageCode.Location = new Point(98, 56);
+            cbWordLanguageCode.Name = "cbWordLanguageCode";
+            cbWordLanguageCode.Size = new Size(121, 23);
+            cbWordLanguageCode.TabIndex = 25;
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(7, 56);
+            label32.Name = "label32";
+            label32.Size = new Size(85, 15);
+            label32.TabIndex = 24;
+            label32.Text = "language code";
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new Point(7, 24);
+            label24.Name = "label24";
+            label24.Size = new Size(36, 15);
+            label24.TabIndex = 3;
+            label24.Text = "Word";
+            // 
+            // txtTopicVocabularyWord
+            // 
+            txtTopicVocabularyWord.Location = new Point(98, 16);
+            txtTopicVocabularyWord.Name = "txtTopicVocabularyWord";
+            txtTopicVocabularyWord.Size = new Size(223, 23);
+            txtTopicVocabularyWord.TabIndex = 2;
+            // 
+            // btnAddLanguageWordDefinition
+            // 
+            btnAddLanguageWordDefinition.Location = new Point(643, 56);
+            btnAddLanguageWordDefinition.Name = "btnAddLanguageWordDefinition";
+            btnAddLanguageWordDefinition.Size = new Size(75, 23);
+            btnAddLanguageWordDefinition.TabIndex = 1;
+            btnAddLanguageWordDefinition.Text = "Add";
+            btnAddLanguageWordDefinition.UseVisualStyleBackColor = true;
+            btnAddLanguageWordDefinition.Click += btnAddLanguageWordDefinition_Click;
+            // 
+            // btnAddTopicVocabulary
+            // 
+            btnAddTopicVocabulary.Location = new Point(643, 255);
+            btnAddTopicVocabulary.Name = "btnAddTopicVocabulary";
+            btnAddTopicVocabulary.Size = new Size(75, 23);
+            btnAddTopicVocabulary.TabIndex = 1;
+            btnAddTopicVocabulary.Text = "Add";
+            btnAddTopicVocabulary.UseVisualStyleBackColor = true;
+            btnAddTopicVocabulary.Click += btnAddTopicVocabulary_Click;
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Location = new Point(331, 24);
+            label25.Name = "label25";
+            label25.Size = new Size(83, 15);
+            label25.TabIndex = 5;
+            label25.Text = "Part of Speech";
+            // 
+            // txtTopicVocabularyDefinition
+            // 
+            txtTopicVocabularyDefinition.Location = new Point(327, 56);
+            txtTopicVocabularyDefinition.Multiline = true;
+            txtTopicVocabularyDefinition.Name = "txtTopicVocabularyDefinition";
+            txtTopicVocabularyDefinition.Size = new Size(311, 64);
+            txtTopicVocabularyDefinition.TabIndex = 2;
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Location = new Point(231, 56);
+            label31.Name = "label31";
+            label31.Size = new Size(90, 15);
+            label31.TabIndex = 3;
+            label31.Text = "Word definition";
+            // 
+            // tabPage8
+            // 
+            tabPage8.Controls.Add(grvPhrasalVerbLanguage);
+            tabPage8.Controls.Add(cbPhrasalVerbLanguageCode);
+            tabPage8.Controls.Add(label33);
+            tabPage8.Controls.Add(txtPhrasalVerbDefinition);
+            tabPage8.Controls.Add(label34);
+            tabPage8.Controls.Add(label26);
+            tabPage8.Controls.Add(txtPhrasalVerb);
+            tabPage8.Controls.Add(grvPhrasalVerbs);
+            tabPage8.Controls.Add(btnAddPhrasaVerbLanguageDefinition);
+            tabPage8.Controls.Add(btnAddPhrasalVerb);
+            tabPage8.Location = new Point(4, 24);
+            tabPage8.Name = "tabPage8";
+            tabPage8.Padding = new Padding(3);
+            tabPage8.Size = new Size(725, 456);
+            tabPage8.TabIndex = 1;
+            tabPage8.Text = "Phrasal Verb";
+            tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // grvPhrasalVerbLanguage
+            // 
+            grvPhrasalVerbLanguage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvPhrasalVerbLanguage.Location = new Point(7, 115);
+            grvPhrasalVerbLanguage.Name = "grvPhrasalVerbLanguage";
+            grvPhrasalVerbLanguage.Size = new Size(712, 123);
+            grvPhrasalVerbLanguage.TabIndex = 30;
+            // 
+            // cbPhrasalVerbLanguageCode
+            // 
+            cbPhrasalVerbLanguageCode.FormattingEnabled = true;
+            cbPhrasalVerbLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbPhrasalVerbLanguageCode.Location = new Point(107, 45);
+            cbPhrasalVerbLanguageCode.Name = "cbPhrasalVerbLanguageCode";
+            cbPhrasalVerbLanguageCode.Size = new Size(121, 23);
+            cbPhrasalVerbLanguageCode.TabIndex = 29;
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Location = new Point(16, 45);
+            label33.Name = "label33";
+            label33.Size = new Size(85, 15);
+            label33.TabIndex = 28;
+            label33.Text = "language code";
+            // 
+            // txtPhrasalVerbDefinition
+            // 
+            txtPhrasalVerbDefinition.Location = new Point(336, 45);
+            txtPhrasalVerbDefinition.Multiline = true;
+            txtPhrasalVerbDefinition.Name = "txtPhrasalVerbDefinition";
+            txtPhrasalVerbDefinition.Size = new Size(298, 64);
+            txtPhrasalVerbDefinition.TabIndex = 26;
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Location = new Point(240, 45);
+            label34.Name = "label34";
+            label34.Size = new Size(59, 15);
+            label34.TabIndex = 27;
+            label34.Text = "Definition";
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new Point(6, 19);
+            label26.Name = "label26";
+            label26.Size = new Size(71, 15);
+            label26.TabIndex = 9;
+            label26.Text = "Phrasal Verb";
+            // 
+            // txtPhrasalVerb
+            // 
+            txtPhrasalVerb.Location = new Point(107, 16);
+            txtPhrasalVerb.Name = "txtPhrasalVerb";
+            txtPhrasalVerb.Size = new Size(200, 23);
+            txtPhrasalVerb.TabIndex = 8;
+            // 
+            // grvPhrasalVerbs
+            // 
+            grvPhrasalVerbs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvPhrasalVerbs.Location = new Point(6, 273);
+            grvPhrasalVerbs.Name = "grvPhrasalVerbs";
+            grvPhrasalVerbs.Size = new Size(713, 177);
+            grvPhrasalVerbs.TabIndex = 6;
+            // 
+            // btnAddPhrasaVerbLanguageDefinition
+            // 
+            btnAddPhrasaVerbLanguageDefinition.Location = new Point(640, 45);
+            btnAddPhrasaVerbLanguageDefinition.Name = "btnAddPhrasaVerbLanguageDefinition";
+            btnAddPhrasaVerbLanguageDefinition.Size = new Size(75, 23);
+            btnAddPhrasaVerbLanguageDefinition.TabIndex = 7;
+            btnAddPhrasaVerbLanguageDefinition.Text = "Add";
+            btnAddPhrasaVerbLanguageDefinition.UseVisualStyleBackColor = true;
+            btnAddPhrasaVerbLanguageDefinition.Click += btnAddPhrasaVerbLanguageDefinition_Click;
+            // 
+            // btnAddPhrasalVerb
+            // 
+            btnAddPhrasalVerb.Location = new Point(644, 244);
+            btnAddPhrasalVerb.Name = "btnAddPhrasalVerb";
+            btnAddPhrasalVerb.Size = new Size(75, 23);
+            btnAddPhrasalVerb.TabIndex = 7;
+            btnAddPhrasalVerb.Text = "Add";
+            btnAddPhrasalVerb.UseVisualStyleBackColor = true;
+            btnAddPhrasalVerb.Click += btnAddPhrasalVerb_Click;
+            // 
+            // tabPage9
+            // 
+            tabPage9.Controls.Add(grvPrepositionalPhrase);
+            tabPage9.Controls.Add(cbPrepositionalPhraseLanguageCode);
+            tabPage9.Controls.Add(label29);
+            tabPage9.Controls.Add(txtPrepositionalPhraseDefinition);
+            tabPage9.Controls.Add(label28);
+            tabPage9.Controls.Add(label27);
+            tabPage9.Controls.Add(txtPrepositionalPhrase);
+            tabPage9.Controls.Add(grvPrepositionalPhrases);
+            tabPage9.Controls.Add(btnAddPrepositialPhrase);
+            tabPage9.Controls.Add(btnAddPrepositionalPhrase);
+            tabPage9.Location = new Point(4, 24);
+            tabPage9.Name = "tabPage9";
+            tabPage9.Size = new Size(725, 456);
+            tabPage9.TabIndex = 2;
+            tabPage9.Text = "Prepositional phrases";
+            tabPage9.UseVisualStyleBackColor = true;
+            // 
+            // cbPrepositionalPhraseLanguageCode
+            // 
+            cbPrepositionalPhraseLanguageCode.FormattingEnabled = true;
+            cbPrepositionalPhraseLanguageCode.Items.AddRange(new object[] { "en", "vi", "de", "es", "fr", "hi", "ja", "ko", "pt", "ru", "zh" });
+            cbPrepositionalPhraseLanguageCode.Location = new Point(123, 49);
+            cbPrepositionalPhraseLanguageCode.Name = "cbPrepositionalPhraseLanguageCode";
+            cbPrepositionalPhraseLanguageCode.Size = new Size(121, 23);
+            cbPrepositionalPhraseLanguageCode.TabIndex = 31;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new Point(32, 49);
+            label29.Name = "label29";
+            label29.Size = new Size(85, 15);
+            label29.TabIndex = 30;
+            label29.Text = "language code";
+            // 
+            // txtPrepositionalPhraseDefinition
+            // 
+            txtPrepositionalPhraseDefinition.Location = new Point(343, 49);
+            txtPrepositionalPhraseDefinition.Multiline = true;
+            txtPrepositionalPhraseDefinition.Name = "txtPrepositionalPhraseDefinition";
+            txtPrepositionalPhraseDefinition.Size = new Size(289, 64);
+            txtPrepositionalPhraseDefinition.TabIndex = 28;
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Location = new Point(247, 49);
+            label28.Name = "label28";
+            label28.Size = new Size(59, 15);
+            label28.TabIndex = 29;
+            label28.Text = "Definition";
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(3, 28);
+            label27.Name = "label27";
+            label27.Size = new Size(114, 15);
+            label27.TabIndex = 13;
+            label27.Text = "Prepositional Phrase";
+            // 
+            // txtPrepositionalPhrase
+            // 
+            txtPrepositionalPhrase.Location = new Point(123, 20);
+            txtPrepositionalPhrase.Name = "txtPrepositionalPhrase";
+            txtPrepositionalPhrase.Size = new Size(509, 23);
+            txtPrepositionalPhrase.TabIndex = 12;
+            // 
+            // grvPrepositionalPhrases
+            // 
+            grvPrepositionalPhrases.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvPrepositionalPhrases.Location = new Point(3, 277);
+            grvPrepositionalPhrases.Name = "grvPrepositionalPhrases";
+            grvPrepositionalPhrases.Size = new Size(719, 164);
+            grvPrepositionalPhrases.TabIndex = 10;
+            // 
+            // btnAddPrepositionalPhrase
+            // 
+            btnAddPrepositionalPhrase.Location = new Point(647, 248);
+            btnAddPrepositionalPhrase.Name = "btnAddPrepositionalPhrase";
+            btnAddPrepositionalPhrase.Size = new Size(75, 23);
+            btnAddPrepositionalPhrase.TabIndex = 11;
+            btnAddPrepositionalPhrase.Text = "Add";
+            btnAddPrepositionalPhrase.UseVisualStyleBackColor = true;
+            btnAddPrepositionalPhrase.Click += btnAddPrepositionalPhrase_Click;
             // 
             // groupBox1
             // 
@@ -809,7 +1202,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(66, 886);
+            label1.Location = new Point(64, 972);
             label1.Name = "label1";
             label1.Size = new Size(32, 15);
             label1.TabIndex = 12;
@@ -819,14 +1212,14 @@
             // 
             cbType.FormattingEnabled = true;
             cbType.Items.AddRange(new object[] { "grammar", "vocabulary", "listening", "speaking", "reading", "writing" });
-            cbType.Location = new Point(149, 878);
+            cbType.Location = new Point(147, 964);
             cbType.Name = "cbType";
             cbType.Size = new Size(209, 23);
             cbType.TabIndex = 21;
             // 
             // txtExercises
             // 
-            txtExercises.Location = new Point(149, 820);
+            txtExercises.Location = new Point(147, 906);
             txtExercises.Name = "txtExercises";
             txtExercises.Size = new Size(670, 23);
             txtExercises.TabIndex = 23;
@@ -834,17 +1227,35 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(66, 828);
+            label5.Location = new Point(64, 914);
             label5.Name = "label5";
             label5.Size = new Size(53, 15);
             label5.TabIndex = 22;
             label5.Text = "Exercises";
             // 
+            // grvPrepositionalPhrase
+            // 
+            grvPrepositionalPhrase.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvPrepositionalPhrase.Location = new Point(13, 119);
+            grvPrepositionalPhrase.Name = "grvPrepositionalPhrase";
+            grvPrepositionalPhrase.Size = new Size(712, 123);
+            grvPrepositionalPhrase.TabIndex = 32;
+            // 
+            // btnAddPrepositialPhrase
+            // 
+            btnAddPrepositialPhrase.Location = new Point(647, 48);
+            btnAddPrepositialPhrase.Name = "btnAddPrepositialPhrase";
+            btnAddPrepositialPhrase.Size = new Size(75, 23);
+            btnAddPrepositialPhrase.TabIndex = 11;
+            btnAddPrepositialPhrase.Text = "Add";
+            btnAddPrepositialPhrase.UseVisualStyleBackColor = true;
+            btnAddPrepositialPhrase.Click += btnAddPrepositionalPhraseDefinition_Click;
+            // 
             // LessonForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(862, 1038);
+            ClientSize = new Size(852, 1041);
             Controls.Add(txtExercises);
             Controls.Add(label5);
             Controls.Add(cbType);
@@ -887,11 +1298,25 @@
             tabPage5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)grvUsage).EndInit();
             ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).EndInit();
+            tabPage6.ResumeLayout(false);
+            tabControl2.ResumeLayout(false);
+            tabPage7.ResumeLayout(false);
+            tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvTopicVocabularyLanguage).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grvTopicVocabulary).EndInit();
+            tabPage8.ResumeLayout(false);
+            tabPage8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbLanguage).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbs).EndInit();
+            tabPage9.ResumeLayout(false);
+            tabPage9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrases).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).EndInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).EndInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrase).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -927,6 +1352,21 @@
         private TabPage tabPage3;
         private TabPage tabPage4;
         private TabPage tabPage5;
+        private TabPage tabPage6;
+        private DataGridView grvTopicVocabulary;
+        private Button btnAddTopicVocabulary;
+        private TextBox txtTopicVocabularyWord;
+        private Label label24;
+        private TextBox txtTopicVocabularyPartOfSpeech;
+        private Label label25;
+        private DataGridView grvPhrasalVerbs;
+        private Button btnAddPhrasalVerb;
+        private TextBox txtPhrasalVerb;
+        private Label label26;
+        private DataGridView grvPrepositionalPhrases;
+        private Button btnAddPrepositionalPhrase;
+        private TextBox txtPrepositionalPhrase;
+        private Label label27;
         private TextBox txtExercises;
         private Label label5;
         private DataGridView dataGridView1;
@@ -973,5 +1413,28 @@
         private Button btnSentenceAddAndNext;
         private Button btnHintAddAndNext;
         private Button btnUsageAddAndNext;
+        private TextBox txtTopicVocabularyDefinition;
+        private Label label31;
+        private TabControl tabControl2;
+        private TabPage tabPage7;
+        private ComboBox cbWordLanguageCode;
+        private Label label32;
+        private TabPage tabPage8;
+        private TabPage tabPage9;
+        private DataGridView grvTopicVocabularyLanguage;
+        private Button btnAddLanguageWordDefinition;
+        private ComboBox cbTopicVocabularyPartOfSpeech;
+        private ComboBox cbPhrasalVerbLanguageCode;
+        private Label label33;
+        private TextBox txtPhrasalVerbDefinition;
+        private Label label34;
+        private DataGridView grvPhrasalVerbLanguage;
+        private Button btnAddPhrasaVerbLanguageDefinition;
+        private TextBox txtPrepositionalPhraseDefinition;
+        private Label label28;
+        private ComboBox cbPrepositionalPhraseLanguageCode;
+        private Label label29;
+        private DataGridView grvPrepositionalPhrase;
+        private Button btnAddPrepositialPhrase;
     }
 }

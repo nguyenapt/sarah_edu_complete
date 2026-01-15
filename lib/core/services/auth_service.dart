@@ -32,6 +32,34 @@ class AuthService {
   // Auth state stream
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
+  // Ensure user document exists for current auth user
+  Future<void> ensureUserDocument(User user) async {
+    final userDoc = await FirebaseFirestore.instance
+        .collection(FirebaseConstants.usersCollection)
+        .doc(user.uid)
+        .get();
+
+    if (!userDoc.exists) {
+      final displayName =
+          user.displayName ?? (user.email?.split('@').first ?? '');
+      final placementResult = await PlacementStorageService.loadPlacementTestResult();
+      final initialLevel = placementResult?.assessedLevel.toString();
+
+      await _createUserDocument(
+        user,
+        displayName,
+        initialLevel: initialLevel,
+      );
+    } else {
+      await _updateUserProfile(
+        user.uid,
+        user.displayName,
+        user.photoURL,
+      );
+      await _updateLastActiveDate(user.uid);
+    }
+  }
+
   // Sign in with email and password
   Future<UserCredential> signInWithEmailAndPassword(
     String email,

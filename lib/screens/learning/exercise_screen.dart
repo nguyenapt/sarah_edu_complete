@@ -43,6 +43,13 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   String? _activeWord; // Track word đang được focus (format: "across_1" hoặc "down_2")
   Map<String, FocusNode> _crosswordFocusNodes = {}; // Map<"row_col", FocusNode>
   
+  // Cho matching exercise
+  Map<int, int> _matchingPairs = {}; // Map<leftIndex, rightIndex> - các cặp đã match (cho exercise chính)
+  int? _selectedLeftIndex; // Left item đang được chọn (cho exercise chính)
+  // Cho matching trong group questions
+  Map<int, Map<int, int>> _groupMatchingPairs = {}; // Map<groupIndex, Map<leftIndex, rightIndex>>
+  Map<int, int?> _groupSelectedLeftIndex = {}; // Map<groupIndex, selectedLeftIndex>
+  
   // Cho groupQuestions - chỉ hiển thị 1 question tại một thời điểm
   int _currentGroupQuestionIndex = 0;
   Map<int, bool> _questionResults = {}; // Map<questionIndex, isCorrect> - lưu kết quả từng question
@@ -69,83 +76,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Question - chỉ hiển thị cho các loại không phải button_single_choice và fill_blank
-            // Kiểm tra cả standalone và groupQuestions
-            if (_shouldShowExerciseInfo())
-            Container(
-                width: double.infinity,
-                margin: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-                      : Theme.of(context).cardTheme.color ?? Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title and Image Section
-                    _buildTitleAndImageSection(),
-                    
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Chip(
-                          label: Text(
-                            _getExerciseTypeLabel(widget.exercise.type),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          backgroundColor: AppTheme.primaryColor,
-                        ),
-                        if (widget.exercise.timeLimit != null)
-                          Row(
-                            children: [
-                              Icon(Icons.timer, size: 16),
-                              const SizedBox(width: 4),
-                              Text('${widget.exercise.timeLimit}s'),
-                            ],
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      widget.exercise.question,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
-                          ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 16, color: Colors.amber),
-                        const SizedBox(width: 4),
-                        Text('${widget.exercise.points} ${AppLocalizations.of(context)!.points}'),
-                        const SizedBox(width: 16),
-                        Chip(
-                          label: Text(
-                            _getDifficultyLabel(widget.exercise.difficulty),
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            if (_shouldShowExerciseInfo())
-            const SizedBox(height: 24),
-
             // Answer Section based on type
             _buildAnswerSection(),
 
@@ -363,25 +293,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     );
   }
 
-  /// Kiểm tra xem có nên hiển thị section thông tin exercise không
-  /// Bỏ section này cho button_single_choice và fill_blank
-  /// Với groupQuestions, không hiển thị section này vì mỗi question sẽ có Card riêng
-  bool _shouldShowExerciseInfo() {
-    // Không hiển thị Card thông tin cho sequentialQuestions
-    if (widget.exercise.type == ExerciseType.sequentialQuestions) {
-      return false;
-    }
-    
-    // Nếu có groupQuestions, không hiển thị Card thông tin exercise
-    if (widget.exercise.groupQuestions != null && widget.exercise.groupQuestions!.isNotEmpty) {
-      return false;
-    }
-    
-    // Nếu không có groupQuestions, kiểm tra type của exercise
-    return widget.exercise.type != ExerciseType.buttonSingleChoice && 
-           widget.exercise.type != ExerciseType.fillBlank;
-  }
-
   Widget _buildAnswerSection() {
     // Nếu là sequentialQuestions, hiển thị sequential questions
     if (widget.exercise.type == ExerciseType.sequentialQuestions) {
@@ -406,6 +317,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         return _buildButtonSingleChoice();
       case ExerciseType.crossword:
         return _buildCrossword();
+      case ExerciseType.wordMatching:
+        return _buildWordMatching();
+      case ExerciseType.definitionMatching:
+        return _buildDefinitionMatching();
+      case ExerciseType.wordFormationExercise:
+        return _buildWordFormation();
+      case ExerciseType.wordPatternExercise:
+        return _buildWordPattern();
       case ExerciseType.listening:
       case ExerciseType.speaking:
       default:
@@ -436,7 +355,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         else if (currentQuestion.type == ExerciseType.singleChoice)
           _buildSingleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex)
         else if (currentQuestion.type == ExerciseType.multipleChoice)
-          _buildMultipleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex),
+          _buildMultipleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex)
+        else if (currentQuestion.type == ExerciseType.matching)
+          _buildMatchingForGroup(currentQuestion, _currentGroupQuestionIndex),
         
         const SizedBox(height: 24),
         
@@ -740,6 +661,34 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
       return userAnswers.every((answer) => content.correctAnswers.contains(answer)) &&
              content.correctAnswers.every((answer) => userAnswers.contains(answer));
+    } else if (groupQuestion.type == ExerciseType.matching) {
+      final content = groupQuestion.content as MatchingContent;
+      final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+      final matchingPairs = _groupMatchingPairs[questionIndex] ?? {};
+      
+      // Kiểm tra xem tất cả left items đã được match chưa
+      if (matchingPairs.length != content.leftItems.length) {
+        return false;
+      }
+      
+      // Kiểm tra từng pair
+      for (final correctPair in content.correctPairs) {
+        final correctLeftIndex = content.leftItems.indexOf(correctPair.left);
+        if (correctLeftIndex == -1) continue;
+        
+        final userRightIndex = matchingPairs[correctLeftIndex];
+        if (userRightIndex == null) return false;
+        
+        // Lấy right value theo language code
+        final correctRightValue = correctPair.getRight(languageCode);
+        final userRightValue = content.getRightItem(userRightIndex, languageCode);
+        
+        if (correctRightValue != userRightValue) {
+          return false;
+        }
+      }
+      
+      return true;
     } else if (groupQuestion.type == ExerciseType.fillBlank) {
       // Lấy correctAnswers từ content
       Map<int, String> correctAnswersMap = {};
@@ -829,6 +778,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     } else if (currentQuestion.type == ExerciseType.multipleChoice) {
       final selectedAnswers = _groupQuestionAnswers[_currentGroupQuestionIndex] as List<String>?;
       return selectedAnswers != null && selectedAnswers.isNotEmpty;
+    } else if (currentQuestion.type == ExerciseType.matching) {
+      final content = currentQuestion.content as MatchingContent;
+      final matchingPairs = _groupMatchingPairs[_currentGroupQuestionIndex] ?? {};
+      // Kiểm tra xem tất cả left items đã được match chưa
+      return matchingPairs.length == content.leftItems.length;
     }
     
     return false;
@@ -1586,6 +1540,13 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           if (selectedAnswers == null || selectedAnswers.isEmpty) {
             return false;
           }
+        } else if (groupQuestion.type == ExerciseType.matching) {
+          final content = groupQuestion.content as MatchingContent;
+          final matchingPairs = _groupMatchingPairs[i] ?? {};
+          // Kiểm tra xem tất cả left items đã được match chưa
+          if (matchingPairs.length != content.leftItems.length) {
+            return false;
+          }
         }
       }
       return true;
@@ -1600,6 +1561,13 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         }
       }
       return true;
+    }
+    
+    // Nếu là matching
+    if (widget.exercise.type == ExerciseType.matching) {
+      final content = widget.exercise.content as MatchingContent;
+      // Tất cả left items phải được match
+      return _matchingPairs.length == content.leftItems.length;
     }
     
     // Nếu là fill_blank
@@ -2266,9 +2234,568 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   }
 
   Widget _buildMatching() {
-    // Simplified version - in real app, you'd need drag-and-drop UI
-    return const Center(
-      child: Text('Matching exercise - Coming soon'),
+    final content = widget.exercise.content as MatchingContent;
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    
+    // Tính toán màu sắc cho từng pair sau khi submit
+    Color? getLeftItemColor(int leftIndex) {
+      if (!_isSubmitted) {
+        final isMatched = _matchingPairs.containsKey(leftIndex);
+        final isSelected = _selectedLeftIndex == leftIndex;
+        if (isMatched) return Colors.green[100];
+        if (isSelected) return AppTheme.primaryColor.withOpacity(0.3);
+        return Colors.grey[200];
+      }
+      
+      // Sau khi submit, kiểm tra xem pair có đúng không
+      final userRightIndex = _matchingPairs[leftIndex];
+      if (userRightIndex == null) return Colors.red[100];
+      
+      // Tìm correct pair
+      for (final correctPair in content.correctPairs) {
+        final correctLeftIndex = content.leftItems.indexOf(correctPair.left);
+        if (correctLeftIndex != leftIndex) continue;
+        
+        // Lấy right value theo language code
+        final correctRightValue = correctPair.getRight(languageCode);
+        
+        // Tìm index của right item
+        int? correctRightIndex;
+        for (int i = 0; i < content.rightItems.length; i++) {
+          final rightItem = content.getRightItem(i, languageCode);
+          if (rightItem == correctRightValue) {
+            correctRightIndex = i;
+            break;
+          }
+        }
+        
+        if (correctRightIndex != null && correctRightIndex == userRightIndex) {
+          return Colors.green[100];
+        }
+      }
+      return Colors.red[100];
+    }
+    
+    Color? getRightItemColor(int rightIndex) {
+      if (!_isSubmitted) {
+        final isMatched = _matchingPairs.containsValue(rightIndex);
+        final isSelectedForCurrentLeft = _selectedLeftIndex != null && 
+                                          _matchingPairs[_selectedLeftIndex] == rightIndex;
+        if (isMatched) return Colors.green[100];
+        if (isSelectedForCurrentLeft) return AppTheme.primaryColor.withOpacity(0.3);
+        return Colors.grey[200];
+      }
+      
+      // Sau khi submit, kiểm tra xem pair có đúng không
+      final leftIndex = _matchingPairs.entries
+          .where((e) => e.value == rightIndex)
+          .map((e) => e.key)
+          .firstOrNull;
+      if (leftIndex == null) return Colors.grey[200];
+      
+      // Tìm correct pair
+      for (final correctPair in content.correctPairs) {
+        final correctLeftIndex = content.leftItems.indexOf(correctPair.left);
+        if (correctLeftIndex != leftIndex) continue;
+        
+        // Lấy right value theo language code
+        final correctRightValue = correctPair.getRight(languageCode);
+        
+        // Tìm index của right item
+        int? correctRightIndex;
+        for (int i = 0; i < content.rightItems.length; i++) {
+          final rightItem = content.getRightItem(i, languageCode);
+          if (rightItem == correctRightValue) {
+            correctRightIndex = i;
+            break;
+          }
+        }
+        
+        if (correctRightIndex != null && correctRightIndex == rightIndex) {
+          return Colors.green[100];
+        }
+      }
+      return Colors.red[100];
+    }
+    
+    IconData? getLeftItemIcon(int leftIndex) {
+      if (!_isSubmitted) {
+        if (_matchingPairs.containsKey(leftIndex)) {
+          return Icons.check_circle;
+        }
+        return null;
+      }
+      
+      final color = getLeftItemColor(leftIndex);
+      if (color == Colors.green[100]) return Icons.check_circle;
+      if (color == Colors.red[100]) return Icons.cancel;
+      return null;
+    }
+    
+    IconData? getRightItemIcon(int rightIndex) {
+      if (!_isSubmitted) {
+        if (_matchingPairs.containsValue(rightIndex)) {
+          return Icons.check_circle;
+        }
+        return null;
+      }
+      
+      final color = getRightItemColor(rightIndex);
+      if (color == Colors.green[100]) return Icons.check_circle;
+      if (color == Colors.red[100]) return Icons.cancel;
+      return null;
+    }
+    
+    Color? getLeftItemIconColor(int leftIndex) {
+      if (!_isSubmitted) return Colors.green;
+      final color = getLeftItemColor(leftIndex);
+      if (color == Colors.green[100]) return Colors.green;
+      if (color == Colors.red[100]) return Colors.red;
+      return null;
+    }
+    
+    Color? getRightItemIconColor(int rightIndex) {
+      if (!_isSubmitted) return Colors.green;
+      final color = getRightItemColor(rightIndex);
+      if (color == Colors.green[100]) return Colors.green;
+      if (color == Colors.red[100]) return Colors.red;
+      return null;
+    }
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.matchItems,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left items column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...content.leftItems.asMap().entries.map((entry) {
+                        final leftIndex = entry.key;
+                        final leftItem = entry.value;
+                        final isMatched = _matchingPairs.containsKey(leftIndex);
+                        final isSelected = _selectedLeftIndex == leftIndex;
+                        final itemColor = getLeftItemColor(leftIndex);
+                        final icon = getLeftItemIcon(leftIndex);
+                        final iconColor = getLeftItemIconColor(leftIndex);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: _isSubmitted || isMatched ? null : () {
+                              setState(() {
+                                if (_selectedLeftIndex == leftIndex) {
+                                  // Deselect nếu đã chọn
+                                  _selectedLeftIndex = null;
+                                } else {
+                                  _selectedLeftIndex = leftIndex;
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: itemColor ?? Colors.grey[200],
+                              foregroundColor: isSelected && !_isSubmitted
+                                  ? AppTheme.primaryColor
+                                  : Colors.black87,
+                              minimumSize: const Size(double.infinity, 50),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    leftItem,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: isSelected && !_isSubmitted ? FontWeight.bold : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                if (icon != null)
+                                  Icon(icon, color: iconColor, size: 20),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Right items column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...content.rightItems.asMap().entries.map((entry) {
+                        final rightIndex = entry.key;
+                        final rightItem = content.getRightItem(rightIndex, languageCode);
+                        final isMatched = _matchingPairs.containsValue(rightIndex);
+                        final isSelectedForCurrentLeft = _selectedLeftIndex != null && 
+                                                          _matchingPairs[_selectedLeftIndex] == rightIndex;
+                        final itemColor = getRightItemColor(rightIndex);
+                        final icon = getRightItemIcon(rightIndex);
+                        final iconColor = getRightItemIconColor(rightIndex);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: _isSubmitted || isMatched ? null : () {
+                              if (_selectedLeftIndex != null) {
+                                setState(() {
+                                  // Xóa match cũ nếu right item đã được match với left item khác
+                                  _matchingPairs.removeWhere((key, value) => value == rightIndex);
+                                  // Thêm match mới
+                                  _matchingPairs[_selectedLeftIndex!] = rightIndex;
+                                  _selectedLeftIndex = null;
+                                });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: itemColor ?? Colors.grey[200],
+                              foregroundColor: isSelectedForCurrentLeft && !_isSubmitted
+                                  ? AppTheme.primaryColor
+                                  : Colors.black87,
+                              minimumSize: const Size(double.infinity, 50),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    rightItem,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: isSelectedForCurrentLeft && !_isSubmitted ? FontWeight.bold : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                if (icon != null)
+                                  Icon(icon, color: iconColor, size: 20),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (_selectedLeftIndex != null && !_isSubmitted)
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'Selected: ${content.leftItems[_selectedLeftIndex!]} - Now select a right item',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppTheme.primaryColor,
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMatchingForGroup(GroupQuestion groupQuestion, int groupIndex) {
+    final content = groupQuestion.content as MatchingContent;
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    
+    // Lấy matching pairs và selected left index cho group này
+    final matchingPairs = _groupMatchingPairs[groupIndex] ?? {};
+    final selectedLeftIndex = _groupSelectedLeftIndex[groupIndex];
+    final isSubmitted = _questionResults.containsKey(groupIndex);
+    
+    // Tính toán màu sắc cho từng pair sau khi submit
+    Color? getLeftItemColor(int leftIndex) {
+      if (!isSubmitted) {
+        final isMatched = matchingPairs.containsKey(leftIndex);
+        final isSelected = selectedLeftIndex == leftIndex;
+        if (isMatched) return Colors.green[100];
+        if (isSelected) return AppTheme.primaryColor.withOpacity(0.3);
+        return Colors.grey[200];
+      }
+      
+      // Sau khi submit, kiểm tra xem pair có đúng không
+      final userRightIndex = matchingPairs[leftIndex];
+      if (userRightIndex == null) return Colors.red[100];
+      
+      // Tìm correct pair
+      for (final correctPair in content.correctPairs) {
+        final correctLeftIndex = content.leftItems.indexOf(correctPair.left);
+        if (correctLeftIndex != leftIndex) continue;
+        
+        // Lấy right value theo language code
+        final correctRightValue = correctPair.getRight(languageCode);
+        
+        // Tìm index của right item
+        int? correctRightIndex;
+        for (int i = 0; i < content.rightItems.length; i++) {
+          final rightItem = content.getRightItem(i, languageCode);
+          if (rightItem == correctRightValue) {
+            correctRightIndex = i;
+            break;
+          }
+        }
+        
+        if (correctRightIndex != null && correctRightIndex == userRightIndex) {
+          return Colors.green[100];
+        }
+      }
+      return Colors.red[100];
+    }
+    
+    Color? getRightItemColor(int rightIndex) {
+      if (!isSubmitted) {
+        final isMatched = matchingPairs.containsValue(rightIndex);
+        final isSelectedForCurrentLeft = selectedLeftIndex != null && 
+                                        matchingPairs[selectedLeftIndex] == rightIndex;
+        if (isMatched) return Colors.green[100];
+        if (isSelectedForCurrentLeft) return AppTheme.primaryColor.withOpacity(0.3);
+        return Colors.grey[200];
+      }
+      
+      // Sau khi submit, kiểm tra xem pair có đúng không
+      final leftIndex = matchingPairs.entries
+          .where((e) => e.value == rightIndex)
+          .map((e) => e.key)
+          .firstOrNull;
+      if (leftIndex == null) return Colors.grey[200];
+      
+      // Tìm correct pair
+      for (final correctPair in content.correctPairs) {
+        final correctLeftIndex = content.leftItems.indexOf(correctPair.left);
+        if (correctLeftIndex != leftIndex) continue;
+        
+        // Lấy right value theo language code
+        final correctRightValue = correctPair.getRight(languageCode);
+        
+        // Tìm index của right item
+        int? correctRightIndex;
+        for (int i = 0; i < content.rightItems.length; i++) {
+          final rightItem = content.getRightItem(i, languageCode);
+          if (rightItem == correctRightValue) {
+            correctRightIndex = i;
+            break;
+          }
+        }
+        
+        if (correctRightIndex != null && correctRightIndex == rightIndex) {
+          return Colors.green[100];
+        }
+      }
+      return Colors.red[100];
+    }
+    
+    IconData? getLeftItemIcon(int leftIndex) {
+      if (!isSubmitted) {
+        if (matchingPairs.containsKey(leftIndex)) {
+          return Icons.check_circle;
+        }
+        return null;
+      }
+      
+      final color = getLeftItemColor(leftIndex);
+      if (color == Colors.green[100]) return Icons.check_circle;
+      if (color == Colors.red[100]) return Icons.cancel;
+      return null;
+    }
+    
+    IconData? getRightItemIcon(int rightIndex) {
+      if (!isSubmitted) {
+        if (matchingPairs.containsValue(rightIndex)) {
+          return Icons.check_circle;
+        }
+        return null;
+      }
+      
+      final color = getRightItemColor(rightIndex);
+      if (color == Colors.green[100]) return Icons.check_circle;
+      if (color == Colors.red[100]) return Icons.cancel;
+      return null;
+    }
+    
+    Color? getLeftItemIconColor(int leftIndex) {
+      if (!isSubmitted) return Colors.green;
+      final color = getLeftItemColor(leftIndex);
+      if (color == Colors.green[100]) return Colors.green;
+      if (color == Colors.red[100]) return Colors.red;
+      return null;
+    }
+    
+    Color? getRightItemIconColor(int rightIndex) {
+      if (!isSubmitted) return Colors.green;
+      final color = getRightItemColor(rightIndex);
+      if (color == Colors.green[100]) return Colors.green;
+      if (color == Colors.red[100]) return Colors.red;
+      return null;
+    }
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.matchItems,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left items column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...content.leftItems.asMap().entries.map((entry) {
+                        final leftIndex = entry.key;
+                        final leftItem = entry.value;
+                        final isMatched = matchingPairs.containsKey(leftIndex);
+                        final isSelected = selectedLeftIndex == leftIndex;
+                        final itemColor = getLeftItemColor(leftIndex);
+                        final icon = getLeftItemIcon(leftIndex);
+                        final iconColor = getLeftItemIconColor(leftIndex);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: isSubmitted || isMatched ? null : () {
+                              setState(() {
+                                if (selectedLeftIndex == leftIndex) {
+                                  // Deselect nếu đã chọn
+                                  _groupSelectedLeftIndex[groupIndex] = null;
+                                } else {
+                                  _groupSelectedLeftIndex[groupIndex] = leftIndex;
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: itemColor ?? Colors.grey[200],
+                              foregroundColor: isSelected && !isSubmitted
+                                  ? AppTheme.primaryColor
+                                  : Colors.black87,
+                              minimumSize: const Size(double.infinity, 50),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    leftItem,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: isSelected && !isSubmitted ? FontWeight.bold : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                if (icon != null)
+                                  Icon(icon, color: iconColor, size: 20),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Right items column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...content.rightItems.asMap().entries.map((entry) {
+                        final rightIndex = entry.key;
+                        final rightItem = content.getRightItem(rightIndex, languageCode);
+                        final isMatched = matchingPairs.containsValue(rightIndex);
+                        final isSelectedForCurrentLeft = selectedLeftIndex != null && 
+                                                          matchingPairs[selectedLeftIndex] == rightIndex;
+                        final itemColor = getRightItemColor(rightIndex);
+                        final icon = getRightItemIcon(rightIndex);
+                        final iconColor = getRightItemIconColor(rightIndex);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: isSubmitted || isMatched ? null : () {
+                              if (selectedLeftIndex != null) {
+                                setState(() {
+                                  // Đảm bảo _groupMatchingPairs[groupIndex] tồn tại
+                                  if (!_groupMatchingPairs.containsKey(groupIndex)) {
+                                    _groupMatchingPairs[groupIndex] = {};
+                                  }
+                                  
+                                  // Xóa match cũ nếu right item đã được match với left item khác
+                                  _groupMatchingPairs[groupIndex]!.removeWhere((key, value) => value == rightIndex);
+                                  // Thêm match mới
+                                  _groupMatchingPairs[groupIndex]![selectedLeftIndex!] = rightIndex;
+                                  _groupSelectedLeftIndex[groupIndex] = null;
+                                });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: itemColor ?? Colors.grey[200],
+                              foregroundColor: isSelectedForCurrentLeft && !isSubmitted
+                                  ? AppTheme.primaryColor
+                                  : Colors.black87,
+                              minimumSize: const Size(double.infinity, 50),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    rightItem,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: isSelectedForCurrentLeft && !isSubmitted ? FontWeight.bold : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                if (icon != null)
+                                  Icon(icon, color: iconColor, size: 20),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (selectedLeftIndex != null && !isSubmitted)
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'Selected: ${content.leftItems[selectedLeftIndex!]} - Now select a right item',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppTheme.primaryColor,
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -2639,6 +3166,366 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     );
   }
 
+  Widget _buildWordMatching() {
+    final content = widget.exercise.content as WordMatchingContent;
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    
+    // State để lưu các cặp đã match
+    Map<int, int> matchedPairs = {}; // wordIndex -> definitionIndex
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Match each word with its definition',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Words column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Words',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...content.pairs.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final pair = entry.value;
+                        final isMatched = matchedPairs.containsKey(index);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: isMatched ? null : () {
+                              // TODO: Implement matching logic
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isMatched ? Colors.green[100] : Colors.grey[200],
+                              foregroundColor: Colors.black87,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(pair.word),
+                                if (pair.audioUrl != null) ...[
+                                  const Spacer(),
+                                  IconButton(
+                                    icon: const Icon(Icons.volume_up, size: 16),
+                                    onPressed: () {
+                                      // TODO: Implement audio playback
+                                    },
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Definitions column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Definitions',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...(content.shuffleOptions 
+                          ? (content.pairs.map((p) => p.getDefinition(languageCode)).toList()..shuffle())
+                          : content.pairs.map((p) => p.getDefinition(languageCode)).toList()
+                      ).asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final definition = entry.value;
+                        final isMatched = matchedPairs.containsValue(index);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: isMatched ? null : () {
+                              // TODO: Implement matching logic
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isMatched ? Colors.green[100] : Colors.grey[200],
+                              foregroundColor: Colors.black87,
+                            ),
+                            child: Text(definition),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDefinitionMatching() {
+    final content = widget.exercise.content as DefinitionMatchingContent;
+    final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Match each definition with its word',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Definitions column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Definitions',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...content.pairs.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final pair = entry.value;
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    pair.getDefinition(languageCode),
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  if (pair.example != null) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Example: ${pair.example}',
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Words column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Words',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...(content.pairs.map((p) => p.word).toList()..shuffle()).asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final word = entry.value;
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // TODO: Implement matching logic
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[200],
+                              foregroundColor: Colors.black87,
+                            ),
+                            child: Text(word),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWordFormation() {
+    final content = widget.exercise.content as WordFormationContent;
+    
+    String? selectedForm;
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Complete the sentence with the correct form of "${content.baseWord}"',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              content.sentence,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: selectedForm,
+              decoration: InputDecoration(
+                labelText: 'Select the correct form',
+                border: OutlineInputBorder(),
+              ),
+              items: content.options.map((option) {
+                return DropdownMenuItem(
+                  value: option,
+                  child: Text(option),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedForm = value;
+                });
+              },
+            ),
+            if (content.explanation != null) ...[
+              const SizedBox(height: 16),
+              Card(
+                color: Colors.blue[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    content.explanation!,
+                    style: TextStyle(color: Colors.blue[900]),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWordPattern() {
+    final content = widget.exercise.content as WordPatternContent;
+    
+    String? selectedPreposition;
+    
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Choose the correct preposition for the pattern "${content.pattern}"',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              content.sentence,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: content.options.map((option) {
+                final isSelected = selectedPreposition == option;
+                return ChoiceChip(
+                  label: Text(option),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedPreposition = selected ? option : null;
+                    });
+                  },
+                  selectedColor: AppTheme.primaryColor.withOpacity(0.3),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              color: Colors.grey[100],
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Pattern: ${content.pattern}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Word: ${content.word}',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handleSubmit() {
     bool isCorrect = false;
 
@@ -2735,6 +3622,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           final userAnswers = (_groupQuestionAnswers[lastQuestionIndex] as List<String>?) ?? [];
           print('    User answers: $userAnswers');
           print('    Correct answers: ${content.correctAnswers}');
+        } else if (lastQuestion.type == ExerciseType.matching) {
+          final content = lastQuestion.content as MatchingContent;
+          final matchingPairs = _groupMatchingPairs[lastQuestionIndex] ?? {};
+          print('    Matching pairs: $matchingPairs');
+          print('    Left items: ${content.leftItems}');
+          print('    Correct pairs: ${content.correctPairs.length}');
         }
         
         final lastQuestionCorrect = _checkQuestionAnswer(lastQuestion, lastQuestionIndex);
@@ -2836,6 +3729,56 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                 break;
               }
             }
+          }
+          break;
+        case ExerciseType.matching:
+          final content = widget.exercise.content as MatchingContent;
+          final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+          print('User matching pairs: $_matchingPairs');
+          print('Correct pairs: ${content.correctPairs}');
+          
+          // Kiểm tra số lượng pairs
+          if (_matchingPairs.length != content.correctPairs.length) {
+            isCorrect = false;
+            break;
+          }
+          
+          // Kiểm tra từng pair
+          isCorrect = true;
+          for (final correctPair in content.correctPairs) {
+            // Tìm leftIndex từ correctPair
+            final leftIndex = content.leftItems.indexOf(correctPair.left);
+            if (leftIndex == -1) {
+              isCorrect = false;
+              break;
+            }
+            
+            // Lấy right value theo language code từ correctPair
+            final correctRightValue = correctPair.getRight(languageCode);
+            
+            // Tìm index của right item trong rightItems
+            int? correctRightIndex;
+            for (int i = 0; i < content.rightItems.length; i++) {
+              final rightItem = content.getRightItem(i, languageCode);
+              if (rightItem == correctRightValue) {
+                correctRightIndex = i;
+                break;
+              }
+            }
+            
+            if (correctRightIndex == null) {
+              isCorrect = false;
+              break;
+            }
+            
+            // Kiểm tra xem user có match đúng không
+            final userRightIndex = _matchingPairs[leftIndex];
+            if (userRightIndex != correctRightIndex) {
+              isCorrect = false;
+              print('  Mismatch: left[$leftIndex]="${correctPair.left}" should match right[$correctRightIndex]="$correctRightValue", but user matched with right[$userRightIndex]');
+              break;
+            }
+            print('  Match: left[$leftIndex]="${correctPair.left}" -> right[$correctRightIndex]="$correctRightValue" ✓');
           }
           break;
         case ExerciseType.crossword:
@@ -3085,6 +4028,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         return localizations.crossword;
       case ExerciseType.sequentialQuestions:
         return 'Sequential Questions';
+      case ExerciseType.wordMatching:
+        return 'Word Matching';
+      case ExerciseType.definitionMatching:
+        return 'Definition Matching';
+      case ExerciseType.wordFormationExercise:
+        return 'Word Formation';
+      case ExerciseType.wordPatternExercise:
+        return 'Word Pattern';
     }
   }
 

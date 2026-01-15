@@ -10,7 +10,11 @@ enum ExerciseType {
   speaking,
   buttonSingleChoice,
   crossword,
-  sequentialQuestions;
+  sequentialQuestions,
+  wordMatching,
+  definitionMatching,
+  wordFormationExercise,
+  wordPatternExercise;
 
   static ExerciseType fromString(String value) {
     // Normalize value: convert snake_case to camelCase
@@ -220,7 +224,7 @@ class BlankItem {
 // Content cho Matching
 class MatchingContent {
   final List<String> leftItems;
-  final List<String> rightItems;
+  final List<dynamic> rightItems; // Có thể là List<String> hoặc List<Map<String, String>>
   final List<MatchingPair> correctPairs;
 
   MatchingContent({
@@ -228,6 +232,19 @@ class MatchingContent {
     required this.rightItems,
     required this.correctPairs,
   });
+
+  /// Lấy right item theo language code
+  String getRightItem(int index, String languageCode) {
+    if (index < 0 || index >= rightItems.length) return '';
+    final item = rightItems[index];
+    if (item is Map) {
+      final itemMap = item as Map<String, dynamic>;
+      return itemMap[languageCode]?.toString() ?? 
+             itemMap['en']?.toString() ?? 
+             (itemMap.values.isNotEmpty ? itemMap.values.first.toString() : '');
+    }
+    return item.toString();
+  }
 
   factory MatchingContent.fromMap(Map<String, dynamic> map) {
     // LeftItems - luôn là List<String> (tiếng Anh)
@@ -244,17 +261,17 @@ class MatchingContent {
       }).toList();
     }
 
-    // RightItems - luôn là List<String> (tiếng Anh)
-    List<String> rightItemsList = [];
+    // RightItems - hỗ trợ multi-language (có thể là List<String> hoặc List<Map<String, String>>)
+    List<dynamic> rightItemsList = [];
     if (map['rightItems'] != null) {
       final rightItems = map['rightItems'] as List<dynamic>;
       rightItemsList = rightItems.map((item) {
         if (item is Map) {
-          final itemMap = item as Map<String, dynamic>;
-          return itemMap['en']?.toString() ?? 
-                 itemMap.values.first.toString();
+          // Giữ nguyên Map để hỗ trợ multi-language
+          return item as Map<String, dynamic>;
         }
-        return item.toString();
+        // Nếu là String, giữ nguyên
+        return item;
       }).toList();
     }
 
@@ -279,15 +296,26 @@ class MatchingContent {
 
 class MatchingPair {
   final String left;
-  final String right;
+  final dynamic right; // Có thể là String hoặc Map<String, String> cho multi-language
 
   MatchingPair({
     required this.left,
     required this.right,
   });
 
+  /// Lấy right value theo language code
+  String getRight(String languageCode) {
+    if (right is Map) {
+      final rightMap = right as Map<String, dynamic>;
+      return rightMap[languageCode]?.toString() ?? 
+             rightMap['en']?.toString() ?? 
+             (rightMap.values.isNotEmpty ? rightMap.values.first.toString() : '');
+    }
+    return right.toString();
+  }
+
   factory MatchingPair.fromMap(Map<String, dynamic> map) {
-    // Left và Right - luôn là String (tiếng Anh)
+    // Left - luôn là String (tiếng Anh)
     String leftValue = '';
     if (map['left'] != null) {
       if (map['left'] is Map) {
@@ -299,15 +327,18 @@ class MatchingPair {
       }
     }
 
-    String rightValue = '';
+    // Right - hỗ trợ multi-language (có thể là String hoặc Map<String, String>)
+    dynamic rightValue;
     if (map['right'] != null) {
       if (map['right'] is Map) {
-        final rightMap = map['right'] as Map<String, dynamic>;
-        rightValue = rightMap['en']?.toString() ?? 
-                   rightMap.values.first.toString();
+        // Giữ nguyên Map để hỗ trợ multi-language
+        rightValue = map['right'] as Map<String, dynamic>;
       } else {
+        // Nếu là String, giữ nguyên
         rightValue = map['right'].toString();
       }
+    } else {
+      rightValue = '';
     }
 
     return MatchingPair(
@@ -721,6 +752,294 @@ class SpeakingContent {
   }
 }
 
+// Vocabulary Exercise Content Classes
+class WordMatchPair {
+  final String word;
+  final Map<String, dynamic>? definition; // Multi-language: Map<String, String>
+  final String? audioUrl;
+
+  WordMatchPair({
+    required this.word,
+    this.definition,
+    this.audioUrl,
+  });
+
+  /// Get definition theo language code
+  String getDefinition(String languageCode) {
+    if (definition == null) return '';
+    if (definition is Map<String, dynamic>) {
+      final defMap = definition as Map<String, dynamic>;
+      if (languageCode != null && defMap.containsKey(languageCode)) {
+        return defMap[languageCode]?.toString() ?? '';
+      }
+      return defMap['en']?.toString() ?? 
+             (defMap.values.isNotEmpty ? defMap.values.first.toString() : '');
+    }
+    return definition.toString();
+  }
+
+  factory WordMatchPair.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic>? definitionData;
+    if (map['definition'] != null) {
+      if (map['definition'] is Map) {
+        definitionData = map['definition'] as Map<String, dynamic>;
+      } else {
+        definitionData = {'en': map['definition'].toString()};
+      }
+    }
+
+    return WordMatchPair(
+      word: map['word']?.toString() ?? '',
+      definition: definitionData,
+      audioUrl: map['audioUrl'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'word': word,
+      'definition': definition,
+      if (audioUrl != null) 'audioUrl': audioUrl,
+    };
+  }
+}
+
+class WordMatchingContent {
+  final List<WordMatchPair> pairs;
+  final bool shuffleOptions;
+
+  WordMatchingContent({
+    required this.pairs,
+    this.shuffleOptions = true,
+  });
+
+  factory WordMatchingContent.fromMap(Map<String, dynamic> map) {
+    List<WordMatchPair> pairsList = [];
+    if (map['pairs'] != null) {
+      pairsList = (map['pairs'] as List<dynamic>)
+          .map((e) => WordMatchPair.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    return WordMatchingContent(
+      pairs: pairsList,
+      shuffleOptions: map['shuffleOptions'] ?? true,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'pairs': pairs.map((e) => e.toMap()).toList(),
+      'shuffleOptions': shuffleOptions,
+    };
+  }
+}
+
+class DefinitionMatchPair {
+  final Map<String, dynamic>? definition; // Multi-language: Map<String, String>
+  final String word;
+  final String? example;
+
+  DefinitionMatchPair({
+    this.definition,
+    required this.word,
+    this.example,
+  });
+
+  /// Get definition theo language code
+  String getDefinition(String languageCode) {
+    if (definition == null) return '';
+    if (definition is Map<String, dynamic>) {
+      final defMap = definition as Map<String, dynamic>;
+      if (languageCode != null && defMap.containsKey(languageCode)) {
+        return defMap[languageCode]?.toString() ?? '';
+      }
+      return defMap['en']?.toString() ?? 
+             (defMap.values.isNotEmpty ? defMap.values.first.toString() : '');
+    }
+    return definition.toString();
+  }
+
+  factory DefinitionMatchPair.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic>? definitionData;
+    if (map['definition'] != null) {
+      if (map['definition'] is Map) {
+        definitionData = map['definition'] as Map<String, dynamic>;
+      } else {
+        definitionData = {'en': map['definition'].toString()};
+      }
+    }
+
+    return DefinitionMatchPair(
+      definition: definitionData,
+      word: map['word']?.toString() ?? '',
+      example: map['example'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'definition': definition,
+      'word': word,
+      if (example != null) 'example': example,
+    };
+  }
+}
+
+class DefinitionMatchingContent {
+  final List<DefinitionMatchPair> pairs;
+
+  DefinitionMatchingContent({
+    required this.pairs,
+  });
+
+  factory DefinitionMatchingContent.fromMap(Map<String, dynamic> map) {
+    List<DefinitionMatchPair> pairsList = [];
+    if (map['pairs'] != null) {
+      pairsList = (map['pairs'] as List<dynamic>)
+          .map((e) => DefinitionMatchPair.fromMap(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    return DefinitionMatchingContent(
+      pairs: pairsList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'pairs': pairs.map((e) => e.toMap()).toList(),
+    };
+  }
+}
+
+class WordFormationContent {
+  final String sentence; // Câu có chỗ trống
+  final String baseWord; // Từ gốc
+  final String correctForm; // Dạng đúng (derived form)
+  final List<String> options; // Các dạng có thể
+  final String? explanation; // Giải thích
+
+  WordFormationContent({
+    required this.sentence,
+    required this.baseWord,
+    required this.correctForm,
+    this.options = const [],
+    this.explanation,
+  });
+
+  factory WordFormationContent.fromMap(Map<String, dynamic> map) {
+    String sentenceText = '';
+    if (map['sentence'] != null) {
+      if (map['sentence'] is Map) {
+        final sentenceMap = map['sentence'] as Map<String, dynamic>;
+        sentenceText = sentenceMap['en']?.toString() ?? 
+                      sentenceMap.values.first.toString();
+      } else {
+        sentenceText = map['sentence'].toString();
+      }
+    }
+
+    List<String> optionsList = [];
+    if (map['options'] != null) {
+      if (map['options'] is List) {
+        optionsList = (map['options'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        optionsList = [map['options'].toString()];
+      }
+    }
+
+    String? explanationText;
+    if (map['explanation'] != null) {
+      if (map['explanation'] is Map) {
+        final explanationMap = map['explanation'] as Map<String, dynamic>;
+        explanationText = explanationMap['en']?.toString() ?? 
+                        explanationMap.values.first.toString();
+      } else {
+        explanationText = map['explanation'].toString();
+      }
+    }
+
+    return WordFormationContent(
+      sentence: sentenceText,
+      baseWord: map['baseWord']?.toString() ?? '',
+      correctForm: map['correctForm']?.toString() ?? '',
+      options: optionsList,
+      explanation: explanationText,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'sentence': sentence,
+      'baseWord': baseWord,
+      'correctForm': correctForm,
+      'options': options,
+      if (explanation != null) 'explanation': explanation,
+    };
+  }
+}
+
+class WordPatternContent {
+  final String sentence; // Câu có chỗ trống
+  final String word; // Từ cần điền giới từ
+  final String correctPreposition; // Giới từ đúng
+  final List<String> options; // Các giới từ có thể
+  final String pattern; // Pattern (ví dụ: "good at")
+
+  WordPatternContent({
+    required this.sentence,
+    required this.word,
+    required this.correctPreposition,
+    this.options = const [],
+    required this.pattern,
+  });
+
+  factory WordPatternContent.fromMap(Map<String, dynamic> map) {
+    String sentenceText = '';
+    if (map['sentence'] != null) {
+      if (map['sentence'] is Map) {
+        final sentenceMap = map['sentence'] as Map<String, dynamic>;
+        sentenceText = sentenceMap['en']?.toString() ?? 
+                      sentenceMap.values.first.toString();
+      } else {
+        sentenceText = map['sentence'].toString();
+      }
+    }
+
+    List<String> optionsList = [];
+    if (map['options'] != null) {
+      if (map['options'] is List) {
+        optionsList = (map['options'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else {
+        optionsList = [map['options'].toString()];
+      }
+    }
+
+    return WordPatternContent(
+      sentence: sentenceText,
+      word: map['word']?.toString() ?? '',
+      correctPreposition: map['correctPreposition']?.toString() ?? '',
+      options: optionsList,
+      pattern: map['pattern']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'sentence': sentence,
+      'word': word,
+      'correctPreposition': correctPreposition,
+      'options': options,
+      'pattern': pattern,
+    };
+  }
+}
+
 class ExerciseModel {
   final String id;
   final String lessonId;
@@ -808,6 +1127,18 @@ class ExerciseModel {
       case ExerciseType.sequentialQuestions:
         // sequentialQuestions uses groupQuestions, content can be empty
         content = {};
+        break;
+      case ExerciseType.wordMatching:
+        content = WordMatchingContent.fromMap(data['content'] ?? {});
+        break;
+      case ExerciseType.definitionMatching:
+        content = DefinitionMatchingContent.fromMap(data['content'] ?? {});
+        break;
+      case ExerciseType.wordFormationExercise:
+        content = WordFormationContent.fromMap(data['content'] ?? {});
+        break;
+      case ExerciseType.wordPatternExercise:
+        content = WordPatternContent.fromMap(data['content'] ?? {});
         break;
     }
 
@@ -925,6 +1256,14 @@ class ExerciseModel {
       contentMap = (content as ButtonSingleChoiceContent).toMap();
     } else if (content is CrosswordContent) {
       contentMap = (content as CrosswordContent).toMap();
+    } else if (content is WordMatchingContent) {
+      contentMap = (content as WordMatchingContent).toMap();
+    } else if (content is DefinitionMatchingContent) {
+      contentMap = (content as DefinitionMatchingContent).toMap();
+    } else if (content is WordFormationContent) {
+      contentMap = (content as WordFormationContent).toMap();
+    } else if (content is WordPatternContent) {
+      contentMap = (content as WordPatternContent).toMap();
     }
 
     return {

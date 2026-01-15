@@ -90,6 +90,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get theme => 'テーマ';
 
   @override
+  String get themeLight => 'ライト';
+
+  @override
+  String get themeDark => 'ダーク';
+
+  @override
+  String get themeSystem => 'システム';
+
+  @override
   String get help => 'ヘルプ';
 
   @override
@@ -178,6 +187,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matching => 'マッチング';
+
+  @override
+  String get matchItems => '項目を一致させてください';
 
   @override
   String get crossword => 'クロスワード';

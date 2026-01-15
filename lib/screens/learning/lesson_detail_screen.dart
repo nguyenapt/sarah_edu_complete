@@ -218,6 +218,10 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
               const SizedBox(height: 16),
               _buildFormsSection(theory.forms!, languageCode),
             ],
+            if (theory.vocabulary != null) ...[
+              const SizedBox(height: 16),
+              _buildVocabularySection(theory.vocabulary!, languageCode),
+            ],
             if (theory.examples.isNotEmpty) ...[
               const SizedBox(height: 16),
               _buildExamplesSection(theory.examples, languageCode),
@@ -385,6 +389,350 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                   fontStyle: FontStyle.italic,
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVocabularySection(VocabularyContent vocabulary, String languageCode) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.book, color: AppTheme.primaryColor),
+            const SizedBox(width: 8),
+            Text(
+              'Vocabulary',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // Topic Vocabulary
+        if (vocabulary.topicVocabulary != null && vocabulary.topicVocabulary!.isNotEmpty) ...[
+          Text(
+            'Topic Vocabulary',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          ...vocabulary.topicVocabulary!.map((item) => _buildTopicVocabularyItem(item, languageCode)),
+          const SizedBox(height: 16),
+        ],
+        // Phrasal Verbs
+        if (vocabulary.phrasalVerbs != null && vocabulary.phrasalVerbs!.isNotEmpty) ...[
+          Text(
+            'Phrasal Verbs',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          ...vocabulary.phrasalVerbs!.map((item) => _buildPhrasalVerbItem(item, languageCode)),
+          const SizedBox(height: 16),
+        ],
+        // Prepositional Phrases
+        if (vocabulary.prepositionalPhrases != null && vocabulary.prepositionalPhrases!.isNotEmpty) ...[
+          Text(
+            'Prepositional Phrases',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          ...vocabulary.prepositionalPhrases!.map((item) => _buildPrepositionalPhraseItem(item, languageCode)),
+          const SizedBox(height: 16),
+        ],
+        // Word Formation
+        if (vocabulary.wordFormation != null && vocabulary.wordFormation!.isNotEmpty) ...[
+          Text(
+            'Word Formation',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          _buildWordFormationTable(vocabulary.wordFormation!),
+          const SizedBox(height: 16),
+        ],
+        // Word Patterns
+        if (vocabulary.wordPatterns != null && vocabulary.wordPatterns!.isNotEmpty) ...[
+          Text(
+            'Word Patterns',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          _buildWordPatternsSection(vocabulary.wordPatterns!),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildTopicVocabularyItem(TopicVocabularyItem item, String languageCode) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  item.word,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                ),
+                const SizedBox(width: 8),
+                Chip(
+                  label: Text(
+                    item.partOfSpeech,
+                    style: const TextStyle(fontSize: 10),
+                  ),
+                  backgroundColor: Colors.grey[200],
+                ),
+                if (item.audioUrl != null) ...[
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.volume_up, size: 20),
+                    onPressed: () {
+                      // TODO: Implement audio playback
+                    },
+                  ),
+                ],
+              ],
+            ),
+            if (item.definitions != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                item.getDefinition(languageCode),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+            if (item.examples.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              ...item.examples.map((example) => Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '• $example',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  )),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhrasalVerbItem(PhrasalVerbItem item, String languageCode) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.verb,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryColor,
+                  ),
+            ),
+            if (item.definition != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                item.getDefinition(languageCode),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+            if (item.examples.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              ...item.examples.map((example) => Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '• $example',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  )),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPrepositionalPhraseItem(PrepositionalPhraseItem item, String languageCode) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.phrase,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryColor,
+                  ),
+            ),
+            if (item.definition != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                item.getDefinition(languageCode),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+            if (item.examples.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              ...item.examples.map((example) => Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '• $example',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  )),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWordFormationTable(List<WordFormationItem> items) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Table(
+          border: TableBorder.all(color: Colors.grey[300]!),
+          children: [
+            TableRow(
+              decoration: BoxDecoration(color: Colors.grey[200]),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    'Base Word',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    'Related Forms',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            ...items.map((item) => TableRow(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        item.baseWord,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(item.relatedForms.join(', ')),
+                    ),
+                  ],
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWordPatternsSection(List<WordPatternItem> items) {
+    final adjectives = items.where((item) => item.category.toLowerCase() == 'adjective').toList();
+    final verbs = items.where((item) => item.category.toLowerCase() == 'verb').toList();
+    final nouns = items.where((item) => item.category.toLowerCase() == 'noun').toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (adjectives.isNotEmpty) ...[
+          Text(
+            'Adjectives',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          ...adjectives.map((item) => _buildWordPatternItem(item)),
+          const SizedBox(height: 16),
+        ],
+        if (verbs.isNotEmpty) ...[
+          Text(
+            'Verbs',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          ...verbs.map((item) => _buildWordPatternItem(item)),
+          const SizedBox(height: 16),
+        ],
+        if (nouns.isNotEmpty) ...[
+          Text(
+            'Nouns',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          ...nouns.map((item) => _buildWordPatternItem(item)),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildWordPatternItem(WordPatternItem item) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.pattern,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryColor,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              item.example,
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ],
         ),
       ),
@@ -600,6 +948,14 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         return localizations.crossword;
       case ExerciseType.sequentialQuestions:
         return 'Sequential Questions';
+      case ExerciseType.wordMatching:
+        return 'Word Matching';
+      case ExerciseType.definitionMatching:
+        return 'Definition Matching';
+      case ExerciseType.wordFormationExercise:
+        return 'Word Formation';
+      case ExerciseType.wordPatternExercise:
+        return 'Word Pattern';
     }
   }
 }

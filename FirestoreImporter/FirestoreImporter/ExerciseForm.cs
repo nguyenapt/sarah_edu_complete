@@ -23,6 +23,11 @@ namespace FirestoreImporter
         private Dictionary<string, dynamic> _contentWordsDictionary;
         private bool _isGroupQuestionMode;
 
+        // Cho matching exercise
+        private Dictionary<string, string> _currentRightItemDictionary;
+        private List<Dictionary<string, dynamic>> _matchingCorrectPairs; // List các correct pairs
+
+
         // Event để gửi GroupQuestion về form cha khi Save and Add New
         public event EventHandler<GroupQuestion>? GroupQuestionSaved;
 
@@ -35,24 +40,31 @@ namespace FirestoreImporter
             _content = new Dictionary<string, dynamic>();
             _contentGrid = new List<List<int?>>();
             _contentWordsDictionary = new Dictionary<string, dynamic>();
+            _currentRightItemDictionary = new Dictionary<string, string>();
+            _matchingCorrectPairs = new List<Dictionary<string, dynamic>>();
+
             SetupDataGridViews();
+            SetupMatchingGrids();
             SetupGroupQuestionMode();
             SetupAutoBuildIds();
             SetupTypeChangedHandler();
         }
-        
+
         private void SetupTypeChangedHandler()
         {
             cbType.SelectedIndexChanged += CbType_SelectedIndexChanged;
             // Set initial state
             CbType_SelectedIndexChanged(null, EventArgs.Empty);
         }
-        
+
         private void CbType_SelectedIndexChanged(object? sender, EventArgs e)
         {
             string? selectedType = cbType.SelectedItem?.ToString();
             bool isCrossword = selectedType == "crossword";
-            
+            bool isMatching = selectedType == "matching";
+            bool isVocabularyExercise = selectedType == "word_matching" || selectedType == "definition_matching" ||
+                                       selectedType == "word_formation_exercise" || selectedType == "word_pattern_exercise";
+
             // Ẩn/hiện tabs
             if (isCrossword)
             {
@@ -63,7 +75,7 @@ namespace FirestoreImporter
                     tabControl1.TabPages.Remove(tabPage2);
                 if (tabControl1.TabPages.Contains(tabPage3))
                     tabControl1.TabPages.Remove(tabPage3);
-                
+
                 // Hiển thị Crossword Content tab
                 if (!tabControl1.TabPages.Contains(tabPage4))
                 {
@@ -71,12 +83,65 @@ namespace FirestoreImporter
                     tabControl1.SelectedTab = tabPage4;
                 }
             }
-            else
+            else if (isMatching)
             {
+                // Matching exercise sử dụng Matching tab (tabPage5)
                 // Ẩn Crossword Content tab
                 if (tabControl1.TabPages.Contains(tabPage4))
                     tabControl1.TabPages.Remove(tabPage4);
-                
+
+                // Ẩn Questions, Explanation, Content tabs
+                if (tabControl1.TabPages.Contains(tabPage1))
+                    tabControl1.TabPages.Remove(tabPage1);
+                if (tabControl1.TabPages.Contains(tabPage2))
+                    tabControl1.TabPages.Remove(tabPage2);
+                if (tabControl1.TabPages.Contains(tabPage3))
+                    tabControl1.TabPages.Remove(tabPage3);
+
+                // Hiển thị Matching tab
+                if (!tabControl1.TabPages.Contains(tabPage5))
+                {
+                    tabControl1.TabPages.Add(tabPage5);
+                    tabControl1.SelectedTab = tabPage5;
+                }
+            }
+            else if (isVocabularyExercise)
+            {
+                // Vocabulary exercises sử dụng Content tab với generic approach
+                // Ẩn Crossword Content tab
+                if (tabControl1.TabPages.Contains(tabPage4))
+                    tabControl1.TabPages.Remove(tabPage4);
+
+                // Hiển thị Questions, Explanation, Content tabs
+                if (!tabControl1.TabPages.Contains(tabPage1))
+                {
+                    tabControl1.TabPages.Insert(0, tabPage1);
+                }
+                if (!tabControl1.TabPages.Contains(tabPage2))
+                {
+                    int index = tabControl1.TabPages.IndexOf(tabPage1);
+                    tabControl1.TabPages.Insert(index + 1, tabPage2);
+                }
+                if (!tabControl1.TabPages.Contains(tabPage3))
+                {
+                    int index = tabControl1.TabPages.IndexOf(tabPage2);
+                    tabControl1.TabPages.Insert(index + 1, tabPage3);
+                }
+
+                // Set selected tab về Content tab
+                if (tabControl1.TabPages.Contains(tabPage3))
+                {
+                    tabControl1.SelectedTab = tabPage3;
+                }
+            }
+            else
+            {
+                // Ẩn Crossword Content tab và Matching tab
+                if (tabControl1.TabPages.Contains(tabPage4))
+                    tabControl1.TabPages.Remove(tabPage4);
+                if (tabControl1.TabPages.Contains(tabPage5))
+                    tabControl1.TabPages.Remove(tabPage5);
+
                 // Hiển thị Questions, Explanation, Content tabs (thêm lại theo thứ tự)
                 if (!tabControl1.TabPages.Contains(tabPage1))
                 {
@@ -92,7 +157,7 @@ namespace FirestoreImporter
                     int index = tabControl1.TabPages.IndexOf(tabPage2);
                     tabControl1.TabPages.Insert(index + 1, tabPage3);
                 }
-                
+
                 // Set selected tab về tab đầu tiên nếu không có tab nào được chọn
                 if (tabControl1.SelectedTab == null && tabControl1.TabPages.Count > 0)
                 {
@@ -174,6 +239,7 @@ namespace FirestoreImporter
 
         private void SetupDataGridViews()
         {
+
             // Setup grvQuestion
             grvQuestion.AutoGenerateColumns = false;
             grvQuestion.Columns.Clear();
@@ -814,14 +880,66 @@ namespace FirestoreImporter
             // Nếu là crossword type, build content với grid và words
             // LƯU Ý: Convert List<List<int?>> thành List<List<object>> nhưng GIỮ NGUYÊN null values
             // ToFirestore() sẽ xử lý conversion null -> -1
-            if (exercise.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
+            if (exercise.Type == "matching")
+            {
+                // Matching exercise: build content từ correctPairs
+                if (_matchingCorrectPairs.Count > 0)
+                {
+                    // Lấy tất cả left items và right items từ correctPairs
+                    var leftItems = _matchingCorrectPairs
+                        .Select(p => p["left"]?.ToString() ?? "")
+                        .Where(s => !string.IsNullOrEmpty(s))
+                        .Distinct()
+                        .ToList();
+                    var rightItems = _matchingCorrectPairs
+                        .Select(p => p["right"] as Dictionary<string, string>)
+                        .Where(r => r != null)
+                        .Distinct()
+                        .ToList();
+
+                    // Shuffle leftItems và rightItems để tạo challenge
+                    var shuffledLeftItems = leftItems.ToList();
+                    var shuffledRightItems = rightItems.ToList();
+
+                    var random = new Random();
+                    shuffledLeftItems = shuffledLeftItems.OrderBy(x => random.Next()).ToList();
+                    shuffledRightItems = shuffledRightItems.OrderBy(x => random.Next()).ToList();
+
+                    var matchingContent = new Dictionary<string, object>
+                    {
+                        { "leftItems", shuffledLeftItems },
+                        { "rightItems", shuffledRightItems },
+                        { "correctPairs", _matchingCorrectPairs.Select(p => new Dictionary<string, object>
+                            {
+                                { "left", p["left"] },
+                                { "right", p["right"] }
+                            }).ToList() }
+                    };
+                    exercise.Content = matchingContent;
+                }
+            }
+            else if (exercise.Type == "word_matching" || exercise.Type == "definition_matching" ||
+                exercise.Type == "word_formation_exercise" || exercise.Type == "word_pattern_exercise")
+            {
+                // Vocabulary exercises: sử dụng generic content approach
+                // User sẽ nhập data qua Content tab với các properties tương ứng
+                if (_content.Count > 0)
+                {
+                    exercise.Content = new Dictionary<string, object>();
+                    foreach (var kvp in _content)
+                    {
+                        exercise.Content[kvp.Key] = kvp.Value;
+                    }
+                }
+            }
+            else if (exercise.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
             {
                 // Convert List<List<int?>> thành List<object> (outer list)
                 // Mỗi inner list sẽ là List<object> với null values được giữ nguyên
-                var gridAsObjects = _contentGrid.Select(row => 
+                var gridAsObjects = _contentGrid.Select(row =>
                     (object)row.Select(cell => cell.HasValue ? (object)cell.Value : (object?)null).ToList<object?>()
                 ).ToList<object>();
-                
+
                 var crosswordContent = new Dictionary<string, object>
                 {
                     { "rows", (int)numRows.Value },
@@ -995,14 +1113,52 @@ namespace FirestoreImporter
             // Nếu là crossword type, build content với grid và words
             // LƯU Ý: Convert List<List<int?>> thành List<List<object>> nhưng GIỮ NGUYÊN null values
             // ToFirestore() sẽ xử lý conversion null -> -1
-            if (groupQuestion.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
+            if (groupQuestion.Type == "matching")
+            {
+                // Matching exercise: build content từ correctPairs
+                if (_matchingCorrectPairs.Count > 0)
+                {
+                    // Lấy tất cả left items và right items từ correctPairs
+                    var leftItems = _matchingCorrectPairs
+                        .Select(p => p["left"]?.ToString() ?? "")
+                        .Where(s => !string.IsNullOrEmpty(s))
+                        .Distinct()
+                        .ToList();
+                    var rightItems = _matchingCorrectPairs
+                        .Select(p => p["right"] as Dictionary<string, string>)
+                        .Where(r => r != null)
+                        .Distinct()
+                        .ToList();
+
+                    // Shuffle leftItems và rightItems để tạo challenge
+                    var shuffledLeftItems = leftItems.ToList();
+                    var shuffledRightItems = rightItems.ToList();
+
+                    var random = new Random();
+                    shuffledLeftItems = shuffledLeftItems.OrderBy(x => random.Next()).ToList();
+                    shuffledRightItems = shuffledRightItems.OrderBy(x => random.Next()).ToList();
+
+                    var matchingContent = new Dictionary<string, object>
+                    {
+                        { "leftItems", shuffledLeftItems },
+                        { "rightItems", shuffledRightItems },
+                        { "correctPairs", _matchingCorrectPairs.Select(p => new Dictionary<string, object>
+                            {
+                                { "left", p["left"] },
+                                { "right", p["right"] }
+                            }).ToList() }
+                    };
+                    groupQuestion.Content = matchingContent;
+                }
+            }
+            else if (groupQuestion.Type == "crossword" && _contentGrid != null && _contentGrid.Count > 0)
             {
                 // Convert List<List<int?>> thành List<object> (outer list)
                 // Mỗi inner list sẽ là List<object> với null values được giữ nguyên
-                var gridAsObjects = _contentGrid.Select(row => 
+                var gridAsObjects = _contentGrid.Select(row =>
                     (object)row.Select(cell => (object?)(cell.HasValue ? (object)cell.Value : null)).ToList<object?>()
                 ).ToList<object>();
-                
+
                 var crosswordContent = new Dictionary<string, object>
                 {
                     { "rows", (int)numRows.Value },
@@ -1148,6 +1304,13 @@ namespace FirestoreImporter
             //cbLanguageCodeExplanation.SelectedIndex = -1;
             //cbPropertyType.SelectedIndex = -1;
 
+
+            txtLeft.Clear();
+            txtRight.Clear();
+            cbRightLanguageCode.SelectedIndex = -1;
+            _currentRightItemDictionary.Clear();
+            _matchingCorrectPairs.Clear();
+
             // Refresh grids để hiển thị empty
             RefreshQuestionGrid();
             RefreshExplanationGrid();
@@ -1168,20 +1331,20 @@ namespace FirestoreImporter
             {
                 // Parse string input: "1, 2, null, 3, null, null, null, null, null, null"
                 string input = txtGridArrayValue.Text.Trim();
-                
+
                 // Remove brackets if present
                 input = input.TrimStart('[').TrimEnd(']');
-                
+
                 // Split by comma
                 string[] parts = input.Split(',');
-                
+
                 List<int?> row = new List<int?>();
                 foreach (string part in parts)
                 {
                     string trimmedPart = part.Trim();
                     if (string.IsNullOrWhiteSpace(trimmedPart))
                         continue;
-                    
+
                     if (trimmedPart.Equals("null", StringComparison.OrdinalIgnoreCase))
                     {
                         row.Add(null);
@@ -1196,16 +1359,16 @@ namespace FirestoreImporter
                         return;
                     }
                 }
-                
+
                 // Add row to grid
                 _contentGrid.Add(row);
-                
+
                 // Update content dictionary với grid mới
                 UpdateCrosswordContent();
-                
+
                 // Refresh grid display
                 RefreshGridDisplay();
-                
+
                 // Clear input
                 txtGridArrayValue.Clear();
             }
@@ -1219,7 +1382,7 @@ namespace FirestoreImporter
         {
             if (_contentGrid == null || _contentGrid.Count == 0)
                 return;
-            
+
             // Tạo content dictionary cho crossword
             var crosswordContent = new Dictionary<string, object>
             {
@@ -1228,13 +1391,13 @@ namespace FirestoreImporter
                 { "grid", _contentGrid },
                 { "words", _contentWordsDictionary.Values.ToList() }
             };
-            
+
             // Update _content dictionary
             _content["rows"] = (int)numRows.Value;
             _content["cols"] = (int)numCols.Value;
             _content["grid"] = _contentGrid;
             _content["words"] = _contentWordsDictionary.Values.ToList();
-            
+
             // Refresh content grid
             RefreshContentGrid();
         }
@@ -1250,7 +1413,7 @@ namespace FirestoreImporter
                     Row = index,
                     Values = string.Join(", ", row.Select(cell => cell.HasValue ? cell.Value.ToString() : "null"))
                 }).ToList();
-                
+
                 grvGrid.DataSource = displayData;
             }
         }
@@ -1270,25 +1433,25 @@ namespace FirestoreImporter
                 MessageBox.Show("Vui lòng nhập Number (phải > 0)!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             if (cbDirection.SelectedItem == null)
             {
                 MessageBox.Show("Vui lòng chọn Direction!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             if (string.IsNullOrWhiteSpace(txtClue.Text))
             {
                 MessageBox.Show("Vui lòng nhập Clue!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             if (string.IsNullOrWhiteSpace(txtAnswer.Text))
             {
                 MessageBox.Show("Vui lòng nhập Answer!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             try
             {
                 int number = (int)numNumber.Value;
@@ -1298,7 +1461,7 @@ namespace FirestoreImporter
                 string clue = txtClue.Text.Trim();
                 string answer = txtAnswer.Text.Trim().ToUpper();
                 int length = answer.Length;
-                
+
                 // Tạo word dictionary
                 var wordDict = new Dictionary<string, object>
                 {
@@ -1310,17 +1473,17 @@ namespace FirestoreImporter
                     { "answer", answer },
                     { "length", length }
                 };
-                
+
                 // Add vào dictionary với key là number để dễ quản lý
                 string key = $"word_{number}";
                 _contentWordsDictionary[key] = wordDict;
-                
+
                 // Update crossword content
                 UpdateCrosswordContent();
-                
+
                 // Refresh word display
                 RefreshWordDisplay();
-                
+
                 // Clear inputs (optional - có thể giữ lại để add word tiếp theo)
                 // numNumber.Value = numNumber.Value + 1;
                 // txtClue.Clear();
@@ -1339,7 +1502,7 @@ namespace FirestoreImporter
             {
                 // Helper class để hiển thị
                 var displayList = new List<WordDisplayItem>();
-                
+
                 foreach (var wordObj in _contentWordsDictionary.Values)
                 {
                     if (wordObj is Dictionary<string, object> word)
@@ -1347,7 +1510,7 @@ namespace FirestoreImporter
                         string clueText = word.ContainsKey("clue") ? (word["clue"]?.ToString() ?? "") : "";
                         if (clueText.Length > 50)
                             clueText = clueText.Substring(0, 50) + "...";
-                        
+
                         displayList.Add(new WordDisplayItem
                         {
                             Number = word.ContainsKey("number") ? Convert.ToInt32(word["number"]) : 0,
@@ -1360,10 +1523,10 @@ namespace FirestoreImporter
                         });
                     }
                 }
-                
+
                 // Sort by number
                 displayList = displayList.OrderBy(w => w.Number).ToList();
-                
+
                 grvWord.DataSource = displayList;
             }
         }
@@ -1401,7 +1564,7 @@ namespace FirestoreImporter
             }
         }
 
-        
+
         // Helper class để bind vào DataGridView
         private class WordDisplayItem
         {
@@ -1413,5 +1576,223 @@ namespace FirestoreImporter
             public string Answer { get; set; } = string.Empty;
             public int Length { get; set; }
         }
+
+
+
+        private class MatchingPairItem
+        {
+            public string Left { get; set; } = string.Empty;
+            public Dictionary<string, string> Right { get; set; } = new Dictionary<string, string>();
+        }
+
+        private void SetupMatchingGrids()
+        {
+            // Setup grvRightItemLanguage
+            SetupRightItemLanguageGrid();
+
+            // Setup grvCorrectPair
+            SetupCorrectPairGrid();
+        }
+
+        private void SetupRightItemLanguageGrid()
+        {
+            grvRightItemLanguage.AutoGenerateColumns = false;
+            grvRightItemLanguage.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvRightItemLanguage.Columns.Add(deleteColumn);
+
+            grvRightItemLanguage.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLanguageCode",
+                HeaderText = "Language Code",
+                DataPropertyName = "Key",
+                Width = 150,
+                ReadOnly = true
+            });
+            grvRightItemLanguage.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colValue",
+                HeaderText = "Value",
+                DataPropertyName = "Value",
+                Width = 440,
+                ReadOnly = true
+            });
+            grvRightItemLanguage.AllowUserToAddRows = false;
+            grvRightItemLanguage.AllowUserToDeleteRows = false;
+            grvRightItemLanguage.ReadOnly = true;
+            grvRightItemLanguage.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvRightItemLanguage.CellContentClick += GrvRightItemLanguage_CellContentClick;
+        }
+
+        private void SetupCorrectPairGrid()
+        {
+            grvCorrectPair.AutoGenerateColumns = false;
+            grvCorrectPair.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvCorrectPair.Columns.Add(deleteColumn);
+
+            grvCorrectPair.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colIndex",
+                HeaderText = "#",
+                DataPropertyName = "Index",
+                Width = 50,
+                ReadOnly = true
+            });
+            grvCorrectPair.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLeft",
+                HeaderText = "Left",
+                DataPropertyName = "Left",
+                Width = 200,
+                ReadOnly = true
+            });
+            grvCorrectPair.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colRight",
+                HeaderText = "Right (Multi-language)",
+                DataPropertyName = "RightDisplay",
+                Width = 350,
+                ReadOnly = true
+            });
+            grvCorrectPair.AllowUserToAddRows = false;
+            grvCorrectPair.AllowUserToDeleteRows = false;
+            grvCorrectPair.ReadOnly = true;
+            grvCorrectPair.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvCorrectPair.CellContentClick += GrvCorrectPair_CellContentClick;
+        }
+
+        private void RefreshRightItemLanguageGrid()
+        {
+            grvRightItemLanguage.DataSource = null;
+            if (_currentRightItemDictionary.Count > 0)
+            {
+                grvRightItemLanguage.DataSource = _currentRightItemDictionary.ToList();
+            }
+        }
+
+        private void RefreshCorrectPairGrid()
+        {
+            grvCorrectPair.DataSource = null;
+            if (_matchingCorrectPairs.Count > 0)
+            {
+                var dataSource = _matchingCorrectPairs.Select((pair, index) => new
+                {
+                    Index = index + 1,
+                    Left = pair.ContainsKey("left") ? pair["left"].ToString() : "",
+                    RightDisplay = pair.ContainsKey("right") && pair["right"] is Dictionary<string, string> rightDict
+                        ? string.Join(" / ", rightDict.Select(kvp => $"{kvp.Key}: {kvp.Value}"))
+                        : ""
+                }).ToList();
+                grvCorrectPair.DataSource = dataSource;
+            }
+        }
+
+        private void GrvRightItemLanguage_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
+            {
+                if (grvRightItemLanguage.Rows[e.RowIndex].DataBoundItem is KeyValuePair<string, string> kvp)
+                {
+                    _currentRightItemDictionary.Remove(kvp.Key);
+                    RefreshRightItemLanguageGrid();
+                }
+            }
+        }
+
+        private void GrvCorrectPair_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
+            {
+                if (e.RowIndex < _matchingCorrectPairs.Count)
+                {
+                    _matchingCorrectPairs.RemoveAt(e.RowIndex);
+                    RefreshCorrectPairGrid();
+                }
+            }
+        }
+
+        private void btnAddRightValue_Click(object sender, EventArgs e)
+        {
+            if (cbRightLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtRight.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Right Value!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string languageCode = cbRightLanguageCode.SelectedItem.ToString()!;
+            string rightValue = txtRight.Text.Trim();
+
+            // Thêm language vào _currentRightItemDictionary
+            _currentRightItemDictionary[languageCode] = rightValue;
+
+            // Refresh grid
+            RefreshRightItemLanguageGrid();
+
+            // Clear input
+            txtRight.Clear();
+        }
+
+        private void btnAddCorrectPair_Click(object sender, EventArgs e)
+        {
+            // Kiểm tra txtLeft có giá trị
+            if (string.IsNullOrWhiteSpace(txtLeft.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Left Value!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Kiểm tra _currentRightItemDictionary có languages không
+            if (_currentRightItemDictionary.Count == 0)
+            {
+                MessageBox.Show("Vui lòng thêm ít nhất một language cho Right Item!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string leftValue = txtLeft.Text.Trim();
+
+            // Tạo correct pair
+            var pair = new Dictionary<string, dynamic>
+            {
+                { "left", leftValue },
+                { "right", new Dictionary<string, string>(_currentRightItemDictionary) }
+            };
+
+            _matchingCorrectPairs.Add(pair);
+
+            // Refresh grid
+            RefreshCorrectPairGrid();
+
+            // Clear inputs: txtLeft và _currentRightItemDictionary
+            txtLeft.Clear();
+            _currentRightItemDictionary.Clear();
+            RefreshRightItemLanguageGrid();
+        }
+
+        
     }
 }

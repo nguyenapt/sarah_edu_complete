@@ -26,6 +26,16 @@ namespace FirestoreImporter
         private Dictionary<string, List<string>> _hintsDictionary; // language code -> list of hints
         private List<Dictionary<string, object>> _usageItems; // List of usage items with language keys
 
+        // Vocabulary Content
+        private List<TopicVocabularyItem> _topicVocabularyItems;
+        private List<PhrasalVerbItem> _phrasalVerbItems;
+        private List<PrepositionalPhraseItem> _prepositionalPhraseItems;
+        
+        // Current vocabulary item being edited (for multi-language definitions)
+        private TopicVocabularyItem? _currentTopicVocabularyItem;
+        private PhrasalVerbItem? _currentPhrasalVerbItem;
+        private PrepositionalPhraseItem? _currentPrepositionalPhraseItem;
+
         public LessonForm()
         {
             InitializeComponent();
@@ -35,6 +45,9 @@ namespace FirestoreImporter
             _examples = new List<Example>();
             _hintsDictionary = new Dictionary<string, List<string>>();
             _usageItems = new List<Dictionary<string, object>>();
+            _topicVocabularyItems = new List<TopicVocabularyItem>();
+            _phrasalVerbItems = new List<PhrasalVerbItem>();
+            _prepositionalPhraseItems = new List<PrepositionalPhraseItem>();
             SetupDataGridViews();
             SetupAutoBuildIds();
         }
@@ -95,6 +108,14 @@ namespace FirestoreImporter
 
             // Setup grvUsage (Usage Items)
             SetupUsageGrid();
+
+            // Setup Vocabulary Grids
+            SetupTopicVocabularyGrid();
+            SetupTopicVocabularyLanguageGrid();
+            SetupPhrasalVerbsGrid();
+            SetupPhrasalVerbLanguageGrid();
+            SetupPrepositionalPhrasesGrid();
+            SetupPrepositionalPhraseLanguageGrid();
         }
 
         private void SetupTitleGrid()
@@ -420,6 +441,46 @@ namespace FirestoreImporter
             public string Usage { get; set; } = string.Empty;
         }
 
+        private class TopicVocabularyGridItem
+        {
+            public int Index { get; set; }
+            public string Word { get; set; } = string.Empty;
+            public string PartOfSpeech { get; set; } = string.Empty;
+            public string Definition { get; set; } = string.Empty;
+        }
+
+        private class PhrasalVerbGridItem
+        {
+            public int Index { get; set; }
+            public string Verb { get; set; } = string.Empty;
+            public string Definition { get; set; } = string.Empty;
+        }
+
+        private class PrepositionalPhraseGridItem
+        {
+            public int Index { get; set; }
+            public string Phrase { get; set; } = string.Empty;
+            public string Definition { get; set; } = string.Empty;
+        }
+
+        private class TopicVocabularyLanguageGridItem
+        {
+            public string LanguageCode { get; set; } = string.Empty;
+            public string Definition { get; set; } = string.Empty;
+        }
+
+        private class PhrasalVerbLanguageGridItem
+        {
+            public string LanguageCode { get; set; } = string.Empty;
+            public string Definition { get; set; } = string.Empty;
+        }
+
+        private class PrepositionalPhraseLanguageGridItem
+        {
+            public string LanguageCode { get; set; } = string.Empty;
+            public string Definition { get; set; } = string.Empty;
+        }
+
         private void GrvTitle_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
@@ -596,6 +657,439 @@ namespace FirestoreImporter
                 grvUsage.DataSource = dataSource;
             }
         }
+
+        private void SetupTopicVocabularyGrid()
+        {
+            grvTopicVocabulary.AutoGenerateColumns = false;
+            grvTopicVocabulary.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvTopicVocabulary.Columns.Add(deleteColumn);
+
+            grvTopicVocabulary.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colWord",
+                HeaderText = "Word",
+                DataPropertyName = "Word",
+                Width = 150,
+                ReadOnly = true
+            });
+            grvTopicVocabulary.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colPartOfSpeech",
+                HeaderText = "Part of Speech",
+                DataPropertyName = "PartOfSpeech",
+                Width = 100,
+                ReadOnly = true
+            });
+            grvTopicVocabulary.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDefinition",
+                HeaderText = "Definition",
+                DataPropertyName = "Definition",
+                Width = 300,
+                ReadOnly = true
+            });
+            grvTopicVocabulary.AllowUserToAddRows = false;
+            grvTopicVocabulary.AllowUserToDeleteRows = false;
+            grvTopicVocabulary.ReadOnly = true;
+            grvTopicVocabulary.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvTopicVocabulary.CellContentClick += GrvTopicVocabulary_CellContentClick;
+        }
+
+        private void SetupPhrasalVerbsGrid()
+        {
+            grvPhrasalVerbs.AutoGenerateColumns = false;
+            grvPhrasalVerbs.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvPhrasalVerbs.Columns.Add(deleteColumn);
+
+            grvPhrasalVerbs.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colVerb",
+                HeaderText = "Phrasal Verb",
+                DataPropertyName = "Verb",
+                Width = 200,
+                ReadOnly = true
+            });
+            grvPhrasalVerbs.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDefinition",
+                HeaderText = "Definition",
+                DataPropertyName = "Definition",
+                Width = 400,
+                ReadOnly = true
+            });
+            grvPhrasalVerbs.AllowUserToAddRows = false;
+            grvPhrasalVerbs.AllowUserToDeleteRows = false;
+            grvPhrasalVerbs.ReadOnly = true;
+            grvPhrasalVerbs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvPhrasalVerbs.CellContentClick += GrvPhrasalVerbs_CellContentClick;
+        }
+
+        private void SetupPrepositionalPhrasesGrid()
+        {
+            grvPrepositionalPhrases.AutoGenerateColumns = false;
+            grvPrepositionalPhrases.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvPrepositionalPhrases.Columns.Add(deleteColumn);
+
+            grvPrepositionalPhrases.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colPhrase",
+                HeaderText = "Phrase",
+                DataPropertyName = "Phrase",
+                Width = 200,
+                ReadOnly = true
+            });
+            grvPrepositionalPhrases.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDefinition",
+                HeaderText = "Definition",
+                DataPropertyName = "Definition",
+                Width = 400,
+                ReadOnly = true
+            });
+            grvPrepositionalPhrases.AllowUserToAddRows = false;
+            grvPrepositionalPhrases.AllowUserToDeleteRows = false;
+            grvPrepositionalPhrases.ReadOnly = true;
+            grvPrepositionalPhrases.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvPrepositionalPhrases.CellContentClick += GrvPrepositionalPhrases_CellContentClick;
+        }
+
+        private void SetupPrepositionalPhraseLanguageGrid()
+        {
+            grvPrepositionalPhrase.AutoGenerateColumns = false;
+            grvPrepositionalPhrase.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvPrepositionalPhrase.Columns.Add(deleteColumn);
+
+            grvPrepositionalPhrase.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLanguageCode",
+                HeaderText = "Language Code",
+                DataPropertyName = "LanguageCode",
+                Width = 150,
+                ReadOnly = true
+            });
+            grvPrepositionalPhrase.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDefinition",
+                HeaderText = "Definition",
+                DataPropertyName = "Definition",
+                Width = 500,
+                ReadOnly = true
+            });
+            grvPrepositionalPhrase.AllowUserToAddRows = false;
+            grvPrepositionalPhrase.AllowUserToDeleteRows = false;
+            grvPrepositionalPhrase.ReadOnly = true;
+            grvPrepositionalPhrase.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvPrepositionalPhrase.CellContentClick += GrvPrepositionalPhrase_CellContentClick;
+        }
+
+        private void SetupTopicVocabularyLanguageGrid()
+        {
+            grvTopicVocabularyLanguage.AutoGenerateColumns = false;
+            grvTopicVocabularyLanguage.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvTopicVocabularyLanguage.Columns.Add(deleteColumn);
+
+            grvTopicVocabularyLanguage.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLanguageCode",
+                HeaderText = "Language Code",
+                DataPropertyName = "LanguageCode",
+                Width = 150,
+                ReadOnly = true
+            });
+            grvTopicVocabularyLanguage.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDefinition",
+                HeaderText = "Definition",
+                DataPropertyName = "Definition",
+                Width = 500,
+                ReadOnly = true
+            });
+            grvTopicVocabularyLanguage.AllowUserToAddRows = false;
+            grvTopicVocabularyLanguage.AllowUserToDeleteRows = false;
+            grvTopicVocabularyLanguage.ReadOnly = true;
+            grvTopicVocabularyLanguage.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvTopicVocabularyLanguage.CellContentClick += GrvTopicVocabularyLanguage_CellContentClick;
+        }
+
+        private void SetupPhrasalVerbLanguageGrid()
+        {
+            grvPhrasalVerbLanguage.AutoGenerateColumns = false;
+            grvPhrasalVerbLanguage.Columns.Clear();
+
+            var deleteColumn = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvPhrasalVerbLanguage.Columns.Add(deleteColumn);
+
+            grvPhrasalVerbLanguage.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLanguageCode",
+                HeaderText = "Language Code",
+                DataPropertyName = "LanguageCode",
+                Width = 150,
+                ReadOnly = true
+            });
+            grvPhrasalVerbLanguage.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colDefinition",
+                HeaderText = "Definition",
+                DataPropertyName = "Definition",
+                Width = 500,
+                ReadOnly = true
+            });
+            grvPhrasalVerbLanguage.AllowUserToAddRows = false;
+            grvPhrasalVerbLanguage.AllowUserToDeleteRows = false;
+            grvPhrasalVerbLanguage.ReadOnly = true;
+            grvPhrasalVerbLanguage.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvPhrasalVerbLanguage.CellContentClick += GrvPhrasalVerbLanguage_CellContentClick;
+        }
+
+        private void RefreshTopicVocabularyGrid()
+        {
+            grvTopicVocabulary.DataSource = null;
+            if (_topicVocabularyItems.Count > 0)
+            {
+                var dataSource = _topicVocabularyItems.Select((item, index) => new TopicVocabularyGridItem
+                {
+                    Index = index + 1,
+                    Word = item.Word,
+                    PartOfSpeech = item.PartOfSpeech,
+                    Definition = item.Definitions != null && item.Definitions.ContainsKey("en")
+                        ? item.Definitions["en"]
+                        : (item.Definitions?.Values.FirstOrDefault() ?? "")
+                }).ToList();
+                grvTopicVocabulary.DataSource = dataSource;
+            }
+        }
+
+        private void RefreshPhrasalVerbsGrid()
+        {
+            grvPhrasalVerbs.DataSource = null;
+            if (_phrasalVerbItems.Count > 0)
+            {
+                var dataSource = _phrasalVerbItems.Select((item, index) => new PhrasalVerbGridItem
+                {
+                    Index = index + 1,
+                    Verb = item.Verb,
+                    Definition = item.Definition != null && item.Definition.ContainsKey("en")
+                        ? item.Definition["en"]
+                        : (item.Definition?.Values.FirstOrDefault() ?? "")
+                }).ToList();
+                grvPhrasalVerbs.DataSource = dataSource;
+            }
+        }
+
+        private void RefreshPrepositionalPhrasesGrid()
+        {
+            grvPrepositionalPhrases.DataSource = null;
+            if (_prepositionalPhraseItems.Count > 0)
+            {
+                var dataSource = _prepositionalPhraseItems.Select((item, index) => new PrepositionalPhraseGridItem
+                {
+                    Index = index + 1,
+                    Phrase = item.Phrase,
+                    Definition = item.Definition != null && item.Definition.ContainsKey("en")
+                        ? item.Definition["en"]
+                        : (item.Definition?.Values.FirstOrDefault() ?? "")
+                }).ToList();
+                grvPrepositionalPhrases.DataSource = dataSource;
+            }
+        }
+
+        private void RefreshPrepositionalPhraseLanguageGrid()
+        {
+            grvPrepositionalPhrase.DataSource = null;
+            if (_currentPrepositionalPhraseItem != null && _currentPrepositionalPhraseItem.Definition != null)
+            {
+                var dataSource = _currentPrepositionalPhraseItem.Definition.Select(kvp => new PrepositionalPhraseLanguageGridItem
+                {
+                    LanguageCode = kvp.Key,
+                    Definition = kvp.Value
+                }).ToList();
+                grvPrepositionalPhrase.DataSource = dataSource;
+            }
+        }
+
+        private void GrvPrepositionalPhrase_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (grvPrepositionalPhrase.Rows[e.RowIndex].DataBoundItem is PrepositionalPhraseLanguageGridItem item)
+                {
+                    if (_currentPrepositionalPhraseItem != null && _currentPrepositionalPhraseItem.Definition != null)
+                    {
+                        _currentPrepositionalPhraseItem.Definition.Remove(item.LanguageCode);
+                        RefreshPrepositionalPhraseLanguageGrid();
+                    }
+                }
+            }
+        }
+
+        private void RefreshTopicVocabularyLanguageGrid()
+        {
+            grvTopicVocabularyLanguage.DataSource = null;
+            if (_currentTopicVocabularyItem != null && _currentTopicVocabularyItem.Definitions != null)
+            {
+                var dataSource = _currentTopicVocabularyItem.Definitions.Select(kvp => new TopicVocabularyLanguageGridItem
+                {
+                    LanguageCode = kvp.Key,
+                    Definition = kvp.Value
+                }).ToList();
+                grvTopicVocabularyLanguage.DataSource = dataSource;
+            }
+        }
+
+        private void RefreshPhrasalVerbLanguageGrid()
+        {
+            grvPhrasalVerbLanguage.DataSource = null;
+            if (_currentPhrasalVerbItem != null && _currentPhrasalVerbItem.Definition != null)
+            {
+                var dataSource = _currentPhrasalVerbItem.Definition.Select(kvp => new PhrasalVerbLanguageGridItem
+                {
+                    LanguageCode = kvp.Key,
+                    Definition = kvp.Value
+                }).ToList();
+                grvPhrasalVerbLanguage.DataSource = dataSource;
+            }
+        }
+
+        private void GrvTopicVocabularyLanguage_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (grvTopicVocabularyLanguage.Rows[e.RowIndex].DataBoundItem is TopicVocabularyLanguageGridItem item)
+                {
+                    if (_currentTopicVocabularyItem != null && _currentTopicVocabularyItem.Definitions != null)
+                    {
+                        _currentTopicVocabularyItem.Definitions.Remove(item.LanguageCode);
+                        RefreshTopicVocabularyLanguageGrid();
+                    }
+                }
+            }
+        }
+
+        private void GrvPhrasalVerbLanguage_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (grvPhrasalVerbLanguage.Rows[e.RowIndex].DataBoundItem is PhrasalVerbLanguageGridItem item)
+                {
+                    if (_currentPhrasalVerbItem != null && _currentPhrasalVerbItem.Definition != null)
+                    {
+                        _currentPhrasalVerbItem.Definition.Remove(item.LanguageCode);
+                        RefreshPhrasalVerbLanguageGrid();
+                    }
+                }
+            }
+        }
+
+
+
+        private void GrvTopicVocabulary_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (grvTopicVocabulary.Rows[e.RowIndex].DataBoundItem is TopicVocabularyGridItem item)
+                {
+                    int index = item.Index - 1;
+                    if (index >= 0 && index < _topicVocabularyItems.Count)
+                    {
+                        _topicVocabularyItems.RemoveAt(index);
+                        RefreshTopicVocabularyGrid();
+                    }
+                }
+            }
+        }
+
+        private void GrvPhrasalVerbs_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (grvPhrasalVerbs.Rows[e.RowIndex].DataBoundItem is PhrasalVerbGridItem item)
+                {
+                    int index = item.Index - 1;
+                    if (index >= 0 && index < _phrasalVerbItems.Count)
+                    {
+                        _phrasalVerbItems.RemoveAt(index);
+                        RefreshPhrasalVerbsGrid();
+                    }
+                }
+            }
+        }
+
+        private void GrvPrepositionalPhrases_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (grvPrepositionalPhrases.Rows[e.RowIndex].DataBoundItem is PrepositionalPhraseGridItem item)
+                {
+                    int index = item.Index - 1;
+                    if (index >= 0 && index < _prepositionalPhraseItems.Count)
+                    {
+                        _prepositionalPhraseItems.RemoveAt(index);
+                        RefreshPrepositionalPhrasesGrid();
+                    }
+                }
+            }
+        }
+
+
 
         private void GrvUsage_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
@@ -909,8 +1403,29 @@ namespace FirestoreImporter
                 theory.Usage = _usageItems;
             }
 
+            // Vocabulary Content
+            var vocabulary = new VocabularyContent();
+            if (_topicVocabularyItems.Count > 0)
+            {
+                vocabulary.TopicVocabulary = _topicVocabularyItems;
+            }
+            if (_phrasalVerbItems.Count > 0)
+            {
+                vocabulary.PhrasalVerbs = _phrasalVerbItems;
+            }
+            if (_prepositionalPhraseItems.Count > 0)
+            {
+                vocabulary.PrepositionalPhrases = _prepositionalPhraseItems;
+            }
+            if (vocabulary.TopicVocabulary != null || vocabulary.PhrasalVerbs != null ||
+                vocabulary.PrepositionalPhrases != null)
+            {
+                theory.Vocabulary = vocabulary;
+            }
+
             // Chỉ thêm theory nếu có ít nhất một field
-            if (theory.Description != null || theory.Examples.Count > 0 || theory.Forms != null || theory.Usage != null || theory.Hints.Count > 0)
+            if (theory.Description != null || theory.Examples.Count > 0 || theory.Forms != null ||
+                theory.Usage != null || theory.Hints.Count > 0 || theory.Vocabulary != null)
             {
                 content.Theory = theory;
             }
@@ -1345,7 +1860,7 @@ namespace FirestoreImporter
                 grvUsageLanguage.DataSource = dataSource;
             }
 
-            if(cbUsageLanguageCode.SelectedIndex != cbUsageLanguageCode.Items.Count - 1)
+            if (cbUsageLanguageCode.SelectedIndex != cbUsageLanguageCode.Items.Count - 1)
             {
                 cbUsageLanguageCode.SelectedIndex += 1;
             }
@@ -1353,6 +1868,255 @@ namespace FirestoreImporter
             // Clear inputs
             txtUsageTitle.Clear();
             //txtUsageExample.Clear();
+        }
+
+        private void btnAddTopicVocabulary_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtTopicVocabularyWord.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Word!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cbTopicVocabularyPartOfSpeech.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Part of Speech!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_currentTopicVocabularyItem == null || _currentTopicVocabularyItem.Definitions == null || _currentTopicVocabularyItem.Definitions.Count == 0)
+            {
+                MessageBox.Show("Vui lòng thêm ít nhất một Definition trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Đảm bảo Word và PartOfSpeech được cập nhật
+            _currentTopicVocabularyItem.Word = txtTopicVocabularyWord.Text.Trim();
+            _currentTopicVocabularyItem.PartOfSpeech = cbTopicVocabularyPartOfSpeech.SelectedItem.ToString()!;
+
+            // Thêm item vào list
+            _topicVocabularyItems.Add(_currentTopicVocabularyItem);
+
+            // Refresh grid
+            RefreshTopicVocabularyGrid();
+
+            // Clear current item và inputs
+            _currentTopicVocabularyItem = null;
+            grvTopicVocabularyLanguage.DataSource = null;
+            txtTopicVocabularyWord.Clear();
+            cbTopicVocabularyPartOfSpeech.SelectedIndex = -1;
+        }
+
+        private void btnAddPhrasalVerb_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtPhrasalVerb.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Phrasal Verb!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_currentPhrasalVerbItem == null || _currentPhrasalVerbItem.Definition == null || _currentPhrasalVerbItem.Definition.Count == 0)
+            {
+                MessageBox.Show("Vui lòng thêm ít nhất một Definition trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Đảm bảo Verb được cập nhật
+            _currentPhrasalVerbItem.Verb = txtPhrasalVerb.Text.Trim();
+
+            // Thêm item vào list
+            _phrasalVerbItems.Add(_currentPhrasalVerbItem);
+
+            // Refresh grid
+            RefreshPhrasalVerbsGrid();
+
+            // Clear current item và inputs
+            _currentPhrasalVerbItem = null;
+            grvPhrasalVerbLanguage.DataSource = null;
+            txtPhrasalVerb.Clear();
+        }
+
+        private void btnAddPrepositionalPhraseDefinition_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtPrepositionalPhrase.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Prepositional Phrase trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cbPrepositionalPhraseLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPrepositionalPhraseDefinition.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Definition!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Tạo hoặc cập nhật current item
+            if (_currentPrepositionalPhraseItem == null)
+            {
+                _currentPrepositionalPhraseItem = new PrepositionalPhraseItem
+                {
+                    Phrase = txtPrepositionalPhrase.Text.Trim(),
+                    Definition = new Dictionary<string, string>(),
+                    Examples = new List<string>()
+                };
+            }
+            else
+            {
+                // Đảm bảo Phrase được cập nhật
+                _currentPrepositionalPhraseItem.Phrase = txtPrepositionalPhrase.Text.Trim();
+            }
+
+            // Thêm definition
+            string languageCode = cbPrepositionalPhraseLanguageCode.SelectedItem.ToString()!;
+            _currentPrepositionalPhraseItem.Definition[languageCode] = txtPrepositionalPhraseDefinition.Text.Trim();
+
+            // Refresh language grid
+            RefreshPrepositionalPhraseLanguageGrid();
+
+            // Clear input và chuyển sang language tiếp theo
+            txtPrepositionalPhraseDefinition.Clear();
+            if (cbPrepositionalPhraseLanguageCode.SelectedIndex != cbPrepositionalPhraseLanguageCode.Items.Count - 1)
+            {
+                cbPrepositionalPhraseLanguageCode.SelectedIndex += 1;
+            }
+        }
+
+        private void btnAddPrepositionalPhrase_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtPrepositionalPhrase.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Prepositional Phrase!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (_currentPrepositionalPhraseItem == null || _currentPrepositionalPhraseItem.Definition == null || _currentPrepositionalPhraseItem.Definition.Count == 0)
+            {
+                MessageBox.Show("Vui lòng thêm ít nhất một Definition trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Đảm bảo Phrase được cập nhật
+            _currentPrepositionalPhraseItem.Phrase = txtPrepositionalPhrase.Text.Trim();
+
+            // Thêm item vào list
+            _prepositionalPhraseItems.Add(_currentPrepositionalPhraseItem);
+
+            // Refresh grid
+            RefreshPrepositionalPhrasesGrid();
+
+            // Clear current item và inputs
+            _currentPrepositionalPhraseItem = null;
+            grvPrepositionalPhrase.DataSource = null;
+            txtPrepositionalPhrase.Clear();
+            txtPrepositionalPhraseDefinition.Clear();
+            cbPrepositionalPhraseLanguageCode.SelectedIndex = -1;
+        }
+
+        private void btnAddLanguageWordDefinition_Click(object sender, EventArgs e)
+        {
+            if (cbWordLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtTopicVocabularyDefinition.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Definition!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Tạo hoặc cập nhật current item
+            if (_currentTopicVocabularyItem == null)
+            {
+                if (string.IsNullOrWhiteSpace(txtTopicVocabularyWord.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập Word trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (cbTopicVocabularyPartOfSpeech.SelectedItem == null)
+                {
+                    MessageBox.Show("Vui lòng chọn Part of Speech trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                _currentTopicVocabularyItem = new TopicVocabularyItem
+                {
+                    Word = txtTopicVocabularyWord.Text.Trim(),
+                    PartOfSpeech = cbTopicVocabularyPartOfSpeech.SelectedItem.ToString()!,
+                    Definitions = new Dictionary<string, string>(),
+                    Examples = new List<string>(),
+                    AudioUrl = null,
+                    ImageUrl = null
+                };
+            }
+
+            // Thêm definition
+            string languageCode = cbWordLanguageCode.SelectedItem.ToString()!;
+            _currentTopicVocabularyItem.Definitions[languageCode] = txtTopicVocabularyDefinition.Text.Trim();
+
+            // Refresh language grid
+            RefreshTopicVocabularyLanguageGrid();
+
+            // Clear input và chuyển sang language tiếp theo
+            txtTopicVocabularyDefinition.Clear();
+            if (cbWordLanguageCode.SelectedIndex != cbWordLanguageCode.Items.Count - 1)
+            {
+                cbWordLanguageCode.SelectedIndex += 1;
+            }
+        }
+
+        private void btnAddPhrasaVerbLanguageDefinition_Click(object sender, EventArgs e)
+        {
+            if (cbPhrasalVerbLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPhrasalVerbDefinition.Text))
+            {
+                MessageBox.Show("Vui lòng nhập Definition!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Tạo hoặc cập nhật current item
+            if (_currentPhrasalVerbItem == null)
+            {
+                if (string.IsNullOrWhiteSpace(txtPhrasalVerb.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập Phrasal Verb trước!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                _currentPhrasalVerbItem = new PhrasalVerbItem
+                {
+                    Verb = txtPhrasalVerb.Text.Trim(),
+                    Definition = new Dictionary<string, string>(),
+                    Examples = new List<string>()
+                };
+            }
+
+            // Thêm definition
+            string languageCode = cbPhrasalVerbLanguageCode.SelectedItem.ToString()!;
+            _currentPhrasalVerbItem.Definition[languageCode] = txtPhrasalVerbDefinition.Text.Trim();
+
+            // Refresh language grid
+            RefreshPhrasalVerbLanguageGrid();
+
+            // Clear input và chuyển sang language tiếp theo
+            txtPhrasalVerbDefinition.Clear();
+            if (cbPhrasalVerbLanguageCode.SelectedIndex != cbPhrasalVerbLanguageCode.Items.Count - 1)
+            {
+                cbPhrasalVerbLanguageCode.SelectedIndex += 1;
+            }
         }
     }
 }

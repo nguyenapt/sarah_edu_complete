@@ -91,6 +91,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get theme => 'Thema';
 
   @override
+  String get themeLight => 'Hell';
+
+  @override
+  String get themeDark => 'Dunkel';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
   String get help => 'Hilfe';
 
   @override
@@ -179,6 +188,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matching => 'Zuordnung';
+
+  @override
+  String get matchItems => 'Ordnen Sie die Elemente zu';
 
   @override
   String get crossword => 'Kreuzworträtsel';

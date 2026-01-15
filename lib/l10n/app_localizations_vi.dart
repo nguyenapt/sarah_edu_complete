@@ -90,6 +90,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get theme => 'Giao diện';
 
   @override
+  String get themeLight => 'Sáng';
+
+  @override
+  String get themeDark => 'Tối';
+
+  @override
+  String get themeSystem => 'Hệ thống';
+
+  @override
   String get help => 'Trợ giúp';
 
   @override
@@ -178,6 +187,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matching => 'Nối';
+
+  @override
+  String get matchItems => 'Ghép các mục';
 
   @override
   String get crossword => 'Ô chữ';

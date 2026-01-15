@@ -296,6 +296,14 @@ class _GroupExerciseScreenState extends State<GroupExerciseScreen> {
         return localizations.crossword;
       case ExerciseType.sequentialQuestions:
         return 'Sequential Questions';
+      case ExerciseType.wordMatching:
+        return 'Word Matching';
+      case ExerciseType.definitionMatching:
+        return 'Definition Matching';
+      case ExerciseType.wordFormationExercise:
+        return 'Word Formation';
+      case ExerciseType.wordPatternExercise:
+        return 'Word Pattern';
     }
   }
 }
