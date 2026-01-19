@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_html/flutter_html.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/exercise_model.dart';
 import '../../l10n/app_localizations.dart';
@@ -930,8 +931,69 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     return (null, question);
   }
 
+  bool _looksLikeHtml(String text) {
+    return RegExp(r'<[^>]+>').hasMatch(text);
+  }
+
+  String _normalizeQuestionText(String text) {
+    if (!_looksLikeHtml(text)) {
+      return text;
+    }
+
+    var normalized = text;
+    normalized = normalized.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
+    normalized = normalized.replaceAll(RegExp(r'</p\s*>', caseSensitive: false), '\n');
+    normalized = normalized.replaceAll(RegExp(r'<p[^>]*>', caseSensitive: false), '');
+    normalized = normalized.replaceAll(RegExp(r'</h\d\s*>', caseSensitive: false), '\n');
+    normalized = normalized.replaceAll(RegExp(r'<h\d[^>]*>', caseSensitive: false), '');
+    normalized = normalized.replaceAll(RegExp(r'<[^>]+>'), '');
+    normalized = normalized.replaceAll('&nbsp;', ' ');
+    normalized = normalized.replaceAll('&amp;', '&');
+    normalized = normalized.replaceAll('&quot;', '"');
+    normalized = normalized.replaceAll('&#39;', "'");
+    return normalized.trim();
+  }
+
+  Widget _buildHtmlContent(String html) {
+    final bodyStyle = Theme.of(context).textTheme.bodyLarge;
+    return Html(
+      data: html,
+      style: {
+        "body": Style(
+          margin: Margins.zero,
+          padding: HtmlPaddings.zero,
+          fontSize: FontSize(bodyStyle?.fontSize ?? 16),
+          color: bodyStyle?.color ?? Colors.black,
+        ),
+        "p": Style(
+          margin: Margins.only(bottom: 8),
+          color: bodyStyle?.color ?? Colors.black,
+        ),
+        "span": Style(
+          color: bodyStyle?.color ?? Colors.black,
+        ),
+        "h1": Style(
+          fontWeight: FontWeight.bold,
+          margin: Margins.only(bottom: 8),
+        ),
+        "h2": Style(
+          fontWeight: FontWeight.bold,
+          margin: Margins.only(bottom: 8),
+        ),
+        "h3": Style(
+          fontWeight: FontWeight.bold,
+          margin: Margins.only(bottom: 8),
+        ),
+      },
+    );
+  }
+
   // Build paragraph với speakers (có thể có nhiều dòng, mỗi dòng có thể có speaker)
   Widget _buildParagraphWithSpeakers(String paragraph) {
+    if (_looksLikeHtml(paragraph)) {
+      return _buildHtmlContent(paragraph);
+    }
+
     final lines = paragraph.split('\n');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1145,8 +1207,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
   // Question content không có Card wrapper (dùng khi đã có Card bên ngoài)
   Widget _buildQuestionContent(String question, int groupIndex, ButtonSingleChoiceContent content) {
+    final normalizedQuestion = _normalizeQuestionText(question);
     // Kiểm tra xem question có nhiều dòng với nhiều speakers không
-    final lines = question.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
+    final lines = normalizedQuestion.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
     int speakerCount = 0;
     for (final line in lines) {
       final (speaker, _) = _parseSpeaker(line);
@@ -1174,7 +1237,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     }
     
     // Logic cũ cho single speaker
-    final (speaker, dialogue) = _parseSpeaker(question);
+    final (speaker, dialogue) = _parseSpeaker(normalizedQuestion);
     final placeholderCount = _countPlaceholders(dialogue);
     final parts = dialogue.split(RegExp(r'\{(\d+)\}'));
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
@@ -1232,7 +1295,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           top: 8,
           right: 8,
           child: QuestionAudioPlayer(
-            questionText: question,
+            questionText: normalizedQuestion,
             speakerVoices: widget.exercise.speakerVoices,
             defaultVoice: widget.exercise.defaultVoice,
             autoPlay: false,

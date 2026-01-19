@@ -1,0 +1,423 @@
+{
+  "units": {
+    "unit_a1_1": {
+      "levelId": "A1",
+      "title": {
+        "en": "Unit 1: Present Simple",
+        "vi": "Unit 1: Hien tai don",
+        "ko": "Unit 1: Present Simple",
+        "ja": "Unit 1: Present Simple"
+      },
+      "description": {
+        "en": "Present simple basics",
+        "vi": "Co ban hien tai don",
+        "ko": "Present simple basics",
+        "ja": "Present simple basics"
+      },
+      "order": 1,
+      "estimatedTime": 60,
+      "lessons": [
+        "lesson_a1_1_1",
+        "lesson_a1_1_2",
+        "lesson_a1_1_3"
+      ],
+      "groupId": "grammar"
+    },
+    "unit_a1_2": {
+      "levelId": "A1",
+      "title": {
+        "en": "Unit 2: Present Continuous",
+        "vi": "Unit 2: Hien tai tiep dien",
+        "ko": "Unit 2: Present Continuous",
+        "ja": "Unit 2: Present Continuous"
+      },
+      "description": {
+        "en": "Present continuous usage",
+        "vi": "Cach dung hien tai tiep dien",
+        "ko": "Present continuous usage",
+        "ja": "Present continuous usage"
+      },
+      "order": 2,
+      "estimatedTime": 60,
+      "lessons": [
+        "lesson_a1_2_1"
+      ],
+      "groupId": "grammar"
+    },
+    "unit_a1_3": {
+      "levelId": "A1",
+      "title": {
+        "en": "Unit 3: Vocabulary",
+        "vi": "Unit 3: Tu vung",
+        "ko": "Unit 3: Vocabulary",
+        "ja": "Unit 3: Vocabulary"
+      },
+      "description": {
+        "en": "Topic vocab + phrasal verbs",
+        "vi": "Tu vung chu de + phrasal verbs",
+        "ko": "Topic vocab + phrasal verbs",
+        "ja": "Topic vocab + phrasal verbs"
+      },
+      "order": 3,
+      "estimatedTime": 60,
+      "lessons": [
+        "lesson_a1_3_1"
+      ],
+      "groupId": "vocabulary"
+    },
+    "unit_a1_review_1_3": {
+      "levelId": "A1",
+      "title": {
+        "en": "Review 1-3",
+        "vi": "On tap 1-3",
+        "ko": "Review 1-3",
+        "ja": "Review 1-3"
+      },
+      "description": {
+        "en": "Practice Units 1-3",
+        "vi": "Luyen tap Units 1-3",
+        "ko": "Practice Units 1-3",
+        "ja": "Practice Units 1-3"
+      },
+      "order": 4,
+      "estimatedTime": 45,
+      "lessons": [
+        "lesson_a1_r1_1"
+      ],
+      "groupId": "review"
+    }
+  },
+  "lessons": {
+    "lesson_a1_1_1": {
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "grammar",
+      "order": 1,
+      "title": {
+        "en": "Present Simple - Statements",
+        "vi": "Hien tai don - Khang dinh",
+        "ko": "Present Simple - Statements",
+        "ja": "Present Simple - Statements"
+      },
+      "content": {
+        "theory": {
+          "title": {
+            "en": "Statements",
+            "vi": "Khang dinh",
+            "ko": "Statements",
+            "ja": "Statements"
+          },
+          "description": {
+            "en": "<p>Use present simple for habits and facts.</p>",
+            "vi": "<p>Su dung hien tai don cho thoi quen va su that.</p>",
+            "ko": "<p>Use present simple for habits and facts.</p>",
+            "ja": "<p>Use present simple for habits and facts.</p>"
+          },
+          "forms": {
+            "statement": [
+              "I/You/We/They + V",
+              "He/She/It + V(s/es)"
+            ],
+            "negative": [
+              "I/You/We/They do not + V",
+              "He/She/It does not + V"
+            ],
+            "question": [
+              "Do + I/you/we/they + V?",
+              "Does + he/she/it + V?"
+            ]
+          },
+          "usage": [
+            {
+              "en": { "title": "Habits", "example": "I go to school every day." },
+              "vi": { "title": "Thoi quen", "example": "Toi di hoc moi ngay." },
+              "ko": { "title": "Habits", "example": "I go to school every day." },
+              "ja": { "title": "Habits", "example": "I go to school every day." }
+            }
+          ],
+          "examples": [
+            {
+              "sentence": "She works in a bank.",
+              "explanation": {
+                "en": "Third person singular adds -s.",
+                "vi": "Ngoi thu 3 so it them -s.",
+                "ko": "Third person singular adds -s.",
+                "ja": "Third person singular adds -s."
+              }
+            }
+          ]
+        },
+        "exercises": [
+          "ex_a1_1_1_1",
+          "ex_a1_1_1_2"
+        ]
+      }
+    },
+    "lesson_a1_1_2": {
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "grammar",
+      "order": 2,
+      "title": {
+        "en": "Present Simple - Negative/Questions",
+        "vi": "Hien tai don - Phu dinh/Hoi",
+        "ko": "Present Simple - Negative/Questions",
+        "ja": "Present Simple - Negative/Questions"
+      },
+      "content": {
+        "theory": {
+          "title": { "en": "Negative & Questions", "vi": "Phu dinh & Cau hoi" }
+        },
+        "exercises": [
+          "ex_a1_1_2_1"
+        ]
+      }
+    },
+    "lesson_a1_1_3": {
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "grammar",
+      "order": 3,
+      "title": {
+        "en": "Stative Verbs",
+        "vi": "Dong tu chi trang thai",
+        "ko": "Stative Verbs",
+        "ja": "Stative Verbs"
+      },
+      "content": {
+        "theory": {
+          "title": { "en": "Stative Verbs", "vi": "Stative Verbs" }
+        },
+        "exercises": [
+          "ex_a1_1_3_1"
+        ]
+      }
+    },
+    "lesson_a1_2_1": {
+      "unitId": "unit_a1_2",
+      "levelId": "A1",
+      "type": "grammar",
+      "order": 1,
+      "title": {
+        "en": "Present Continuous",
+        "vi": "Hien tai tiep dien",
+        "ko": "Present Continuous",
+        "ja": "Present Continuous"
+      },
+      "content": {
+        "theory": {
+          "title": { "en": "Form & Usage", "vi": "Cau truc & Cach dung" }
+        },
+        "exercises": [
+          "ex_a1_2_1_1",
+          "ex_a1_2_1_2"
+        ]
+      }
+    },
+    "lesson_a1_3_1": {
+      "unitId": "unit_a1_3",
+      "levelId": "A1",
+      "type": "vocabulary",
+      "order": 1,
+      "title": {
+        "en": "Daily Activities",
+        "vi": "Hoat dong hang ngay",
+        "ko": "Daily Activities",
+        "ja": "Daily Activities"
+      },
+      "content": {
+        "theory": {
+          "title": { "en": "Vocabulary", "vi": "Tu vung" },
+          "vocabulary": {
+            "topicVocabulary": [
+              {
+                "word": "breakfast",
+                "partOfSpeech": "n",
+                "definitions": {
+                  "en": "morning meal",
+                  "vi": "bua sang",
+                  "ko": "morning meal",
+                  "ja": "morning meal"
+                },
+                "examples": [
+                  "I eat breakfast at 7."
+                ]
+              }
+            ],
+            "phrasalVerbs": [
+              {
+                "verb": "wake up",
+                "definition": {
+                  "en": "stop sleeping",
+                  "vi": "thuc day",
+                  "ko": "stop sleeping",
+                  "ja": "stop sleeping"
+                }
+              }
+            ],
+            "prepositionalPhrases": [
+              {
+                "phrase": "in the morning",
+                "definition": {
+                  "en": "during morning",
+                  "vi": "vao buoi sang",
+                  "ko": "during morning",
+                  "ja": "during morning"
+                }
+              }
+            ]
+          }
+        },
+        "exercises": [
+          "ex_a1_3_1_1"
+        ]
+      }
+    },
+    "lesson_a1_r1_1": {
+      "unitId": "unit_a1_review_1_3",
+      "levelId": "A1",
+      "type": "grammar",
+      "order": 1,
+      "title": {
+        "en": "Review 1-3",
+        "vi": "On tap 1-3",
+        "ko": "Review 1-3",
+        "ja": "Review 1-3"
+      },
+      "content": {
+        "exercises": [
+          "ex_a1_r1_1_1",
+          "ex_a1_r1_1_2"
+        ]
+      }
+    }
+  },
+  "exercises": {
+    "ex_a1_1_1_1": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "I ____ to school every day.",
+        "vi": "Toi ____ den truong moi ngay.",
+        "ko": "I ____ to school every day.",
+        "ja": "I ____ to school every day."
+      },
+      "content": {
+        "options": ["go", "goes", "going", "went"],
+        "correctAnswers": ["go"]
+      },
+      "points": 10,
+      "difficulty": "easy",
+      "explanation": {
+        "en": "Use base verb with I.",
+        "vi": "Dung dong tu nguyen the voi I.",
+        "ko": "Use base verb with I.",
+        "ja": "Use base verb with I."
+      }
+    },
+    "ex_a1_1_1_2": {
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "fill_blank",
+      "question": {
+        "en": "They ____ to the park every Sunday.",
+        "vi": "Ho ____ den cong vien moi Chu nhat."
+      },
+      "content": {
+        "text": "They ____ to the park every Sunday.",
+        "blanks": [
+          { "position": 0, "correctAnswer": "go", "hints": ["Use base form"] }
+        ]
+      },
+      "points": 10,
+      "difficulty": "easy"
+    },
+    "ex_a1_2_1_1": {
+      "lessonId": "lesson_a1_2_1",
+      "unitId": "unit_a1_2",
+      "levelId": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "She is ____ a book now.",
+        "vi": "Co ay dang ____ mot cuon sach."
+      },
+      "content": {
+        "options": ["read", "reads", "reading", "to read"],
+        "correctAnswers": ["reading"]
+      },
+      "points": 10,
+      "difficulty": "easy"
+    },
+    "ex_a1_2_1_2": {
+      "lessonId": "lesson_a1_2_1",
+      "unitId": "unit_a1_2",
+      "levelId": "A1",
+      "type": "fill_blank",
+      "question": {
+        "en": "We ____ (study) now.",
+        "vi": "Chung toi dang ____."
+      },
+      "content": {
+        "text": "We ____ now.",
+        "blanks": [
+          { "position": 0, "correctAnswer": "are studying", "hints": ["Use be + V-ing"] }
+        ]
+      },
+      "points": 10,
+      "difficulty": "easy"
+    },
+    "ex_a1_3_1_1": {
+      "lessonId": "lesson_a1_3_1",
+      "unitId": "unit_a1_3",
+      "levelId": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "Breakfast means ____.",
+        "vi": "Breakfast nghia la ____."
+      },
+      "content": {
+        "options": ["bua sang", "bua trua", "bua toi", "bua phu"],
+        "correctAnswers": ["bua sang"]
+      },
+      "points": 10,
+      "difficulty": "easy"
+    },
+    "ex_a1_r1_1_1": {
+      "lessonId": "lesson_a1_r1_1",
+      "unitId": "unit_a1_review_1_3",
+      "levelId": "A1",
+      "type": "single_choice",
+      "question": {
+        "en": "He ____ (go) to work every day.",
+        "vi": "Anh ay ____ di lam moi ngay."
+      },
+      "content": {
+        "options": ["go", "goes", "going"],
+        "correctAnswers": ["goes"]
+      },
+      "points": 10,
+      "difficulty": "easy"
+    },
+    "ex_a1_r1_1_2": {
+      "lessonId": "lesson_a1_r1_1",
+      "unitId": "unit_a1_review_1_3",
+      "levelId": "A1",
+      "type": "fill_blank",
+      "question": {
+        "en": "I am ____ (read) now.",
+        "vi": "Toi dang ____."
+      },
+      "content": {
+        "text": "I am ____ now.",
+        "blanks": [
+          { "position": 0, "correctAnswer": "reading" }
+        ]
+      },
+      "points": 10,
+      "difficulty": "easy"
+    }
+  }
+}
