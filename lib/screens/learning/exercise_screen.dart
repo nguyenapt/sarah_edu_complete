@@ -3893,6 +3893,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       final timeSpent = _startTime != null 
           ? DateTime.now().difference(_startTime!).inSeconds 
           : 0;
+
+      int totalCount = 1;
+      int correctCount = isCorrect ? 1 : 0;
+      if (widget.exercise.type == ExerciseType.sequentialQuestions &&
+          widget.exercise.groupQuestions != null &&
+          widget.exercise.groupQuestions!.isNotEmpty) {
+        totalCount = widget.exercise.groupQuestions!.length;
+        correctCount = _questionResults.values.where((result) => result).length;
+      }
       
       print('Saving progress for user: ${authProvider.user!.id}');
       print('Exercise: ${widget.exercise.id}');
@@ -3905,6 +3914,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         widget.exercise,
         isCorrect,
         timeSpent,
+        correctCount: correctCount,
+        totalCount: totalCount,
       ).then((result) {
         print('✅ Progress saved successfully!');
         

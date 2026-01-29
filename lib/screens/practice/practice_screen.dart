@@ -440,36 +440,36 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   // Widget để build mỗi practice module
   Widget _buildPracticeModule(UnitGroup group, String levelId) {
-    const double moduleHeight = 120.0; // Tăng chiều cao để đủ hiển thị HTML content (tránh overflow)
-    
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      height: moduleHeight,
       child: Container(
+        constraints: const BoxConstraints(minHeight: 120),
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey[300]!, width: 1),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Star icon bên trái - có thể click
-            _buildGradeIcon(group, levelId),
-            // Text ở giữa - có thể click
-            Expanded(
-              child: _buildModuleContent(group, levelId),
-            ),
-            // Vạch phân cách dọc
-            Container(
-              width: 1,
-              height: double.infinity,
-              color: Colors.grey[300],
-            ),
-            // Menu icon bên phải - có thể click
-            _buildMenuIcon(group, levelId),
-          ],
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Star icon bên trái - có thể click
+              _buildGradeIcon(group, levelId),
+              // Text ở giữa - có thể click
+              Expanded(
+                child: _buildModuleContent(group, levelId),
+              ),
+              // Vạch phân cách dọc
+              VerticalDivider(
+                width: 1,
+                thickness: 1,
+                color: Colors.grey[300],
+              ),
+              // Menu icon bên phải - có thể click
+              _buildMenuIcon(group, levelId),
+            ],
+          ),
         ),
       ),
     );

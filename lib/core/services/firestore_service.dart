@@ -11,6 +11,7 @@ import '../../core/utils/progress_comparator.dart';
 import 'level_progression_service.dart';
 import 'stats_service.dart';
 import 'group_unit_service.dart';
+import 'weak_skill_service.dart';
 
 /// Result của saveExerciseProgress
 class SaveExerciseProgressResult {
@@ -154,6 +155,40 @@ class FirestoreService {
       return LessonModel.fromFirestore(doc.data()!, doc.id);
     } catch (e) {
       throw Exception('Error fetching lesson: $e');
+    }
+  }
+
+  /// Lấy lessons theo danh sách levelId và lesson type
+  /// Firestore whereIn giới hạn 10 items, nên chia nhỏ query nếu cần
+  Future<List<LessonModel>> getLessonsByLevelsAndType(
+    List<String> levelIds,
+    LessonType type,
+  ) async {
+    try {
+      if (levelIds.isEmpty) return [];
+
+      final allLessons = <LessonModel>[];
+      const batchSize = 10;
+
+      for (int i = 0; i < levelIds.length; i += batchSize) {
+        final batch = levelIds.skip(i).take(batchSize).toList();
+
+        final snapshot = await _firestore
+            .collection(FirebaseConstants.lessonsCollection)
+            .where('levelId', whereIn: batch)
+            .where('type', isEqualTo: type.toString())
+            .get();
+
+        final lessons = snapshot.docs
+            .map((doc) => LessonModel.fromFirestore(doc.data(), doc.id))
+            .toList();
+
+        allLessons.addAll(lessons);
+      }
+
+      return allLessons;
+    } catch (e) {
+      throw Exception('Error fetching lessons by levels and type: $e');
     }
   }
 
@@ -374,8 +409,10 @@ class FirestoreService {
     String userId,
     ExerciseModel exercise,
     bool isCorrect,
-    int timeSpent,
-  ) async {
+    int timeSpent, {
+    int? correctCount,
+    int? totalCount,
+  }) async {
     try {
       print('📝 saveExerciseProgress called');
       print('userId: $userId');
@@ -395,6 +432,10 @@ class FirestoreService {
       // Tính score (0.0 - 1.0)
       final score = isCorrect ? 1.0 : 0.0;
 
+      final resolvedTotalCount = totalCount ?? 1;
+      final resolvedCorrectCount =
+          correctCount ?? (isCorrect ? resolvedTotalCount : 0);
+
       // Tạo ExerciseHistoryItem mới
       final newHistoryItem = ExerciseHistoryItem(
         exerciseId: exercise.id,
@@ -405,6 +446,12 @@ class FirestoreService {
         completedAt: DateTime.now(),
         timeSpent: timeSpent,
         mistakes: [], // Có thể thêm logic để track mistakes sau
+        correctCount: resolvedCorrectCount,
+        totalCount: resolvedTotalCount,
+        tagsSnapshot: TagsSnapshot(
+          skillTypes: exercise.skillTypes,
+          grammarTopics: exercise.grammarTopics,
+        ),
       );
 
       // Thêm vào exerciseHistory
@@ -483,10 +530,14 @@ class FirestoreService {
         }
       }
 
+      final weakSkillService = WeakSkillService();
+      final weakSkillStats = weakSkillService.buildStats(updatedHistory);
+
       // Cập nhật progress
       final updatedProgress = currentProgress.copyWith(
         exerciseHistory: updatedHistory,
         highestProgress: updatedHighestProgress,
+        weakSkillStats: weakSkillStats,
         lastUpdated: DateTime.now(),
       );
 

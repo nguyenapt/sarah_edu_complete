@@ -362,6 +362,39 @@ class AppLocalizationsDe extends AppLocalizations {
   String get vocabulary => 'Wortschatz';
 
   @override
+  String get vocabularyFilterLabel => 'Filter:';
+
+  @override
+  String get vocabularySearchHint => 'Search vocabulary/definition';
+
+  @override
+  String get vocabularyNoMatch => 'No matching vocabulary';
+
+  @override
+  String get vocabularySortWordAsc => 'A-Z';
+
+  @override
+  String get vocabularySortWordDesc => 'Z-A';
+
+  @override
+  String get vocabularySortDefinitionAsc => 'Def A-Z';
+
+  @override
+  String get vocabularySortDefinitionDesc => 'Def Z-A';
+
+  @override
+  String get practiceVocabularyTitle => 'Practice Vocabulary';
+
+  @override
+  String get practiceVocabularyEmpty => 'No vocabulary to practice';
+
+  @override
+  String get flashcardTapShowWord => 'Tap to show word';
+
+  @override
+  String get flashcardTapShowDefinition => 'Tap to show definition';
+
+  @override
   String get weakSkills => 'Schwache Fähigkeiten';
 
   @override

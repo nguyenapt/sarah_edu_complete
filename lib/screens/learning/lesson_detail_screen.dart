@@ -9,6 +9,9 @@ import '../../models/exercise_model.dart';
 import '../../providers/language_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'exercise_screen.dart';
+import '../practice/vocabulary_flashcard_screen.dart';
+
+enum VocabularySortOption { wordAsc, wordDesc, definitionAsc, definitionDesc }
 
 class LessonDetailScreen extends StatefulWidget {
   final LessonModel lesson;
@@ -26,6 +29,8 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
   final FirestoreService _firestoreService = FirestoreService();
   List<ExerciseModel> _exercises = [];
   bool _isLoadingExercises = false;
+  String _vocabularySearchQuery = '';
+  VocabularySortOption _vocabularySortOption = VocabularySortOption.wordAsc;
 
   @override
   void initState() {
@@ -133,8 +138,9 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
 
     return Card(
+      margin: const EdgeInsets.only(bottom: 6),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -396,6 +402,12 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
   }
 
   Widget _buildVocabularySection(VocabularyContent vocabulary, String languageCode) {
+    final topicVocabularyItems = vocabulary.topicVocabulary ?? [];
+    final filteredTopicVocabulary = _filterAndSortTopicVocabulary(
+      topicVocabularyItems,
+      languageCode,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -413,15 +425,18 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         ),
         const SizedBox(height: 16),
         // Topic Vocabulary
-        if (vocabulary.topicVocabulary != null && vocabulary.topicVocabulary!.isNotEmpty) ...[
-          Text(
-            'Topic Vocabulary',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
+        if (topicVocabularyItems.isNotEmpty) ...[
+          _buildTopicVocabularyControls(filteredTopicVocabulary, languageCode),
           const SizedBox(height: 8),
-          ...vocabulary.topicVocabulary!.map((item) => _buildTopicVocabularyItem(item, languageCode)),
+          if (filteredTopicVocabulary.isEmpty)
+            Text(
+              AppLocalizations.of(context)!.vocabularyNoMatch,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+            )
+          else
+            ...filteredTopicVocabulary.map((item) => _buildTopicVocabularyItem(item, languageCode)),
           const SizedBox(height: 16),
         ],
         // Phrasal Verbs
@@ -477,7 +492,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
 
   Widget _buildTopicVocabularyItem(TopicVocabularyItem item, String languageCode) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 4),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -575,6 +590,142 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  List<TopicVocabularyItem> _filterAndSortTopicVocabulary(
+    List<TopicVocabularyItem> items,
+    String languageCode,
+  ) {
+    final query = _vocabularySearchQuery.trim().toLowerCase();
+    final filtered = query.isEmpty
+        ? List<TopicVocabularyItem>.from(items)
+        : items.where((item) {
+            final word = item.word.toLowerCase();
+            final definition = item.getDefinition(languageCode).toLowerCase();
+            return word.contains(query) || definition.contains(query);
+          }).toList();
+
+    int compareBy(String a, String b) => a.toLowerCase().compareTo(b.toLowerCase());
+
+    filtered.sort((a, b) {
+      switch (_vocabularySortOption) {
+        case VocabularySortOption.wordAsc:
+          return compareBy(a.word, b.word);
+        case VocabularySortOption.wordDesc:
+          return compareBy(b.word, a.word);
+        case VocabularySortOption.definitionAsc:
+          return compareBy(a.getDefinition(languageCode), b.getDefinition(languageCode));
+        case VocabularySortOption.definitionDesc:
+          return compareBy(b.getDefinition(languageCode), a.getDefinition(languageCode));
+      }
+    });
+
+    return filtered;
+  }
+
+  Widget _buildTopicVocabularyControls(
+    List<TopicVocabularyItem> currentItems,
+    String languageCode,
+  ) {
+    final localizations = AppLocalizations.of(context)!;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          localizations.vocabularyFilterLabel,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: _buildTopicVocabularySearchField()),
+        const SizedBox(width: 8),
+        _buildTopicVocabularySort(),
+        const SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: currentItems.isEmpty
+              ? null
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VocabularyFlashcardScreen(
+                        items: currentItems,
+                        languageCode: languageCode,
+                      ),
+                    ),
+                  );
+                },
+          child: Text(AppLocalizations.of(context)!.practice),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.primaryColor,
+            foregroundColor: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTopicVocabularySort() {
+    final localizations = AppLocalizations.of(context)!;
+    return DropdownButtonHideUnderline(
+      child: SizedBox(
+        height: 34,
+        child: DropdownButton<VocabularySortOption>(
+          value: _vocabularySortOption,
+          isDense: true,
+          iconSize: 18,
+          style: Theme.of(context).textTheme.bodySmall,
+          items: [
+            DropdownMenuItem(
+              value: VocabularySortOption.wordAsc,
+              child: Text(localizations.vocabularySortWordAsc),
+            ),
+            DropdownMenuItem(
+              value: VocabularySortOption.wordDesc,
+              child: Text(localizations.vocabularySortWordDesc),
+            ),
+            DropdownMenuItem(
+              value: VocabularySortOption.definitionAsc,
+              child: Text(localizations.vocabularySortDefinitionAsc),
+            ),
+            DropdownMenuItem(
+              value: VocabularySortOption.definitionDesc,
+              child: Text(localizations.vocabularySortDefinitionDesc),
+            ),
+          ],
+          onChanged: (value) {
+            if (value == null) return;
+            setState(() {
+              _vocabularySortOption = value;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopicVocabularySearchField() {
+    final localizations = AppLocalizations.of(context)!;
+    return TextField(
+      style: Theme.of(context).textTheme.bodyMedium,
+      decoration: InputDecoration(
+        hintText: localizations.vocabularySearchHint,
+        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+        prefixIcon: const Icon(Icons.search),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      onChanged: (value) {
+        setState(() {
+          _vocabularySearchQuery = value;
+        });
+      },
     );
   }
 
@@ -838,7 +989,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
 
   Widget _buildExerciseCard(ExerciseModel exercise, int index) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 6),
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: _getDifficultyColor(exercise.difficulty),

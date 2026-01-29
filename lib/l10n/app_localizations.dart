@@ -788,6 +788,72 @@ abstract class AppLocalizations {
   /// **'Vocabulary'**
   String get vocabulary;
 
+  /// No description provided for @vocabularyFilterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter:'**
+  String get vocabularyFilterLabel;
+
+  /// No description provided for @vocabularySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search vocabulary/definition'**
+  String get vocabularySearchHint;
+
+  /// No description provided for @vocabularyNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching vocabulary'**
+  String get vocabularyNoMatch;
+
+  /// No description provided for @vocabularySortWordAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'A-Z'**
+  String get vocabularySortWordAsc;
+
+  /// No description provided for @vocabularySortWordDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Z-A'**
+  String get vocabularySortWordDesc;
+
+  /// No description provided for @vocabularySortDefinitionAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Def A-Z'**
+  String get vocabularySortDefinitionAsc;
+
+  /// No description provided for @vocabularySortDefinitionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Def Z-A'**
+  String get vocabularySortDefinitionDesc;
+
+  /// No description provided for @practiceVocabularyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice Vocabulary'**
+  String get practiceVocabularyTitle;
+
+  /// No description provided for @practiceVocabularyEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No vocabulary to practice'**
+  String get practiceVocabularyEmpty;
+
+  /// No description provided for @flashcardTapShowWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to show word'**
+  String get flashcardTapShowWord;
+
+  /// No description provided for @flashcardTapShowDefinition.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to show definition'**
+  String get flashcardTapShowDefinition;
+
   /// No description provided for @weakSkills.
   ///
   /// In en, this message translates to:

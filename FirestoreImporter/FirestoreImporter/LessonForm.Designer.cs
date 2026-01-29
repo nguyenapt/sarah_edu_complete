@@ -114,6 +114,7 @@
             btnAddPhrasaVerbLanguageDefinition = new Button();
             btnAddPhrasalVerb = new Button();
             tabPage9 = new TabPage();
+            grvPrepositionalPhrase = new DataGridView();
             cbPrepositionalPhraseLanguageCode = new ComboBox();
             label29 = new Label();
             txtPrepositionalPhraseDefinition = new TextBox();
@@ -121,6 +122,7 @@
             label27 = new Label();
             txtPrepositionalPhrase = new TextBox();
             grvPrepositionalPhrases = new DataGridView();
+            btnAddPrepositialPhrase = new Button();
             btnAddPrepositionalPhrase = new Button();
             groupBox1 = new GroupBox();
             grvTitle = new DataGridView();
@@ -138,8 +140,6 @@
             cbType = new ComboBox();
             txtExercises = new TextBox();
             label5 = new Label();
-            grvPrepositionalPhrase = new DataGridView();
-            btnAddPrepositialPhrase = new Button();
             ((System.ComponentModel.ISupportInitialize)numOrder).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -163,12 +163,12 @@
             ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbLanguage).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbs).BeginInit();
             tabPage9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrase).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrases).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrase).BeginInit();
             SuspendLayout();
             // 
             // txtLessonId
@@ -792,7 +792,7 @@
             // cbTopicVocabularyPartOfSpeech
             // 
             cbTopicVocabularyPartOfSpeech.FormattingEnabled = true;
-            cbTopicVocabularyPartOfSpeech.Items.AddRange(new object[] { "verb", "noun", "adjective", "adverb", "pronoun", "preposition", "conjunction", "interjection", "article" });
+            cbTopicVocabularyPartOfSpeech.Items.AddRange(new object[] { "verb", "noun", "adjective", "adverb", "pronoun", "preposition", "conjunction", "interjection", "article", "noun phrase", "verb phrase", "adverb phrase", "prepositional phrase", "infinitive phras", "gerund phrase" });
             cbTopicVocabularyPartOfSpeech.Location = new Point(420, 16);
             cbTopicVocabularyPartOfSpeech.Name = "cbTopicVocabularyPartOfSpeech";
             cbTopicVocabularyPartOfSpeech.Size = new Size(218, 23);
@@ -1020,6 +1020,14 @@
             tabPage9.Text = "Prepositional phrases";
             tabPage9.UseVisualStyleBackColor = true;
             // 
+            // grvPrepositionalPhrase
+            // 
+            grvPrepositionalPhrase.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvPrepositionalPhrase.Location = new Point(13, 119);
+            grvPrepositionalPhrase.Name = "grvPrepositionalPhrase";
+            grvPrepositionalPhrase.Size = new Size(712, 123);
+            grvPrepositionalPhrase.TabIndex = 32;
+            // 
             // cbPrepositionalPhraseLanguageCode
             // 
             cbPrepositionalPhraseLanguageCode.FormattingEnabled = true;
@@ -1078,6 +1086,16 @@
             grvPrepositionalPhrases.Name = "grvPrepositionalPhrases";
             grvPrepositionalPhrases.Size = new Size(719, 164);
             grvPrepositionalPhrases.TabIndex = 10;
+            // 
+            // btnAddPrepositialPhrase
+            // 
+            btnAddPrepositialPhrase.Location = new Point(647, 48);
+            btnAddPrepositialPhrase.Name = "btnAddPrepositialPhrase";
+            btnAddPrepositialPhrase.Size = new Size(75, 23);
+            btnAddPrepositialPhrase.TabIndex = 11;
+            btnAddPrepositialPhrase.Text = "Add";
+            btnAddPrepositialPhrase.UseVisualStyleBackColor = true;
+            btnAddPrepositialPhrase.Click += btnAddPrepositionalPhraseDefinition_Click;
             // 
             // btnAddPrepositionalPhrase
             // 
@@ -1233,24 +1251,6 @@
             label5.TabIndex = 22;
             label5.Text = "Exercises";
             // 
-            // grvPrepositionalPhrase
-            // 
-            grvPrepositionalPhrase.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvPrepositionalPhrase.Location = new Point(13, 119);
-            grvPrepositionalPhrase.Name = "grvPrepositionalPhrase";
-            grvPrepositionalPhrase.Size = new Size(712, 123);
-            grvPrepositionalPhrase.TabIndex = 32;
-            // 
-            // btnAddPrepositialPhrase
-            // 
-            btnAddPrepositialPhrase.Location = new Point(647, 48);
-            btnAddPrepositialPhrase.Name = "btnAddPrepositialPhrase";
-            btnAddPrepositialPhrase.Size = new Size(75, 23);
-            btnAddPrepositialPhrase.TabIndex = 11;
-            btnAddPrepositialPhrase.Text = "Add";
-            btnAddPrepositialPhrase.UseVisualStyleBackColor = true;
-            btnAddPrepositialPhrase.Click += btnAddPrepositionalPhraseDefinition_Click;
-            // 
             // LessonForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1310,13 +1310,13 @@
             ((System.ComponentModel.ISupportInitialize)grvPhrasalVerbs).EndInit();
             tabPage9.ResumeLayout(false);
             tabPage9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrase).EndInit();
             ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrases).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)grvTitle).EndInit();
             ((System.ComponentModel.ISupportInitialize)numLesson).EndInit();
             ((System.ComponentModel.ISupportInitialize)numUnit).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvPrepositionalPhrase).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }

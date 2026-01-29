@@ -360,6 +360,39 @@ class AppLocalizationsVi extends AppLocalizations {
   String get vocabulary => 'Từ vựng';
 
   @override
+  String get vocabularyFilterLabel => 'Lọc:';
+
+  @override
+  String get vocabularySearchHint => 'Tìm từ/định nghĩa';
+
+  @override
+  String get vocabularyNoMatch => 'Không tìm thấy từ vựng phù hợp';
+
+  @override
+  String get vocabularySortWordAsc => 'A-Z';
+
+  @override
+  String get vocabularySortWordDesc => 'Z-A';
+
+  @override
+  String get vocabularySortDefinitionAsc => 'ĐN A-Z';
+
+  @override
+  String get vocabularySortDefinitionDesc => 'ĐN Z-A';
+
+  @override
+  String get practiceVocabularyTitle => 'Luyện tập từ vựng';
+
+  @override
+  String get practiceVocabularyEmpty => 'Không có từ vựng để luyện tập';
+
+  @override
+  String get flashcardTapShowWord => 'Chạm để xem từ';
+
+  @override
+  String get flashcardTapShowDefinition => 'Chạm để xem định nghĩa';
+
+  @override
   String get weakSkills => 'Kỹ năng yếu';
 
   @override

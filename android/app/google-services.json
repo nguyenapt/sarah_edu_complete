@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:595631319099:android:49e1508247e9c95f33941e",
-        "android_client_info": {
-          "package_name": "com.learnenglish.withsarah.sarah_learn_english"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA1d1tk-pIaibVVZ97XgImmsEkjsXwrKXs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "595631319099-bmkhfmrtfsqueanp0ku245iulrjn6v2e.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:595631319099:android:09e616c17e0b5d7433941e",
         "android_client_info": {
           "package_name": "com.sarah.edu.complete.sarah_edu_complete"
@@ -48,6 +19,14 @@
           "android_info": {
             "package_name": "com.sarah.edu.complete.sarah_edu_complete",
             "certificate_hash": "80d1043e5298526cb23d1edb31a1627d83d83b07"
+          }
+        },
+        {
+          "client_id": "595631319099-5qb20fcjibcv14ke9fjlc08s4oo7hajs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sarah.edu.complete.sarah_edu_complete",
+            "certificate_hash": "d3d7a2d1935a8afb95c0ae2c64144300301f4faa"
           }
         },
         {

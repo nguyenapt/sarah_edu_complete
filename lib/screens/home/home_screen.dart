@@ -15,6 +15,9 @@ import '../learning/level_selection_screen.dart';
 import '../learning/exercise_screen.dart';
 import '../auth/login_screen.dart';
 import '../placement/placement_test_screen.dart';
+import '../vocabulary/vocabulary_collection_screen.dart';
+import '../weak_skills/weak_skill_screen.dart';
+import '../progress/progress_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -138,8 +141,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             AppLocalizations.of(context)!.vocabulary,
                             Icons.book,
                             () {
-                              // TODO: Navigate to vocabulary screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const VocabularyCollectionScreen(),
+                                ),
+                              );
                             },
+                            showComingSoon: false,
+                            subtitle: null,
+                            iconColor: const Color(0xFFFFA726),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -168,8 +179,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             AppLocalizations.of(context)!.vocabulary,
                             Icons.book,
                             () {
-                              // TODO: Navigate to vocabulary screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const VocabularyCollectionScreen(),
+                                ),
+                              );
                             },
+                            showComingSoon: false,
+                            subtitle: null,
+                            iconColor: const Color(0xFFFFA726),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -178,8 +197,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             AppLocalizations.of(context)!.weakSkills,
                             Icons.trending_down,
                             () {
-                              // TODO: Navigate to weak skills screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const WeakSkillScreen(),
+                                ),
+                              );
                             },
+                            showComingSoon: false,
+                            subtitle: null,
+                            iconColor: const Color(0xFFE53935),
                           ),
                         ),
                       ],
@@ -199,8 +226,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             AppLocalizations.of(context)!.overview,
                             Icons.dashboard,
                             () {
-                              // TODO: Navigate to overview screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProgressScreen(),
+                                ),
+                              );
                             },
+                            showComingSoon: false,
+                            subtitle: null,
+                            iconColor: const Color(0xFF43A047),
                           ),
                         ),
                       ],
@@ -612,7 +647,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Compact Section Widget (cho 2 cột)
-  Widget _buildCompactSection(String title, IconData icon, VoidCallback onTap) {
+  Widget _buildCompactSection(
+    String title,
+    IconData icon,
+    VoidCallback onTap, {
+    bool showComingSoon = true,
+    String? subtitle,
+    Color? iconColor,
+  }) {
     return Card(
       child: InkWell(
         onTap: onTap,
@@ -653,17 +695,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(
                       icon,
                       size: 40,
-                      color: Colors.grey[400],
+                      color: iconColor ?? Colors.grey[400],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppLocalizations.of(context)!.featureComingSoon,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                    if (showComingSoon || subtitle != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        subtitle ?? AppLocalizations.of(context)!.featureComingSoon,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                    ],
                   ],
                 ),
               ),

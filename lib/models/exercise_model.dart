@@ -1045,6 +1045,8 @@ class ExerciseModel {
   final String lessonId;
   final String unitId;
   final String levelId;
+  final List<String> skillTypes;
+  final List<String> grammarTopics;
   final ExerciseType type;
   final String question;
   final dynamic content; // ChoiceContent, FillBlankContent, etc.
@@ -1064,6 +1066,8 @@ class ExerciseModel {
     required this.lessonId,
     required this.unitId,
     required this.levelId,
+    this.skillTypes = const [],
+    this.grammarTopics = const [],
     required this.type,
     required this.question,
     required this.content,
@@ -1223,6 +1227,8 @@ class ExerciseModel {
       lessonId: data['lessonId'] ?? '',
       unitId: data['unitId'] ?? '',
       levelId: data['levelId'] ?? '',
+      skillTypes: List<String>.from(data['skillTypes'] ?? const []),
+      grammarTopics: List<String>.from(data['grammarTopics'] ?? const []),
       type: type,
       question: questionText,
       content: content,
@@ -1270,6 +1276,8 @@ class ExerciseModel {
       'lessonId': lessonId,
       'unitId': unitId,
       'levelId': levelId,
+      'skillTypes': skillTypes,
+      'grammarTopics': grammarTopics,
       'type': type.toString(),
       'question': question,
       'content': contentMap,
