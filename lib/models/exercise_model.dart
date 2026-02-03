@@ -1083,6 +1083,14 @@ class ExerciseModel {
     this.defaultVoice,
   });
 
+  static List<String> _stringListFrom(dynamic value) {
+    if (value == null) return const [];
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+    return [value.toString()];
+  }
+
   /// Get title theo language code
   String getTitle(String languageCode) {
     if (title == null) return '';
@@ -1227,8 +1235,8 @@ class ExerciseModel {
       lessonId: data['lessonId'] ?? '',
       unitId: data['unitId'] ?? '',
       levelId: data['levelId'] ?? '',
-      skillTypes: List<String>.from(data['skillTypes'] ?? const []),
-      grammarTopics: List<String>.from(data['grammarTopics'] ?? const []),
+      skillTypes: _stringListFrom(data['skillTypes']),
+      grammarTopics: _stringListFrom(data['grammarTopics']),
       type: type,
       question: questionText,
       content: content,

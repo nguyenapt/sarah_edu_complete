@@ -60,6 +60,10 @@
             txtAudioUrl = new TextBox();
             label14 = new Label();
             txtImageUrl = new TextBox();
+            labelGrammarTopics = new Label();
+            txtGrammarTopics = new TextBox();
+            labelSkillTopics = new Label();
+            txtSkillTopics = new TextBox();
             btnExportJsonFireStore = new Button();
             btnExportJson = new Button();
             cbPropertyType = new ComboBox();
@@ -424,6 +428,38 @@
             txtImageUrl.Name = "txtImageUrl";
             txtImageUrl.Size = new Size(648, 23);
             txtImageUrl.TabIndex = 7;
+            // 
+            // labelGrammarTopics
+            // 
+            labelGrammarTopics.AutoSize = true;
+            labelGrammarTopics.Location = new Point(60, 236);
+            labelGrammarTopics.Name = "labelGrammarTopics";
+            labelGrammarTopics.Size = new Size(98, 15);
+            labelGrammarTopics.TabIndex = 2;
+            labelGrammarTopics.Text = "Grammar Topics";
+            // 
+            // txtGrammarTopics
+            // 
+            txtGrammarTopics.Location = new Point(173, 228);
+            txtGrammarTopics.Name = "txtGrammarTopics";
+            txtGrammarTopics.Size = new Size(618, 23);
+            txtGrammarTopics.TabIndex = 8;
+            // 
+            // labelSkillTopics
+            // 
+            labelSkillTopics.AutoSize = true;
+            labelSkillTopics.Location = new Point(60, 265);
+            labelSkillTopics.Name = "labelSkillTopics";
+            labelSkillTopics.Size = new Size(67, 15);
+            labelSkillTopics.TabIndex = 2;
+            labelSkillTopics.Text = "Skill Topics";
+            // 
+            // txtSkillTopics
+            // 
+            txtSkillTopics.Location = new Point(173, 257);
+            txtSkillTopics.Name = "txtSkillTopics";
+            txtSkillTopics.Size = new Size(618, 23);
+            txtSkillTopics.TabIndex = 9;
             // 
             // btnExportJsonFireStore
             // 
@@ -1056,6 +1092,10 @@
             Controls.Add(label4);
             Controls.Add(txtUnitId);
             Controls.Add(label3);
+            Controls.Add(txtSkillTopics);
+            Controls.Add(labelSkillTopics);
+            Controls.Add(txtGrammarTopics);
+            Controls.Add(labelGrammarTopics);
             Controls.Add(txtImageUrl);
             Controls.Add(label14);
             Controls.Add(txtAudioUrl);
@@ -1138,6 +1178,10 @@
         private TextBox txtAudioUrl;
         private Label label14;
         private TextBox txtImageUrl;
+        private Label labelGrammarTopics;
+        private TextBox txtGrammarTopics;
+        private Label labelSkillTopics;
+        private TextBox txtSkillTopics;
         private Button btnExportJsonFireStore;
         private Button btnExportJson;
         private DataGridView grvContent;

@@ -75,6 +75,48 @@ class AppLocalizationsVi extends AppLocalizations {
   String get registerNow => 'Đăng ký ngay';
 
   @override
+  String get createAccountTitle => 'Tạo tài khoản mới';
+
+  @override
+  String get createAccountSubtitle => 'Điền thông tin để bắt đầu học';
+
+  @override
+  String get nameHint => 'Nhập họ và tên của bạn';
+
+  @override
+  String get emailHint => 'Nhập email của bạn';
+
+  @override
+  String get passwordHint => 'Nhập mật khẩu (ít nhất 6 ký tự)';
+
+  @override
+  String get confirmPasswordHint => 'Nhập lại mật khẩu';
+
+  @override
+  String get validationNameRequired => 'Vui lòng nhập họ và tên';
+
+  @override
+  String get validationEmailRequired => 'Vui lòng nhập email';
+
+  @override
+  String get validationEmailInvalid => 'Email không hợp lệ';
+
+  @override
+  String get validationPasswordRequired => 'Vui lòng nhập mật khẩu';
+
+  @override
+  String get validationPasswordMinLength => 'Mật khẩu phải có ít nhất 6 ký tự';
+
+  @override
+  String get validationConfirmPasswordRequired => 'Vui lòng xác nhận mật khẩu';
+
+  @override
+  String get validationPasswordMismatch => 'Mật khẩu không khớp';
+
+  @override
+  String get registerFailed => 'Đăng ký thất bại';
+
+  @override
   String get name => 'Họ và tên';
 
   @override

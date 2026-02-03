@@ -248,6 +248,90 @@ abstract class AppLocalizations {
   /// **'Register now'**
   String get registerNow;
 
+  /// No description provided for @createAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new account'**
+  String get createAccountTitle;
+
+  /// No description provided for @createAccountSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your details to start learning'**
+  String get createAccountSubtitle;
+
+  /// No description provided for @nameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get nameHint;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get emailHint;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter password (at least 6 characters)'**
+  String get passwordHint;
+
+  /// No description provided for @confirmPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-enter password'**
+  String get confirmPasswordHint;
+
+  /// No description provided for @validationNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get validationNameRequired;
+
+  /// No description provided for @validationEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get validationEmailRequired;
+
+  /// No description provided for @validationEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get validationEmailInvalid;
+
+  /// No description provided for @validationPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get validationPasswordRequired;
+
+  /// No description provided for @validationPasswordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get validationPasswordMinLength;
+
+  /// No description provided for @validationConfirmPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get validationConfirmPasswordRequired;
+
+  /// No description provided for @validationPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get validationPasswordMismatch;
+
+  /// No description provided for @registerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed'**
+  String get registerFailed;
+
   /// No description provided for @name.
   ///
   /// In en, this message translates to:

@@ -430,7 +430,8 @@ namespace FirestoreImporter
                 MessageBox.Show($"Đã upload Exercise lên Firestore thành công!\nExercise ID: {exercise.Id}",
                     "Thành công",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information);                
+
             }
             catch (Exception ex)
             {
@@ -492,6 +493,22 @@ namespace FirestoreImporter
 
             // Exercise với groupQuestions không cần Content ở level exercise
             // Content sẽ nằm trong từng GroupQuestion
+            // split theo dấu phẩy
+            if (!string.IsNullOrWhiteSpace(txtGrammarTopics.Text))
+            {
+                exercise.GrammarTopics = txtGrammarTopics.Text.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtSkillTopics.Text))
+            {
+                exercise.SkillTypes = txtSkillTopics.Text.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList();
+            }
 
             return exercise;
         }

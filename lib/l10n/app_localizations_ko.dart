@@ -75,6 +75,50 @@ class AppLocalizationsKo extends AppLocalizations {
   String get registerNow => '지금 가입하기';
 
   @override
+  String get createAccountTitle => 'Create a new account';
+
+  @override
+  String get createAccountSubtitle => 'Fill in your details to start learning';
+
+  @override
+  String get nameHint => 'Enter your full name';
+
+  @override
+  String get emailHint => 'Enter your email';
+
+  @override
+  String get passwordHint => 'Enter password (at least 6 characters)';
+
+  @override
+  String get confirmPasswordHint => 'Re-enter password';
+
+  @override
+  String get validationNameRequired => 'Please enter your name';
+
+  @override
+  String get validationEmailRequired => 'Please enter your email';
+
+  @override
+  String get validationEmailInvalid => 'Invalid email';
+
+  @override
+  String get validationPasswordRequired => 'Please enter your password';
+
+  @override
+  String get validationPasswordMinLength =>
+      'Password must be at least 6 characters';
+
+  @override
+  String get validationConfirmPasswordRequired =>
+      'Please confirm your password';
+
+  @override
+  String get validationPasswordMismatch => 'Passwords do not match';
+
+  @override
+  String get registerFailed => 'Registration failed';
+
+  @override
   String get name => '이름';
 
   @override

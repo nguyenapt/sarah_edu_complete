@@ -51,6 +51,12 @@ public class ExerciseModel
     [JsonProperty("title")]
     public Dictionary<string, string>? Title { get; set; }
 
+    [JsonProperty("grammarTopics")]
+    public List<string> GrammarTopics { get; set; } = new();
+
+    [JsonProperty("skillTypes")]
+    public List<string> SkillTypes { get; set; } = new();
+
     public Dictionary<string, object> ToFirestore()
     {
         var data = new Dictionary<string, object>
@@ -109,6 +115,16 @@ public class ExerciseModel
         if (Title != null)
         {
             data["title"] = Title;
+        }
+
+        if (GrammarTopics != null && GrammarTopics.Count > 0)
+        {
+            data["grammarTopics"] = GrammarTopics;
+        }
+
+        if (SkillTypes != null && SkillTypes.Count > 0)
+        {
+            data["skillTypes"] = SkillTypes;
         }
 
         return data;

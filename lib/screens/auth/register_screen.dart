@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import 'login_screen.dart';
 
@@ -31,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _handleRegister() async {
     if (_formKey.currentState!.validate()) {
+      final l10n = AppLocalizations.of(context)!;
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final success = await authProvider.registerWithEmailAndPassword(
         _emailController.text.trim(),
@@ -44,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else if (!success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Đăng ký thất bại'),
+            content: Text(authProvider.errorMessage ?? l10n.registerFailed),
             backgroundColor: Colors.red,
           ),
         );
@@ -54,9 +56,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Đăng ký'),
+        title: Text(l10n.register),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -68,14 +71,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const SizedBox(height: 20),
                 Text(
-                  'Tạo tài khoản mới',
+                  l10n.createAccountTitle,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Điền thông tin để bắt đầu học',
+                  l10n.createAccountSubtitle,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -85,14 +88,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Name field
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Họ và tên',
-                    hintText: 'Nhập họ và tên của bạn',
-                    prefixIcon: Icon(Icons.person),
+                  decoration: InputDecoration(
+                    labelText: l10n.name,
+                    hintText: l10n.nameHint,
+                    prefixIcon: const Icon(Icons.person),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập họ và tên';
+                      return l10n.validationNameRequired;
                     }
                     return null;
                   },
@@ -103,17 +106,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Nhập email của bạn',
-                    prefixIcon: Icon(Icons.email),
+                  decoration: InputDecoration(
+                    labelText: l10n.email,
+                    hintText: l10n.emailHint,
+                    prefixIcon: const Icon(Icons.email),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập email';
+                      return l10n.validationEmailRequired;
                     }
                     if (!value.contains('@')) {
-                      return 'Email không hợp lệ';
+                      return l10n.validationEmailInvalid;
                     }
                     return null;
                   },
@@ -125,8 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    labelText: 'Mật khẩu',
-                    hintText: 'Nhập mật khẩu (ít nhất 6 ký tự)',
+                    labelText: l10n.password,
+                    hintText: l10n.passwordHint,
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -143,10 +146,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập mật khẩu';
+                      return l10n.validationPasswordRequired;
                     }
                     if (value.length < 6) {
-                      return 'Mật khẩu phải có ít nhất 6 ký tự';
+                      return l10n.validationPasswordMinLength;
                     }
                     return null;
                   },
@@ -158,8 +161,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
                   decoration: InputDecoration(
-                    labelText: 'Xác nhận mật khẩu',
-                    hintText: 'Nhập lại mật khẩu',
+                    labelText: l10n.confirmPassword,
+                    hintText: l10n.confirmPasswordHint,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -176,10 +179,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng xác nhận mật khẩu';
+                      return l10n.validationConfirmPasswordRequired;
                     }
                     if (value != _passwordController.text) {
-                      return 'Mật khẩu không khớp';
+                      return l10n.validationPasswordMismatch;
                     }
                     return null;
                   },
@@ -206,9 +209,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : const Text(
-                              'Đăng ký',
-                              style: TextStyle(
+                          : Text(
+                              l10n.register,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -223,14 +226,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Đã có tài khoản? ',
+                      l10n.alreadyHaveAccount,
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Đăng nhập'),
+                      child: Text(l10n.login),
                     ),
                   ],
                 ),

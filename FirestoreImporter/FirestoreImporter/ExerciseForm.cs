@@ -224,6 +224,8 @@ namespace FirestoreImporter
                 numExercise.Enabled = false;
                 numLesson.Enabled = false;
                 numUnit.Enabled = false;
+                txtGrammarTopics.Enabled = false;
+                txtSkillTopics.Enabled = false;
 
                 // Ẩn nút Export Json và Export Json FireStore, chỉ hiển thị nút Save
                 btnExportJson.Visible = false;
@@ -874,6 +876,22 @@ namespace FirestoreImporter
             if (!string.IsNullOrWhiteSpace(txtImageUrl.Text))
             {
                 exercise.ImageUrl = txtImageUrl.Text.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtGrammarTopics.Text))
+            {
+                exercise.GrammarTopics = txtGrammarTopics.Text.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtSkillTopics.Text))
+            {
+                exercise.SkillTypes = txtSkillTopics.Text.Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList();
             }
 
             // Content từ dictionary

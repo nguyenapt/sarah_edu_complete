@@ -67,6 +67,10 @@
             numExercise = new NumericUpDown();
             cbType = new ComboBox();
             label10 = new Label();
+            txtGrammarTopics = new TextBox();
+            label12 = new Label();
+            label15 = new Label();
+            txtSkillTopics = new TextBox();
             ((System.ComponentModel.ISupportInitialize)grvQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPoints).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimeLimit).BeginInit();
@@ -422,11 +426,47 @@
             label10.TabIndex = 22;
             label10.Text = "Exercise Type";
             // 
+            // txtGrammarTopics
+            // 
+            txtGrammarTopics.Location = new Point(464, 833);
+            txtGrammarTopics.Name = "txtGrammarTopics";
+            txtGrammarTopics.Size = new Size(323, 23);
+            txtGrammarTopics.TabIndex = 24;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(329, 836);
+            label12.Name = "label12";
+            label12.Size = new Size(94, 15);
+            label12.TabIndex = 23;
+            label12.Text = "Grammar Topics";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(329, 865);
+            label15.Name = "label15";
+            label15.Size = new Size(61, 15);
+            label15.TabIndex = 23;
+            label15.Text = "Skill Types";
+            // 
+            // txtSkillTopics
+            // 
+            txtSkillTopics.Location = new Point(464, 862);
+            txtSkillTopics.Name = "txtSkillTopics";
+            txtSkillTopics.Size = new Size(323, 23);
+            txtSkillTopics.TabIndex = 24;
+            // 
             // ExerciseGroupForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(854, 990);
+            Controls.Add(txtSkillTopics);
+            Controls.Add(label15);
+            Controls.Add(txtGrammarTopics);
+            Controls.Add(label12);
             Controls.Add(label10);
             Controls.Add(cbType);
             Controls.Add(numExercise);
@@ -515,5 +555,9 @@
         private NumericUpDown numExercise;
         private ComboBox cbType;
         private Label label10;
+        private TextBox txtGrammarTopics;
+        private Label label12;
+        private Label label15;
+        private TextBox txtSkillTopics;
     }
 }

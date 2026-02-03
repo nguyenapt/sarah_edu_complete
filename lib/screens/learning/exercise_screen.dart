@@ -82,6 +82,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
             const SizedBox(height: 24),
 
+            if (widget.exercise.groupQuestions == null ||
+                widget.exercise.groupQuestions!.isEmpty)
+              _buildExplanationBox(widget.exercise.explanation),
+
             // Submit Button - chỉ hiển thị khi không có groupQuestions
             if (!_isSubmitted && 
                 (widget.exercise.groupQuestions == null || 
@@ -340,6 +344,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     }
     
     final currentQuestion = groupQuestions[_currentGroupQuestionIndex];
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final currentExplanation = currentQuestion.getExplanation(languageCode);
     final isLastQuestion = _currentGroupQuestionIndex == groupQuestions.length - 1;
     final hasMultipleQuestions = groupQuestions.length > 1;
     
@@ -359,6 +366,11 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           _buildMultipleChoiceForGroup(currentQuestion, _currentGroupQuestionIndex)
         else if (currentQuestion.type == ExerciseType.matching)
           _buildMatchingForGroup(currentQuestion, _currentGroupQuestionIndex),
+
+        if (currentExplanation != null && currentExplanation.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _buildExplanationBox(currentExplanation),
+        ],
         
         const SizedBox(height: 24),
         
@@ -470,6 +482,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         // Hiển thị tất cả questions đã unlock
         ...List.generate(lastUnlockedIndex + 1, (index) {
           final question = groupQuestions[index];
+          final languageCode =
+              Provider.of<LanguageProvider>(context, listen: false)
+                  .currentLanguageCode;
+          final explanation = question.getExplanation(languageCode);
           
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -480,6 +496,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                 _buildSingleChoiceForGroup(question, index)
               else if (question.type == ExerciseType.multipleChoice)
                 _buildMultipleChoiceForGroup(question, index),
+              if (explanation != null && explanation.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                _buildExplanationBox(explanation),
+              ],
               if (index < lastUnlockedIndex) const SizedBox(height: 24),
             ],
           );
@@ -4077,6 +4097,43 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildExplanationBox(String? explanation) {
+    if (explanation == null || explanation.trim().isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.lightbulb, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                'Giải thích',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _looksLikeHtml(explanation)
+              ? Html(data: explanation)
+              : Text(explanation),
+        ],
       ),
     );
   }
