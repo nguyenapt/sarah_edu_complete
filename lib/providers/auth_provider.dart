@@ -27,32 +27,86 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // Listen to auth state changes
+    // Kiểm tra currentUser ngay lập tức để tự động đăng nhập nhanh hơn
+    // Điều này quan trọng cho việc khôi phục session trên Android
+    _checkCurrentUser();
+
+    // Listen to auth state changes (sẽ trigger khi có thay đổi auth state)
     _authService.authStateChanges.listen((User? firebaseUser) async {
       try {
+        // Nếu đã có user từ _checkCurrentUser, không cần setup lại
+        if (_user != null && firebaseUser?.uid == _user?.id) {
+          debugPrint('✅ User already loaded, skipping duplicate setup');
+          return;
+        }
+
         // Cancel previous subscription if exists
         await _userSubscription?.cancel();
         _userSubscription = null;
 
         if (firebaseUser != null) {
+          debugPrint('🔄 Auth state changed: User ${firebaseUser.uid}');
           await _setupUserListener(firebaseUser);
         } else {
+          debugPrint('ℹ️ Auth state changed: No user');
           _user = null;
           _isLoading = false;
           notifyListeners();
         }
       } catch (e) {
-        debugPrint('Error in auth state listener: $e');
+        debugPrint('❌ Error in auth state listener: $e');
         _user = null;
         _isLoading = false;
         notifyListeners();
       }
     }, onError: (error) {
-      debugPrint('Error in auth state stream: $error');
+      debugPrint('❌ Error in auth state stream: $error');
       _user = null;
       _isLoading = false;
       notifyListeners();
     });
+  }
+
+  /// Kiểm tra currentUser ngay lập tức để tự động đăng nhập
+  /// Đây là bước quan trọng để khôi phục session đã lưu trên Android
+  Future<void> _checkCurrentUser() async {
+    try {
+      // Firebase Auth tự động lưu session vào local storage trên Android
+      // currentUser sẽ trả về user nếu session còn hợp lệ
+      final currentUser = _authService.currentUser;
+      
+      if (currentUser != null) {
+        debugPrint('✅ Found existing user session: ${currentUser.uid}');
+        debugPrint('   Email: ${currentUser.email}');
+        debugPrint('   Display Name: ${currentUser.displayName}');
+        
+        // Kiểm tra token để đảm bảo session còn hợp lệ
+        try {
+          // Refresh token để đảm bảo session còn valid
+          await currentUser.getIdToken(true);
+          debugPrint('✅ Token refreshed successfully, session is valid');
+        } catch (tokenError) {
+          debugPrint('⚠️ Token refresh failed: $tokenError');
+          // Nếu token không hợp lệ, clear user
+          _isLoading = false;
+          _user = null;
+          notifyListeners();
+          return;
+        }
+        
+        // Load user data ngay lập tức
+        await _setupUserListener(currentUser);
+      } else {
+        debugPrint('ℹ️ No existing user session found - user needs to login');
+        _isLoading = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('❌ Error checking current user: $e');
+      _isLoading = false;
+      _user = null;
+      notifyListeners();
+    }
   }
 
   /// Setup Firestore snapshot listener cho user data (realtime updates)

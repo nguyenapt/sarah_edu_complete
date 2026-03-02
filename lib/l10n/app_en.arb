@@ -53,6 +53,8 @@
   "units": "Units",
   "lessons": "Lessons",
   "exercises": "Exercises",
+  "exerciseDetails": "Exercise Details",
+  "viewDetails": "View Details",
   "theory": "Theory",
   "examples": "Examples",
   "usage": "Usage",

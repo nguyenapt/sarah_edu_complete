@@ -170,6 +170,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get exercises => 'अभ्यास';
 
   @override
+  String get exerciseDetails => 'Exercise Details';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
   String get theory => 'सिद्धांत';
 
   @override

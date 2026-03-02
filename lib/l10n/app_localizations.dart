@@ -434,6 +434,18 @@ abstract class AppLocalizations {
   /// **'Exercises'**
   String get exercises;
 
+  /// No description provided for @exerciseDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Details'**
+  String get exerciseDetails;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
   /// No description provided for @theory.
   ///
   /// In en, this message translates to:

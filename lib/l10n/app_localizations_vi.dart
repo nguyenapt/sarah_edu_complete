@@ -168,6 +168,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get exercises => 'Bài tập';
 
   @override
+  String get exerciseDetails => 'Chi tiết bài tập';
+
+  @override
+  String get viewDetails => 'Xem chi tiết';
+
+  @override
   String get theory => 'Lý thuyết';
 
   @override

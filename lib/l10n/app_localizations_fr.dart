@@ -171,6 +171,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exercises => 'Exercices';
 
   @override
+  String get exerciseDetails => 'Exercise Details';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
   String get theory => 'Théorie';
 
   @override

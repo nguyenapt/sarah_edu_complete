@@ -171,6 +171,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get exercises => 'Упражнения';
 
   @override
+  String get exerciseDetails => 'Exercise Details';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
   String get theory => 'Теория';
 
   @override

@@ -170,6 +170,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exercises => '练习';
 
   @override
+  String get exerciseDetails => 'Exercise Details';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
   String get theory => '理论';
 
   @override

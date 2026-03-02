@@ -171,6 +171,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exercises => 'Übungen';
 
   @override
+  String get exerciseDetails => 'Exercise Details';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
   String get theory => 'Theorie';
 
   @override

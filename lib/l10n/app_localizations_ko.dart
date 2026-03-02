@@ -170,6 +170,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get exercises => '연습문제';
 
   @override
+  String get exerciseDetails => 'Exercise Details';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
   String get theory => '이론';
 
   @override
