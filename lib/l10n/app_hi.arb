@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "1 उत्तर चुनें",
   "selectMultipleAnswersShort": "कई उत्तर चुनें",
   "listening": "सुनना",
+  "grammar": "व्याकरण",
+  "reading": "पढ़ना",
   "speaking": "बोलना",
   "progressTitle": "सीखने की प्रगति",
   "featureInDevelopment": "विकास में सुविधा",
@@ -245,6 +247,44 @@
   "continueButton": "जारी रखें",
   "xp": "XP",
   "levelLabel": "स्तर",
-  "user": "उपयोगकर्ता"
+  "user": "उपयोगकर्ता",
+  "levelSkipTest": "स्तर छोड़ें परीक्षण",
+  "skipToLevel": "{level} पर जाएं",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "आपने आज पहले से ही परीक्षण दिया है। कृपया कल पुनः प्रयास करें।",
+  "levelUnlocked": "स्तर {level} अनलॉक हो गया!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "परीक्षण असफल",
+  "testFailedMessage": "परीक्षण असफल। स्तर को अनलॉक करने के लिए आपको कम से कम 80% की आवश्यकता है।",
+  "noQuestionsAvailable": "कोई प्रश्न उपलब्ध नहीं",
+  "pleaseLogin": "कृपया लॉगिन करें",
+  "questionNumber": "प्रश्न {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "अंक",
+  "previous": "पिछला",
+  "next": "अगला",
+  "submit": "जमा करें",
+  "ok": "ठीक"
 }
 

@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "1つ選択",
   "selectMultipleAnswersShort": "複数選択",
   "listening": "リスニング",
+  "grammar": "文法",
+  "reading": "リーディング",
   "speaking": "スピーキング",
   "progressTitle": "学習進捗",
   "featureInDevelopment": "開発中の機能",
@@ -245,6 +247,44 @@
   "continueButton": "続ける",
   "xp": "XP",
   "levelLabel": "レベル",
-  "user": "ユーザー"
+  "user": "ユーザー",
+  "levelSkipTest": "レベルスキップテスト",
+  "skipToLevel": "{level}にスキップ",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "本日はすでにテストを受けています。明日再度お試しください。",
+  "levelUnlocked": "レベル{level}がロック解除されました！",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "テスト失敗",
+  "testFailedMessage": "テスト失敗。レベルをロック解除するには、少なくとも80%が必要です。",
+  "noQuestionsAvailable": "質問がありません",
+  "pleaseLogin": "ログインしてください",
+  "questionNumber": "質問 {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "ポイント",
+  "previous": "前へ",
+  "next": "次へ",
+  "submit": "提出",
+  "ok": "OK"
 }
 

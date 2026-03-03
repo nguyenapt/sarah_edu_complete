@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import '../../models/level_model.dart';
 import '../../models/unit_model.dart';
 import '../../models/lesson_model.dart';
@@ -6,6 +7,7 @@ import '../../models/exercise_model.dart';
 import '../../models/placement_test_model.dart';
 import '../../models/progress_model.dart';
 import '../../models/user_model.dart';
+import '../../models/level_skip_test_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../core/utils/progress_comparator.dart';
 import 'level_progression_service.dart';
@@ -592,6 +594,157 @@ class FirestoreService {
       print('❌ Exception in saveExerciseProgress: $e');
       print('Stack trace: $stackTrace');
       throw Exception('Error saving exercise progress: $e');
+    }
+  }
+
+  // Level Skip Test Methods
+  /// Load level skip test questions từ Firestore collection levelSkipTests
+  Future<List<PlacementTestQuestion>> loadLevelSkipTestQuestions(
+    String targetLevel,
+  ) async {
+    try {
+      // Normalize level to uppercase
+      final normalizedLevel = targetLevel.toUpperCase();
+      final collectionName = FirebaseConstants.levelSkipTestCollection;
+      
+      debugPrint('Querying collection: $collectionName for level: $normalizedLevel');
+      
+      // Thử query với where clause trước
+      try {
+        final snapshot = await _firestore
+            .collection(collectionName)
+            .where('level', isEqualTo: normalizedLevel)
+            .get();
+
+        debugPrint('Level Skip Test Query: level=$normalizedLevel, found ${snapshot.docs.length} documents');
+        
+        if (snapshot.docs.isNotEmpty) {
+          return snapshot.docs
+              .map((doc) => PlacementTestQuestion.fromMap(doc.data(), doc.id))
+              .toList();
+        }
+      } catch (e) {
+        debugPrint('Query with where clause failed: $e');
+      }
+      
+      // Fallback: Query tất cả rồi filter ở client side
+      debugPrint('Falling back to client-side filter...');
+      
+      try {
+        final allSnapshot = await _firestore
+            .collection(collectionName)
+            .get();
+        
+        debugPrint('Total documents in $collectionName: ${allSnapshot.docs.length}');
+        
+        if (allSnapshot.docs.isEmpty) {
+          // Thử các collection names khác có thể
+          debugPrint('Trying alternative collection names...');
+          final altNames = ['levelSkipTest', 'level_skip_tests', 'levelSkipTestQuestions'];
+          for (final altName in altNames) {
+            try {
+              final altSnapshot = await _firestore.collection(altName).limit(1).get();
+              if (altSnapshot.docs.isNotEmpty) {
+                debugPrint('Found documents in alternative collection: $altName');
+                throw Exception('Documents found in collection "$altName" but not in "$collectionName". Please check collection name.');
+              }
+            } catch (e) {
+              if (e.toString().contains('found in collection')) {
+                rethrow;
+              }
+              // Ignore other errors
+            }
+          }
+          
+          throw Exception('No documents found in collection "$collectionName". Please import data from JSON files.');
+        }
+        
+        // Debug: Log sample document
+        final sampleDoc = allSnapshot.docs.first.data();
+        debugPrint('Sample document ID: ${allSnapshot.docs.first.id}');
+        debugPrint('Sample document level value: ${sampleDoc['level']} (type: ${sampleDoc['level'].runtimeType})');
+        debugPrint('Target level: $normalizedLevel (type: String)');
+        
+        // Filter ở client side
+        final filteredDocs = allSnapshot.docs.where((doc) {
+          final docLevel = doc.data()['level']?.toString().toUpperCase();
+          return docLevel == normalizedLevel;
+        }).toList();
+        
+        debugPrint('Filtered documents: ${filteredDocs.length}');
+        
+        if (filteredDocs.isEmpty) {
+          final availableLevels = allSnapshot.docs.map((d) => d.data()['level']?.toString()).whereType<String>().toSet();
+          throw Exception('No questions found for level $normalizedLevel. Available levels: ${availableLevels.join(", ")}');
+        }
+        
+        return filteredDocs
+            .map((doc) => PlacementTestQuestion.fromMap(doc.data(), doc.id))
+            .toList();
+      } catch (e) {
+        if (e.toString().contains('No documents found')) {
+          rethrow;
+        }
+        debugPrint('Error querying collection: $e');
+        rethrow;
+      }
+    } catch (e) {
+      debugPrint('Error fetching level skip test questions: $e');
+      throw Exception('Error fetching level skip test questions: $e');
+    }
+  }
+
+  /// Lấy level skip test attempt của user trong ngày
+  Future<LevelSkipTestAttempt?> getLevelSkipTestAttempt(
+    String userId,
+    String date,
+  ) async {
+    try {
+      final docId = '${userId}_$date';
+      final doc = await _firestore
+          .collection(FirebaseConstants.levelSkipTestAttemptsCollection)
+          .doc(docId)
+          .get();
+
+      if (!doc.exists) return null;
+      return LevelSkipTestAttempt.fromMap(doc.data()!);
+    } catch (e) {
+      throw Exception('Error fetching level skip test attempt: $e');
+    }
+  }
+
+  /// Lưu level skip test attempt (tăng count trong ngày)
+  Future<void> saveLevelSkipTestAttempt(
+    String userId,
+    String date,
+  ) async {
+    try {
+      final docId = '${userId}_$date';
+      final docRef = _firestore
+          .collection(FirebaseConstants.levelSkipTestAttemptsCollection)
+          .doc(docId);
+
+      // Kiểm tra xem đã có attempt chưa
+      final doc = await docRef.get();
+      
+      if (doc.exists) {
+        // Tăng count
+        await docRef.update({
+          'count': FieldValue.increment(1),
+          'lastAttemptAt': FieldValue.serverTimestamp(),
+        });
+      } else {
+        // Tạo mới
+        final attempt = LevelSkipTestAttempt(
+          userId: userId,
+          date: date,
+          count: 1,
+          lastAttemptAt: DateTime.now(),
+        );
+        await docRef.set(attempt.toMap());
+      }
+    } catch (e) {
+      throw Exception('Error saving level skip test attempt: $e');
     }
   }
 }

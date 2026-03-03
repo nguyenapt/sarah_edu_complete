@@ -1,0 +1,264 @@
+{
+  "levelSkipTest": {
+    "lst_c2_001": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: So intricate ___ the design that it defied conventional categorization.",
+        "vi": "Chọn dạng đúng: Thiết kế ___ phức tạp đến nỗi nó thách thức sự phân loại thông thường."
+      },
+      "options": ["was", "is", "are", "were"],
+      "correctAnswers": ["was"],
+      "explanation": {
+        "en": "In 'So + adjective + be + subject' structure with inversion, use past tense 'was' for past context.",
+        "vi": "Trong cấu trúc 'So + tính từ + be + chủ ngữ' với đảo ngữ, dùng thì quá khứ 'was' cho ngữ cảnh quá khứ."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_002": {
+      "category": "vocabulary",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'ineffable' mean?",
+        "vi": "'Ineffable' có nghĩa là gì?"
+      },
+      "options": ["too great or extreme to be expressed in words", "easily expressed", "very common", "very simple"],
+      "correctAnswers": ["too great or extreme to be expressed in words"],
+      "explanation": {
+        "en": "'Ineffable' means too great or extreme to be expressed or described in words.",
+        "vi": "'Ineffable' có nghĩa là quá lớn hoặc cực đoan đến mức không thể diễn tả hoặc mô tả bằng lời."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_003": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Were the circumstances different, a more favorable outcome ___ been possible.",
+        "vi": "Chọn dạng đúng: Nếu hoàn cảnh khác đi, một kết quả thuận lợi hơn đã ___ có thể."
+      },
+      "options": ["would", "would have", "will", "will have"],
+      "correctAnswers": ["would have"],
+      "explanation": {
+        "en": "In formal conditional with 'Were' at the beginning, use 'would have + past participle' for unreal past.",
+        "vi": "Trong câu điều kiện trang trọng với 'Were' ở đầu, dùng 'would have + quá khứ phân từ' cho quá khứ không thực tế."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_004": {
+      "category": "reading",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The dialectical tension between individual agency and structural determinism constitutes a central problematic in contemporary social theory. While structuralists emphasize the constraining influence of social institutions, agency theorists foreground the capacity of individuals to act autonomously. The synthesis emerging from this debate recognizes that agency and structure are mutually constitutive, with neither being reducible to the other.' What is the emerging synthesis?",
+        "vi": "Đọc: 'Sự căng thẳng biện chứng giữa quyền tự chủ cá nhân và chủ nghĩa quyết định cấu trúc tạo thành một vấn đề trung tâm trong lý thuyết xã hội đương đại. Trong khi các nhà cấu trúc luận nhấn mạnh ảnh hưởng ràng buộc của các thể chế xã hội, các nhà lý thuyết quyền tự chủ đặt nền tảng cho khả năng của các cá nhân hành động tự chủ. Sự tổng hợp xuất hiện từ cuộc tranh luận này nhận ra rằng quyền tự chủ và cấu trúc là tương hỗ cấu thành, với cả hai đều không thể quy giản về nhau.' Sự tổng hợp đang xuất hiện là gì?"
+      },
+      "options": ["Agency is reducible to structure", "Structure is reducible to agency", "Agency and structure are mutually constitutive", "Only structure matters"],
+      "correctAnswers": ["Agency and structure are mutually constitutive"],
+      "explanation": {
+        "en": "The text states 'The synthesis emerging from this debate recognizes that agency and structure are mutually constitutive'.",
+        "vi": "Đoạn văn nêu rõ 'Sự tổng hợp xuất hiện từ cuộc tranh luận này nhận ra rằng quyền tự chủ và cấu trúc là tương hỗ cấu thành'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_005": {
+      "category": "vocabulary",
+      "level": "C2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The theoretical framework was designed to ___ the intricate relationships between various conceptual domains.",
+        "vi": "Điền vào chỗ trống: Khung lý thuyết được thiết kế để ___ các mối quan hệ phức tạp giữa các lĩnh vực khái niệm khác nhau."
+      },
+      "options": ["obscure", "elucidate", "complicate", "simplify"],
+      "correctAnswers": ["elucidate"],
+      "explanation": {
+        "en": "'Elucidate' means to make clear or explain, which fits the context of a framework clarifying relationships.",
+        "vi": "'Elucidate' có nghĩa là làm rõ hoặc giải thích, phù hợp với ngữ cảnh một khung làm rõ các mối quan hệ."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_006": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Scarcely ___ the negotiations commenced when fundamental disagreements emerged.",
+        "vi": "Chọn dạng đúng: Các cuộc đàm phán vừa ___ bắt đầu thì các bất đồng cơ bản đã xuất hiện."
+      },
+      "options": ["had", "has", "have", "was"],
+      "correctAnswers": ["had"],
+      "explanation": {
+        "en": "In 'Scarcely... when' structure, use past perfect 'had' with inversion: 'Scarcely had... when'.",
+        "vi": "Trong cấu trúc 'Scarcely... when', dùng quá khứ hoàn thành 'had' với đảo ngữ: 'Scarcely had... when'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_007": {
+      "category": "vocabulary",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'recalcitrant' mean?",
+        "vi": "'Recalcitrant' có nghĩa là gì?"
+      },
+      "options": ["cooperative", "having an obstinately uncooperative attitude", "very helpful", "very easy"],
+      "correctAnswers": ["having an obstinately uncooperative attitude"],
+      "explanation": {
+        "en": "'Recalcitrant' means having an obstinately uncooperative attitude toward authority or discipline.",
+        "vi": "'Recalcitrant' có nghĩa là có thái độ không hợp tác một cách cứng đầu đối với quyền lực hoặc kỷ luật."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_008": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Only by understanding the historical context ___ one fully appreciate the significance of these developments.",
+        "vi": "Chọn dạng đúng: Chỉ bằng cách hiểu bối cảnh lịch sử, người ta mới ___ đánh giá đầy đủ ý nghĩa của những phát triển này."
+      },
+      "options": ["can", "could", "will", "would"],
+      "correctAnswers": ["can"],
+      "explanation": {
+        "en": "After 'Only by' at the beginning, use inversion with modal 'can' for general ability.",
+        "vi": "Sau 'Only by' ở đầu câu, dùng đảo ngữ với động từ khuyết thiếu 'can' cho khả năng chung."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_009": {
+      "category": "reading",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The deconstructionist critique of logocentrism challenges the privileging of speech over writing in Western philosophical tradition. Derrida's analysis reveals how binary oppositions, such as presence/absence and speech/writing, are hierarchically structured, with one term being valorized at the expense of the other. This critique aims to destabilize these hierarchies and expose the inherent instability of meaning.' What does deconstructionism aim to do?",
+        "vi": "Đọc: 'Sự phê phán của chủ nghĩa giải cấu trúc đối với chủ nghĩa logocentrism thách thức việc ưu tiên lời nói hơn viết trong truyền thống triết học phương Tây. Phân tích của Derrida tiết lộ cách các đối lập nhị phân, chẳng hạn như hiện diện/vắng mặt và lời nói/viết, được cấu trúc theo thứ bậc, với một thuật ngữ được đánh giá cao với chi phí của thuật ngữ kia. Sự phê phán này nhằm mục đích làm mất ổn định các thứ bậc này và phơi bày sự bất ổn vốn có của ý nghĩa.' Chủ nghĩa giải cấu trúc nhằm mục đích gì?"
+      },
+      "options": ["Stabilize hierarchies", "Destabilize hierarchies and expose meaning's instability", "Privilege speech over writing", "Maintain binary oppositions"],
+      "correctAnswers": ["Destabilize hierarchies and expose meaning's instability"],
+      "explanation": {
+        "en": "The text states 'This critique aims to destabilize these hierarchies and expose the inherent instability of meaning'.",
+        "vi": "Đoạn văn nêu rõ 'Sự phê phán này nhằm mục đích làm mất ổn định các thứ bậc này và phơi bày sự bất ổn vốn có của ý nghĩa'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_010": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use complex inversion correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng đảo ngữ phức tạp đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "Only after extensive research did they reach a conclusion.",
+        "Only after extensive research they reached a conclusion.",
+        "Barely had the results been published when controversy arose.",
+        "Barely the results had been published when controversy arose."
+      ],
+      "correctAnswers": ["Only after extensive research did they reach a conclusion.", "Barely had the results been published when controversy arose."],
+      "explanation": {
+        "en": "Complex inversion: After 'Only after' and 'Barely' at the beginning, use inversion: auxiliary + subject + main verb.",
+        "vi": "Đảo ngữ phức tạp: Sau 'Only after' và 'Barely' ở đầu câu, dùng đảo ngữ: trợ động từ + chủ ngữ + động từ chính."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "lst_c2_011": {
+      "category": "vocabulary",
+      "level": "C2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The argument was so ___ that it left no room for counter-interpretation.",
+        "vi": "Điền vào chỗ trống: Lập luận ___ đến nỗi nó không để lại chỗ cho sự diễn giải ngược lại."
+      },
+      "options": ["ambiguous", "cogent", "weak", "unclear"],
+      "correctAnswers": ["cogent"],
+      "explanation": {
+        "en": "'Cogent' means clear, logical, and convincing, which fits the context of an argument that leaves no room for counter-interpretation.",
+        "vi": "'Cogent' có nghĩa là rõ ràng, logic và thuyết phục, phù hợp với ngữ cảnh một lập luận không để lại chỗ cho sự diễn giải ngược lại."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_012": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Under no circumstances ___ such behavior be tolerated.",
+        "vi": "Chọn dạng đúng: Trong bất kỳ hoàn cảnh nào, hành vi như vậy ___ được dung thứ."
+      },
+      "options": ["should", "will", "can", "must"],
+      "correctAnswers": ["should"],
+      "explanation": {
+        "en": "After 'Under no circumstances' at the beginning, use inversion with modal 'should' for strong recommendation.",
+        "vi": "Sau 'Under no circumstances' ở đầu câu, dùng đảo ngữ với động từ khuyết thiếu 'should' cho khuyến nghị mạnh."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_013": {
+      "category": "reading",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The phenomenological reduction, as articulated by Husserl, involves bracketing the natural attitude and suspending judgment about the existence of the external world. This methodological procedure enables the phenomenologist to focus on the structures of consciousness itself, examining how objects are given to consciousness rather than making claims about their independent existence.' What does the phenomenological reduction enable?",
+        "vi": "Đọc: 'Sự quy giản hiện tượng học, như được diễn đạt bởi Husserl, liên quan đến việc đặt trong ngoặc thái độ tự nhiên và tạm ngừng phán đoán về sự tồn tại của thế giới bên ngoài. Thủ tục phương pháp luận này cho phép nhà hiện tượng học tập trung vào các cấu trúc của ý thức chính nó, xem xét cách các đối tượng được trao cho ý thức thay vì đưa ra các tuyên bố về sự tồn tại độc lập của chúng.' Sự quy giản hiện tượng học cho phép điều gì?"
+      },
+      "options": ["Focus on external objects", "Focus on structures of consciousness", "Make claims about independent existence", "Maintain the natural attitude"],
+      "correctAnswers": ["Focus on structures of consciousness"],
+      "explanation": {
+        "en": "The text states 'This methodological procedure enables the phenomenologist to focus on the structures of consciousness itself'.",
+        "vi": "Đoạn văn nêu rõ 'Thủ tục phương pháp luận này cho phép nhà hiện tượng học tập trung vào các cấu trúc của ý thức chính nó'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_014": {
+      "category": "vocabulary",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'hermeneutic' mean?",
+        "vi": "'Hermeneutic' có nghĩa là gì?"
+      },
+      "options": ["relating to interpretation, especially of texts", "relating to mathematics", "relating to physics", "relating to biology"],
+      "correctAnswers": ["relating to interpretation, especially of texts"],
+      "explanation": {
+        "en": "'Hermeneutic' means relating to interpretation, especially of texts or philosophical works.",
+        "vi": "'Hermeneutic' có nghĩa là liên quan đến sự diễn giải, đặc biệt là các văn bản hoặc tác phẩm triết học."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c2_015": {
+      "category": "grammar",
+      "level": "C2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Not only ___ the theory revolutionary, but it also challenged fundamental assumptions.",
+        "vi": "Chọn dạng đúng: Không chỉ lý thuyết ___ mang tính cách mạng, mà nó còn thách thức các giả định cơ bản."
+      },
+      "options": ["was", "is", "are", "were"],
+      "correctAnswers": ["was"],
+      "explanation": {
+        "en": "After 'Not only' at the beginning, use inversion with past tense 'was' for past context.",
+        "vi": "Sau 'Not only' ở đầu câu, dùng đảo ngữ với thì quá khứ 'was' cho ngữ cảnh quá khứ."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    }
+  }
+}

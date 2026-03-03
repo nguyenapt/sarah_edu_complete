@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "Выбрать 1 ответ",
   "selectMultipleAnswersShort": "Выбрать несколько ответов",
   "listening": "Аудирование",
+  "grammar": "Грамматика",
+  "reading": "Чтение",
   "speaking": "Говорение",
   "progressTitle": "Прогресс обучения",
   "featureInDevelopment": "Функция в разработке",
@@ -245,6 +247,44 @@
   "continueButton": "Продолжить",
   "xp": "XP",
   "levelLabel": "Уровень",
-  "user": "Пользователь"
+  "user": "Пользователь",
+  "levelSkipTest": "Тест пропуска уровня",
+  "skipToLevel": "Перейти к {level}",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "Вы уже прошли тест сегодня. Пожалуйста, попробуйте снова завтра.",
+  "levelUnlocked": "Уровень {level} разблокирован!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "Тест не пройден",
+  "testFailedMessage": "Тест не пройден. Вам нужно набрать не менее 80%, чтобы разблокировать уровень.",
+  "noQuestionsAvailable": "Нет доступных вопросов",
+  "pleaseLogin": "Пожалуйста, войдите в систему",
+  "questionNumber": "Вопрос {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "баллы",
+  "previous": "Назад",
+  "next": "Далее",
+  "submit": "Отправить",
+  "ok": "ОК"
 }
 

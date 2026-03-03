@@ -1,0 +1,264 @@
+{
+  "levelSkipTest": {
+    "lst_c1_001": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Were it not for his intervention, the situation ___ deteriorated further.",
+        "vi": "Chọn dạng đúng: Nếu không có sự can thiệp của anh ấy, tình huống đã ___ trở nên tồi tệ hơn."
+      },
+      "options": ["would", "would have", "will", "will have"],
+      "correctAnswers": ["would have"],
+      "explanation": {
+        "en": "In formal conditional with 'Were it not for', use 'would have + past participle' for unreal past situations.",
+        "vi": "Trong câu điều kiện trang trọng với 'Were it not for', dùng 'would have + quá khứ phân từ' cho tình huống quá khứ không thực tế."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_002": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'ubiquitous' mean?",
+        "vi": "'Ubiquitous' có nghĩa là gì?"
+      },
+      "options": ["rare", "present, appearing, or found everywhere", "hidden", "temporary"],
+      "correctAnswers": ["present, appearing, or found everywhere"],
+      "explanation": {
+        "en": "'Ubiquitous' means present, appearing, or found everywhere.",
+        "vi": "'Ubiquitous' có nghĩa là có mặt, xuất hiện, hoặc được tìm thấy ở khắp mọi nơi."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_003": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Such ___ the complexity of the issue that a simple solution seems unattainable.",
+        "vi": "Chọn dạng đúng: Vấn đề ___ phức tạp đến nỗi một giải pháp đơn giản dường như không thể đạt được."
+      },
+      "options": ["is", "was", "are", "were"],
+      "correctAnswers": ["is"],
+      "explanation": {
+        "en": "In 'Such + be + subject' structure with inversion, use 'is' for singular subject 'the complexity'.",
+        "vi": "Trong cấu trúc 'Such + be + chủ ngữ' với đảo ngữ, dùng 'is' cho chủ ngữ số ít 'the complexity'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_004": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The epistemological foundations of scientific inquiry have been subject to rigorous philosophical scrutiny. While empiricism emphasizes observation and experimentation, rationalism posits that knowledge can be derived through reason alone. The contemporary scientific method, however, represents a synthesis of both approaches, acknowledging the interplay between empirical evidence and theoretical frameworks.' What is the main point about the scientific method?",
+        "vi": "Đọc: 'Nền tảng nhận thức luận của nghiên cứu khoa học đã được xem xét một cách nghiêm ngặt về mặt triết học. Trong khi chủ nghĩa kinh nghiệm nhấn mạnh quan sát và thực nghiệm, chủ nghĩa duy lý cho rằng kiến thức có thể được suy ra chỉ thông qua lý trí. Tuy nhiên, phương pháp khoa học đương đại đại diện cho sự tổng hợp của cả hai cách tiếp cận, thừa nhận sự tương tác giữa bằng chứng thực nghiệm và khung lý thuyết.' Điểm chính về phương pháp khoa học là gì?"
+      },
+      "options": ["It relies solely on observation", "It is a synthesis of empiricism and rationalism", "It rejects theoretical frameworks", "It emphasizes reason alone"],
+      "correctAnswers": ["It is a synthesis of empiricism and rationalism"],
+      "explanation": {
+        "en": "The text states 'The contemporary scientific method, however, represents a synthesis of both approaches'.",
+        "vi": "Đoạn văn nêu rõ 'Tuy nhiên, phương pháp khoa học đương đại đại diện cho sự tổng hợp của cả hai cách tiếp cận'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_005": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The research methodology was designed to ___ potential biases in the data collection process.",
+        "vi": "Điền vào chỗ trống: Phương pháp nghiên cứu được thiết kế để ___ các thiên kiến tiềm ẩn trong quá trình thu thập dữ liệu."
+      },
+      "options": ["introduce", "mitigate", "amplify", "ignore"],
+      "correctAnswers": ["mitigate"],
+      "explanation": {
+        "en": "'Mitigate' means to make less severe, serious, or painful, which fits the context of reducing biases.",
+        "vi": "'Mitigate' có nghĩa là làm giảm mức độ nghiêm trọng, nghiêm túc, hoặc đau đớn, phù hợp với ngữ cảnh giảm thiểu thiên kiến."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_006": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Little ___ she realize the implications of her decision.",
+        "vi": "Chọn dạng đúng: Cô ấy ___ nhận ra ý nghĩa của quyết định của mình."
+      },
+      "options": ["does", "did", "do", "will"],
+      "correctAnswers": ["did"],
+      "explanation": {
+        "en": "After 'Little' at the beginning of a sentence, use inversion with past tense 'did' for past events.",
+        "vi": "Sau 'Little' ở đầu câu, dùng đảo ngữ với thì quá khứ 'did' cho sự kiện trong quá khứ."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_007": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'paradigm' mean?",
+        "vi": "'Paradigm' có nghĩa là gì?"
+      },
+      "options": ["a typical example or pattern", "a mistake", "a simple solution", "a temporary state"],
+      "correctAnswers": ["a typical example or pattern"],
+      "explanation": {
+        "en": "'Paradigm' means a typical example or pattern of something; a model or framework.",
+        "vi": "'Paradigm' có nghĩa là một ví dụ hoặc mẫu điển hình của một cái gì đó; một mô hình hoặc khung."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_008": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: No sooner ___ the announcement been made than protests erupted.",
+        "vi": "Chọn dạng đúng: Ngay khi thông báo được đưa ra, các cuộc biểu tình đã ___ nổ ra."
+      },
+      "options": ["has", "had", "have", "was"],
+      "correctAnswers": ["had"],
+      "explanation": {
+        "en": "In 'No sooner... than' structure, use past perfect 'had' with inversion: 'No sooner had... than'.",
+        "vi": "Trong cấu trúc 'No sooner... than', dùng quá khứ hoàn thành 'had' với đảo ngữ: 'No sooner had... than'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_009": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The ontological status of abstract entities has been a perennial topic in metaphysics. While nominalists argue that only concrete, physical objects exist, realists maintain that abstract entities such as numbers and properties have genuine existence. This debate touches upon fundamental questions about the nature of reality and our capacity to know it.' What is the realist position?",
+        "vi": "Đọc: 'Trạng thái bản thể luận của các thực thể trừu tượng đã là một chủ đề lâu đời trong siêu hình học. Trong khi các nhà danh nghĩa cho rằng chỉ có các đối tượng cụ thể, vật lý tồn tại, các nhà thực tại cho rằng các thực thể trừu tượng như số và thuộc tính có sự tồn tại thực sự. Cuộc tranh luận này chạm vào những câu hỏi cơ bản về bản chất của thực tại và khả năng của chúng ta để biết nó.' Lập trường của nhà thực tại là gì?"
+      },
+      "options": ["Only physical objects exist", "Abstract entities have genuine existence", "Reality is unknowable", "Numbers are fictional"],
+      "correctAnswers": ["Abstract entities have genuine existence"],
+      "explanation": {
+        "en": "The text states 'realists maintain that abstract entities such as numbers and properties have genuine existence'.",
+        "vi": "Đoạn văn nêu rõ 'các nhà thực tại cho rằng các thực thể trừu tượng như số và thuộc tính có sự tồn tại thực sự'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_010": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use advanced inversion correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng đảo ngữ nâng cao đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "Rarely have I seen such dedication.",
+        "Rarely I have seen such dedication.",
+        "Seldom does he make mistakes.",
+        "Seldom he makes mistakes."
+      ],
+      "correctAnswers": ["Rarely have I seen such dedication.", "Seldom does he make mistakes."],
+      "explanation": {
+        "en": "Advanced inversion: After negative adverbs like 'Rarely' and 'Seldom' at the beginning, use inversion: auxiliary + subject + main verb.",
+        "vi": "Đảo ngữ nâng cao: Sau các trạng từ phủ định như 'Rarely' và 'Seldom' ở đầu câu, dùng đảo ngữ: trợ động từ + chủ ngữ + động từ chính."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "lst_c1_011": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The theoretical framework ___ a comprehensive understanding of the phenomenon.",
+        "vi": "Điền vào chỗ trống: Khung lý thuyết ___ một sự hiểu biết toàn diện về hiện tượng."
+      },
+      "options": ["obscures", "facilitates", "hinders", "complicates"],
+      "correctAnswers": ["facilitates"],
+      "explanation": {
+        "en": "'Facilitates' means to make easier or help bring about, which fits the context of a framework enabling understanding.",
+        "vi": "'Facilitates' có nghĩa là làm cho dễ dàng hơn hoặc giúp tạo ra, phù hợp với ngữ cảnh một khung giúp hiểu biết."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_012": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Hardly ___ the meeting begun when technical difficulties arose.",
+        "vi": "Chọn dạng đúng: Cuộc họp vừa ___ bắt đầu thì các khó khăn kỹ thuật đã nảy sinh."
+      },
+      "options": ["has", "had", "have", "was"],
+      "correctAnswers": ["had"],
+      "explanation": {
+        "en": "In 'Hardly... when' structure, use past perfect 'had' with inversion: 'Hardly had... when'.",
+        "vi": "Trong cấu trúc 'Hardly... when', dùng quá khứ hoàn thành 'had' với đảo ngữ: 'Hardly had... when'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_013": {
+      "category": "reading",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The hermeneutic circle, a fundamental concept in interpretive theory, posits that understanding a text requires familiarity with its parts, while comprehending the parts necessitates an understanding of the whole. This circular relationship challenges linear models of interpretation and suggests that meaning emerges through an iterative process of engagement with the text.' What does the hermeneutic circle challenge?",
+        "vi": "Đọc: 'Vòng tròn diễn giải, một khái niệm cơ bản trong lý thuyết diễn giải, cho rằng việc hiểu một văn bản đòi hỏi sự quen thuộc với các phần của nó, trong khi hiểu các phần lại cần một sự hiểu biết về toàn bộ. Mối quan hệ vòng tròn này thách thức các mô hình diễn giải tuyến tính và gợi ý rằng ý nghĩa xuất hiện thông qua một quá trình lặp lại của sự tương tác với văn bản.' Vòng tròn diễn giải thách thức điều gì?"
+      },
+      "options": ["The parts of a text", "Linear models of interpretation", "The meaning of words", "The whole text"],
+      "correctAnswers": ["Linear models of interpretation"],
+      "explanation": {
+        "en": "The text states 'This circular relationship challenges linear models of interpretation'.",
+        "vi": "Đoạn văn nêu rõ 'Mối quan hệ vòng tròn này thách thức các mô hình diễn giải tuyến tính'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_014": {
+      "category": "vocabulary",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'epistemological' mean?",
+        "vi": "'Epistemological' có nghĩa là gì?"
+      },
+      "options": ["relating to knowledge and the nature of knowledge", "relating to ethics", "relating to beauty", "relating to existence"],
+      "correctAnswers": ["relating to knowledge and the nature of knowledge"],
+      "explanation": {
+        "en": "'Epistemological' means relating to the theory of knowledge, especially regarding its methods, validity, and scope.",
+        "vi": "'Epistemological' có nghĩa là liên quan đến lý thuyết về kiến thức, đặc biệt liên quan đến các phương pháp, tính hợp lệ và phạm vi của nó."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_c1_015": {
+      "category": "grammar",
+      "level": "C1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Not until the final report was published ___ the full extent of the problem become apparent.",
+        "vi": "Chọn dạng đúng: Mãi đến khi báo cáo cuối cùng được công bố, ___ mức độ đầy đủ của vấn đề mới trở nên rõ ràng."
+      },
+      "options": ["did", "does", "do", "will"],
+      "correctAnswers": ["did"],
+      "explanation": {
+        "en": "After 'Not until' at the beginning, use inversion with past tense 'did' for past events.",
+        "vi": "Sau 'Not until' ở đầu câu, dùng đảo ngữ với thì quá khứ 'did' cho sự kiện trong quá khứ."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    }
+  }
+}

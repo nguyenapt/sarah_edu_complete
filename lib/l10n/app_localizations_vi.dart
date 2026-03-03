@@ -328,7 +328,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Chọn ngôn ngữ ưa thích cho giao diện ứng dụng';
 
   @override
-  String get next => 'Tiếp theo';
+  String get next => 'Tiếp';
 
   @override
   String get previous => 'Trước';
@@ -400,6 +400,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get listening => 'Nghe';
+
+  @override
+  String get grammar => 'Ngữ pháp';
+
+  @override
+  String get reading => 'Đọc hiểu';
 
   @override
   String get speaking => 'Nói';
@@ -629,4 +635,39 @@ class AppLocalizationsVi extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Hoàn thành câu với dạng đúng của \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'Test vượt cấp';
+
+  @override
+  String skipToLevel(String level) {
+    return 'Vượt cấp lên $level';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'Bạn đã làm test hôm nay. Vui lòng thử lại vào ngày mai.';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'Đã mở khóa level $level!';
+  }
+
+  @override
+  String get testFailed => 'Test không đạt';
+
+  @override
+  String get testFailedMessage =>
+      'Test không đạt. Bạn cần đạt ít nhất 80% để mở khóa level.';
+
+  @override
+  String get noQuestionsAvailable => 'Không có câu hỏi nào';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'Câu $current / $total';
+  }
+
+  @override
+  String get ok => 'OK';
 }

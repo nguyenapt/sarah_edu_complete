@@ -18,6 +18,8 @@ import '../placement/placement_test_screen.dart';
 import '../vocabulary/vocabulary_collection_screen.dart';
 import '../weak_skills/weak_skill_screen.dart';
 import '../progress/progress_screen.dart';
+import '../level_skip/level_skip_test_screen.dart';
+import '../../core/services/level_skip_test_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,9 +31,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirestoreService _firestoreService = FirestoreService();
   final NextExerciseService _nextExerciseService = NextExerciseService();
+  final LevelSkipTestService _levelSkipTestService = LevelSkipTestService();
   List<LevelModel> _levels = [];
   bool _isLoading = true;
   UserProgressModel? _userProgress;
+  bool _canSkipLevel = false;
+  bool _hasDailyLimit = false;
+  String? _nextLevel;
 
   @override
   void initState() {
@@ -50,9 +56,91 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _userProgress = UserProgressModel.fromFirestore(doc);
         });
+        
+        // Check level skip test availability
+        _checkLevelSkipAvailability(userId);
       }
     } catch (e) {
       debugPrint('Error loading user progress: $e');
+    }
+  }
+  
+  Future<void> _checkLevelSkipAvailability(String userId) async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.isAuthenticated && authProvider.user != null) {
+        final currentLevel = authProvider.user!.currentLevel;
+        final nextLevel = _levelSkipTestService.getNextLevel(currentLevel);
+        
+        if (nextLevel != null) {
+          final hasLimit = await _levelSkipTestService.checkDailyLimit(userId);
+          if (mounted) {
+            setState(() {
+              _canSkipLevel = true;
+              _hasDailyLimit = hasLimit;
+              _nextLevel = nextLevel;
+            });
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              _canSkipLevel = false;
+              _hasDailyLimit = false;
+              _nextLevel = null;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error checking level skip availability: $e');
+    }
+  }
+  
+  Future<void> _handleLevelSkipTest() async {
+    if (_nextLevel == null) return;
+    
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated || authProvider.user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseLogin),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    
+    // Check daily limit again
+    final hasLimit = await _levelSkipTestService.checkDailyLimit(
+      authProvider.user!.id,
+    );
+    
+    if (hasLimit) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.dailyLimitReached),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    
+    // Navigate to level skip test screen
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LevelSkipTestScreen(
+          targetLevel: _nextLevel!,
+        ),
+      ),
+    );
+    
+    // If test passed and level was unlocked, reload data
+    if (result == true && mounted) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.user != null) {
+        _loadUserProgress(authProvider.user!.id);
+      }
     }
   }
 
@@ -639,6 +727,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              // Level Skip Test Button
+              if (_canSkipLevel && _nextLevel != null) ...[
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _hasDailyLimit ? null : _handleLevelSkipTest,
+                    icon: const Icon(Icons.flash_on, size: 18),
+                    label: Text(
+                      AppLocalizations.of(context)!.skipToLevel(_nextLevel!),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                  ),
+                ),
+                if (_hasDailyLimit)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      AppLocalizations.of(context)!.dailyLimitReached,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.orange[700],
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+              ],
             ],
           ),
         ),

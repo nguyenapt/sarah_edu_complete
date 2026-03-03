@@ -258,7 +258,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get explanation => '설명';
 
   @override
-  String get points => '점수';
+  String get points => '포인트';
 
   @override
   String get youGot => '획득한 점수';
@@ -401,6 +401,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get listening => '듣기';
 
   @override
+  String get grammar => '문법';
+
+  @override
+  String get reading => '읽기';
+
+  @override
   String get speaking => '말하기';
 
   @override
@@ -497,7 +503,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pleaseLoginToUseFeature => '이 기능을 사용하려면 로그인하세요';
 
   @override
-  String get pleaseLogin => '로그인하세요';
+  String get pleaseLogin => '로그인해 주세요';
 
   @override
   String get loginToUseReviewFeature => '복습 기능을 사용하려면 로그인하세요';
@@ -622,4 +628,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => '레벨 스킵 테스트';
+
+  @override
+  String skipToLevel(String level) {
+    return '$level로 건너뛰기';
+  }
+
+  @override
+  String get dailyLimitReached => '오늘 이미 테스트를 받으셨습니다. 내일 다시 시도해 주세요.';
+
+  @override
+  String levelUnlocked(String level) {
+    return '레벨 $level 잠금 해제됨!';
+  }
+
+  @override
+  String get testFailed => '테스트 실패';
+
+  @override
+  String get testFailedMessage => '테스트 실패. 레벨을 잠금 해제하려면 최소 80%가 필요합니다.';
+
+  @override
+  String get noQuestionsAvailable => '사용 가능한 질문이 없습니다';
+
+  @override
+  String questionNumber(int current, int total) {
+    return '질문 $current / $total';
+  }
+
+  @override
+  String get ok => '확인';
 }

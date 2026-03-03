@@ -406,6 +406,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get listening => 'Escuta';
 
   @override
+  String get grammar => 'Gramática';
+
+  @override
+  String get reading => 'Leitura';
+
+  @override
   String get speaking => 'Fala';
 
   @override
@@ -634,4 +640,39 @@ class AppLocalizationsPt extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'Teste de Pular Nível';
+
+  @override
+  String skipToLevel(String level) {
+    return 'Pular para $level';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'Você já fez o teste hoje. Por favor, tente novamente amanhã.';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'Nível $level desbloqueado!';
+  }
+
+  @override
+  String get testFailed => 'Teste falhou';
+
+  @override
+  String get testFailedMessage =>
+      'Teste falhou. Você precisa de pelo menos 80% para desbloquear o nível.';
+
+  @override
+  String get noQuestionsAvailable => 'Nenhuma pergunta disponível';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'Pergunta $current / $total';
+  }
+
+  @override
+  String get ok => 'OK';
 }

@@ -407,6 +407,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get listening => 'Écoute';
 
   @override
+  String get grammar => 'Grammaire';
+
+  @override
+  String get reading => 'Lecture';
+
+  @override
   String get speaking => 'Parole';
 
   @override
@@ -635,4 +641,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'Test de Saut de Niveau';
+
+  @override
+  String skipToLevel(String level) {
+    return 'Passer à $level';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'Vous avez déjà passé le test aujourd\'hui. Veuillez réessayer demain.';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'Niveau $level déverrouillé !';
+  }
+
+  @override
+  String get testFailed => 'Test échoué';
+
+  @override
+  String get testFailedMessage =>
+      'Test échoué. Vous devez obtenir au moins 80% pour déverrouiller le niveau.';
+
+  @override
+  String get noQuestionsAvailable => 'Aucune question disponible';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'Question $current / $total';
+  }
+
+  @override
+  String get ok => 'OK';
 }

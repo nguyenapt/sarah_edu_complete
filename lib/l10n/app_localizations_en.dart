@@ -404,6 +404,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get listening => 'Listening';
 
   @override
+  String get grammar => 'Grammar';
+
+  @override
+  String get reading => 'Reading';
+
+  @override
   String get speaking => 'Speaking';
 
   @override
@@ -630,4 +636,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'Level Skip Test';
+
+  @override
+  String skipToLevel(String level) {
+    return 'Skip to $level';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'You have already taken the test today. Please try again tomorrow.';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'Level $level unlocked!';
+  }
+
+  @override
+  String get testFailed => 'Test Failed';
+
+  @override
+  String get testFailedMessage =>
+      'Test failed. You need at least 80% to unlock the level.';
+
+  @override
+  String get noQuestionsAvailable => 'No questions available';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'Question $current / $total';
+  }
+
+  @override
+  String get ok => 'OK';
 }

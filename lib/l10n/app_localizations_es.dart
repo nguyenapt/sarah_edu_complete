@@ -407,6 +407,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get listening => 'Escucha';
 
   @override
+  String get grammar => 'Gramática';
+
+  @override
+  String get reading => 'Lectura';
+
+  @override
   String get speaking => 'Habla';
 
   @override
@@ -508,7 +514,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Por favor, inicia sesión para usar esta función';
 
   @override
-  String get pleaseLogin => 'Por favor, inicia sesión';
+  String get pleaseLogin => 'Por favor inicia sesión';
 
   @override
   String get loginToUseReviewFeature =>
@@ -635,4 +641,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'Prueba de Salto de Nivel';
+
+  @override
+  String skipToLevel(String level) {
+    return 'Saltar a $level';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'Ya has realizado la prueba hoy. Por favor, inténtalo de nuevo mañana.';
+
+  @override
+  String levelUnlocked(String level) {
+    return '¡Nivel $level desbloqueado!';
+  }
+
+  @override
+  String get testFailed => 'Prueba fallida';
+
+  @override
+  String get testFailedMessage =>
+      'Prueba fallida. Necesitas al menos 80% para desbloquear el nivel.';
+
+  @override
+  String get noQuestionsAvailable => 'No hay preguntas disponibles';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'Pregunta $current / $total';
+  }
+
+  @override
+  String get ok => 'OK';
 }

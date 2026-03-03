@@ -1,0 +1,264 @@
+{
+  "levelSkipTest": {
+    "lst_b2_001": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Had I known about the meeting, I ___ attended.",
+        "vi": "Chọn dạng đúng: Nếu tôi biết về cuộc họp, tôi đã ___ tham dự."
+      },
+      "options": ["would", "would have", "will", "will have"],
+      "correctAnswers": ["would have"],
+      "explanation": {
+        "en": "In third conditional (unreal past), use 'would have + past participle' in the main clause after 'had + past participle' in the if clause.",
+        "vi": "Trong câu điều kiện loại 3 (không thực tế ở quá khứ), dùng 'would have + quá khứ phân từ' ở mệnh đề chính sau 'had + quá khứ phân từ' ở mệnh đề if."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_002": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'scrutinize' mean?",
+        "vi": "'Scrutinize' có nghĩa là gì?"
+      },
+      "options": ["to ignore", "to examine closely and carefully", "to approve", "to reject"],
+      "correctAnswers": ["to examine closely and carefully"],
+      "explanation": {
+        "en": "'Scrutinize' means to examine or inspect closely and thoroughly.",
+        "vi": "'Scrutinize' có nghĩa là xem xét hoặc kiểm tra kỹ lưỡng và cẩn thận."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_003": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: Not only ___ the project on time, but he also exceeded expectations.",
+        "vi": "Chọn dạng đúng: Không chỉ ___ dự án đúng hạn, mà anh ấy còn vượt quá mong đợi."
+      },
+      "options": ["he completed", "did he complete", "he completes", "does he complete"],
+      "correctAnswers": ["did he complete"],
+      "explanation": {
+        "en": "After 'Not only' at the beginning of a sentence, use inversion: auxiliary verb + subject + main verb.",
+        "vi": "Sau 'Not only' ở đầu câu, dùng đảo ngữ: trợ động từ + chủ ngữ + động từ chính."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_004": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The phenomenon of globalization has created both opportunities and challenges. While it has facilitated international trade and cultural exchange, it has also led to concerns about economic inequality and cultural homogenization. Critics argue that local traditions are being eroded, while proponents emphasize the benefits of interconnectedness.' What is the main argument of critics?",
+        "vi": "Đọc: 'Hiện tượng toàn cầu hóa đã tạo ra cả cơ hội và thách thức. Trong khi nó đã tạo điều kiện cho thương mại quốc tế và trao đổi văn hóa, nó cũng dẫn đến những lo ngại về bất bình đẳng kinh tế và đồng nhất hóa văn hóa. Các nhà phê bình cho rằng truyền thống địa phương đang bị xói mòn, trong khi những người ủng hộ nhấn mạnh lợi ích của sự kết nối.' Lập luận chính của các nhà phê bình là gì?"
+      },
+      "options": ["Economic benefits", "Cultural exchange", "Local traditions are being eroded", "International trade"],
+      "correctAnswers": ["Local traditions are being eroded"],
+      "explanation": {
+        "en": "The text states 'Critics argue that local traditions are being eroded'.",
+        "vi": "Đoạn văn nêu rõ 'Các nhà phê bình cho rằng truyền thống địa phương đang bị xói mòn'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_005": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The research findings ___ the need for further investigation into this matter.",
+        "vi": "Điền vào chỗ trống: Những phát hiện nghiên cứu ___ sự cần thiết phải điều tra thêm về vấn đề này."
+      },
+      "options": ["diminish", "undermine", "underscore", "neglect"],
+      "correctAnswers": ["underscore"],
+      "explanation": {
+        "en": "'Underscore' means to emphasize or highlight, which fits the context of research findings showing the need for investigation.",
+        "vi": "'Underscore' có nghĩa là nhấn mạnh hoặc làm nổi bật, phù hợp với ngữ cảnh các phát hiện nghiên cứu cho thấy sự cần thiết phải điều tra."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_006": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: The proposal, ___ was submitted last week, has been approved.",
+        "vi": "Chọn dạng đúng: Đề xuất, ___ được nộp tuần trước, đã được phê duyệt."
+      },
+      "options": ["which", "that", "who", "whom"],
+      "correctAnswers": ["which"],
+      "explanation": {
+        "en": "Use 'which' (not 'that') in non-restrictive relative clauses, especially when there's a comma before it.",
+        "vi": "Dùng 'which' (không phải 'that') trong mệnh đề quan hệ không giới hạn, đặc biệt khi có dấu phẩy trước nó."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b2_007": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'ambiguous' mean?",
+        "vi": "'Ambiguous' có nghĩa là gì?"
+      },
+      "options": ["clear and precise", "having more than one possible meaning", "very difficult", "very easy"],
+      "correctAnswers": ["having more than one possible meaning"],
+      "explanation": {
+        "en": "'Ambiguous' means having more than one possible meaning or interpretation.",
+        "vi": "'Ambiguous' có nghĩa là có nhiều hơn một nghĩa hoặc cách hiểu có thể."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b2_008": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I'd rather you ___ me the truth from the beginning.",
+        "vi": "Chọn dạng đúng: Tôi muốn bạn ___ tôi sự thật ngay từ đầu."
+      },
+      "options": ["tell", "told", "telling", "to tell"],
+      "correctAnswers": ["told"],
+      "explanation": {
+        "en": "After 'I'd rather', use past tense 'told' to express a preference about a present or future action.",
+        "vi": "Sau 'I'd rather', dùng thì quá khứ 'told' để diễn tả sự ưa thích về một hành động ở hiện tại hoặc tương lai."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_009": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Sustainable development requires balancing economic growth with environmental protection. This concept has gained traction as societies recognize the finite nature of natural resources. However, implementing sustainable practices often involves trade-offs between immediate economic benefits and long-term environmental goals.' What is the main challenge mentioned?",
+        "vi": "Đọc: 'Phát triển bền vững đòi hỏi sự cân bằng giữa tăng trưởng kinh tế và bảo vệ môi trường. Khái niệm này đã được chấp nhận khi các xã hội nhận ra tính hữu hạn của tài nguyên thiên nhiên. Tuy nhiên, việc thực hiện các thực hành bền vững thường liên quan đến sự đánh đổi giữa lợi ích kinh tế trước mắt và mục tiêu môi trường dài hạn.' Thách thức chính được đề cập là gì?"
+      },
+      "options": ["Economic growth", "Trade-offs between immediate benefits and long-term goals", "Environmental protection", "Natural resources"],
+      "correctAnswers": ["Trade-offs between immediate benefits and long-term goals"],
+      "explanation": {
+        "en": "The text states 'implementing sustainable practices often involves trade-offs between immediate economic benefits and long-term environmental goals'.",
+        "vi": "Đoạn văn nêu rõ 'việc thực hiện các thực hành bền vững thường liên quan đến sự đánh đổi giữa lợi ích kinh tế trước mắt và mục tiêu môi trường dài hạn'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_010": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use subjunctive mood correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng thức giả định đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "I suggest that he be present at the meeting.",
+        "I suggest that he is present at the meeting.",
+        "It's essential that she arrive on time.",
+        "It's essential that she arrives on time."
+      ],
+      "correctAnswers": ["I suggest that he be present at the meeting.", "It's essential that she arrive on time."],
+      "explanation": {
+        "en": "Subjunctive mood: After 'suggest that' and 'essential that', use base form 'be' and 'arrive' (not 'is' and 'arrives').",
+        "vi": "Thức giả định: Sau 'suggest that' và 'essential that', dùng dạng nguyên thể 'be' và 'arrive' (không phải 'is' và 'arrives')."
+      },
+      "points": 10,
+      "difficulty": "hard"
+    },
+    "lst_b2_011": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The new policy aims to ___ the gap between rich and poor.",
+        "vi": "Điền vào chỗ trống: Chính sách mới nhằm ___ khoảng cách giữa người giàu và người nghèo."
+      },
+      "options": ["widen", "bridge", "ignore", "maintain"],
+      "correctAnswers": ["bridge"],
+      "explanation": {
+        "en": "'Bridge' as a verb means to reduce or eliminate a gap or difference, which fits the context.",
+        "vi": "'Bridge' như một động từ có nghĩa là giảm hoặc loại bỏ khoảng cách hoặc sự khác biệt, phù hợp với ngữ cảnh."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b2_012": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: So difficult ___ the exam that many students failed.",
+        "vi": "Chọn dạng đúng: Kỳ thi ___ khó đến nỗi nhiều học sinh đã trượt."
+      },
+      "options": ["was", "it was", "was it", "it"],
+      "correctAnswers": ["was"],
+      "explanation": {
+        "en": "In 'So + adjective + be + subject' structure, use inversion: 'So difficult was the exam'.",
+        "vi": "Trong cấu trúc 'So + tính từ + be + chủ ngữ', dùng đảo ngữ: 'So difficult was the exam'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_013": {
+      "category": "reading",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The concept of work-life balance has evolved significantly in the modern workplace. While previous generations prioritized career advancement, many contemporary workers seek a more holistic approach that integrates personal fulfillment with professional success. This shift reflects changing values and the recognition that well-being encompasses more than just financial achievement.' What does the shift reflect?",
+        "vi": "Đọc: 'Khái niệm cân bằng công việc-cuộc sống đã phát triển đáng kể trong môi trường làm việc hiện đại. Trong khi các thế hệ trước ưu tiên thăng tiến nghề nghiệp, nhiều lao động đương đại tìm kiếm một cách tiếp cận toàn diện hơn tích hợp sự thỏa mãn cá nhân với thành công nghề nghiệp. Sự thay đổi này phản ánh các giá trị đang thay đổi và sự nhận thức rằng hạnh phúc bao gồm nhiều hơn chỉ thành tựu tài chính.' Sự thay đổi này phản ánh điều gì?"
+      },
+      "options": ["Financial achievement", "Changing values and recognition of well-being", "Career advancement", "Previous generations"],
+      "correctAnswers": ["Changing values and recognition of well-being"],
+      "explanation": {
+        "en": "The text states 'This shift reflects changing values and the recognition that well-being encompasses more than just financial achievement'.",
+        "vi": "Đoạn văn nêu rõ 'Sự thay đổi này phản ánh các giá trị đang thay đổi và sự nhận thức rằng hạnh phúc bao gồm nhiều hơn chỉ thành tựu tài chính'."
+      },
+      "points": 5,
+      "difficulty": "hard"
+    },
+    "lst_b2_014": {
+      "category": "vocabulary",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'comprehensive' mean?",
+        "vi": "'Comprehensive' có nghĩa là gì?"
+      },
+      "options": ["incomplete", "covering all aspects; complete", "simple", "confusing"],
+      "correctAnswers": ["covering all aspects; complete"],
+      "explanation": {
+        "en": "'Comprehensive' means including or dealing with all or nearly all elements or aspects of something.",
+        "vi": "'Comprehensive' có nghĩa là bao gồm hoặc xử lý tất cả hoặc gần như tất cả các yếu tố hoặc khía cạnh của một cái gì đó."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b2_015": {
+      "category": "grammar",
+      "level": "B2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: The more you practice, ___ you become.",
+        "vi": "Chọn dạng đúng: Bạn càng luyện tập nhiều, bạn càng ___."
+      },
+      "options": ["the better", "better", "the best", "best"],
+      "correctAnswers": ["the better"],
+      "explanation": {
+        "en": "In comparative structure 'The more... the more...', use 'the + comparative form': 'the better'.",
+        "vi": "Trong cấu trúc so sánh 'The more... the more...', dùng 'the + dạng so sánh hơn': 'the better'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    }
+  }
+}

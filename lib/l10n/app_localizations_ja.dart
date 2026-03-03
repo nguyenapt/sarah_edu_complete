@@ -401,6 +401,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get listening => 'リスニング';
 
   @override
+  String get grammar => '文法';
+
+  @override
+  String get reading => 'リーディング';
+
+  @override
   String get speaking => 'スピーキング';
 
   @override
@@ -622,4 +628,37 @@ class AppLocalizationsJa extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'レベルスキップテスト';
+
+  @override
+  String skipToLevel(String level) {
+    return '$levelにスキップ';
+  }
+
+  @override
+  String get dailyLimitReached => '本日はすでにテストを受けています。明日再度お試しください。';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'レベル$levelがロック解除されました！';
+  }
+
+  @override
+  String get testFailed => 'テスト失敗';
+
+  @override
+  String get testFailedMessage => 'テスト失敗。レベルをロック解除するには、少なくとも80%が必要です。';
+
+  @override
+  String get noQuestionsAvailable => '質問がありません';
+
+  @override
+  String questionNumber(int current, int total) {
+    return '質問 $current / $total';
+  }
+
+  @override
+  String get ok => 'OK';
 }

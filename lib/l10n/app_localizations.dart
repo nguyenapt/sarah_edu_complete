@@ -860,6 +860,18 @@ abstract class AppLocalizations {
   /// **'Listening'**
   String get listening;
 
+  /// No description provided for @grammar.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar'**
+  String get grammar;
+
+  /// No description provided for @reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get reading;
+
   /// No description provided for @speaking.
   ///
   /// In en, this message translates to:
@@ -1273,6 +1285,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete the sentence with the correct form of \"{word}\"'**
   String completeSentenceWithForm(String word);
+
+  /// No description provided for @levelSkipTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Level Skip Test'**
+  String get levelSkipTest;
+
+  /// No description provided for @skipToLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to {level}'**
+  String skipToLevel(String level);
+
+  /// No description provided for @dailyLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You have already taken the test today. Please try again tomorrow.'**
+  String get dailyLimitReached;
+
+  /// No description provided for @levelUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} unlocked!'**
+  String levelUnlocked(String level);
+
+  /// No description provided for @testFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Failed'**
+  String get testFailed;
+
+  /// No description provided for @testFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Test failed. You need at least 80% to unlock the level.'**
+  String get testFailedMessage;
+
+  /// No description provided for @noQuestionsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No questions available'**
+  String get noQuestionsAvailable;
+
+  /// No description provided for @questionNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {current} / {total}'**
+  String questionNumber(int current, int total);
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

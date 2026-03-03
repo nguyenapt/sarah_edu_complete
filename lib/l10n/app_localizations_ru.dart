@@ -259,7 +259,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get explanation => 'Объяснение';
 
   @override
-  String get points => 'баллов';
+  String get points => 'баллы';
 
   @override
   String get youGot => 'Вы получили';
@@ -406,6 +406,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get listening => 'Аудирование';
 
   @override
+  String get grammar => 'Грамматика';
+
+  @override
+  String get reading => 'Чтение';
+
+  @override
   String get speaking => 'Говорение';
 
   @override
@@ -507,7 +513,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Пожалуйста, войдите, чтобы использовать эту функцию';
 
   @override
-  String get pleaseLogin => 'Пожалуйста, войдите';
+  String get pleaseLogin => 'Пожалуйста, войдите в систему';
 
   @override
   String get loginToUseReviewFeature =>
@@ -634,4 +640,39 @@ class AppLocalizationsRu extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'Тест пропуска уровня';
+
+  @override
+  String skipToLevel(String level) {
+    return 'Перейти к $level';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'Вы уже прошли тест сегодня. Пожалуйста, попробуйте снова завтра.';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'Уровень $level разблокирован!';
+  }
+
+  @override
+  String get testFailed => 'Тест не пройден';
+
+  @override
+  String get testFailedMessage =>
+      'Тест не пройден. Вам нужно набрать не менее 80%, чтобы разблокировать уровень.';
+
+  @override
+  String get noQuestionsAvailable => 'Нет доступных вопросов';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'Вопрос $current / $total';
+  }
+
+  @override
+  String get ok => 'ОК';
 }

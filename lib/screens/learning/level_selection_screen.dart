@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/level_model.dart';
 import '../../core/services/firestore_service.dart';
+import '../../core/services/level_skip_test_service.dart';
 import '../../models/unit_model.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../l10n/app_localizations.dart';
+import '../level_skip/level_skip_test_screen.dart';
 import 'unit_list_screen.dart';
 
 class LevelSelectionScreen extends StatefulWidget {
@@ -24,9 +27,13 @@ class LevelSelectionScreen extends StatefulWidget {
 
 class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
   final FirestoreService _firestoreService = FirestoreService();
+  final LevelSkipTestService _levelSkipTestService = LevelSkipTestService();
   LevelModel? _level;
   List<UnitModel> _units = [];
   bool _isLoading = true;
+  bool _isLevelLocked = false;
+  bool _canSkipLevel = false;
+  bool _hasDailyLimit = false;
 
   @override
   void initState() {
@@ -45,6 +52,27 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 
       // Load units
       final units = await _firestoreService.getUnitsByLevel(widget.levelId);
+      
+      // Check if level is locked and if user can skip
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.isAuthenticated && authProvider.user != null) {
+        final currentLevel = authProvider.user!.currentLevel;
+        final nextLevel = _levelSkipTestService.getNextLevel(currentLevel);
+        
+        _isLevelLocked = currentLevel != null && 
+            currentLevel.toUpperCase() != widget.levelId.toUpperCase();
+        _canSkipLevel = _isLevelLocked && 
+            nextLevel != null && 
+            nextLevel.toUpperCase() == widget.levelId.toUpperCase();
+        
+        if (_canSkipLevel) {
+          // Check daily limit
+          _hasDailyLimit = await _levelSkipTestService.checkDailyLimit(
+            authProvider.user!.id,
+          );
+        }
+      }
+      
       setState(() {
         _units = units;
         _isLoading = false;
@@ -61,6 +89,49 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
           ),
         );
       }
+    }
+  }
+  
+  Future<void> _handleLevelSkipTest() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated || authProvider.user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseLogin),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    
+    // Check daily limit again
+    final hasLimit = await _levelSkipTestService.checkDailyLimit(
+      authProvider.user!.id,
+    );
+    
+    if (hasLimit) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.dailyLimitReached),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    
+    // Navigate to level skip test screen
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LevelSkipTestScreen(
+          targetLevel: widget.levelId,
+        ),
+      ),
+    );
+    
+    // If test passed and level was unlocked, reload data
+    if (result == true && mounted) {
+      _loadData();
     }
   }
 
@@ -89,14 +160,26 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              _level!.getName(languageCode),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _level!.getName(languageCode),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
+                                ),
+                                if (_isLevelLocked)
+                                  Icon(
+                                    Icons.lock,
+                                    color: Colors.grey[600],
+                                  ),
+                              ],
                             ),
                             const SizedBox(height: 8),
                             Text(
@@ -117,6 +200,38 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                                 ),
                               ],
                             ),
+                            // Level Skip Test Button
+                            if (_canSkipLevel) ...[
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: _hasDailyLimit ? null : _handleLevelSkipTest,
+                                  icon: const Icon(Icons.flash_on),
+                                  label: Text(
+                                    AppLocalizations.of(context)!.skipToLevel(widget.levelId),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppTheme.primaryColor,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                ),
+                              ),
+                              if (_hasDailyLimit)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.dailyLimitReached,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.orange[700],
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                            ],
                           ],
                         ),
                       ),

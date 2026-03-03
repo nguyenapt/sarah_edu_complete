@@ -187,6 +187,8 @@
   "selectOneAnswerShort": "Chọn 1 đáp án",
   "selectMultipleAnswersShort": "Chọn nhiều đáp án",
   "listening": "Nghe",
+  "grammar": "Ngữ pháp",
+  "reading": "Đọc hiểu",
   "speaking": "Nói",
   "progressTitle": "Tiến Độ Học Tập",
   "featureInDevelopment": "Tính năng đang phát triển",
@@ -312,6 +314,44 @@
         "type": "String"
       }
     }
-  }
+  },
+  "levelSkipTest": "Test vượt cấp",
+  "skipToLevel": "Vượt cấp lên {level}",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "Bạn đã làm test hôm nay. Vui lòng thử lại vào ngày mai.",
+  "levelUnlocked": "Đã mở khóa level {level}!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "Test không đạt",
+  "testFailedMessage": "Test không đạt. Bạn cần đạt ít nhất 80% để mở khóa level.",
+  "noQuestionsAvailable": "Không có câu hỏi nào",
+  "pleaseLogin": "Vui lòng đăng nhập",
+  "questionNumber": "Câu {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "điểm",
+  "previous": "Trước",
+  "next": "Tiếp",
+  "submit": "Nộp bài",
+  "ok": "OK"
 }
 

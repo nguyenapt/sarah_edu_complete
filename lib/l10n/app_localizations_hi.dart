@@ -229,7 +229,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get hours => 'घंटे';
 
   @override
-  String get submit => 'सबमिट करें';
+  String get submit => 'जमा करें';
 
   @override
   String get continueText => 'Continue';
@@ -402,6 +402,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get listening => 'सुनना';
+
+  @override
+  String get grammar => 'व्याकरण';
+
+  @override
+  String get reading => 'पढ़ना';
 
   @override
   String get speaking => 'बोलना';
@@ -632,4 +638,39 @@ class AppLocalizationsHi extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => 'स्तर छोड़ें परीक्षण';
+
+  @override
+  String skipToLevel(String level) {
+    return '$level पर जाएं';
+  }
+
+  @override
+  String get dailyLimitReached =>
+      'आपने आज पहले से ही परीक्षण दिया है। कृपया कल पुनः प्रयास करें।';
+
+  @override
+  String levelUnlocked(String level) {
+    return 'स्तर $level अनलॉक हो गया!';
+  }
+
+  @override
+  String get testFailed => 'परीक्षण असफल';
+
+  @override
+  String get testFailedMessage =>
+      'परीक्षण असफल। स्तर को अनलॉक करने के लिए आपको कम से कम 80% की आवश्यकता है।';
+
+  @override
+  String get noQuestionsAvailable => 'कोई प्रश्न उपलब्ध नहीं';
+
+  @override
+  String questionNumber(int current, int total) {
+    return 'प्रश्न $current / $total';
+  }
+
+  @override
+  String get ok => 'ठीक';
 }

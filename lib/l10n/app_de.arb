@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "1 Antwort auswählen",
   "selectMultipleAnswersShort": "Mehrere Antworten auswählen",
   "listening": "Hören",
+  "grammar": "Grammatik",
+  "reading": "Lesen",
   "speaking": "Sprechen",
   "progressTitle": "Lernfortschritt",
   "featureInDevelopment": "Funktion in Entwicklung",
@@ -245,6 +247,44 @@
   "continueButton": "Weiter",
   "xp": "XP",
   "levelLabel": "Niveau",
-  "user": "Benutzer"
+  "user": "Benutzer",
+  "levelSkipTest": "Level-Überspringen-Test",
+  "skipToLevel": "Zu {level} überspringen",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "Sie haben den Test heute bereits gemacht. Bitte versuchen Sie es morgen erneut.",
+  "levelUnlocked": "Level {level} freigeschaltet!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "Test fehlgeschlagen",
+  "testFailedMessage": "Test fehlgeschlagen. Sie benötigen mindestens 80%, um das Level freizuschalten.",
+  "noQuestionsAvailable": "Keine Fragen verfügbar",
+  "pleaseLogin": "Bitte anmelden",
+  "questionNumber": "Frage {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "Punkte",
+  "previous": "Zurück",
+  "next": "Weiter",
+  "submit": "Einreichen",
+  "ok": "OK"
 }
 

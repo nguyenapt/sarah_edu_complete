@@ -74,6 +74,12 @@ service cloud.firestore {
       allow write: if false; // Only admin
     }
     
+    // Level Skip Tests - Public read, no write
+    match /levelSkipTests/{testId} {
+      allow read: if true; // Anyone can read
+      allow write: if false; // Only admin
+    }
+    
     // ============================================
     // USER-SPECIFIC COLLECTIONS (Require auth)
     // ============================================
@@ -103,6 +109,20 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && 
         resource.data.userId == request.auth.uid;
     }
+    
+    // Level Skip Test Attempts - Only owner can read/write
+    // Document ID format: {userId}_{date} (e.g., "user123_2024-01-15")
+    match /levelSkipTestAttempts/{attemptId} {
+      allow read: if isAuthenticated() && 
+        attemptId.matches(request.auth.uid + '_.*');
+      allow create: if isAuthenticated() && 
+        attemptId.matches(request.auth.uid + '_.*') &&
+        request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && 
+        attemptId.matches(request.auth.uid + '_.*') &&
+        resource.data.userId == request.auth.uid;
+      allow delete: if false; // No one can delete
+    }
   }
 }
 ```
@@ -113,7 +133,7 @@ service cloud.firestore {
 
 ## Giải Thích Rules
 
-### Public Collections (levels, units, lessons, exercises, groupUnits, placementTest)
+### Public Collections (levels, units, lessons, exercises, groupUnits, placementTest, levelSkipTests)
 - `allow read: if true` - Bất kỳ ai cũng có thể đọc (kể cả chưa đăng nhập)
 - `allow write: if false` - Không ai có thể ghi (chỉ admin qua Cloud Functions)
 
@@ -123,6 +143,11 @@ service cloud.firestore {
 
 ### AI Practice
 - Chỉ user tạo session mới có thể đọc/ghi session đó
+
+### Level Skip Test Attempts
+- Document ID format: `{userId}_{date}` (ví dụ: `user123_2024-01-15`)
+- Chỉ user đó mới có thể đọc/ghi attempt của mình
+- Không ai có thể xóa
 
 ## Test Rules
 

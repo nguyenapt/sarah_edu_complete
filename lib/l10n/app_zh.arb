@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "选择 1 个答案",
   "selectMultipleAnswersShort": "选择多个答案",
   "listening": "听力",
+  "grammar": "语法",
+  "reading": "阅读",
   "speaking": "口语",
   "progressTitle": "学习进度",
   "featureInDevelopment": "功能开发中",
@@ -245,6 +247,44 @@
   "continueButton": "继续",
   "xp": "XP",
   "levelLabel": "级别",
-  "user": "用户"
+  "user": "用户",
+  "levelSkipTest": "跳级测试",
+  "skipToLevel": "跳到 {level}",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "您今天已经参加了测试。请明天再试。",
+  "levelUnlocked": "级别 {level} 已解锁！",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "测试失败",
+  "testFailedMessage": "测试失败。您需要至少80%才能解锁级别。",
+  "noQuestionsAvailable": "没有可用的问题",
+  "pleaseLogin": "请登录",
+  "questionNumber": "问题 {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "分",
+  "previous": "上一题",
+  "next": "下一题",
+  "submit": "提交",
+  "ok": "确定"
 }
 

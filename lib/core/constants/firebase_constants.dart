@@ -9,6 +9,8 @@ class FirebaseConstants {
   static const String aiPracticeCollection = 'aiPractice';
   static const String placementTestCollection = 'placementTest';
   static const String groupUnitsCollection = 'groupUnits';
+  static const String levelSkipTestCollection = 'levelSkipTest';
+  static const String levelSkipTestAttemptsCollection = 'levelSkipTestAttempts';
 
   // User fields
   static const String userEmail = 'email';

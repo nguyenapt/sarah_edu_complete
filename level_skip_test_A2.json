@@ -1,0 +1,264 @@
+{
+  "levelSkipTest": {
+    "lst_a2_001": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I ___ to London last year.",
+        "vi": "Chọn dạng đúng: Tôi ___ đến London năm ngoái."
+      },
+      "options": ["go", "goes", "went", "going"],
+      "correctAnswers": ["went"],
+      "explanation": {
+        "en": "Use past tense 'went' for actions in the past.",
+        "vi": "Dùng quá khứ 'went' cho hành động trong quá khứ."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_a2_002": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'enormous' mean?",
+        "vi": "'Enormous' có nghĩa là gì?"
+      },
+      "options": ["very small", "very large", "very fast", "very slow"],
+      "correctAnswers": ["very large"],
+      "explanation": {
+        "en": "'Enormous' means very large or huge.",
+        "vi": "'Enormous' có nghĩa là rất lớn hoặc khổng lồ."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_003": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: She is ___ a book now.",
+        "vi": "Chọn dạng đúng: Cô ấy đang ___ một cuốn sách."
+      },
+      "options": ["read", "reads", "reading", "readed"],
+      "correctAnswers": ["reading"],
+      "explanation": {
+        "en": "Use 'reading' (present continuous) with 'is' for actions happening now.",
+        "vi": "Dùng 'reading' (hiện tại tiếp diễn) với 'is' cho hành động đang xảy ra."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_004": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Sarah loves reading books. She reads every evening before bed. Her favorite books are about adventure.' When does Sarah read?",
+        "vi": "Đọc: 'Sarah thích đọc sách. Cô ấy đọc mỗi buổi tối trước khi ngủ. Sách yêu thích của cô ấy là về phiêu lưu.' Sarah đọc sách khi nào?"
+      },
+      "options": ["in the morning", "in the afternoon", "every evening", "on weekends"],
+      "correctAnswers": ["every evening"],
+      "explanation": {
+        "en": "The text says 'She reads every evening before bed'.",
+        "vi": "Đoạn văn nói 'Cô ấy đọc mỗi buổi tối trước khi ngủ'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_005": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The weather is very ___ today. I need a jacket.",
+        "vi": "Điền vào chỗ trống: Thời tiết hôm nay rất ___. Tôi cần một chiếc áo khoác."
+      },
+      "options": ["hot", "warm", "cold", "sunny"],
+      "correctAnswers": ["cold"],
+      "explanation": {
+        "en": "If you need a jacket, the weather is cold.",
+        "vi": "Nếu cần áo khoác, thời tiết là lạnh."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_006": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I have ___ this movie before.",
+        "vi": "Chọn dạng đúng: Tôi đã ___ bộ phim này trước đây."
+      },
+      "options": ["see", "saw", "seen", "seeing"],
+      "correctAnswers": ["seen"],
+      "explanation": {
+        "en": "Use past participle 'seen' with 'have' in present perfect tense.",
+        "vi": "Dùng quá khứ phân từ 'seen' với 'have' ở thì hiện tại hoàn thành."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_007": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the synonym of 'happy'?",
+        "vi": "Từ đồng nghĩa của 'happy' là gì?"
+      },
+      "options": ["sad", "angry", "joyful", "tired"],
+      "correctAnswers": ["joyful"],
+      "explanation": {
+        "en": "'Joyful' is a synonym of 'happy', meaning feeling great pleasure.",
+        "vi": "'Joyful' là từ đồng nghĩa của 'happy', có nghĩa là cảm thấy vui sướng."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_a2_008": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: They ___ playing football when it started raining.",
+        "vi": "Chọn dạng đúng: Họ đang ___ chơi bóng đá khi trời bắt đầu mưa."
+      },
+      "options": ["was", "were", "is", "are"],
+      "correctAnswers": ["were"],
+      "explanation": {
+        "en": "Use 'were' with 'They' in past continuous tense.",
+        "vi": "Dùng 'were' với 'They' ở thì quá khứ tiếp diễn."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_009": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'The library is open from 9 AM to 6 PM on weekdays. On weekends, it opens at 10 AM and closes at 4 PM.' When does the library close on weekdays?",
+        "vi": "Đọc: 'Thư viện mở cửa từ 9 giờ sáng đến 6 giờ chiều vào các ngày trong tuần. Vào cuối tuần, nó mở lúc 10 giờ sáng và đóng lúc 4 giờ chiều.' Thư viện đóng cửa lúc mấy giờ vào các ngày trong tuần?"
+      },
+      "options": ["4 PM", "6 PM", "9 AM", "10 AM"],
+      "correctAnswers": ["6 PM"],
+      "explanation": {
+        "en": "The text says 'The library is open from 9 AM to 6 PM on weekdays'.",
+        "vi": "Đoạn văn nói 'Thư viện mở cửa từ 9 giờ sáng đến 6 giờ chiều vào các ngày trong tuần'."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_a2_010": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use the past tense correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng thì quá khứ đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "I went to the store yesterday.",
+        "She go to school last week.",
+        "They played tennis on Sunday.",
+        "He eat breakfast this morning."
+      ],
+      "correctAnswers": ["I went to the store yesterday.", "They played tennis on Sunday."],
+      "explanation": {
+        "en": "Past tense verbs: 'went' and 'played' are correct. 'go' and 'eat' should be 'went' and 'ate'.",
+        "vi": "Động từ quá khứ: 'went' và 'played' là đúng. 'go' và 'eat' nên là 'went' và 'ate'."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "lst_a2_011": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: I'm feeling very ___ today. I think I need to rest.",
+        "vi": "Điền vào chỗ trống: Hôm nay tôi cảm thấy rất ___. Tôi nghĩ tôi cần nghỉ ngơi."
+      },
+      "options": ["energetic", "tired", "excited", "happy"],
+      "correctAnswers": ["tired"],
+      "explanation": {
+        "en": "If you need to rest, you are tired.",
+        "vi": "Nếu cần nghỉ ngơi, bạn đang mệt mỏi."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_a2_012": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: If it ___ tomorrow, we will stay home.",
+        "vi": "Chọn dạng đúng: Nếu ngày mai trời ___, chúng ta sẽ ở nhà."
+      },
+      "options": ["rain", "rains", "will rain", "rained"],
+      "correctAnswers": ["rains"],
+      "explanation": {
+        "en": "In first conditional (if + present, will + base), use present tense 'rains'.",
+        "vi": "Trong câu điều kiện loại 1 (if + hiện tại, will + động từ nguyên thể), dùng thì hiện tại 'rains'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_a2_013": {
+      "category": "reading",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Tom works as a chef in a restaurant. He starts work at 6 AM and finishes at 2 PM. He loves cooking and enjoys creating new dishes.' What time does Tom finish work?",
+        "vi": "Đọc: 'Tom làm đầu bếp ở một nhà hàng. Anh ấy bắt đầu làm việc lúc 6 giờ sáng và kết thúc lúc 2 giờ chiều. Anh ấy thích nấu ăn và thích tạo ra những món ăn mới.' Tom kết thúc làm việc lúc mấy giờ?"
+      },
+      "options": ["6 AM", "2 PM", "8 AM", "4 PM"],
+      "correctAnswers": ["2 PM"],
+      "explanation": {
+        "en": "The text says 'He finishes at 2 PM'.",
+        "vi": "Đoạn văn nói 'Anh ấy kết thúc lúc 2 giờ chiều'."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_a2_014": {
+      "category": "vocabulary",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'delicious' mean?",
+        "vi": "'Delicious' có nghĩa là gì?"
+      },
+      "options": ["tasting very good", "tasting bad", "very hot", "very cold"],
+      "correctAnswers": ["tasting very good"],
+      "explanation": {
+        "en": "'Delicious' means having a very pleasant taste.",
+        "vi": "'Delicious' có nghĩa là có vị rất ngon."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_a2_015": {
+      "category": "grammar",
+      "level": "A2",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: She ___ her homework when I called her.",
+        "vi": "Chọn dạng đúng: Cô ấy đang ___ bài tập về nhà khi tôi gọi cho cô ấy."
+      },
+      "options": ["do", "does", "was doing", "did"],
+      "correctAnswers": ["was doing"],
+      "explanation": {
+        "en": "Use past continuous 'was doing' for an action in progress when another action happened.",
+        "vi": "Dùng quá khứ tiếp diễn 'was doing' cho hành động đang diễn ra khi một hành động khác xảy ra."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    }
+  }
+}

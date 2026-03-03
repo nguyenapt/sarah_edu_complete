@@ -187,6 +187,8 @@
   "selectOneAnswerShort": "Select 1 answer",
   "selectMultipleAnswersShort": "Select multiple answers",
   "listening": "Listening",
+  "grammar": "Grammar",
+  "reading": "Reading",
   "speaking": "Speaking",
   "progressTitle": "Learning Progress",
   "featureInDevelopment": "Feature in development",
@@ -312,6 +314,44 @@
         "type": "String"
       }
     }
-  }
+  },
+  "levelSkipTest": "Level Skip Test",
+  "skipToLevel": "Skip to {level}",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "You have already taken the test today. Please try again tomorrow.",
+  "levelUnlocked": "Level {level} unlocked!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "Test Failed",
+  "testFailedMessage": "Test failed. You need at least 80% to unlock the level.",
+  "noQuestionsAvailable": "No questions available",
+  "pleaseLogin": "Please login",
+  "questionNumber": "Question {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "points",
+  "previous": "Previous",
+  "next": "Next",
+  "submit": "Submit",
+  "ok": "OK"
 }
 

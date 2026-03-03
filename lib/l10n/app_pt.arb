@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "Selecionar 1 resposta",
   "selectMultipleAnswersShort": "Selecionar múltiplas respostas",
   "listening": "Escuta",
+  "grammar": "Gramática",
+  "reading": "Leitura",
   "speaking": "Fala",
   "progressTitle": "Progresso de aprendizagem",
   "featureInDevelopment": "Funcionalidade em desenvolvimento",
@@ -245,6 +247,44 @@
   "continueButton": "Continuar",
   "xp": "XP",
   "levelLabel": "Nível",
-  "user": "Usuário"
+  "user": "Usuário",
+  "levelSkipTest": "Teste de Pular Nível",
+  "skipToLevel": "Pular para {level}",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "Você já fez o teste hoje. Por favor, tente novamente amanhã.",
+  "levelUnlocked": "Nível {level} desbloqueado!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "Teste falhou",
+  "testFailedMessage": "Teste falhou. Você precisa de pelo menos 80% para desbloquear o nível.",
+  "noQuestionsAvailable": "Nenhuma pergunta disponível",
+  "pleaseLogin": "Por favor, faça login",
+  "questionNumber": "Pergunta {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "pontos",
+  "previous": "Anterior",
+  "next": "Próximo",
+  "submit": "Enviar",
+  "ok": "OK"
 }
 

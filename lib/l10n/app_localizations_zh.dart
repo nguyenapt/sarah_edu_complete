@@ -258,7 +258,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get explanation => '解释';
 
   @override
-  String get points => '分数';
+  String get points => '分';
 
   @override
   String get youGot => '您获得了';
@@ -327,10 +327,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get welcomeDescription3 => '为应用程序界面选择您喜欢的语言';
 
   @override
-  String get next => '下一步';
+  String get next => '下一题';
 
   @override
-  String get previous => '上一步';
+  String get previous => '上一题';
 
   @override
   String get skip => '跳过';
@@ -399,6 +399,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get listening => '听力';
+
+  @override
+  String get grammar => '语法';
+
+  @override
+  String get reading => '阅读';
 
   @override
   String get speaking => '口语';
@@ -622,4 +628,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String completeSentenceWithForm(String word) {
     return 'Complete the sentence with the correct form of \"$word\"';
   }
+
+  @override
+  String get levelSkipTest => '跳级测试';
+
+  @override
+  String skipToLevel(String level) {
+    return '跳到 $level';
+  }
+
+  @override
+  String get dailyLimitReached => '您今天已经参加了测试。请明天再试。';
+
+  @override
+  String levelUnlocked(String level) {
+    return '级别 $level 已解锁！';
+  }
+
+  @override
+  String get testFailed => '测试失败';
+
+  @override
+  String get testFailedMessage => '测试失败。您需要至少80%才能解锁级别。';
+
+  @override
+  String get noQuestionsAvailable => '没有可用的问题';
+
+  @override
+  String questionNumber(int current, int total) {
+    return '问题 $current / $total';
+  }
+
+  @override
+  String get ok => '确定';
 }

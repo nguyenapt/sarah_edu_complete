@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "Sélectionner 1 réponse",
   "selectMultipleAnswersShort": "Sélectionner plusieurs réponses",
   "listening": "Écoute",
+  "grammar": "Grammaire",
+  "reading": "Lecture",
   "speaking": "Parole",
   "progressTitle": "Progrès d'apprentissage",
   "featureInDevelopment": "Fonctionnalité en développement",
@@ -245,6 +247,44 @@
   "continueButton": "Continuer",
   "xp": "XP",
   "levelLabel": "Niveau",
-  "user": "Utilisateur"
+  "user": "Utilisateur",
+  "levelSkipTest": "Test de Saut de Niveau",
+  "skipToLevel": "Passer à {level}",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "Vous avez déjà passé le test aujourd'hui. Veuillez réessayer demain.",
+  "levelUnlocked": "Niveau {level} déverrouillé !",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "Test échoué",
+  "testFailedMessage": "Test échoué. Vous devez obtenir au moins 80% pour déverrouiller le niveau.",
+  "noQuestionsAvailable": "Aucune question disponible",
+  "pleaseLogin": "Veuillez vous connecter",
+  "questionNumber": "Question {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "points",
+  "previous": "Précédent",
+  "next": "Suivant",
+  "submit": "Soumettre",
+  "ok": "OK"
 }
 

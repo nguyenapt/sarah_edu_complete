@@ -1,0 +1,264 @@
+{
+  "levelSkipTest": {
+    "lst_b1_001": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: By next year, I ___ English for five years.",
+        "vi": "Chọn dạng đúng: Đến năm sau, tôi sẽ ___ tiếng Anh được năm năm."
+      },
+      "options": ["study", "will study", "will have studied", "studied"],
+      "correctAnswers": ["will have studied"],
+      "explanation": {
+        "en": "Use future perfect tense 'will have studied' for an action completed before a future time.",
+        "vi": "Dùng thì tương lai hoàn thành 'will have studied' cho hành động hoàn thành trước một thời điểm trong tương lai."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_002": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'accomplish' mean?",
+        "vi": "'Accomplish' có nghĩa là gì?"
+      },
+      "options": ["to fail", "to achieve or complete", "to start", "to delay"],
+      "correctAnswers": ["to achieve or complete"],
+      "explanation": {
+        "en": "'Accomplish' means to achieve or complete successfully.",
+        "vi": "'Accomplish' có nghĩa là đạt được hoặc hoàn thành thành công."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_003": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: If I ___ rich, I would travel around the world.",
+        "vi": "Chọn dạng đúng: Nếu tôi ___, tôi sẽ đi du lịch vòng quanh thế giới."
+      },
+      "options": ["am", "was", "were", "will be"],
+      "correctAnswers": ["were"],
+      "explanation": {
+        "en": "In second conditional (unreal present), use 'were' for all subjects with 'if'.",
+        "vi": "Trong câu điều kiện loại 2 (không thực tế ở hiện tại), dùng 'were' cho tất cả các chủ ngữ với 'if'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_004": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Climate change is one of the most pressing issues of our time. Scientists have been warning about its effects for decades. Rising sea levels, extreme weather events, and loss of biodiversity are just some of the consequences we face.' What is the main topic?",
+        "vi": "Đọc: 'Biến đổi khí hậu là một trong những vấn đề cấp bách nhất của thời đại chúng ta. Các nhà khoa học đã cảnh báo về tác động của nó trong nhiều thập kỷ. Mực nước biển dâng cao, các sự kiện thời tiết cực đoan, và mất đa dạng sinh học chỉ là một số hậu quả chúng ta phải đối mặt.' Chủ đề chính là gì?"
+      },
+      "options": ["Weather patterns", "Climate change", "Biodiversity", "Sea levels"],
+      "correctAnswers": ["Climate change"],
+      "explanation": {
+        "en": "The text focuses on climate change as the main topic, with other elements as consequences.",
+        "vi": "Đoạn văn tập trung vào biến đổi khí hậu như chủ đề chính, với các yếu tố khác là hậu quả."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_005": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The company decided to ___ the project due to budget constraints.",
+        "vi": "Điền vào chỗ trống: Công ty quyết định ___ dự án do hạn chế về ngân sách."
+      },
+      "options": ["expand", "postpone", "accelerate", "promote"],
+      "correctAnswers": ["postpone"],
+      "explanation": {
+        "en": "'Postpone' means to delay or put off to a later time, which fits the context of budget constraints.",
+        "vi": "'Postpone' có nghĩa là hoãn lại hoặc để lại sau, phù hợp với ngữ cảnh hạn chế về ngân sách."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_006": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: The book ___ by millions of people around the world.",
+        "vi": "Chọn dạng đúng: Cuốn sách ___ bởi hàng triệu người trên thế giới."
+      },
+      "options": ["reads", "is read", "was read", "has been read"],
+      "correctAnswers": ["has been read"],
+      "explanation": {
+        "en": "Use present perfect passive 'has been read' for an action with present relevance.",
+        "vi": "Dùng bị động hiện tại hoàn thành 'has been read' cho hành động có liên quan đến hiện tại."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_007": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What is the meaning of 'significant'?",
+        "vi": "Nghĩa của 'significant' là gì?"
+      },
+      "options": ["unimportant", "important or meaningful", "small", "temporary"],
+      "correctAnswers": ["important or meaningful"],
+      "explanation": {
+        "en": "'Significant' means important, meaningful, or having a major effect.",
+        "vi": "'Significant' có nghĩa là quan trọng, có ý nghĩa, hoặc có tác động lớn."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_b1_008": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: I wish I ___ more time to spend with my family.",
+        "vi": "Chọn dạng đúng: Tôi ước tôi ___ nhiều thời gian hơn để dành cho gia đình."
+      },
+      "options": ["have", "had", "will have", "having"],
+      "correctAnswers": ["had"],
+      "explanation": {
+        "en": "After 'wish', use past tense 'had' to express a present unreal situation.",
+        "vi": "Sau 'wish', dùng thì quá khứ 'had' để diễn tả tình huống không thực tế ở hiện tại."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_009": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Remote work has become increasingly popular in recent years. Many companies have adopted flexible work arrangements, allowing employees to work from home. This trend has been accelerated by advances in technology and the need for better work-life balance.' What has accelerated the trend of remote work?",
+        "vi": "Đọc: 'Làm việc từ xa đã trở nên ngày càng phổ biến trong những năm gần đây. Nhiều công ty đã áp dụng các chế độ làm việc linh hoạt, cho phép nhân viên làm việc từ nhà. Xu hướng này đã được thúc đẩy bởi những tiến bộ trong công nghệ và nhu cầu về sự cân bằng giữa công việc và cuộc sống tốt hơn.' Điều gì đã thúc đẩy xu hướng làm việc từ xa?"
+      },
+      "options": ["Better salaries", "Advances in technology and need for work-life balance", "Shorter working hours", "More job opportunities"],
+      "correctAnswers": ["Advances in technology and need for work-life balance"],
+      "explanation": {
+        "en": "The text explicitly states 'This trend has been accelerated by advances in technology and the need for better work-life balance'.",
+        "vi": "Đoạn văn nêu rõ 'Xu hướng này đã được thúc đẩy bởi những tiến bộ trong công nghệ và nhu cầu về sự cân bằng giữa công việc và cuộc sống tốt hơn'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_010": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "multiple_choice",
+      "question": {
+        "en": "Which sentences use the passive voice correctly? (Select all that apply)",
+        "vi": "Những câu nào sử dụng câu bị động đúng? (Chọn tất cả các câu đúng)"
+      },
+      "options": [
+        "The report was written by the team.",
+        "The team wrote the report.",
+        "The building is being constructed by workers.",
+        "Workers construct the building."
+      ],
+      "correctAnswers": ["The report was written by the team.", "The building is being constructed by workers."],
+      "explanation": {
+        "en": "Passive voice: 'was written' and 'is being constructed' are correct passive forms. The other sentences are active voice.",
+        "vi": "Câu bị động: 'was written' và 'is being constructed' là các dạng bị động đúng. Các câu khác là câu chủ động."
+      },
+      "points": 10,
+      "difficulty": "medium"
+    },
+    "lst_b1_011": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "fill_blank",
+      "question": {
+        "en": "Fill in the blank: The new policy will ___ many people's lives for the better.",
+        "vi": "Điền vào chỗ trống: Chính sách mới sẽ ___ cuộc sống của nhiều người theo hướng tốt hơn."
+      },
+      "options": ["worsen", "improve", "complicate", "ignore"],
+      "correctAnswers": ["improve"],
+      "explanation": {
+        "en": "'Improve' means to make something better, which fits the context 'for the better'.",
+        "vi": "'Improve' có nghĩa là làm cho cái gì đó tốt hơn, phù hợp với ngữ cảnh 'theo hướng tốt hơn'."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_b1_012": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: She suggested ___ to the new restaurant downtown.",
+        "vi": "Chọn dạng đúng: Cô ấy đề xuất ___ đến nhà hàng mới ở trung tâm thành phố."
+      },
+      "options": ["go", "going", "to go", "went"],
+      "correctAnswers": ["going"],
+      "explanation": {
+        "en": "After 'suggest', use gerund (verb + ing) form: 'suggest going'.",
+        "vi": "Sau 'suggest', dùng dạng danh động từ (động từ + ing): 'suggest going'."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_013": {
+      "category": "reading",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Read: 'Artificial intelligence is transforming various industries, from healthcare to finance. While it offers numerous benefits such as increased efficiency and accuracy, it also raises concerns about job displacement and privacy. Experts believe that the key is to find a balance between embracing innovation and addressing these challenges.' What is the main concern mentioned?",
+        "vi": "Đọc: 'Trí tuệ nhân tạo đang biến đổi nhiều ngành công nghiệp, từ y tế đến tài chính. Trong khi nó mang lại nhiều lợi ích như tăng hiệu quả và độ chính xác, nó cũng làm dấy lên những lo ngại về việc mất việc làm và quyền riêng tư. Các chuyên gia tin rằng chìa khóa là tìm ra sự cân bằng giữa việc chấp nhận đổi mới và giải quyết những thách thức này.' Mối quan ngại chính được đề cập là gì?"
+      },
+      "options": ["Increased efficiency", "Job displacement and privacy", "Healthcare transformation", "Financial benefits"],
+      "correctAnswers": ["Job displacement and privacy"],
+      "explanation": {
+        "en": "The text mentions 'concerns about job displacement and privacy' as the main concerns.",
+        "vi": "Đoạn văn đề cập 'lo ngại về việc mất việc làm và quyền riêng tư' như những mối quan ngại chính."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    },
+    "lst_b1_014": {
+      "category": "vocabulary",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "What does 'efficient' mean?",
+        "vi": "'Efficient' có nghĩa là gì?"
+      },
+      "options": ["working well without wasting time or energy", "working slowly", "working incorrectly", "not working"],
+      "correctAnswers": ["working well without wasting time or energy"],
+      "explanation": {
+        "en": "'Efficient' means achieving maximum productivity with minimum wasted effort or expense.",
+        "vi": "'Efficient' có nghĩa là đạt được năng suất tối đa với nỗ lực hoặc chi phí lãng phí tối thiểu."
+      },
+      "points": 5,
+      "difficulty": "easy"
+    },
+    "lst_b1_015": {
+      "category": "grammar",
+      "level": "B1",
+      "type": "single_choice",
+      "question": {
+        "en": "Choose the correct form: It's time we ___ about this problem seriously.",
+        "vi": "Chọn dạng đúng: Đã đến lúc chúng ta ___ về vấn đề này một cách nghiêm túc."
+      },
+      "options": ["think", "thought", "thinking", "to think"],
+      "correctAnswers": ["thought"],
+      "explanation": {
+        "en": "After 'It's time', use past tense 'thought' to express that something should be done now.",
+        "vi": "Sau 'It's time', dùng thì quá khứ 'thought' để diễn tả rằng điều gì đó nên được làm ngay bây giờ."
+      },
+      "points": 5,
+      "difficulty": "medium"
+    }
+  }
+}

@@ -186,6 +186,8 @@
   "selectOneAnswerShort": "1개 선택",
   "selectMultipleAnswersShort": "여러 개 선택",
   "listening": "듣기",
+  "grammar": "문법",
+  "reading": "읽기",
   "speaking": "말하기",
   "progressTitle": "학습 진행 상황",
   "featureInDevelopment": "개발 중인 기능",
@@ -245,6 +247,44 @@
   "continueButton": "계속",
   "xp": "XP",
   "levelLabel": "레벨",
-  "user": "사용자"
+  "user": "사용자",
+  "levelSkipTest": "레벨 스킵 테스트",
+  "skipToLevel": "{level}로 건너뛰기",
+  "@skipToLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyLimitReached": "오늘 이미 테스트를 받으셨습니다. 내일 다시 시도해 주세요.",
+  "levelUnlocked": "레벨 {level} 잠금 해제됨!",
+  "@levelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "testFailed": "테스트 실패",
+  "testFailedMessage": "테스트 실패. 레벨을 잠금 해제하려면 최소 80%가 필요합니다.",
+  "noQuestionsAvailable": "사용 가능한 질문이 없습니다",
+  "pleaseLogin": "로그인해 주세요",
+  "questionNumber": "질문 {current} / {total}",
+  "@questionNumber": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "points": "포인트",
+  "previous": "이전",
+  "next": "다음",
+  "submit": "제출",
+  "ok": "확인"
 }
 
