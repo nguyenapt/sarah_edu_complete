@@ -3703,7 +3703,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Complete the sentence with the correct form of "${content.baseWord}"',
+              AppLocalizations.of(context)!.completeSentenceWithForm(content.baseWord),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -3717,7 +3717,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             DropdownButtonFormField<String>(
               value: selectedForm,
               decoration: InputDecoration(
-                labelText: 'Select the correct form',
+                labelText: AppLocalizations.of(context)!.selectCorrectForm,
                 border: OutlineInputBorder(),
               ),
               items: content.options.map((option) {
@@ -4175,8 +4175,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           // Normal success message
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Đã lưu tiến trình học tập'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.progressSaved),
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 2),
               ),
@@ -4190,7 +4190,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Lỗi khi lưu tiến trình: $error'),
+              content: Text(AppLocalizations.of(context)!.errorSavingProgress(error.toString())),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 3),
             ),
@@ -4259,19 +4259,19 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       backgroundColor = const Color(0xFFE8F5E9); // Light green
       iconColor = const Color(0xFF4CAF50); // Green
       textColor = const Color(0xFF2E7D32); // Dark green
-      statusText = 'Chính xác!';
+      statusText = AppLocalizations.of(context)!.perfect;
       statusIcon = Icons.check_circle;
     } else if (isGood) {
       backgroundColor = const Color(0xFFE3F2FD); // Light blue
       iconColor = const Color(0xFF2196F3); // Blue
       textColor = const Color(0xFF1565C0); // Dark blue
-      statusText = 'Tốt lắm!';
+      statusText = AppLocalizations.of(context)!.goodJob;
       statusIcon = Icons.thumb_up;
     } else {
       backgroundColor = const Color(0xFFFFF3E0); // Light orange
       iconColor = const Color(0xFFFF9800); // Orange
       textColor = const Color(0xFFE65100); // Dark orange
-      statusText = 'Cần cố gắng thêm!';
+      statusText = AppLocalizations.of(context)!.needToTryHarder;
       statusIcon = Icons.trending_up;
     }
     
@@ -4353,7 +4353,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                             ),
                       ),
                       Text(
-                        'điểm',
+                        ' ${AppLocalizations.of(context)!.points}',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               color: Colors.grey[700],
                             ),
@@ -4411,7 +4411,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                         Icon(Icons.lightbulb_outline, color: AppTheme.primaryColor, size: 20),
                         const SizedBox(width: 8),
                         Text(
-                          'Giải thích',
+                          AppLocalizations.of(context)!.explanation,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppTheme.primaryColor,
@@ -4530,7 +4530,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
               Icon(Icons.lightbulb, color: AppTheme.primaryColor),
               const SizedBox(width: 8),
               Text(
-                'Giải thích',
+                AppLocalizations.of(context)!.explanation,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppTheme.primaryColor,

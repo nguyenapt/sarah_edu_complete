@@ -171,10 +171,36 @@ class AppLocalizationsRu extends AppLocalizations {
   String get exercises => 'Упражнения';
 
   @override
-  String get exerciseDetails => 'Exercise Details';
+  String get exerciseDetails => 'Детали упражнения';
 
   @override
-  String get viewDetails => 'View Details';
+  String get viewDetails => 'Просмотр деталей';
+
+  @override
+  String position(int number) {
+    return 'Позиция $number';
+  }
+
+  @override
+  String youChose(String answer) {
+    return 'Вы выбрали: $answer';
+  }
+
+  @override
+  String get youHaventChosen => 'Вы не выбрали';
+
+  @override
+  String correctAnswer(String answer) {
+    return 'Правильный ответ: $answer';
+  }
+
+  @override
+  String youFilled(String answer) {
+    return 'Вы заполнили: \"$answer\"';
+  }
+
+  @override
+  String get youHaventFilled => 'Вы не заполнили';
 
   @override
   String get theory => 'Теория';
@@ -214,6 +240,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get incorrect => 'Неправильно!';
+
+  @override
+  String get perfect => 'Отлично!';
+
+  @override
+  String get goodJob => 'Хорошая работа!';
+
+  @override
+  String get needToTryHarder => 'Нужно больше стараться!';
+
+  @override
+  String question(int number) {
+    return 'Вопрос $number';
+  }
 
   @override
   String get explanation => 'Объяснение';
@@ -510,4 +550,88 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get user => 'Пользователь';
+
+  @override
+  String completedExercises(int completed, int total) {
+    return 'Completed: $completed/$total exercises';
+  }
+
+  @override
+  String get progressSaved => 'Learning progress saved';
+
+  @override
+  String errorSavingProgress(String error) {
+    return 'Error saving progress: $error';
+  }
+
+  @override
+  String errorLoadingData(String error) {
+    return 'Error loading data: $error';
+  }
+
+  @override
+  String get allLessonsCompleted => 'You have completed all lessons!';
+
+  @override
+  String get noProgressData => 'No progress data available.';
+
+  @override
+  String get noWeakSkillsData => 'No weak skills data available.';
+
+  @override
+  String get skills => 'Skills';
+
+  @override
+  String get topics => 'Topics';
+
+  @override
+  String get noData => 'No data available.';
+
+  @override
+  String correctPercent(int percent, int attempts) {
+    return 'Correct $percent% • $attempts attempts';
+  }
+
+  @override
+  String get practiceSuggestions => 'Practice Suggestions';
+
+  @override
+  String get noSuggestions => 'No suggestions available.';
+
+  @override
+  String get loginToSaveResult => 'Login to save result';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get enterEmailForReset =>
+      'Enter your email to receive password reset link';
+
+  @override
+  String get emailSent => 'Email sent!';
+
+  @override
+  String get checkEmailInstructions =>
+      'Please check your inbox and follow the instructions in the email.';
+
+  @override
+  String get enterYourEmail => 'Enter your email';
+
+  @override
+  String get pleaseEnterEmail => 'Please enter email';
+
+  @override
+  String get sendPasswordResetEmail => 'Send password reset email';
+
+  @override
+  String get backToLogin => 'Back to login';
+
+  @override
+  String get selectCorrectForm => 'Select the correct form';
+
+  @override
+  String completeSentenceWithForm(String word) {
+    return 'Complete the sentence with the correct form of \"$word\"';
+  }
 }

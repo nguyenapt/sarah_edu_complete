@@ -56,7 +56,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi tải dữ liệu: $e'),
+            content: Text(AppLocalizations.of(context)!.errorLoadingData(e.toString())),
             backgroundColor: Colors.red,
           ),
         );

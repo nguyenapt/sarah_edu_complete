@@ -111,7 +111,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                             ),
                       ),
                       Text(
-                        'điểm',
+                        ' ${AppLocalizations.of(context)!.points}',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               color: Colors.grey[700],
                             ),
@@ -214,7 +214,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Câu $questionNumber',
+                        AppLocalizations.of(context)!.question(questionNumber),
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -232,7 +232,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${question.point} điểm',
+                    '${question.point} ${AppLocalizations.of(context)!.points}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: statusColor,
@@ -319,7 +319,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    isCorrect ? 'Chính xác!' : 'Sai rồi!',
+                    isCorrect ? AppLocalizations.of(context)!.perfect : AppLocalizations.of(context)!.incorrect,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           color: statusColor,
                           fontWeight: FontWeight.bold,
@@ -333,7 +333,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${exercise.points} điểm',
+                    '${exercise.points} ${AppLocalizations.of(context)!.points}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: statusColor,
@@ -429,7 +429,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Vị trí ${index + 1}:',
+                        AppLocalizations.of(context)!.position(index + 1),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -454,7 +454,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'Bạn chọn: $userAnswer',
+                                  AppLocalizations.of(context)!.youChose(userAnswer),
                                   style: TextStyle(
                                     color: answerColor,
                                     fontWeight: FontWeight.w600,
@@ -477,7 +477,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               Icon(Icons.help_outline, size: 16, color: Colors.grey[600]),
                               const SizedBox(width: 8),
                               Text(
-                                'Bạn chưa chọn',
+                                AppLocalizations.of(context)!.youHaventChosen,
                                 style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 14,
@@ -499,7 +499,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Đáp án đúng: $correctAnswer',
+                                AppLocalizations.of(context)!.correctAnswer(correctAnswer ?? ''),
                                 style: const TextStyle(
                                   color: Color(0xFF4CAF50),
                                   fontWeight: FontWeight.w600,
@@ -592,7 +592,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Vị trí ${index + 1}:',
+                        AppLocalizations.of(context)!.position(index + 1),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -617,7 +617,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'Bạn điền: "$userAnswer"',
+                                  AppLocalizations.of(context)!.youFilled(userAnswer),
                                   style: TextStyle(
                                     color: answerColor,
                                     fontWeight: FontWeight.w600,
@@ -640,7 +640,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               Icon(Icons.help_outline, size: 16, color: Colors.grey[600]),
                               const SizedBox(width: 8),
                               Text(
-                                'Bạn chưa điền',
+                                AppLocalizations.of(context)!.youHaventFilled,
                                 style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 14,
@@ -662,7 +662,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Đáp án đúng: "$correctAnswer"',
+                                AppLocalizations.of(context)!.correctAnswer('"$correctAnswer"'),
                                 style: const TextStyle(
                                   color: Color(0xFF4CAF50),
                                   fontWeight: FontWeight.w600,
@@ -754,7 +754,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Bạn chọn: $userAnswer',
+                            AppLocalizations.of(context)!.youChose(userAnswer),
                             style: TextStyle(
                               color: answerColor,
                               fontWeight: FontWeight.w600,
@@ -777,7 +777,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                         Icon(Icons.help_outline, size: 16, color: Colors.grey[600]),
                         const SizedBox(width: 8),
                         Text(
-                          'Bạn chưa chọn',
+                          AppLocalizations.of(context)!.youHaventChosen,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontSize: 14,
@@ -799,7 +799,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Đáp án đúng: ${content.correctAnswers.join(", ")}',
+                          AppLocalizations.of(context)!.correctAnswer(content.correctAnswers.join(", ")),
                           style: const TextStyle(
                             color: Color(0xFF4CAF50),
                             fontWeight: FontWeight.w600,
@@ -892,7 +892,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Bạn chọn: ${userAnswers.join(", ")}',
+                            AppLocalizations.of(context)!.youChose(userAnswers.join(", ")),
                             style: TextStyle(
                               color: answerColor,
                               fontWeight: FontWeight.w600,
@@ -915,7 +915,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                         Icon(Icons.help_outline, size: 16, color: Colors.grey[600]),
                         const SizedBox(width: 8),
                         Text(
-                          'Bạn chưa chọn',
+                          AppLocalizations.of(context)!.youHaventChosen,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontSize: 14,
@@ -937,7 +937,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Đáp án đúng: ${correctAnswers.join(", ")}',
+                          AppLocalizations.of(context)!.correctAnswer(correctAnswers.join(", ")),
                           style: const TextStyle(
                             color: Color(0xFF4CAF50),
                             fontWeight: FontWeight.w600,
@@ -1060,7 +1060,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'Bạn chọn: $userRightValue',
+                                  AppLocalizations.of(context)!.youChose(userRightValue),
                                   style: TextStyle(
                                     color: answerColor,
                                     fontWeight: FontWeight.w600,
@@ -1083,7 +1083,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               Icon(Icons.help_outline, size: 16, color: Colors.grey[600]),
                               const SizedBox(width: 8),
                               Text(
-                                'Bạn chưa chọn',
+                                AppLocalizations.of(context)!.youHaventChosen,
                                 style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 14,
@@ -1106,7 +1106,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'Đáp án đúng: $correctRightValue',
+                                  AppLocalizations.of(context)!.correctAnswer(correctRightValue),
                                   style: const TextStyle(
                                     color: Color(0xFF4CAF50),
                                     fontWeight: FontWeight.w600,

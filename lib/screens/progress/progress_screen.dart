@@ -134,7 +134,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     if (values.every((value) => value == 0)) {
       return Center(
         child: Text(
-          'Chưa có dữ liệu tiến độ.',
+          AppLocalizations.of(context)!.noProgressData,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Colors.grey[600],
               ),

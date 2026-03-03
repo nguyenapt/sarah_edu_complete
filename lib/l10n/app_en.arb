@@ -55,6 +55,40 @@
   "exercises": "Exercises",
   "exerciseDetails": "Exercise Details",
   "viewDetails": "View Details",
+  "position": "Position {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "You chose: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "You haven't chosen",
+  "correctAnswer": "Correct answer: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "You filled: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "You haven't filled",
   "theory": "Theory",
   "examples": "Examples",
   "usage": "Usage",
@@ -68,6 +102,17 @@
   "continueText": "Continue",
   "correct": "Correct!",
   "incorrect": "Incorrect!",
+  "perfect": "Perfect!",
+  "goodJob": "Good job!",
+  "needToTryHarder": "Need to try harder!",
+  "question": "Question {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "Explanation",
   "points": "points",
   "youGot": "You got",
@@ -201,6 +246,72 @@
   "continueButton": "Continue",
   "xp": "XP",
   "levelLabel": "Level",
-  "user": "User"
+  "user": "User",
+  "completedExercises": "Completed: {completed}/{total} exercises",
+  "@completedExercises": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSaved": "Learning progress saved",
+  "errorSavingProgress": "Error saving progress: {error}",
+  "@errorSavingProgress": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingData": "Error loading data: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "allLessonsCompleted": "You have completed all lessons!",
+  "noProgressData": "No progress data available.",
+  "noWeakSkillsData": "No weak skills data available.",
+  "skills": "Skills",
+  "topics": "Topics",
+  "noData": "No data available.",
+  "correctPercent": "Correct {percent}% • {attempts} attempts",
+  "@correctPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "practiceSuggestions": "Practice Suggestions",
+  "noSuggestions": "No suggestions available.",
+  "loginToSaveResult": "Login to save result",
+  "backToHome": "Back to Home",
+  "forgotPassword": "Forgot Password?",
+  "enterEmailForReset": "Enter your email to receive password reset link",
+  "emailSent": "Email sent!",
+  "checkEmailInstructions": "Please check your inbox and follow the instructions in the email.",
+  "enterYourEmail": "Enter your email",
+  "pleaseEnterEmail": "Please enter email",
+  "sendPasswordResetEmail": "Send password reset email",
+  "backToLogin": "Back to login",
+  "selectCorrectForm": "Select the correct form",
+  "completeSentenceWithForm": "Complete the sentence with the correct form of \"{word}\"",
+  "@completeSentenceWithForm": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  }
 }
 

@@ -241,8 +241,8 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text(
-                  'Đăng nhập để lưu kết quả',
+                child: Text(
+                  AppLocalizations.of(context)!.loginToSaveResult,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -263,8 +263,8 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: const Text(
-                'Quay lại Home',
+              child: Text(
+                AppLocalizations.of(context)!.backToHome,
                 style: TextStyle(
                   fontSize: 16,
                 ),

@@ -53,6 +53,42 @@
   "units": "Единицы",
   "lessons": "Уроки",
   "exercises": "Упражнения",
+  "exerciseDetails": "Детали упражнения",
+  "viewDetails": "Просмотр деталей",
+  "position": "Позиция {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "Вы выбрали: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "Вы не выбрали",
+  "correctAnswer": "Правильный ответ: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "Вы заполнили: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "Вы не заполнили",
   "theory": "Теория",
   "examples": "Примеры",
   "usage": "Использование",
@@ -65,6 +101,17 @@
   "submit": "Отправить",
   "correct": "Правильно!",
   "incorrect": "Неправильно!",
+  "perfect": "Отлично!",
+  "goodJob": "Хорошая работа!",
+  "needToTryHarder": "Нужно больше стараться!",
+  "question": "Вопрос {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "Объяснение",
   "points": "баллов",
   "youGot": "Вы получили",

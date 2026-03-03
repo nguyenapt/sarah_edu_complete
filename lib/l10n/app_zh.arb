@@ -53,6 +53,42 @@
   "units": "单元",
   "lessons": "课程",
   "exercises": "练习",
+  "exerciseDetails": "练习详情",
+  "viewDetails": "查看详情",
+  "position": "位置 {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "您选择了: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "您未选择",
+  "correctAnswer": "正确答案: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "您填写了: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "您未填写",
   "theory": "理论",
   "examples": "示例",
   "usage": "用法",
@@ -65,6 +101,17 @@
   "submit": "提交",
   "correct": "正确！",
   "incorrect": "错误！",
+  "perfect": "完美!",
+  "goodJob": "做得好!",
+  "needToTryHarder": "需要更加努力!",
+  "question": "问题 {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "解释",
   "points": "分数",
   "youGot": "您获得了",

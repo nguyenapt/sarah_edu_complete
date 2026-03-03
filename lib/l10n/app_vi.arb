@@ -55,6 +55,40 @@
   "exercises": "Bài tập",
   "exerciseDetails": "Chi tiết bài tập",
   "viewDetails": "Xem chi tiết",
+  "position": "Vị trí {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "Bạn chọn: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "Bạn chưa chọn",
+  "correctAnswer": "Đáp án đúng: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "Bạn điền: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "Bạn chưa điền",
   "theory": "Lý thuyết",
   "examples": "Ví dụ",
   "usage": "Cách dùng",
@@ -68,6 +102,17 @@
   "continueText": "Tiếp tục",
   "correct": "Chính xác!",
   "incorrect": "Sai rồi!",
+  "perfect": "Chính xác!",
+  "goodJob": "Tốt lắm!",
+  "needToTryHarder": "Cần cố gắng thêm!",
+  "question": "Câu {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "Giải thích",
   "points": "điểm",
   "youGot": "Bạn nhận được",
@@ -201,6 +246,72 @@
   "continueButton": "Tiếp tục",
   "xp": "XP",
   "levelLabel": "Level",
-  "user": "User"
+  "user": "User",
+  "completedExercises": "Đã hoàn thành: {completed}/{total} bài tập",
+  "@completedExercises": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSaved": "Đã lưu tiến trình học tập",
+  "errorSavingProgress": "Lỗi khi lưu tiến trình: {error}",
+  "@errorSavingProgress": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorLoadingData": "Lỗi tải dữ liệu: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "allLessonsCompleted": "Bạn đã hoàn thành tất cả bài học!",
+  "noProgressData": "Chưa có dữ liệu tiến độ.",
+  "noWeakSkillsData": "Chưa có dữ liệu kỹ năng yếu.",
+  "skills": "Kỹ năng",
+  "topics": "Chủ đề",
+  "noData": "Chưa có dữ liệu.",
+  "correctPercent": "Đúng {percent}% • {attempts} lượt",
+  "@correctPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "practiceSuggestions": "Gợi ý bài luyện",
+  "noSuggestions": "Chưa có gợi ý.",
+  "loginToSaveResult": "Đăng nhập để lưu kết quả",
+  "backToHome": "Quay lại Home",
+  "forgotPassword": "Quên mật khẩu?",
+  "enterEmailForReset": "Nhập email của bạn để nhận link đặt lại mật khẩu",
+  "emailSent": "Đã gửi email!",
+  "checkEmailInstructions": "Vui lòng kiểm tra hộp thư và làm theo hướng dẫn trong email.",
+  "enterYourEmail": "Nhập email của bạn",
+  "pleaseEnterEmail": "Vui lòng nhập email",
+  "sendPasswordResetEmail": "Gửi email đặt lại mật khẩu",
+  "backToLogin": "Quay lại đăng nhập",
+  "selectCorrectForm": "Chọn dạng đúng",
+  "completeSentenceWithForm": "Hoàn thành câu với dạng đúng của \"{word}\"",
+  "@completeSentenceWithForm": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  }
 }
 

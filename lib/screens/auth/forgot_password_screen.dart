@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -32,8 +33,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             _emailSent = true;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.checkEmailInstructions),
               backgroundColor: Colors.green,
             ),
           );
@@ -53,7 +54,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quên mật khẩu'),
+        title: Text(AppLocalizations.of(context)!.forgotPassword),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -71,7 +72,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Quên mật khẩu?',
+                  AppLocalizations.of(context)!.forgotPassword,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -80,7 +81,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 const SizedBox(height: 16),
                 if (!_emailSent)
                   Text(
-                    'Nhập email của bạn để nhận link đặt lại mật khẩu',
+                    AppLocalizations.of(context)!.enterEmailForReset,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -90,7 +91,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Column(
                     children: [
                       Text(
-                        'Đã gửi email!',
+                        AppLocalizations.of(context)!.emailSent,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               color: Colors.green,
                               fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Vui lòng kiểm tra hộp thư và làm theo hướng dẫn trong email.',
+                        AppLocalizations.of(context)!.checkEmailInstructions,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -114,17 +115,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Nhập email của bạn',
-                      prefixIcon: Icon(Icons.email),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.email,
+                      hintText: AppLocalizations.of(context)!.enterYourEmail,
+                      prefixIcon: const Icon(Icons.email),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Vui lòng nhập email';
+                        return AppLocalizations.of(context)!.pleaseEnterEmail;
                       }
                       if (!value.contains('@')) {
-                        return 'Email không hợp lệ';
+                        return AppLocalizations.of(context)!.validationEmailInvalid;
                       }
                       return null;
                     },
@@ -153,9 +154,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       Colors.white),
                                 ),
                               )
-                            : const Text(
-                                'Gửi email đặt lại mật khẩu',
-                                style: TextStyle(
+                            : Text(
+                                AppLocalizations.of(context)!.sendPasswordResetEmail,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -173,9 +174,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       backgroundColor: AppTheme.primaryColor,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text(
-                      'Quay lại đăng nhập',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.backToLogin,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),

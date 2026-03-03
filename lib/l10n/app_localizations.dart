@@ -221,7 +221,7 @@ abstract class AppLocalizations {
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password'**
+  /// **'Forgot Password?'**
   String get forgotPassword;
 
   /// No description provided for @loginWithGoogle.
@@ -446,6 +446,42 @@ abstract class AppLocalizations {
   /// **'View Details'**
   String get viewDetails;
 
+  /// No description provided for @position.
+  ///
+  /// In en, this message translates to:
+  /// **'Position {number}'**
+  String position(int number);
+
+  /// No description provided for @youChose.
+  ///
+  /// In en, this message translates to:
+  /// **'You chose: {answer}'**
+  String youChose(String answer);
+
+  /// No description provided for @youHaventChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t chosen'**
+  String get youHaventChosen;
+
+  /// No description provided for @correctAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer: {answer}'**
+  String correctAnswer(String answer);
+
+  /// No description provided for @youFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'You filled: \"{answer}\"'**
+  String youFilled(String answer);
+
+  /// No description provided for @youHaventFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t filled'**
+  String get youHaventFilled;
+
   /// No description provided for @theory.
   ///
   /// In en, this message translates to:
@@ -523,6 +559,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect!'**
   String get incorrect;
+
+  /// No description provided for @perfect.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect!'**
+  String get perfect;
+
+  /// No description provided for @goodJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Good job!'**
+  String get goodJob;
+
+  /// No description provided for @needToTryHarder.
+  ///
+  /// In en, this message translates to:
+  /// **'Need to try harder!'**
+  String get needToTryHarder;
+
+  /// No description provided for @question.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {number}'**
+  String question(int number);
 
   /// No description provided for @explanation.
   ///
@@ -1069,6 +1129,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User'**
   String get user;
+
+  /// No description provided for @completedExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed: {completed}/{total} exercises'**
+  String completedExercises(int completed, int total);
+
+  /// No description provided for @progressSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning progress saved'**
+  String get progressSaved;
+
+  /// No description provided for @errorSavingProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving progress: {error}'**
+  String errorSavingProgress(String error);
+
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data: {error}'**
+  String errorLoadingData(String error);
+
+  /// No description provided for @allLessonsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'You have completed all lessons!'**
+  String get allLessonsCompleted;
+
+  /// No description provided for @noProgressData.
+  ///
+  /// In en, this message translates to:
+  /// **'No progress data available.'**
+  String get noProgressData;
+
+  /// No description provided for @noWeakSkillsData.
+  ///
+  /// In en, this message translates to:
+  /// **'No weak skills data available.'**
+  String get noWeakSkillsData;
+
+  /// No description provided for @skills.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills'**
+  String get skills;
+
+  /// No description provided for @topics.
+  ///
+  /// In en, this message translates to:
+  /// **'Topics'**
+  String get topics;
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available.'**
+  String get noData;
+
+  /// No description provided for @correctPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct {percent}% • {attempts} attempts'**
+  String correctPercent(int percent, int attempts);
+
+  /// No description provided for @practiceSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice Suggestions'**
+  String get practiceSuggestions;
+
+  /// No description provided for @noSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions available.'**
+  String get noSuggestions;
+
+  /// No description provided for @loginToSaveResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to save result'**
+  String get loginToSaveResult;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @enterEmailForReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to receive password reset link'**
+  String get enterEmailForReset;
+
+  /// No description provided for @emailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sent!'**
+  String get emailSent;
+
+  /// No description provided for @checkEmailInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your inbox and follow the instructions in the email.'**
+  String get checkEmailInstructions;
+
+  /// No description provided for @enterYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enterYourEmail;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @sendPasswordResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send password reset email'**
+  String get sendPasswordResetEmail;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to login'**
+  String get backToLogin;
+
+  /// No description provided for @selectCorrectForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the correct form'**
+  String get selectCorrectForm;
+
+  /// No description provided for @completeSentenceWithForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the sentence with the correct form of \"{word}\"'**
+  String completeSentenceWithForm(String word);
 }
 
 class _AppLocalizationsDelegate

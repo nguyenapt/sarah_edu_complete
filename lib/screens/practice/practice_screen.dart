@@ -1047,8 +1047,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Bạn đã hoàn thành tất cả bài học!'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.allLessonsCompleted),
                       backgroundColor: Colors.green,
                     ),
                   );

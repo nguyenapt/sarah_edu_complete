@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi tải dữ liệu: $e'),
+            content: Text(AppLocalizations.of(context)!.errorLoadingData(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -407,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Đã học hết
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: const Text('Bạn đã hoàn thành tất cả bài học!'),
+                    content: Text(AppLocalizations.of(context)!.allLessonsCompleted),
                     backgroundColor: Colors.green,
                   ),
                 );

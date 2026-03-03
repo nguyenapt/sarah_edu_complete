@@ -67,7 +67,7 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
           : _stats == null
               ? Center(
                   child: Text(
-                    'Chưa có dữ liệu kỹ năng yếu.',
+                    AppLocalizations.of(context)!.noWeakSkillsData,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -77,12 +77,12 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
                   padding: const EdgeInsets.all(16),
                   children: [
                     _buildSection(
-                      title: 'Kỹ năng',
+                      title: AppLocalizations.of(context)!.skills,
                       items: _stats!.skillTypes,
                     ),
                     const SizedBox(height: 16),
                     _buildSection(
-                      title: 'Chủ đề',
+                      title: AppLocalizations.of(context)!.topics,
                       items: _stats!.grammarTopics,
                     ),
                     const SizedBox(height: 16),
@@ -97,7 +97,7 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
     required List<WeakSkillItem> items,
   }) {
     if (items.isEmpty) {
-      return _buildEmptyCard(title, 'Chưa có dữ liệu.');
+      return _buildEmptyCard(title, AppLocalizations.of(context)!.noData);
     }
 
     final sorted = List<WeakSkillItem>.from(items)
@@ -118,12 +118,12 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
             ),
             const SizedBox(height: 8),
             ...displayItems.map((item) {
-              final percent = (item.accuracy * 100).toStringAsFixed(0);
+              final percent = (item.accuracy * 100).toInt();
               return ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
                 title: Text(item.id),
-                subtitle: Text('Đúng $percent% • ${item.attempts} lượt'),
+                subtitle: Text(AppLocalizations.of(context)!.correctPercent(percent, item.attempts)),
                 trailing: Icon(
                   Icons.trending_down,
                   color: AppTheme.primaryColor,
@@ -138,7 +138,7 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
 
   Widget _buildRecommendedLessons(List<String> lessonIds) {
     if (lessonIds.isEmpty) {
-      return _buildEmptyCard('Gợi ý bài luyện', 'Chưa có gợi ý.');
+      return _buildEmptyCard(AppLocalizations.of(context)!.practiceSuggestions, AppLocalizations.of(context)!.noSuggestions);
     }
 
     return Card(
@@ -148,7 +148,7 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Gợi ý bài luyện',
+              AppLocalizations.of(context)!.practiceSuggestions,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

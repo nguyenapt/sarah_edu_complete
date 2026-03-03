@@ -53,6 +53,42 @@
   "units": "단원",
   "lessons": "수업",
   "exercises": "연습문제",
+  "exerciseDetails": "연습문제 상세",
+  "viewDetails": "상세 보기",
+  "position": "위치 {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "선택한 답: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "선택하지 않음",
+  "correctAnswer": "정답: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "입력한 답: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "입력하지 않음",
   "theory": "이론",
   "examples": "예제",
   "usage": "사용법",
@@ -65,6 +101,17 @@
   "submit": "제출",
   "correct": "정답입니다!",
   "incorrect": "틀렸습니다!",
+  "perfect": "완벽해요!",
+  "goodJob": "잘했어요!",
+  "needToTryHarder": "더 노력이 필요해요!",
+  "question": "문제 {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "설명",
   "points": "점수",
   "youGot": "획득한 점수",

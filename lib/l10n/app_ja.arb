@@ -53,6 +53,42 @@
   "units": "ユニット",
   "lessons": "レッスン",
   "exercises": "練習問題",
+  "exerciseDetails": "練習問題の詳細",
+  "viewDetails": "詳細を見る",
+  "position": "位置 {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "選択した答え: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "選択していません",
+  "correctAnswer": "正解: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "入力した答え: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "入力していません",
   "theory": "理論",
   "examples": "例",
   "usage": "使い方",
@@ -65,6 +101,17 @@
   "submit": "提出",
   "correct": "正解です！",
   "incorrect": "不正解です！",
+  "perfect": "完璧!",
+  "goodJob": "よくできました!",
+  "needToTryHarder": "もっと頑張りましょう!",
+  "question": "問題 {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "説明",
   "points": "ポイント",
   "youGot": "獲得ポイント",

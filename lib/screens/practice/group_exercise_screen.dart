@@ -86,7 +86,7 @@ class _GroupExerciseScreenState extends State<GroupExerciseScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Lỗi tải dữ liệu: $e'),
+            content: Text(AppLocalizations.of(context)!.errorLoadingData(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -131,7 +131,7 @@ class _GroupExerciseScreenState extends State<GroupExerciseScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Đã hoàn thành: ${_completedExerciseIds.length}/${_exercises.length} bài tập',
+                                AppLocalizations.of(context)!.completedExercises(_completedExerciseIds.length, _exercises.length),
                                 style: TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontWeight: FontWeight.bold,

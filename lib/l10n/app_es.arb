@@ -53,6 +53,42 @@
   "units": "Unidades",
   "lessons": "Lecciones",
   "exercises": "Ejercicios",
+  "exerciseDetails": "Detalles del ejercicio",
+  "viewDetails": "Ver detalles",
+  "position": "Posición {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "Elegiste: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "No has elegido",
+  "correctAnswer": "Respuesta correcta: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "Completaste: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "No has completado",
   "theory": "Teoría",
   "examples": "Ejemplos",
   "usage": "Uso",
@@ -65,6 +101,17 @@
   "submit": "Enviar",
   "correct": "¡Correcto!",
   "incorrect": "¡Incorrecto!",
+  "perfect": "¡Perfecto!",
+  "goodJob": "¡Bien hecho!",
+  "needToTryHarder": "¡Necesitas esforzarte más!",
+  "question": "Pregunta {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "Explicación",
   "points": "puntos",
   "youGot": "Obtuviste",

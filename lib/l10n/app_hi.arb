@@ -53,6 +53,42 @@
   "units": "इकाइयां",
   "lessons": "पाठ",
   "exercises": "अभ्यास",
+  "exerciseDetails": "अभ्यास विवरण",
+  "viewDetails": "विवरण देखें",
+  "position": "स्थिति {number}",
+  "@position": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "youChose": "आपने चुना: {answer}",
+  "@youChose": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventChosen": "आपने चयन नहीं किया",
+  "correctAnswer": "सही उत्तर: {answer}",
+  "@correctAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youFilled": "आपने भरा: \"{answer}\"",
+  "@youFilled": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "youHaventFilled": "आपने नहीं भरा",
   "theory": "सिद्धांत",
   "examples": "उदाहरण",
   "usage": "उपयोग",
@@ -65,6 +101,17 @@
   "submit": "सबमिट करें",
   "correct": "सही!",
   "incorrect": "गलत!",
+  "perfect": "बिल्कुल सही!",
+  "goodJob": "बहुत बढ़िया!",
+  "needToTryHarder": "और मेहनत करनी होगी!",
+  "question": "प्रश्न {number}",
+  "@question": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "explanation": "व्याख्या",
   "points": "अंक",
   "youGot": "आपको मिले",

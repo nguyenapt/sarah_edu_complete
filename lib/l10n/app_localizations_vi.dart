@@ -174,6 +174,32 @@ class AppLocalizationsVi extends AppLocalizations {
   String get viewDetails => 'Xem chi tiết';
 
   @override
+  String position(int number) {
+    return 'Vị trí $number';
+  }
+
+  @override
+  String youChose(String answer) {
+    return 'Bạn chọn: $answer';
+  }
+
+  @override
+  String get youHaventChosen => 'Bạn chưa chọn';
+
+  @override
+  String correctAnswer(String answer) {
+    return 'Đáp án đúng: $answer';
+  }
+
+  @override
+  String youFilled(String answer) {
+    return 'Bạn điền: \"$answer\"';
+  }
+
+  @override
+  String get youHaventFilled => 'Bạn chưa điền';
+
+  @override
   String get theory => 'Lý thuyết';
 
   @override
@@ -211,6 +237,20 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get incorrect => 'Sai rồi!';
+
+  @override
+  String get perfect => 'Chính xác!';
+
+  @override
+  String get goodJob => 'Tốt lắm!';
+
+  @override
+  String get needToTryHarder => 'Cần cố gắng thêm!';
+
+  @override
+  String question(int number) {
+    return 'Câu $number';
+  }
 
   @override
   String get explanation => 'Giải thích';
@@ -505,4 +545,88 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get user => 'User';
+
+  @override
+  String completedExercises(int completed, int total) {
+    return 'Đã hoàn thành: $completed/$total bài tập';
+  }
+
+  @override
+  String get progressSaved => 'Đã lưu tiến trình học tập';
+
+  @override
+  String errorSavingProgress(String error) {
+    return 'Lỗi khi lưu tiến trình: $error';
+  }
+
+  @override
+  String errorLoadingData(String error) {
+    return 'Lỗi tải dữ liệu: $error';
+  }
+
+  @override
+  String get allLessonsCompleted => 'Bạn đã hoàn thành tất cả bài học!';
+
+  @override
+  String get noProgressData => 'Chưa có dữ liệu tiến độ.';
+
+  @override
+  String get noWeakSkillsData => 'Chưa có dữ liệu kỹ năng yếu.';
+
+  @override
+  String get skills => 'Kỹ năng';
+
+  @override
+  String get topics => 'Chủ đề';
+
+  @override
+  String get noData => 'Chưa có dữ liệu.';
+
+  @override
+  String correctPercent(int percent, int attempts) {
+    return 'Đúng $percent% • $attempts lượt';
+  }
+
+  @override
+  String get practiceSuggestions => 'Gợi ý bài luyện';
+
+  @override
+  String get noSuggestions => 'Chưa có gợi ý.';
+
+  @override
+  String get loginToSaveResult => 'Đăng nhập để lưu kết quả';
+
+  @override
+  String get backToHome => 'Quay lại Home';
+
+  @override
+  String get enterEmailForReset =>
+      'Nhập email của bạn để nhận link đặt lại mật khẩu';
+
+  @override
+  String get emailSent => 'Đã gửi email!';
+
+  @override
+  String get checkEmailInstructions =>
+      'Vui lòng kiểm tra hộp thư và làm theo hướng dẫn trong email.';
+
+  @override
+  String get enterYourEmail => 'Nhập email của bạn';
+
+  @override
+  String get pleaseEnterEmail => 'Vui lòng nhập email';
+
+  @override
+  String get sendPasswordResetEmail => 'Gửi email đặt lại mật khẩu';
+
+  @override
+  String get backToLogin => 'Quay lại đăng nhập';
+
+  @override
+  String get selectCorrectForm => 'Chọn dạng đúng';
+
+  @override
+  String completeSentenceWithForm(String word) {
+    return 'Hoàn thành câu với dạng đúng của \"$word\"';
+  }
 }
