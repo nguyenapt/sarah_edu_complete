@@ -18,14 +18,17 @@ namespace FirestoreImporter
     {
         private List<GroupQuestion> _groupQuestions;
         private Dictionary<string, string> _titleDictionary;
+        private Dictionary<string, VoiceConfig> _speakerVoices;
 
         public ExerciseGroupForm()
         {
             InitializeComponent();
             _groupQuestions = new List<GroupQuestion>();
             _titleDictionary = new Dictionary<string, string>();
+            _speakerVoices = new Dictionary<string, VoiceConfig>();
             SetupDataGridViews();
             SetupAutoBuildIds();
+            SetupVoiceControls();
         }
 
         private void SetupAutoBuildIds()
@@ -163,6 +166,135 @@ namespace FirestoreImporter
             grvQuestion.ReadOnly = true;
             grvQuestion.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grvQuestion.CellContentClick += GrvQuestion_CellContentClick;
+
+            // Setup grvSpeakerVoices
+            grvSpeakerVoices.AutoGenerateColumns = false;
+            grvSpeakerVoices.Columns.Clear();
+            
+            // Delete button column
+            var deleteColumnVoice = new DataGridViewButtonColumn
+            {
+                Name = "colDelete",
+                HeaderText = "",
+                Text = "Delete",
+                UseColumnTextForButtonValue = true,
+                Width = 60,
+                ReadOnly = true
+            };
+            grvSpeakerVoices.Columns.Add(deleteColumnVoice);
+            
+            grvSpeakerVoices.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colName",
+                HeaderText = "Name",
+                DataPropertyName = "Name",
+                Width = 100,
+                ReadOnly = true
+            });
+            grvSpeakerVoices.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colGender",
+                HeaderText = "Gender",
+                DataPropertyName = "Gender",
+                Width = 70,
+                ReadOnly = true
+            });
+            grvSpeakerVoices.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colAge",
+                HeaderText = "Age",
+                DataPropertyName = "Age",
+                Width = 70,
+                ReadOnly = true
+            });
+            grvSpeakerVoices.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colLanguageCode",
+                HeaderText = "Language",
+                DataPropertyName = "LanguageCode",
+                Width = 80,
+                ReadOnly = true
+            });
+            grvSpeakerVoices.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colRate",
+                HeaderText = "Rate",
+                DataPropertyName = "Rate",
+                Width = 60,
+                ReadOnly = true
+            });
+            grvSpeakerVoices.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colPitch",
+                HeaderText = "Pitch",
+                DataPropertyName = "Pitch",
+                Width = 60,
+                ReadOnly = true
+            });
+            grvSpeakerVoices.AllowUserToAddRows = false;
+            grvSpeakerVoices.AllowUserToDeleteRows = false;
+            grvSpeakerVoices.ReadOnly = true;
+            grvSpeakerVoices.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grvSpeakerVoices.CellContentClick += GrvSpeakerVoices_CellContentClick;
+        }
+
+        private void SetupVoiceControls()
+        {
+            // Setup default values cho voice controls
+            numRate.Value = 1.0m;
+            numPitch.Value = 0.0m;
+            numVoicePitch.Value = 0.0m;
+            numVoiceAge.Value = 1.0m; // Note: This is actually Rate, not Age (based on Designer)
+            
+            // Set default selections
+            if (cboDefaultVoiceGender.Items.Count > 0)
+                cboDefaultVoiceGender.SelectedIndex = 0; // female
+            if (cboDefaultVoiceAge.Items.Count > 0)
+                cboDefaultVoiceAge.SelectedIndex = 1; // adult
+            if (cboDefaultVoiceLanguageCode.Items.Count > 0)
+                cboDefaultVoiceLanguageCode.SelectedIndex = 0; // en-US
+
+            if (cboVoiceGender.Items.Count > 0)
+                cboVoiceGender.SelectedIndex = 0; // female
+            if (cboVoiceAge.Items.Count > 0)
+                cboVoiceAge.SelectedIndex = 1; // adult
+            if (cboVoiceLanguageCode.Items.Count > 0)
+                cboVoiceLanguageCode.SelectedIndex = 0; // en-US
+
+            // Attach event handlers
+            btnAddVoice.Click += BtnAddVoice_Click;
+            cbHasVoice.CheckedChanged += CbHasVoice_CheckedChanged;
+            
+            // Ban đầu disable các controls voice (vì checkbox chưa được check)
+            EnableVoiceControls(false);
+        }
+
+        private void CbHasVoice_CheckedChanged(object? sender, EventArgs e)
+        {
+            bool isEnabled = cbHasVoice.Checked;
+            EnableVoiceControls(isEnabled);
+        }
+
+        private void EnableVoiceControls(bool enabled)
+        {
+            // Enable/Disable Default Voice controls (groupBox2)
+            groupBox2.Enabled = enabled;
+            cboDefaultVoiceAge.Enabled = enabled;
+            cboDefaultVoiceGender.Enabled = enabled;
+            cboDefaultVoiceLanguageCode.Enabled = enabled;
+            numRate.Enabled = enabled;
+            numPitch.Enabled = enabled;
+
+            // Enable/Disable Speaker Voices controls (groupBox3)
+            groupBox3.Enabled = enabled;
+            txtVoiceName.Enabled = enabled;
+            cboVoiceAge.Enabled = enabled;
+            cboVoiceGender.Enabled = enabled;
+            cboVoiceLanguageCode.Enabled = enabled;
+            numVoiceAge.Enabled = enabled; // Note: This is actually Rate
+            numVoicePitch.Enabled = enabled;
+            btnAddVoice.Enabled = enabled;
+            grvSpeakerVoices.Enabled = enabled;
         }
 
         // Helper class để bind vào DataGridView
@@ -180,6 +312,17 @@ namespace FirestoreImporter
             public string PropertyName { get; set; } = string.Empty;
             public string Type { get; set; } = string.Empty;
             public string Value { get; set; } = string.Empty;
+        }
+
+        // Helper class để bind vào DataGridView cho SpeakerVoices
+        private class SpeakerVoiceGridItem
+        {
+            public string Name { get; set; } = string.Empty;
+            public string Gender { get; set; } = string.Empty;
+            public string Age { get; set; } = string.Empty;
+            public string LanguageCode { get; set; } = string.Empty;
+            public double Rate { get; set; }
+            public double Pitch { get; set; }
         }
 
         private void GrvTitle_CellContentClick(object? sender, DataGridViewCellEventArgs e)
@@ -235,6 +378,92 @@ namespace FirestoreImporter
                     }
                 }
             }
+        }
+
+        private void GrvSpeakerVoices_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
+            {
+                if (grvSpeakerVoices.Rows[e.RowIndex].DataBoundItem is SpeakerVoiceGridItem item)
+                {
+                    _speakerVoices.Remove(item.Name);
+                    RefreshSpeakerVoicesGrid();
+                }
+            }
+        }
+
+        private void RefreshSpeakerVoicesGrid()
+        {
+            grvSpeakerVoices.DataSource = null;
+            if (_speakerVoices.Count > 0)
+            {
+                var dataSource = _speakerVoices.Select(kvp => new SpeakerVoiceGridItem
+                {
+                    Name = kvp.Key,
+                    Gender = kvp.Value.Gender,
+                    Age = kvp.Value.Age,
+                    LanguageCode = kvp.Value.LanguageCode,
+                    Rate = kvp.Value.Rate,
+                    Pitch = kvp.Value.Pitch
+                }).ToList();
+                grvSpeakerVoices.DataSource = dataSource;
+            }
+        }
+
+        private void BtnAddVoice_Click(object? sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtVoiceName.Text))
+            {
+                MessageBox.Show("Vui lòng nhập tên speaker!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string name = txtVoiceName.Text.Trim();
+            
+            // Validate các fields
+            if (cboVoiceAge.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Age!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cboVoiceGender.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Gender!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cboVoiceLanguageCode.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn Language Code!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var voiceConfig = new VoiceConfig
+            {
+                Age = cboVoiceAge.SelectedItem.ToString()!,
+                Gender = cboVoiceGender.SelectedItem.ToString()!,
+                LanguageCode = cboVoiceLanguageCode.SelectedItem.ToString()!,
+                Rate = (double)numVoiceAge.Value, // Note: numVoiceAge is actually Rate based on Designer
+                Pitch = (double)numVoicePitch.Value
+            };
+
+            // Update hoặc thêm mới
+            _speakerVoices[name] = voiceConfig;
+
+            // Refresh grid
+            RefreshSpeakerVoicesGrid();
+
+            // Clear input
+            txtVoiceName.Clear();
+            numVoiceAge.Value = 1.0m;
+            numVoicePitch.Value = 0.0m;
+            if (cboVoiceAge.Items.Count > 0)
+                cboVoiceAge.SelectedIndex = 1; // adult
+            if (cboVoiceGender.Items.Count > 0)
+                cboVoiceGender.SelectedIndex = 0; // female
+            if (cboVoiceLanguageCode.Items.Count > 0)
+                cboVoiceLanguageCode.SelectedIndex = 0; // en-US
         }
 
         private void btnAddQuestion_Click(object sender, EventArgs e)
@@ -509,6 +738,34 @@ namespace FirestoreImporter
                     .Where(s => !string.IsNullOrEmpty(s))
                     .ToList();
             }
+
+            // Has Voice - chỉ import khi checkbox được checked
+            if (cbHasVoice.Checked)
+            {
+                exercise.HasVoice = true;
+
+                // Default Voice - chỉ import khi hasVoice được checked và có đủ dữ liệu
+                if (cboDefaultVoiceAge.SelectedItem != null &&
+                    cboDefaultVoiceGender.SelectedItem != null &&
+                    cboDefaultVoiceLanguageCode.SelectedItem != null)
+                {
+                    exercise.DefaultVoice = new VoiceConfig
+                    {
+                        Age = cboDefaultVoiceAge.SelectedItem.ToString()!,
+                        Gender = cboDefaultVoiceGender.SelectedItem.ToString()!,
+                        LanguageCode = cboDefaultVoiceLanguageCode.SelectedItem.ToString()!,
+                        Rate = (double)numRate.Value,
+                        Pitch = (double)numPitch.Value
+                    };
+                }
+
+                // Speaker Voices - chỉ import khi hasVoice được checked và có dữ liệu
+                if (_speakerVoices.Count > 0)
+                {
+                    exercise.SpeakerVoices = new Dictionary<string, VoiceConfig>(_speakerVoices);
+                }
+            }
+            // Nếu không checked, không import bất kỳ voice data nào (HasVoice, DefaultVoice, SpeakerVoices đều null)
 
             return exercise;
         }

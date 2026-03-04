@@ -4,6 +4,36 @@ using System.Collections;
 
 namespace FirestoreImporter.Models;
 
+public class VoiceConfig
+{
+    [JsonProperty("gender")]
+    public string Gender { get; set; } = "female"; // "male" or "female"
+
+    [JsonProperty("age")]
+    public string Age { get; set; } = "adult"; // "kid", "young", "adult", "senior"
+
+    [JsonProperty("languageCode")]
+    public string LanguageCode { get; set; } = "en-US";
+
+    [JsonProperty("rate")]
+    public double Rate { get; set; } = 1.0; // 0.5 - 2.0
+
+    [JsonProperty("pitch")]
+    public double Pitch { get; set; } = 0.0; // -50 to +50 semitones
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        return new Dictionary<string, object>
+        {
+            { "gender", Gender },
+            { "age", Age },
+            { "languageCode", LanguageCode },
+            { "rate", Rate },
+            { "pitch", Pitch }
+        };
+    }
+}
+
 public class ExerciseModel
 {
     [JsonProperty("id")]
@@ -56,6 +86,15 @@ public class ExerciseModel
 
     [JsonProperty("skillTypes")]
     public List<string> SkillTypes { get; set; } = new();
+
+    [JsonProperty("hasVoice")]
+    public bool? HasVoice { get; set; }
+
+    [JsonProperty("defaultVoice")]
+    public VoiceConfig? DefaultVoice { get; set; }
+
+    [JsonProperty("speakerVoices")]
+    public Dictionary<string, VoiceConfig>? SpeakerVoices { get; set; }
 
     public Dictionary<string, object> ToFirestore()
     {
@@ -126,6 +165,26 @@ public class ExerciseModel
         {
             data["skillTypes"] = SkillTypes;
         }
+
+        // Chỉ export voice data khi HasVoice = true
+        if (HasVoice.HasValue && HasVoice.Value)
+        {
+            data["hasVoice"] = HasVoice.Value;
+
+            if (DefaultVoice != null)
+            {
+                data["defaultVoice"] = DefaultVoice.ToFirestore();
+            }
+
+            if (SpeakerVoices != null && SpeakerVoices.Count > 0)
+            {
+                data["speakerVoices"] = SpeakerVoices.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => (object)kvp.Value.ToFirestore()
+                );
+            }
+        }
+        // Nếu HasVoice = false hoặc null, không export bất kỳ voice data nào
 
         return data;
     }
