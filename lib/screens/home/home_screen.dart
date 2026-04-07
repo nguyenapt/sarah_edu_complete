@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/constants/app_constants.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/firestore_service.dart';
@@ -10,8 +9,6 @@ import '../../core/services/next_exercise_service.dart';
 import '../../models/level_model.dart';
 import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/language_provider.dart';
-import '../learning/level_selection_screen.dart';
 import '../learning/exercise_screen.dart';
 import '../auth/login_screen.dart';
 import '../placement/placement_test_screen.dart';
@@ -20,6 +17,9 @@ import '../weak_skills/weak_skill_screen.dart';
 import '../progress/progress_screen.dart';
 import '../level_skip/level_skip_test_screen.dart';
 import '../../core/services/level_skip_test_service.dart';
+import '../../widgets/common/practice_top_app_bar.dart';
+import '../settings/settings_screen.dart';
+import '../main_navigation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -168,9 +168,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sarah Edu'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            if (!authProvider.isAuthenticated) {
+              return AppBar(title: Text(loc.appName));
+            }
+            return PracticeTopAppBar(
+              title: loc.appName,
+              onAvatarTap: () {
+                final scope = MainNavigationScope.of(context);
+                if (scope != null) {
+                  scope.goToTab(4);
+                  return;
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

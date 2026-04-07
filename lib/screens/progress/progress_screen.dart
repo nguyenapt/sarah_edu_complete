@@ -7,6 +7,9 @@ import '../../l10n/app_localizations.dart';
 import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
 import '../auth/login_screen.dart';
+import '../../widgets/common/practice_top_app_bar.dart';
+import '../settings/settings_screen.dart';
+import '../main_navigation.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -55,8 +58,32 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.progressTitle),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            final title = AppLocalizations.of(context)!.progressTitle;
+            if (!authProvider.isAuthenticated) {
+              return AppBar(title: Text(title));
+            }
+            return PracticeTopAppBar(
+              title: title,
+              onAvatarTap: () {
+                final scope = MainNavigationScope.of(context);
+                if (scope != null) {
+                  scope.goToTab(4);
+                  return;
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

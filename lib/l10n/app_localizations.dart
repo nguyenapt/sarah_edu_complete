@@ -1334,11 +1334,53 @@ abstract class AppLocalizations {
   /// **'Question {current} / {total}'**
   String questionNumber(int current, int total);
 
+  /// No description provided for @practiceSessionHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice Session'**
+  String get practiceSessionHeading;
+
+  /// No description provided for @sessionProgressPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% Progress'**
+  String sessionProgressPercent(int percent);
+
+  /// No description provided for @newSkillBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'NEW SKILL'**
+  String get newSkillBadge;
+
+  /// No description provided for @lessonCapsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LESSON'**
+  String get lessonCapsLabel;
+
   /// No description provided for @ok.
   ///
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @grammarNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar Note'**
+  String get grammarNoteTitle;
+
+  /// No description provided for @buttonSingleChoiceTapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a word...'**
+  String get buttonSingleChoiceTapHint;
+
+  /// No description provided for @fillBlankNeedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Need a hint?'**
+  String get fillBlankNeedHint;
 }
 
 class _AppLocalizationsDelegate

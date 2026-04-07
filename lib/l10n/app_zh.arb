@@ -285,6 +285,20 @@
   "previous": "上一题",
   "next": "下一题",
   "submit": "提交",
-  "ok": "确定"
+  "practiceSessionHeading": "Practice Session",
+  "sessionProgressPercent": "{percent}% Progress",
+  "@sessionProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "newSkillBadge": "NEW SKILL",
+  "lessonCapsLabel": "LESSON",
+  "ok": "确定",
+  "grammarNoteTitle": "Grammar Note",
+  "buttonSingleChoiceTapHint": "Tap a word...",
+  "fillBlankNeedHint": "Need a hint?"
 }
 

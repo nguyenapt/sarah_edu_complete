@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +14,33 @@ import '../../widgets/learning/question_audio_player.dart';
 import '../auth/login_screen.dart';
 import '../level_up/level_up_screen.dart';
 import 'exercise_detail_screen.dart';
+
+/// Màu đồng bộ với `mockup_1.html` (tailwind theme.extend.colors — Fluent Horizon).
+const Color _kSurface = Color(0xFFF4F6FF); // background / surface
+const Color _kOnSurface = Color(0xFF14304F); // on-surface, on-background
+const Color _kOnSurfaceVariant = Color(0xFF445D7F); // on-surface-variant (nhãn phụ)
+const Color _kPrimary = Color(0xFF006286); // primary — viền chọn, vòng chữ, % Progress
+const Color _kPrimaryContainer = Color(0xFF2DB7F2);
+const Color _kPrimaryFixedDim = Color(0xFF05A9E3); // gradient progress / nút
+const Color _kSurfaceContainer = Color(0xFFDDE9FF); // vòng A/B chưa chọn; track thanh tiến độ (mockup)
+const Color _kSurfaceContainerLowest = Color(0xFFFFFFFF); // thẻ câu hỏi
+/// ~10% primary-container (bg-primary-container/10) cho ô đáp án đang chọn.
+const Color _kOptionSelectedFill = Color(0x1A2DB7F2);
+const Color _kOptionCircleIdleFg = Color(0xFF445D7F); // on-surface-variant
+const Color _kTertiaryContainer = Color(0xFFFED01B); // badge New Skill
+const Color _kOnTertiaryContainer = Color(0xFF594700);
+/// Thẻ Grammar Note (mockup: nền be nhạt, viền trái vàng ôliu).
+const Color _kGrammarNoteBg = Color(0xFFF5F0E8);
+const Color _kGrammarAccent = Color(0xFF6B5A2E);
+/// Vòng trang trí phía sau thẻ câu hỏi (xanh lá mờ).
+const Color _kQuestionDecorGreen = Color(0x338BC34A);
+
+/// Gradient nút Next/Submit trong mockup: `from-[#006286] to-[#2db7f2]`.
+const LinearGradient _kPrimaryCtaGradient = LinearGradient(
+  colors: [_kPrimary, _kPrimaryContainer],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
 
 class ExerciseScreen extends StatefulWidget {
   final ExerciseModel exercise;
@@ -67,53 +96,245 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     _startTime = DateTime.now();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.exercises),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Answer Section based on type
-            _buildAnswerSection(),
-
-            const SizedBox(height: 24),
-
-            if (widget.exercise.groupQuestions == null ||
-                widget.exercise.groupQuestions!.isEmpty)
-              _buildExplanationBox(widget.exercise.explanation),
-
-            // Submit Button - chỉ hiển thị khi không có groupQuestions
-            if (!_isSubmitted && 
-                (widget.exercise.groupQuestions == null || 
-                 widget.exercise.groupQuestions!.isEmpty))
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _canSubmit() ? _handleSubmit : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor: Colors.white,
-                  ),
+  /// Nút Submit / Tiếp — gradient như footer `mockup_1.html`.
+  Widget _buildGradientCtaButton({
+    required VoidCallback? onPressed,
+    required String label,
+  }) {
+    final enabled = onPressed != null;
+    return Opacity(
+      opacity: enabled ? 1 : 0.45,
+      child: SizedBox(
+        width: double.infinity,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: enabled ? _kPrimaryCtaGradient : null,
+            color: enabled ? null : Colors.grey.shade400,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: enabled
+                ? [
+                    BoxShadow(
+                      color: _kPrimary.withOpacity(0.2),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onPressed,
+              borderRadius: BorderRadius.circular(14),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Center(
                   child: Text(
-                    AppLocalizations.of(context)!.submit,
+                    label,
                     style: const TextStyle(
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-            // Result
-            if (_isSubmitted) _buildResultSection(),
+  /// 0–1: tiến độ phiên (mockup thanh %).
+  double _sessionProgressFraction() {
+    final gq = widget.exercise.groupQuestions;
+    if (gq != null && gq.isNotEmpty) {
+      final total = gq.length;
+      if (total == 0) return 0;
+      var submitted = 0;
+      for (var i = 0; i < total; i++) {
+        if (_questionResults.containsKey(i)) submitted++;
+      }
+      final hasCurrentAnswer =
+          _groupQuestionAnswers[_currentGroupQuestionIndex] != null;
+      final extra = hasCurrentAnswer && !_questionResults.containsKey(_currentGroupQuestionIndex)
+          ? 0.5
+          : 0.0;
+      return ((submitted + extra) / total).clamp(0.0, 1.0);
+    }
+    if (_isSubmitted) return 1.0;
+    if (_selectedAnswer != null) return 0.35;
+    return 0.0;
+  }
+
+  Widget _buildPracticeSessionHeader() {
+    final loc = AppLocalizations.of(context)!;
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final exerciseTitle = widget.exercise.getTitle(languageCode);
+    final hasLessonLine = exerciseTitle.trim().isNotEmpty;
+    final lessonLine =
+        hasLessonLine ? '${loc.lessonCapsLabel}: ${exerciseTitle.toUpperCase()}' : null;
+    final pct = (_sessionProgressFraction() * 100).round().clamp(0, 100);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (lessonLine != null) ...[
+          Text(
+            lessonLine,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.8,
+              color: _kOnSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 6),
+        ],
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                loc.practiceSessionHeading,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: _kOnSurface,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '$pct%',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: _kOnSurface,
+                    letterSpacing: -0.5,
+                    height: 1.1,
+                  ),
+                ),
+                Text(
+                  loc.progress,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: _kOnSurfaceVariant,
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
+        const SizedBox(height: 12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            height: 8,
+            width: double.infinity,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                const ColoredBox(color: _kSurfaceContainer),
+                FractionallySizedBox(
+                  widthFactor: _sessionProgressFraction().clamp(0.0, 1.0),
+                  alignment: Alignment.centerLeft,
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [_kPrimary, _kPrimaryFixedDim],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    return Scaffold(
+      backgroundColor: _kSurface,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        foregroundColor: _kOnSurface,
+        iconTheme: IconThemeData(color: _kOnSurface),
+        leading: IconButton(
+          icon: const Icon(Icons.menu_rounded),
+          color: _kOnSurface,
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+        title: Text(
+          loc.appName,
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+            color: _kOnSurface,
+          ),
+        ),
+        centerTitle: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Icon(
+              Icons.account_circle_rounded,
+              color: _kOnSurface.withValues(alpha: 0.85),
+              size: 28,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: _buildPracticeSessionHeader(),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildAnswerSection(),
+                  const SizedBox(height: 24),
+                  if (widget.exercise.groupQuestions == null ||
+                      widget.exercise.groupQuestions!.isEmpty)
+                    if (widget.exercise.type != ExerciseType.buttonSingleChoice)
+                      _buildExplanationBox(widget.exercise.explanation),
+                  if (!_isSubmitted &&
+                      (widget.exercise.groupQuestions == null ||
+                          widget.exercise.groupQuestions!.isEmpty))
+                    _buildGradientCtaButton(
+                      onPressed: _canSubmit() ? _handleSubmit : null,
+                      label: loc.submit,
+                    ),
+                  if (_isSubmitted) _buildResultSection(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -418,7 +639,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         else if (currentQuestion.type == ExerciseType.matching)
           _buildMatchingForGroup(currentQuestion, _currentGroupQuestionIndex),
 
-        if (currentExplanation != null && currentExplanation.isNotEmpty) ...[
+        if (currentExplanation != null &&
+            currentExplanation.isNotEmpty &&
+            currentQuestion.type != ExerciseType.buttonSingleChoice) ...[
           const SizedBox(height: 12),
           _buildExplanationBox(currentExplanation),
         ],
@@ -427,27 +650,13 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         
         // Nút điều hướng
         if (!_isSubmitted)
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _canSubmitCurrentQuestion() 
-                  ? (isLastQuestion ? _handleSubmit : _goToNextQuestion)
-                  : null,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(
-                isLastQuestion 
-                    ? AppLocalizations.of(context)!.submit
-                    : AppLocalizations.of(context)!.continueText,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          _buildGradientCtaButton(
+            onPressed: _canSubmitCurrentQuestion()
+                ? (isLastQuestion ? _handleSubmit : _goToNextQuestion)
+                : null,
+            label: isLastQuestion
+                ? AppLocalizations.of(context)!.submit
+                : AppLocalizations.of(context)!.continueText,
           ),
       ],
     );
@@ -547,7 +756,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                 _buildSingleChoiceForGroup(question, index)
               else if (question.type == ExerciseType.multipleChoice)
                 _buildMultipleChoiceForGroup(question, index),
-              if (explanation != null && explanation.isNotEmpty) ...[
+              if (explanation != null &&
+                  explanation.isNotEmpty &&
+                  question.type != ExerciseType.buttonSingleChoice) ...[
                 const SizedBox(height: 12),
                 _buildExplanationBox(explanation),
               ],
@@ -860,9 +1071,80 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     return false;
   }
 
+  /// Ghi chú ngữ pháp (viền trái đậm + icon) — chỉ dùng cho button single choice.
+  Widget _buildGrammarNoteCard(String explanation) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final loc = AppLocalizations.of(context)!;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF2D2D2D) : _kGrammarNoteBg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border(
+          left: BorderSide(color: isDark ? Colors.amber.shade700 : _kGrammarAccent, width: 4),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.lightbulb_outline_rounded,
+                color: isDark ? Colors.amber.shade600 : _kGrammarAccent,
+                size: 22,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                loc.grammarNoteTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                  color: isDark ? Colors.amber.shade600 : _kGrammarAccent,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _looksLikeHtml(explanation)
+              ? Html(
+                  data: explanation,
+                  style: {
+                    'body': Style(
+                      margin: Margins.zero,
+                      color: isDark ? Colors.white70 : _kOnSurfaceVariant,
+                      fontSize: FontSize(14),
+                      lineHeight: const LineHeight(1.35),
+                    ),
+                  },
+                )
+              : Text(
+                  explanation,
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.35,
+                    color: isDark ? Colors.white70 : _kOnSurfaceVariant,
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildButtonSingleChoiceForGroup(GroupQuestion groupQuestion, int groupIndex) {
     final content = groupQuestion.content as ButtonSingleChoiceContent;
-    
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final grammarExplanation = groupQuestion.getExplanation(languageCode);
+
     // Initialize keys và animations cho group này
     final placeholderCount = _countPlaceholders(groupQuestion.question);
     for (int i = 0; i < content.options.length; i++) {
@@ -892,48 +1174,34 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       isQuestionAnswered = hasAllAnswers;
     }
     
-    return Container(
-      margin: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-            : Theme.of(context).cardTheme.color ?? Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (groupQuestion.imageUrl != null && groupQuestion.imageUrl!.isNotEmpty) ...[
+          _buildGroupQuestionImage(groupQuestion.imageUrl!),
+          const SizedBox(height: 16),
         ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image của GroupQuestion (nếu có)
-            if (groupQuestion.imageUrl != null && groupQuestion.imageUrl!.isNotEmpty) ...[
-              _buildGroupQuestionImage(groupQuestion.imageUrl!),
-              const SizedBox(height: 16),
-            ],
-            // Question với placeholders (không có Card wrapper)
-            _buildQuestionContent(groupQuestion.question, groupIndex, content),
-            // Options buttons - chỉ hiển thị khi chưa có đáp án (trong sequential questions)
-            if (!isQuestionAnswered) ...[
-              const SizedBox(height: 24),
-              _buildOptionsButtons(content.options, groupIndex, content),
-            ],
-          ],
-        ),
-      ),
+        _buildQuestionContent(groupQuestion.question, groupIndex, content),
+        if (grammarExplanation != null && grammarExplanation.trim().isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildGrammarNoteCard(grammarExplanation.trim()),
+        ],
+        if (!isQuestionAnswered) ...[
+          const SizedBox(height: 24),
+          _buildOptionsButtons(content.options, groupIndex, content),
+        ],
+      ],
     );
   }
 
   Widget _buildButtonSingleChoice() {
     final content = widget.exercise.content as ButtonSingleChoiceContent;
     final placeholderCount = _countPlaceholders(widget.exercise.question);
-    
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final instructionTitle = widget.exercise.getTitle(languageCode);
+    final grammarExplanation = widget.exercise.explanation;
+
     // Initialize keys (groupIndex = -1 cho standalone)
     for (int i = 0; i < content.options.length; i++) {
       final key = '-1_option_$i';
@@ -947,35 +1215,35 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         _placeholderKeys[key] = GlobalKey();
       }
     }
-    
-    return Container(
-      margin: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-            : Theme.of(context).cardTheme.color ?? Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+
+    final loc = AppLocalizations.of(context)!;
+    final instructionStyle = const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      color: _kOnSurface,
+      height: 1.35,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            instructionTitle.trim().isNotEmpty
+                ? instructionTitle
+                : loc.selectCorrectForm,
+            style: instructionStyle,
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Question với placeholders (không có Card wrapper)
-            _buildQuestionContent(widget.exercise.question, -1, content),
-            const SizedBox(height: 24),
-            // Options buttons
-            _buildOptionsButtons(content.options, -1, content),
-          ],
         ),
-      ),
+        _buildQuestionContent(widget.exercise.question, -1, content),
+        if (grammarExplanation != null && grammarExplanation.trim().isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildGrammarNoteCard(grammarExplanation.trim()),
+        ],
+        const SizedBox(height: 24),
+        _buildOptionsButtons(content.options, -1, content),
+      ],
     );
   }
 
@@ -1162,23 +1430,37 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
     final questionText = '$speaker: $dialogue';
     
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
+          Positioned(
+            right: -8,
+            top: -8,
+            child: IgnorePointer(
+              child: Container(
+                width: 88,
+                height: 88,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _kQuestionDecorGreen,
+                ),
+              ),
+            ),
+          ),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              color: isDark ? const Color(0xFF2D2D2D) : _kSurfaceContainerLowest,
+              borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -1189,7 +1471,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                   '$speaker:',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor,
+                        color: _kPrimary,
                       ),
                 ),
                 const SizedBox(height: 8),
@@ -1203,8 +1485,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                         Text(
                           parts[i].trim(),
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).textTheme.bodyLarge?.color,
+                                fontWeight: FontWeight.w700,
+                                color: _kOnSurface,
                               ),
                         ),
                       if (i < placeholders.length)
@@ -1296,21 +1578,46 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
     }
     
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Nếu có từ 2 speakers trở lên, xử lý như paragraph
     if (speakerCount >= 2) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-              : Colors.grey[50],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: _buildMultipleSpeakerContent(lines, groupIndex, content),
-        ),
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            right: -8,
+            top: -8,
+            child: IgnorePointer(
+              child: Container(
+                width: 88,
+                height: 88,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _kQuestionDecorGreen,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF2D2D2D) : _kSurfaceContainerLowest,
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildMultipleSpeakerContent(lines, groupIndex, content),
+            ),
+          ),
+        ],
       );
     }
     
@@ -1321,15 +1628,35 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final placeholders = RegExp(r'\{(\d+)\}').allMatches(dialogue).toList();
     
     return Stack(
+      clipBehavior: Clip.none,
       children: [
+        Positioned(
+          right: -8,
+          top: -8,
+          child: IgnorePointer(
+            child: Container(
+              width: 88,
+              height: 88,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: _kQuestionDecorGreen,
+              ),
+            ),
+          ),
+        ),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-                : Colors.grey[50],
-            borderRadius: BorderRadius.circular(12),
+            color: isDark ? const Color(0xFF2D2D2D) : _kSurfaceContainerLowest,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 14,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1339,7 +1666,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                   '$speaker:',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor,
+                        color: _kPrimary,
                       ),
                 ),
                 const SizedBox(height: 8),
@@ -1354,8 +1681,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                       Text(
                         parts[i].trim(),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                              fontWeight: FontWeight.w700,
+                              color: _kOnSurface,
                             ),
                       ),
                     if (i < placeholders.length)
@@ -1433,35 +1760,91 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       }
     }
     
-    // Nếu chưa chọn, hiển thị vùng màu xám
+    // Chưa chọn: viền nét đứt + gợi ý (mockup button single choice).
+    // Trong Wrap, maxWidth còn lại trên dòng có thể nhỏ hơn width mong muốn — phải
+    // khớp constraints và cho phép xuống dòng để không cắt chữ ("Tap a"…).
     if (selectedOption == null) {
-      return Container(
-        key: placeholderKey,
-        margin: EdgeInsets.zero,
-        width: placeholderWidth,
-        height: placeholderHeight,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(8),
-        ),
+      final loc = AppLocalizations.of(context)!;
+      final hintText = loc.buttonSingleChoiceTapHint;
+      final hintStyle = TextStyle(
+        fontSize: 14,
+        fontStyle: FontStyle.italic,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white54
+            : _kOnSurfaceVariant,
+      );
+      final scaler = MediaQuery.textScalerOf(context);
+      final desiredMinW = math.max(
+        placeholderWidth,
+        _measureHintMinWidth(hintText, hintStyle, placeholderHorizontalPadding, scaler),
+      );
+
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final maxW = constraints.maxWidth;
+          final effectiveW =
+              maxW.isFinite ? math.min(desiredMinW, maxW) : desiredMinW;
+          final innerMaxW = math.max(
+            0.0,
+            effectiveW - placeholderHorizontalPadding * 2,
+          );
+          final layoutPainter = TextPainter(
+            text: TextSpan(text: hintText, style: hintStyle),
+            textDirection: TextDirection.ltr,
+            textScaler: scaler,
+            maxLines: 4,
+          )..layout(maxWidth: innerMaxW);
+          final useH = math.max(
+            placeholderHeight,
+            layoutPainter.height + placeholderVerticalPadding * 2,
+          );
+
+          return Container(
+            key: placeholderKey,
+            margin: EdgeInsets.zero,
+            width: effectiveW,
+            height: useH,
+            child: CustomPaint(
+              painter: _DashedRoundedRectPainter(
+                color: _kPrimary.withValues(alpha: 0.42),
+                radius: 8,
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: placeholderHorizontalPadding,
+                    vertical: placeholderVerticalPadding,
+                  ),
+                  child: Text(
+                    hintText,
+                    style: hintStyle,
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                    maxLines: 4,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       );
     }
-    
+
     // Kiểm tra đáp án đúng/sai sau khi submit
-    Color borderColor = AppTheme.primaryColor;
-    Color backgroundColor = AppTheme.primaryColor.withOpacity(0.1);
+    Color borderColor = _kPrimary;
+    Color backgroundColor = _kOptionSelectedFill;
     
     if (_isSubmitted) {
       final correctAnswer = content.correctAnswers.length > placeholderIndex 
           ? content.correctAnswers[placeholderIndex]
           : null;
-      if (correctAnswer != null) {
+        if (correctAnswer != null) {
         if (selectedOption == correctAnswer) {
           borderColor = Colors.green;
-          backgroundColor = Colors.green.withOpacity(0.1);
+          backgroundColor = Colors.green.withValues(alpha: 0.1);
         } else {
           borderColor = Colors.red;
-          backgroundColor = Colors.red.withOpacity(0.1);
+          backgroundColor = Colors.red.withValues(alpha: 0.1);
         }
       }
     }
@@ -1511,7 +1894,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                       ? Colors.green
                       : _isSubmitted && selectedOption != (content.correctAnswers.length > placeholderIndex ? content.correctAnswers[placeholderIndex] : null)
                           ? Colors.red
-                          : AppTheme.primaryColor,
+                          : _kPrimary,
                 ),
               ),
             ),
@@ -1552,6 +1935,20 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     )..layout();
     final textHeight = painter.height.ceilToDouble();
     return textHeight + (verticalPadding * 2);
+  }
+
+  double _measureHintMinWidth(
+    String hintText,
+    TextStyle hintStyle,
+    double horizontalPadding,
+    TextScaler scaler,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(text: hintText, style: hintStyle),
+      textDirection: TextDirection.ltr,
+      textScaler: scaler,
+    )..layout();
+    return painter.width + horizontalPadding * 2 + 2;
   }
 
   Widget _buildOptionsButtons(List<String> options, int groupIndex, ButtonSingleChoiceContent content) {
@@ -1617,48 +2014,88 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       ));
     }
     
-    // Kiểm tra đáp án đúng/sai sau khi submit
-    Color? backgroundColor = isSelected ? Colors.grey[300] : AppTheme.primaryColor;
-    Color? foregroundColor = isSelected ? Colors.grey[600] : Colors.white;
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    Color backgroundColor =
+        isDark ? const Color(0xFF3A3A3A) : _kSurfaceContainerLowest;
+    Color foregroundColor = isDark ? Colors.white : _kOnSurface;
+    Color borderColor = Colors.transparent;
+    double borderWidth = 0;
+
+    if (isSelected && !_isSubmitted) {
+      borderColor = _kPrimary;
+      borderWidth = 2;
+    }
+
     if (_isSubmitted && isSelected) {
-      // Kiểm tra xem option này có đúng không
       final correctAnswers = content.correctAnswers;
       if (correctAnswers.contains(option)) {
-        backgroundColor = Colors.green.withOpacity(0.3);
-        foregroundColor = Colors.green[900];
+        backgroundColor = Colors.green.withValues(alpha: 0.15);
+        foregroundColor = Colors.green.shade900;
+        borderColor = Colors.green.shade700;
+        borderWidth = 2;
       } else {
-        backgroundColor = Colors.red.withOpacity(0.3);
-        foregroundColor = Colors.red[900];
+        backgroundColor = Colors.red.withValues(alpha: 0.15);
+        foregroundColor = Colors.red.shade900;
+        borderColor = Colors.red.shade700;
+        borderWidth = 2;
       }
     }
-    
+
     final isDisabled = _isSubmitted || isQuestionAnswered;
-    
+    final shadow = isDisabled
+        ? null
+        : <BoxShadow>[
+            BoxShadow(
+              color: _kPrimary.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ];
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      child: ElevatedButton(
+      child: Container(
         key: optionKey,
-        onPressed: isDisabled ? null : () => _handleOptionTap(option, index, groupIndex, content),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: shadow,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (_isSubmitted && isSelected && content.correctAnswers.contains(option))
-              const Icon(Icons.check_circle, size: 16),
-            if (_isSubmitted && isSelected && !content.correctAnswers.contains(option))
-              const Icon(Icons.cancel, size: 16),
-            if (_isSubmitted && isSelected) const SizedBox(width: 4),
-            Text(option),
-          ],
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          child: InkWell(
+            onTap: isDisabled ? null : () => _handleOptionTap(option, index, groupIndex, content),
+            borderRadius: BorderRadius.circular(14),
+            child: Ink(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: borderColor, width: borderWidth),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_isSubmitted && isSelected && content.correctAnswers.contains(option))
+                      Icon(Icons.check_circle, size: 18, color: foregroundColor),
+                    if (_isSubmitted && isSelected && !content.correctAnswers.contains(option))
+                      Icon(Icons.cancel, size: 18, color: foregroundColor),
+                    if (_isSubmitted && isSelected) const SizedBox(width: 4),
+                    Text(
+                      option,
+                      style: TextStyle(
+                        color: foregroundColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -1818,88 +2255,244 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     return _selectedAnswer != null;
   }
 
-  Widget _buildSingleChoice() {
-    final content = widget.exercise.content as ChoiceContent;
+  /// Đáp án A/B/C… — mockup: chọn = viền navy + nền trắng + vòng chữ navy trắng; sau submit giữ feedback xanh/đỏ.
+  Widget _buildMockupChoiceRows({
+    required ChoiceContent content,
+    required bool isSubmitted,
+    required String? selectedAnswer,
+    required void Function(String option) onSelect,
+  }) {
+    const letterCodes = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...content.options.asMap().entries.map((entry) {
-          final index = entry.key;
-          final option = entry.value;
-          final isSelected = _selectedAnswer == option;
-          final isCorrectAnswer = content.correctAnswers.contains(option);
+      children: content.options.asMap().entries.map((entry) {
+        final index = entry.key;
+        final option = entry.value;
+        final letter = index < letterCodes.length ? letterCodes[index] : '${index + 1}';
+        final isSelected = selectedAnswer == option;
+        final isCorrectAnswer = content.correctAnswers.contains(option);
 
-          Color? backgroundColor;
-          Color? foregroundColor;
-          IconData? iconData;
-          Color? iconColor;
+        Color bg;
+        Color borderColor;
+        Color textColor;
+        Color circleBg;
+        Color circleFg;
+        IconData? trail;
 
-          if (_isSubmitted) {
-            if (isCorrectAnswer) {
-              backgroundColor = Colors.green.withOpacity(0.2);
-              foregroundColor = Colors.green[900];
-              iconData = Icons.check_circle;
-              iconColor = Colors.green;
-            } else if (isSelected && !isCorrectAnswer) {
-              backgroundColor = Colors.red.withOpacity(0.2);
-              foregroundColor = Colors.red[900];
-              iconData = Icons.cancel;
-              iconColor = Colors.red;
-            } else {
-              backgroundColor = Colors.grey[200];
-              foregroundColor = Colors.grey[600];
-            }
+        if (isSubmitted) {
+          if (isCorrectAnswer) {
+            bg = Colors.green.withOpacity(0.18);
+            borderColor = Colors.green.shade700;
+            textColor = Colors.green.shade900;
+            circleBg = Colors.green.shade100;
+            circleFg = Colors.green.shade800;
+            trail = Icons.check_circle_rounded;
+          } else if (isSelected) {
+            bg = Colors.red.withOpacity(0.16);
+            borderColor = Colors.red.shade700;
+            textColor = Colors.red.shade900;
+            circleBg = Colors.red.shade100;
+            circleFg = Colors.red.shade800;
+            trail = Icons.cancel_rounded;
           } else {
-            if (isSelected) {
-              backgroundColor = AppTheme.primaryColor;
-              foregroundColor = Colors.white;
-            } else {
-              backgroundColor = Colors.grey[200];
-              foregroundColor = Colors.black87;
-            }
+            bg = _kSurface;
+            borderColor = Colors.transparent;
+            textColor = Colors.grey.shade600;
+            circleBg = _kSurfaceContainer;
+            circleFg = _kOnSurfaceVariant;
           }
+        } else if (isSelected) {
+          bg = _kOptionSelectedFill;
+          borderColor = _kPrimary;
+          textColor = _kOnSurface;
+          circleBg = _kPrimary;
+          circleFg = Colors.white;
+        } else {
+          bg = _kSurface;
+          borderColor = Colors.transparent;
+          textColor = _kOnSurface;
+          circleBg = _kSurfaceContainer;
+          circleFg = _kOptionCircleIdleFg;
+        }
 
-          return Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ElevatedButton(
-              onPressed: _isSubmitted
-                  ? null
-                  : () {
-                      setState(() {
-                        _selectedAnswer = option;
-                      });
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: backgroundColor,
-                foregroundColor: foregroundColor,
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+        final thickBorder = isSubmitted
+            ? (isCorrectAnswer || (isSelected && !isCorrectAnswer))
+            : isSelected;
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: isSubmitted ? null : () => onSelect(option),
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                decoration: BoxDecoration(
+                  color: bg,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: borderColor,
+                    width: thickBorder ? 2 : 1,
+                  ),
                 ),
-                elevation: 0,
-              ),
-              child: Row(
-                children: [
-                  if (iconData != null) ...[
-                    Icon(iconData, color: iconColor, size: 20),
-                    const SizedBox(width: 8),
-                  ],
-                  Expanded(
-                    child: Text(
-                      option,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: circleBg,
+                      ),
+                      child: Text(
+                        letter,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                          color: circleFg,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        option,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                          color: textColor,
+                          height: 1.3,
+                        ),
+                      ),
+                    ),
+                    if (trail != null)
+                      Icon(
+                        trail,
+                        color: isCorrectAnswer
+                            ? Colors.green.shade700
+                            : Colors.red.shade600,
+                        size: 22,
+                      ),
+                  ],
+                ),
               ),
             ),
-          );
-        }),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSingleChoice() {
+    final content = widget.exercise.content as ChoiceContent;
+    final loc = AppLocalizations.of(context)!;
+    final (speaker, dialogue) = _parseSpeaker(widget.exercise.question);
+    final totalQ = 1;
+    final currentQ = 1;
+    final showBadge = widget.exercise.skillTypes.isNotEmpty;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: _kSurfaceContainerLowest,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 14,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        loc.questionNumber(currentQ, totalQ),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: _kPrimary,
+                        ),
+                      ),
+                    ),
+                    if (showBadge)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _kTertiaryContainer,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          loc.newSkillBadge,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                            color: _kOnTertiaryContainer,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                if (speaker != null) ...[
+                  Text(
+                    '$speaker:',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                      color: _kPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+                Text(
+                  dialogue,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: _kOnSurface,
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                _buildMockupChoiceRows(
+                  content: content,
+                  isSubmitted: _isSubmitted,
+                  selectedAnswer: _selectedAnswer as String?,
+                  onSelect: (o) {
+                    setState(() {
+                      _selectedAnswer = o;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (widget.exercise.audioUrl != null && widget.exercise.audioUrl!.isNotEmpty)
+          Positioned(
+            top: 8,
+            right: 8,
+            child: QuestionAudioPlayer(
+              questionText: widget.exercise.question,
+              speakerVoices: widget.exercise.speakerVoices,
+              defaultVoice: widget.exercise.defaultVoice,
+              autoPlay: false,
+            ),
+          ),
       ],
     );
   }
@@ -1967,25 +2560,28 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final selectedAnswer = _groupQuestionAnswers[groupIndex] as String?;
     final isSubmitted = _questionResults.containsKey(groupIndex);
     final (speaker, dialogue) = _parseSpeaker(groupQuestion.question);
+    final loc = AppLocalizations.of(context)!;
+    final gq = widget.exercise.groupQuestions!;
+    final totalQ = gq.length;
+    final currentQ = groupIndex + 1;
+    final showBadge =
+        widget.exercise.skillTypes.isNotEmpty && groupIndex == 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Image của GroupQuestion (nếu có)
         if (groupQuestion.imageUrl != null && groupQuestion.imageUrl!.isNotEmpty) ...[
           Container(
             width: double.infinity,
             margin: EdgeInsets.zero,
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF2D2D2D)
-                  : Theme.of(context).cardTheme.color ?? Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              color: _kSurfaceContainerLowest,
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
@@ -1996,46 +2592,90 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           ),
           const SizedBox(height: 16),
         ],
-        // Card hiển thị question text
         Stack(
+          clipBehavior: Clip.none,
           children: [
             Container(
               width: double.infinity,
-              margin: EdgeInsets.zero,
               decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF2D2D2D) // Màu sáng hơn cho dark mode
-                    : Theme.of(context).cardTheme.color ?? Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                color: _kSurfaceContainerLowest,
+                borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 14,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            loc.questionNumber(currentQ, totalQ),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: _kPrimary,
+                            ),
+                          ),
+                        ),
+                        if (showBadge)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: _kTertiaryContainer,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              loc.newSkillBadge,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.5,
+                                color: _kOnTertiaryContainer,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
                     if (speaker != null) ...[
                       Text(
                         '$speaker:',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.primaryColor,
-                            ),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          color: _kPrimary,
+                        ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                     ],
                     Text(
                       dialogue,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
-                          ),
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: _kOnSurface,
+                        height: 1.35,
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    _buildMockupChoiceRows(
+                      content: content,
+                      isSubmitted: isSubmitted,
+                      selectedAnswer: selectedAnswer,
+                      onSelect: (o) {
+                        setState(() {
+                          _groupQuestionAnswers[groupIndex] = o;
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -2053,84 +2693,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             ),
           ],
         ),
-        const SizedBox(height: 24),
-        // Options buttons
-        ...content.options.asMap().entries.map((entry) {
-          final index = entry.key;
-          final option = entry.value;
-          final isSelected = selectedAnswer == option;
-          final isCorrectAnswer = content.correctAnswers.contains(option);
-
-          Color? backgroundColor;
-          Color? foregroundColor;
-          IconData? iconData;
-          Color? iconColor;
-
-          if (isSubmitted) {
-            if (isCorrectAnswer) {
-              backgroundColor = Colors.green.withOpacity(0.2);
-              foregroundColor = Colors.green[900];
-              iconData = Icons.check_circle;
-              iconColor = Colors.green;
-            } else if (isSelected && !isCorrectAnswer) {
-              backgroundColor = Colors.red.withOpacity(0.2);
-              foregroundColor = Colors.red[900];
-              iconData = Icons.cancel;
-              iconColor = Colors.red;
-            } else {
-              backgroundColor = Colors.grey[200];
-              foregroundColor = Colors.grey[600];
-            }
-          } else {
-            if (isSelected) {
-              backgroundColor = AppTheme.primaryColor;
-              foregroundColor = Colors.white;
-            } else {
-              backgroundColor = Colors.grey[200];
-              foregroundColor = Colors.black87;
-            }
-          }
-
-          return Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ElevatedButton(
-              onPressed: isSubmitted
-                  ? null
-                  : () {
-                      setState(() {
-                        _groupQuestionAnswers[groupIndex] = option;
-                      });
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: backgroundColor,
-                foregroundColor: foregroundColor,
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: Row(
-                children: [
-                  if (iconData != null) ...[
-                    Icon(iconData, color: iconColor, size: 20),
-                    const SizedBox(width: 8),
-                  ],
-                  Expanded(
-                    child: Text(
-                      option,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }),
       ],
     );
   }
@@ -2313,46 +2875,88 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     );
   }
 
+  /// Nhãn danh mục (uppercase) cho fill blank — mockup: "VERB CONJUGATION".
+  String? _fillBlankCategoryLabel() {
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final t = widget.exercise.getTitle(languageCode);
+    if (t.trim().isNotEmpty) return t.trim().toUpperCase();
+    if (widget.exercise.skillTypes.isNotEmpty) {
+      return widget.exercise.skillTypes.first.toUpperCase();
+    }
+    if (widget.exercise.grammarTopics.isNotEmpty) {
+      return widget.exercise.grammarTopics.first.replaceAll('_', ' ').toUpperCase();
+    }
+    return null;
+  }
+
+  static const BoxDecoration _kFillBlankCardDecoration = BoxDecoration(
+    color: Color(0xFFFFFFFF),
+    borderRadius: BorderRadius.all(Radius.circular(32)),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0x14000000),
+        blurRadius: 16,
+        offset: Offset(0, 6),
+      ),
+    ],
+  );
+
   Widget _buildFillBlank() {
     final content = widget.exercise.content as FillBlankContent;
-    
-    // Tạo map từ position -> correctAnswer
+
     final Map<int, String> correctAnswersMap = {};
     for (final blank in content.blanks) {
       correctAnswersMap[blank.position] = blank.correctAnswer;
     }
-    
+
+    final category = _fillBlankCategoryLabel();
+
     return Container(
       width: double.infinity,
-      child: Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: _buildQuestionWithTextFields(
-            widget.exercise.question,
-            0, // groupIndex = 0 for standalone
-            correctAnswersMap,
-            forceSubmitted: _isSubmitted,
-          ),
+      decoration: _kFillBlankCardDecoration,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (category != null) ...[
+              Text(
+                category,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.0,
+                  color: _kOnSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+            _buildQuestionWithTextFields(
+              widget.exercise.question,
+              0,
+              correctAnswersMap,
+              forceSubmitted: _isSubmitted,
+              fillBlankContent: content,
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildFillBlankForGroup(GroupQuestion groupQuestion, int groupIndex) {
-    // Lấy correctAnswers từ content
     Map<int, String> correctAnswersMap = {};
+    FillBlankContent? fillContent;
     if (groupQuestion.content is FillBlankContent) {
-      final content = groupQuestion.content as FillBlankContent;
-      for (final blank in content.blanks) {
+      fillContent = groupQuestion.content as FillBlankContent;
+      for (final blank in fillContent.blanks) {
         correctAnswersMap[blank.position] = blank.correctAnswer;
       }
     } else if (groupQuestion.content is Map) {
-      // Format mới: content có correctAnswers trực tiếp
       final contentMap = groupQuestion.content as Map<String, dynamic>;
       if (contentMap['correctAnswers'] != null) {
         final answers = contentMap['correctAnswers'] as List<dynamic>;
-        // Lấy placeholder indices từ question để map đúng
         final regex = RegExp(r'\{(\d+)\}');
         final matches = regex.allMatches(groupQuestion.question);
         final placeholderIndices = matches.map((m) => int.parse(m.group(1)!)).toList();
@@ -2361,30 +2965,69 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         }
       }
     }
-    
+
+    final category = _fillBlankCategoryLabel();
+
     return Container(
       width: double.infinity,
-      child: Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image của GroupQuestion (nếu có)
-              if (groupQuestion.imageUrl != null && groupQuestion.imageUrl!.isNotEmpty) ...[
-                _buildGroupQuestionImage(groupQuestion.imageUrl!),
-                const SizedBox(height: 16),
-              ],
-              _buildQuestionWithTextFields(
-                groupQuestion.question,
-                groupIndex,
-                correctAnswersMap,
-                forceSubmitted: _isSubmitted || _questionResults.containsKey(groupIndex),
-              ),
+      decoration: _kFillBlankCardDecoration,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (groupQuestion.imageUrl != null && groupQuestion.imageUrl!.isNotEmpty) ...[
+              _buildGroupQuestionImage(groupQuestion.imageUrl!),
+              const SizedBox(height: 16),
             ],
-          ),
+            if (category != null) ...[
+              Text(
+                category,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.0,
+                  color: _kOnSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+            _buildQuestionWithTextFields(
+              groupQuestion.question,
+              groupIndex,
+              correctAnswersMap,
+              forceSubmitted: _isSubmitted || _questionResults.containsKey(groupIndex),
+              fillBlankContent: fillContent,
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  void _showFillBlankHintsDialog(FillBlankContent content) {
+    final loc = AppLocalizations.of(context)!;
+    final lines = <String>[];
+    for (final b in content.blanks) {
+      if (b.hints.isEmpty) continue;
+      for (final h in b.hints) {
+        lines.add('• $h');
+      }
+    }
+    if (lines.isEmpty) return;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(loc.fillBlankNeedHint),
+        content: SingleChildScrollView(
+          child: Text(lines.join('\n'), style: const TextStyle(height: 1.4)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(loc.ok),
+          ),
+        ],
       ),
     );
   }
@@ -2394,107 +3037,215 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     int groupIndex,
     Map<int, String> correctAnswersMap, {
     bool? forceSubmitted,
+    FillBlankContent? fillBlankContent,
   }) {
-    // Split question theo pattern {0}, {1}, {2}...
-    // Pattern: tìm {số} và giữ lại cả số trong group
+    String? instructionLine;
+    var body = question;
+    final nl = question.indexOf('\n');
+    if (nl != -1) {
+      instructionLine = question.substring(0, nl).trim();
+      body = question.substring(nl + 1).trim();
+    }
+
+    final fc = fillBlankContent;
+    final hasHints = fc != null && fc.blanks.any((b) => b.hints.isNotEmpty);
+    final contentForHints = fc;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (instructionLine != null && instructionLine.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              instructionLine,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: _kOnSurface,
+                height: 1.35,
+              ),
+            ),
+          ),
+        _buildFillBlankInlineSentence(
+          body,
+          groupIndex,
+          correctAnswersMap,
+          forceSubmitted,
+        ),
+        if (hasHints && contentForHints != null) ...[
+          const SizedBox(height: 20),
+          TextButton.icon(
+            onPressed: () => _showFillBlankHintsDialog(contentForHints),
+            icon: const Icon(Icons.lightbulb_outline_rounded, color: _kPrimary, size: 22),
+            label: Text(
+              AppLocalizations.of(context)!.fillBlankNeedHint,
+              style: const TextStyle(
+                color: _kPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+            style: TextButton.styleFrom(
+              foregroundColor: _kPrimary,
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildFillBlankInlineSentence(
+    String question,
+    int groupIndex,
+    Map<int, String> correctAnswersMap,
+    bool? forceSubmitted,
+  ) {
     final regex = RegExp(r'(\{(\d+)\})');
     final matches = regex.allMatches(question);
-    
+
     if (matches.isEmpty) {
       return Text(
         question,
-        style: Theme.of(context).textTheme.bodyLarge,
+        style: const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+          color: _kOnSurface,
+          height: 1.45,
+        ),
       );
     }
-    
-    // Tạo list các phần tử: text và placeholder
+
     final List<Widget> widgets = [];
     int lastEnd = 0;
-    
+
     for (final match in matches) {
-      // Text trước placeholder
       if (match.start > lastEnd) {
         final textBefore = question.substring(lastEnd, match.start);
         if (textBefore.isNotEmpty) {
-          widgets.add(Text(
-            textBefore,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ));
+          widgets.add(
+            Text(
+              textBefore,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: _kOnSurface,
+                height: 1.45,
+              ),
+            ),
+          );
         }
       }
-      
-      // Placeholder
+
       final placeholderIndex = int.parse(match.group(2)!);
-      final key = groupIndex * 1000 + placeholderIndex;
-      final userAnswer = _fillBlankAnswers[key] ?? '';
-      // Nếu có groupQuestions, check xem question này đã được check chưa
-      final isSubmitted = forceSubmitted ?? (_isSubmitted || 
-          (widget.exercise.groupQuestions != null && 
-           _questionResults.containsKey(groupIndex)));
+      final storageKey = groupIndex * 1000 + placeholderIndex;
+      final userAnswer = _fillBlankAnswers[storageKey] ?? '';
+      final isSubmitted = forceSubmitted ??
+          (_isSubmitted ||
+              (widget.exercise.groupQuestions != null &&
+                  _questionResults.containsKey(groupIndex)));
       final correctAnswer = correctAnswersMap[placeholderIndex] ?? '';
-      // Check từng placeholder riêng biệt (không dùng kết quả của toàn bộ câu hỏi)
-      final isCorrect = isSubmitted && userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase();
-      final isWrong = isSubmitted && userAnswer.isNotEmpty && !isCorrect;
-      
-      widgets.add(Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: 120,
-        child: TextField(
-          enabled: !isSubmitted,
-          controller: TextEditingController(text: userAnswer)
-            ..selection = TextSelection.collapsed(offset: userAnswer.length),
-          onChanged: (value) {
-            setState(() {
-              _fillBlankAnswers[key] = value;
-            });
-          },
-          decoration: InputDecoration(
-            hintText: '...',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+      final isCorrect =
+          isSubmitted && userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase();
+      final isWrong = isSubmitted && !isCorrect;
+
+      final minChars = math.max(correctAnswer.length, 4);
+      final slotWidth = (minChars * 13.0 + 36).clamp(72.0, 220.0);
+
+      Color fillBg = _kSurfaceContainer;
+      Color underline = _kPrimary;
+      if (isSubmitted) {
+        if (isCorrect) {
+          fillBg = Colors.green.withValues(alpha: 0.14);
+          underline = Colors.green.shade700;
+        } else if (isWrong) {
+          fillBg = Colors.red.withValues(alpha: 0.12);
+          underline = Colors.red.shade700;
+        }
+      }
+
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 2, right: 6, top: 2, bottom: 2),
+          child: _FillBlankSlot(
+            width: slotWidth,
+            fillColor: fillBg,
+            underlineColor: underline,
+            underlineHeight: 3,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: ValueKey('fb_${groupIndex}_$placeholderIndex'),
+                    enabled: !isSubmitted,
+                    controller: TextEditingController(text: userAnswer)
+                      ..selection = TextSelection.collapsed(offset: userAnswer.length),
+                    onChanged: (value) {
+                      setState(() {
+                        _fillBlankAnswers[storageKey] = value;
+                      });
+                    },
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: isSubmitted && isCorrect ? FontWeight.w700 : FontWeight.w600,
+                      color: isSubmitted && isWrong ? Colors.red.shade900 : _kOnSurface,
+                    ),
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+                      hintText: '----',
+                      hintStyle: TextStyle(
+                        color: _kOnSurfaceVariant,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                if (isSubmitted)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2),
+                    child: Icon(
+                      isCorrect ? Icons.check_circle : Icons.cancel,
+                      size: 18,
+                      color: isCorrect ? Colors.green.shade700 : Colors.red.shade700,
+                    ),
+                  ),
+              ],
             ),
-            filled: true,
-            fillColor: isSubmitted
-                ? (isCorrect 
-                    ? Colors.green.withOpacity(0.2)
-                    : isWrong
-                        ? Colors.red.withOpacity(0.2)
-                        : Colors.grey[200])
-                : Colors.white,
-            suffixIcon: isSubmitted
-                ? (isCorrect
-                    ? const Icon(Icons.check_circle, color: Colors.green, size: 20)
-                    : isWrong
-                        ? const Icon(Icons.cancel, color: Colors.red, size: 20)
-                        : null)
-                : null,
-          ),
-          style: TextStyle(
-            color: isSubmitted && isWrong ? Colors.red : null,
-            fontWeight: isSubmitted && isCorrect ? FontWeight.bold : null,
           ),
         ),
-      ));
-      
+      );
+
       lastEnd = match.end;
     }
-    
-    // Text sau placeholder cuối cùng
+
     if (lastEnd < question.length) {
       final textAfter = question.substring(lastEnd);
       if (textAfter.isNotEmpty) {
-        widgets.add(Text(
-          textAfter,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ));
+        widgets.add(
+          Text(
+            textAfter,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: _kOnSurface,
+              height: 1.45,
+            ),
+          ),
+        );
       }
     }
-    
-    // Dùng Wrap để tự động xuống dòng khi cần, không bị che mất nội dung
+
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 4,
-      runSpacing: 8,
+      spacing: 2,
+      runSpacing: 10,
       children: widgets,
     );
   }
@@ -4589,6 +5340,86 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       case Difficulty.hard:
         return localizations.hard;
     }
+  }
+}
+
+/// Ô điền inline fill blank: nền `#dde9ff`, bo góc trên, gạch dưới primary (mockup).
+class _FillBlankSlot extends StatelessWidget {
+  const _FillBlankSlot({
+    required this.width,
+    required this.fillColor,
+    required this.underlineColor,
+    required this.underlineHeight,
+    required this.child,
+  });
+
+  final double width;
+  final Color fillColor;
+  final Color underlineColor;
+  final double underlineHeight;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+        color: fillColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+        border: Border(
+          bottom: BorderSide(color: underlineColor, width: underlineHeight),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
+/// Viền nét đứt bo góc cho ô placeholder (button single choice).
+class _DashedRoundedRectPainter extends CustomPainter {
+  _DashedRoundedRectPainter({
+    required this.color,
+    required this.radius,
+  });
+
+  final Color color;
+  final double radius;
+  static const double _strokeWidth = 1.25;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = RRect.fromRectAndRadius(
+      Rect.fromLTWH(
+        _strokeWidth / 2,
+        _strokeWidth / 2,
+        size.width - _strokeWidth,
+        size.height - _strokeWidth,
+      ),
+      Radius.circular(radius),
+    );
+    final path = Path()..addRRect(r);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _strokeWidth;
+    for (final metric in path.computeMetrics()) {
+      var d = 0.0;
+      while (d < metric.length) {
+        const dash = 5.0;
+        const gap = 4.0;
+        final end = (d + dash).clamp(0.0, metric.length);
+        canvas.drawPath(metric.extractPath(d, end), paint);
+        d += dash + gap;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedRoundedRectPainter oldDelegate) {
+    return oldDelegate.color != color || oldDelegate.radius != radius;
   }
 }
 

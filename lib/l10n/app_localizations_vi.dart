@@ -669,5 +669,28 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get practiceSessionHeading => 'Phiên luyện tập';
+
+  @override
+  String sessionProgressPercent(int percent) {
+    return '$percent% tiến độ';
+  }
+
+  @override
+  String get newSkillBadge => 'KỸ NĂNG MỚI';
+
+  @override
+  String get lessonCapsLabel => 'BÀI HỌC';
+
+  @override
   String get ok => 'OK';
+
+  @override
+  String get grammarNoteTitle => 'Ghi chú ngữ pháp';
+
+  @override
+  String get buttonSingleChoiceTapHint => 'Chạm một từ...';
+
+  @override
+  String get fillBlankNeedHint => 'Cần gợi ý?';
 }

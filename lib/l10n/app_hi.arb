@@ -285,6 +285,20 @@
   "previous": "पिछला",
   "next": "अगला",
   "submit": "जमा करें",
-  "ok": "ठीक"
+  "practiceSessionHeading": "Practice Session",
+  "sessionProgressPercent": "{percent}% Progress",
+  "@sessionProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "newSkillBadge": "NEW SKILL",
+  "lessonCapsLabel": "LESSON",
+  "ok": "ठीक",
+  "grammarNoteTitle": "Grammar Note",
+  "buttonSingleChoiceTapHint": "Tap a word...",
+  "fillBlankNeedHint": "Need a hint?"
 }
 

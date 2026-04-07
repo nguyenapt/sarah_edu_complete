@@ -672,5 +672,28 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get practiceSessionHeading => 'Practice Session';
+
+  @override
+  String sessionProgressPercent(int percent) {
+    return '$percent% Progress';
+  }
+
+  @override
+  String get newSkillBadge => 'NEW SKILL';
+
+  @override
+  String get lessonCapsLabel => 'LESSON';
+
+  @override
   String get ok => 'ठीक';
+
+  @override
+  String get grammarNoteTitle => 'Grammar Note';
+
+  @override
+  String get buttonSingleChoiceTapHint => 'Tap a word...';
+
+  @override
+  String get fillBlankNeedHint => 'Need a hint?';
 }

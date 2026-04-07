@@ -665,6 +665,9 @@ class UnitGroupService {
       
       debugPrint('🔍 Final continueGroupIndex=$continueGroupIndex for level $levelId');
 
+      // Sau các nhánh trên, continueGroupIndex luôn được gán.
+      final continueIdx = continueGroupIndex;
+
       // Load units cho tất cả groups
       final allUnits = await _getUnitsByLevelCached(levelId);
       final unitMap = <String, UnitModel>{};
@@ -691,42 +694,30 @@ class UnitGroupService {
           debugPrint('  ⚠️ Warning: No units found for group ${groupUnit.id}. Expected units: ${groupUnit.units.join(", ")}');
         }
 
-        // Logic mới: Kiểm tra completed dựa trên highestExerciseId
-        bool isCompleted = false;
-        if (completedGroup != null && groupUnit.id == completedGroup.id) {
-          isCompleted = true;
-        }
+        // Đã hoàn thành: mọi group có index < continueIdx (điểm "tiếp tục").
+        // Ví dụ đang học ở group index 2 (group thứ 3) → continueIdx = 2 → index 0,1 là đã xong.
+        final isCompleted = groupUnit.index < continueIdx;
 
         // Xác định type và unlock status dựa trên logic mới
         GroupType type;
         bool isUnlocked;
 
-        if (continueGroupIndex == null) {
-          // Không có continueGroupIndex → group đầu tiên enable
-          isUnlocked = groupUnit.index == 0;
-          type = groupUnit.index == 0 ? GroupType.continuePractice : GroupType.locked;
-          debugPrint('  📌 No continueGroupIndex: group ${groupUnit.id} isUnlocked=$isUnlocked, type=$type');
+        if (completedGroup != null && groupUnit.id == completedGroup.id) {
+          type = GroupType.review;
+          isUnlocked = true;
+        } else if (groupUnit.index == continueIdx) {
+          type = GroupType.continuePractice;
+          isUnlocked = true;
+        } else if (groupUnit.index < continueIdx) {
+          type = GroupType.review;
+          isUnlocked = true;
         } else {
-          // Phân loại groups dựa trên index so với continueGroupIndex
-          if (completedGroup != null && groupUnit.id == completedGroup.id) {
-            // Group đã hoàn thành → review
-            type = GroupType.review;
-            isUnlocked = true;
-          } else if (groupUnit.index == continueGroupIndex) {
-            // Group tiếp theo (sau group đã hoàn thành hoặc group đầu tiên) → continuePractice
-            type = GroupType.continuePractice;
-            isUnlocked = true;
-          } else if (groupUnit.index < continueGroupIndex) {
-            // Group trước continueGroup → review (nếu không phải completedGroup)
-            type = GroupType.review;
-            isUnlocked = true;
-          } else {
-            // Group sau continueGroup → locked
-            type = GroupType.locked;
-            isUnlocked = false;
-          }
-          debugPrint('  📌 continueGroupIndex=$continueGroupIndex, completedGroup=${completedGroup?.id}: group ${groupUnit.id} (index=${groupUnit.index}) isUnlocked=$isUnlocked, type=$type, isCompleted=$isCompleted');
+          type = GroupType.locked;
+          isUnlocked = false;
         }
+        debugPrint(
+          '  📌 continueIdx=$continueIdx, completedGroup=${completedGroup?.id}: group ${groupUnit.id} (index=${groupUnit.index}) isUnlocked=$isUnlocked, type=$type, isCompleted=$isCompleted',
+        );
 
         final unitGroup = UnitGroup.fromUnits(
           levelId: levelId,

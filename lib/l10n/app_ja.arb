@@ -285,6 +285,20 @@
   "previous": "前へ",
   "next": "次へ",
   "submit": "提出",
-  "ok": "OK"
+  "practiceSessionHeading": "Practice Session",
+  "sessionProgressPercent": "{percent}% Progress",
+  "@sessionProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "newSkillBadge": "NEW SKILL",
+  "lessonCapsLabel": "LESSON",
+  "ok": "OK",
+  "grammarNoteTitle": "Grammar Note",
+  "buttonSingleChoiceTapHint": "Tap a word...",
+  "fillBlankNeedHint": "Need a hint?"
 }
 

@@ -7,6 +7,9 @@ import '../../providers/auth_provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../practice/practice_screen.dart';
 import '../auth/login_screen.dart';
+import '../../widgets/common/practice_top_app_bar.dart';
+import '../settings/settings_screen.dart';
+import '../main_navigation.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
@@ -131,8 +134,21 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.review),
+        appBar: PracticeTopAppBar(
+          title: AppLocalizations.of(context)!.review,
+          onAvatarTap: () {
+            final scope = MainNavigationScope.of(context);
+            if (scope != null) {
+              scope.goToTab(4);
+              return;
+            }
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => const SettingsScreen(),
+              ),
+            );
+          },
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -141,8 +157,21 @@ class _ReviewScreenState extends State<ReviewScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.review),
+      appBar: PracticeTopAppBar(
+        title: AppLocalizations.of(context)!.review,
+        onAvatarTap: () {
+          final scope = MainNavigationScope.of(context);
+          if (scope != null) {
+            scope.goToTab(4);
+            return;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => const SettingsScreen(),
+            ),
+          );
+        },
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),

@@ -285,6 +285,20 @@
   "previous": "Назад",
   "next": "Далее",
   "submit": "Отправить",
-  "ok": "ОК"
+  "practiceSessionHeading": "Practice Session",
+  "sessionProgressPercent": "{percent}% Progress",
+  "@sessionProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "newSkillBadge": "NEW SKILL",
+  "lessonCapsLabel": "LESSON",
+  "ok": "ОК",
+  "grammarNoteTitle": "Grammar Note",
+  "buttonSingleChoiceTapHint": "Tap a word...",
+  "fillBlankNeedHint": "Need a hint?"
 }
 

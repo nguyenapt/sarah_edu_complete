@@ -352,6 +352,20 @@
   "previous": "Trước",
   "next": "Tiếp",
   "submit": "Nộp bài",
-  "ok": "OK"
+  "practiceSessionHeading": "Phiên luyện tập",
+  "sessionProgressPercent": "{percent}% tiến độ",
+  "@sessionProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "newSkillBadge": "KỸ NĂNG MỚI",
+  "lessonCapsLabel": "BÀI HỌC",
+  "ok": "OK",
+  "grammarNoteTitle": "Ghi chú ngữ pháp",
+  "buttonSingleChoiceTapHint": "Chạm một từ...",
+  "fillBlankNeedHint": "Cần gợi ý?"
 }
 

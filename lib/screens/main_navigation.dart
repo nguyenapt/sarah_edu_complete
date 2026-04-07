@@ -10,6 +10,26 @@ import 'progress/progress_screen.dart';
 import 'settings/settings_screen.dart';
 import 'auth/login_screen.dart';
 
+class MainNavigationScope extends InheritedWidget {
+  const MainNavigationScope({
+    super.key,
+    required this.goToTab,
+    required super.child,
+  });
+
+  /// 0=Home, 1=Practice, 2=Review, 3=Progress, 4=Settings
+  final void Function(int index) goToTab;
+
+  static MainNavigationScope? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<MainNavigationScope>();
+  }
+
+  @override
+  bool updateShouldNotify(covariant MainNavigationScope oldWidget) {
+    return false;
+  }
+}
+
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
@@ -96,11 +116,17 @@ class _MainNavigationState extends State<MainNavigation> {
       _currentIndex = 0; // Reset về Home
     }
 
-    return Scaffold(
-      body: screens[screenIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: adjustedIndex,
-        onTap: (index) {
+    return MainNavigationScope(
+      goToTab: (index) {
+        setState(() {
+          _currentIndex = getScreenIndex(index);
+        });
+      },
+      child: Scaffold(
+        body: screens[screenIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: adjustedIndex,
+          onTap: (index) {
           // Hiển thị thông báo yêu cầu đăng nhập cho guest user khi bấm vào Review hoặc Progress
           if (!isAuthenticated) {
             // 0=Home, 1=Practice, 2=Review, 3=Progress, 4=Settings
@@ -135,6 +161,7 @@ class _MainNavigationState extends State<MainNavigation> {
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Colors.grey,
         items: items,
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import '../../providers/language_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../auth/login_screen.dart';
 import '../auth/register_screen.dart';
+import '../../widgets/common/practice_top_app_bar.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -14,8 +15,17 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settings),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            final title = AppLocalizations.of(context)!.settings;
+            if (!authProvider.isAuthenticated) {
+              return AppBar(title: Text(title));
+            }
+            return PracticeTopAppBar(title: title);
+          },
+        ),
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
