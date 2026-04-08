@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/theme/app_theme.dart';
 import '../../models/placement_test_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/login_screen.dart';
 import '../main_navigation.dart';
+
+const Color _kSurface = Color(0xFFF4F6FF);
+const Color _kOnSurface = Color(0xFF14304F);
+const Color _kOnSurfaceVariant = Color(0xFF445D7F);
+const Color _kPrimary = Color(0xFF006286);
+const Color _kPrimaryContainer = Color(0xFF2DB7F2);
+const Color _kSurfaceContainer = Color(0xFFDDE9FF);
+
+const LinearGradient _kPrimaryCtaGradient = LinearGradient(
+  colors: [_kPrimary, _kPrimaryContainer],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
 
 class PlacementTestResultScreen extends StatefulWidget {
   final PlacementTestResult result;
@@ -33,6 +45,7 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final isAuthenticated = authProvider.isAuthenticated;
+    final loc = AppLocalizations.of(context)!;
 
     // Nếu user vừa đăng nhập thành công (chuyển từ unauthenticated sang authenticated)
     if (_wasUnauthenticated && isAuthenticated && mounted) {
@@ -48,41 +61,90 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.placementTestResult),
-        automaticallyImplyLeading: false,
-      ),
+      backgroundColor: _kSurface,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Level Card
-            Card(
-              color: _getLevelColor(widget.result.assessedLevel),
+            SafeArea(
+              bottom: false,
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.fromLTRB(0, 6, 0, 10),
+                child: Row(
+                  children: [
+                    IconButton(
+                      tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      color: _kOnSurface,
+                      onPressed: () => Navigator.of(context).maybePop(),
+                    ),
+                    Expanded(
+                      child: Text(
+                        loc.placementTestResult,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: _kOnSurface,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: _kSurfaceContainer,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {},
+                        icon: const Icon(Icons.person_rounded, size: 20),
+                        color: _kOnSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Level Card
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                gradient: _kPrimaryCtaGradient,
+                boxShadow: [
+                  BoxShadow(
+                    color: _kPrimary.withValues(alpha: 0.22),
+                    blurRadius: 22,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 22, 24, 22),
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.emoji_events,
-                      size: 64,
+                    const Icon(
+                      Icons.emoji_events_rounded,
+                      size: 56,
                       color: Colors.white,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     Text(
                       'Your Level',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white70,
-                          ),
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       widget.result.assessedLevel.toString(),
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 44,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
                     ),
                   ],
                 ),
@@ -92,6 +154,11 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
 
             // Score Card
             Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+                side: BorderSide(color: Colors.grey.withValues(alpha: 0.12)),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -99,9 +166,11 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                   children: [
                     Text(
                       'Score',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: _kOnSurface,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -117,7 +186,7 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                           context,
                           'Total',
                           '${widget.result.totalQuestions}',
-                          AppTheme.primaryColor,
+                          _kPrimary,
                         ),
                         _buildScoreItem(
                           context,
@@ -135,6 +204,11 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
 
             // Category Breakdown
             Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+                side: BorderSide(color: Colors.grey.withValues(alpha: 0.12)),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -142,9 +216,11 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                   children: [
                     Text(
                       'Category Breakdown',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: _kOnSurface,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     ...widget.result.categoryTotals.entries.map((entry) {
@@ -194,11 +270,16 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
             // Time Spent
             if (widget.result.timeSpentSeconds != null)
               Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  side: BorderSide(color: Colors.grey.withValues(alpha: 0.12)),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(Icons.timer, color: AppTheme.primaryColor),
+                      const Icon(Icons.timer_rounded, color: _kPrimary),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -206,14 +287,18 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                           children: [
                             Text(
                               'Time Spent',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: _kOnSurface,
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               _formatTime(widget.result.timeSpentSeconds!),
-                              style: Theme.of(context).textTheme.bodyLarge,
+                              style: TextStyle(
+                                color: _kOnSurfaceVariant.withValues(alpha: 0.9),
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),
@@ -227,7 +312,8 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
 
             // Action Buttons
             if (!isAuthenticated)
-              ElevatedButton(
+              _GradientPillButton(
+                label: loc.loginToSaveResult,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -236,21 +322,9 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                     ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                ),
-                child: Text(
-                  AppLocalizations.of(context)!.loginToSaveResult,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
             const SizedBox(height: 12),
-            OutlinedButton(
+            _OutlinePillButton(
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -260,15 +334,7 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
                   (route) => false,
                 );
               },
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              child: Text(
-                AppLocalizations.of(context)!.backToHome,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
+              label: loc.backToHome,
             ),
           ],
         ),
@@ -300,20 +366,7 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
     );
   }
 
-  Color _getLevelColor(PlacementTestLevel level) {
-    switch (level) {
-      case PlacementTestLevel.a1:
-        return Colors.blue;
-      case PlacementTestLevel.a2:
-        return Colors.lightBlue;
-      case PlacementTestLevel.b1:
-        return Colors.green;
-      case PlacementTestLevel.b2:
-        return Colors.orange;
-      case PlacementTestLevel.c1:
-        return Colors.red;
-    }
-  }
+  // Removed legacy level color helper (replaced by gradient card).
 
   String _getCategoryLabel(PlacementTestCategory category) {
     switch (category) {
@@ -345,6 +398,99 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
     return '${minutes}m ${remainingSeconds}s';
+  }
+}
+
+class _GradientPillButton extends StatelessWidget {
+  const _GradientPillButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+    return Opacity(
+      opacity: enabled ? 1 : 0.55,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: enabled ? _kPrimaryCtaGradient : null,
+          color: enabled ? null : Colors.grey.shade400,
+          borderRadius: BorderRadius.circular(999),
+          boxShadow: enabled
+              ? [
+                  BoxShadow(
+                    color: _kPrimary.withValues(alpha: 0.22),
+                    blurRadius: 14,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onPressed,
+            borderRadius: BorderRadius.circular(999),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Center(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlinePillButton extends StatelessWidget {
+  const _OutlinePillButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: _kPrimary.withValues(alpha: 0.35)),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Center(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: _kPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

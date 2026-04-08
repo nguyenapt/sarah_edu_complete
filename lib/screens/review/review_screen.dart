@@ -10,6 +10,8 @@ import '../auth/login_screen.dart';
 import '../../widgets/common/practice_top_app_bar.dart';
 import '../settings/settings_screen.dart';
 import '../main_navigation.dart';
+import '../../widgets/common/guest_locked_view.dart';
+import '../auth/register_screen.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
@@ -72,59 +74,28 @@ class _ReviewScreenState extends State<ReviewScreen> {
     
     // Nếu guest user, hiển thị màn hình yêu cầu đăng nhập
     if (!authProvider.isAuthenticated) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.review),
-        ),
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.lock_outline,
-                  size: 80,
-                  color: AppTheme.primaryColor.withOpacity(0.5),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  AppLocalizations.of(context)!.pleaseLogin,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  AppLocalizations.of(context)!.loginToUseReviewFeature,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[500],
-                      ),
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.login),
-                  label: Text(AppLocalizations.of(context)!.login),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
+      final loc = AppLocalizations.of(context)!;
+      return GuestLockedScaffold(
+        title: loc.review,
+        child: GuestLockedView(
+          title: loc.pleaseLogin,
+          subtitle: loc.loginToUseReviewFeature,
+          onLogin: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+          onRegister: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RegisterScreen(),
+              ),
+            );
+          },
         ),
       );
     }

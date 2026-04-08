@@ -211,6 +211,32 @@
   "vocabularySortDefinitionDesc": "Def Z-A",
   "practiceVocabularyTitle": "Practice Vocabulary",
   "practiceVocabularyEmpty": "No vocabulary to practice",
+  "vocabularySearchDictionaryHint": "Search your dictionary...",
+  "vocabularyRecentMasteries": "RECENT MASTERIES",
+  "vocabularyChipVerbs": "Verbs",
+  "vocabularyChipNouns": "Nouns",
+  "vocabularyChipIdioms": "Idioms",
+  "vocabularyChipWeakWords": "Weak Words",
+  "vocabularyWeakWordsEmpty": "No weak words yet. Keep practicing!",
+  "vocabularyWordOfTheDay": "Word of the Day",
+  "vocabularyWordOfTheDayBody": "Master \"{word}\" and earn triple points in today's challenge.",
+  "@vocabularyWordOfTheDayBody": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "vocabularyExplore": "EXPLORE",
+  "vocabularyReviewSoon": "REVIEW SOON",
+  "vocabularySort": "Sort",
+  "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
+  "vocabularyFlashcardWordOfTheMoment": "WORD OF THE MOMENT",
+  "vocabularyFlashcardTapToFlip": "Tap to flip definition",
+  "vocabularyFlashcardStillLearning": "STILL LEARNING",
+  "vocabularyFlashcardGotIt": "GOT IT",
+  "vocabularyFlashcardSyncing": "Syncing vocabulary…",
+  "vocabularyFlashcardSyncFailed": "Could not sync vocabulary. Will retry later.",
   "flashcardTapShowWord": "Tap to show word",
   "flashcardTapShowDefinition": "Tap to show definition",
   "weakSkills": "Compétences faibles",

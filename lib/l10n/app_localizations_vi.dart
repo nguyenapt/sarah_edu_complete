@@ -481,6 +481,66 @@ class AppLocalizationsVi extends AppLocalizations {
   String get practiceVocabularyEmpty => 'Không có từ vựng để luyện tập';
 
   @override
+  String get vocabularySearchDictionaryHint => 'Tìm trong từ điển...';
+
+  @override
+  String get vocabularyRecentMasteries => 'THÀNH THẠO GẦN ĐÂY';
+
+  @override
+  String get vocabularyChipVerbs => 'Động từ';
+
+  @override
+  String get vocabularyChipNouns => 'Danh từ';
+
+  @override
+  String get vocabularyChipIdioms => 'Thành ngữ';
+
+  @override
+  String get vocabularyChipWeakWords => 'Từ yếu';
+
+  @override
+  String get vocabularyWeakWordsEmpty => 'Chưa có từ yếu. Hãy luyện tập thêm!';
+
+  @override
+  String get vocabularyWordOfTheDay => 'Từ trong ngày';
+
+  @override
+  String vocabularyWordOfTheDayBody(String word) {
+    return 'Ôn \"$word\" và nhận gấp ba điểm trong thử thách hôm nay.';
+  }
+
+  @override
+  String get vocabularyExplore => 'KHÁM PHÁ';
+
+  @override
+  String get vocabularyReviewSoon => 'ÔN SỚM';
+
+  @override
+  String get vocabularySort => 'Sắp xếp';
+
+  @override
+  String get vocabularyFlashcardCurrentSession => 'PHIÊN HIỆN TẠI';
+
+  @override
+  String get vocabularyFlashcardWordOfTheMoment => 'TỪ ĐANG HỌC';
+
+  @override
+  String get vocabularyFlashcardTapToFlip => 'Chạm để lật xem nghĩa';
+
+  @override
+  String get vocabularyFlashcardStillLearning => 'VẪN ĐANG HỌC';
+
+  @override
+  String get vocabularyFlashcardGotIt => 'ĐÃ NHỚ';
+
+  @override
+  String get vocabularyFlashcardSyncing => 'Đang đồng bộ từ vựng…';
+
+  @override
+  String get vocabularyFlashcardSyncFailed =>
+      'Không đồng bộ được. Sẽ thử lại sau.';
+
+  @override
   String get flashcardTapShowWord => 'Chạm để xem từ';
 
   @override

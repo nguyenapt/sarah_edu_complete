@@ -1,13 +1,24 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/theme/app_theme.dart';
 import '../../models/placement_test_model.dart';
 import '../../core/services/placement_test_service.dart';
 import '../../core/services/placement_storage_service.dart';
 import '../../providers/language_provider.dart';
-import '../../l10n/app_localizations.dart';
 import 'placement_test_result_screen.dart';
+
+const Color _kSurface = Color(0xFFF4F6FF);
+const Color _kOnSurface = Color(0xFF14304F);
+const Color _kOnSurfaceVariant = Color(0xFF445D7F);
+const Color _kPrimary = Color(0xFF006286);
+const Color _kPrimaryContainer = Color(0xFF2DB7F2);
+const Color _kSurfaceContainer = Color(0xFFDDE9FF);
+
+const LinearGradient _kPrimaryCtaGradient = LinearGradient(
+  colors: [_kPrimary, _kPrimaryContainer],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
 
 class PlacementTestScreen extends StatefulWidget {
   const PlacementTestScreen({super.key});
@@ -21,7 +32,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
   
   List<PlacementTestQuestion> _allQuestions = [];
   List<PlacementTestQuestion> _testQuestions = [];
-  List<PlacementTestAnswer> _answers = [];
+  final List<PlacementTestAnswer> _answers = [];
   int _currentQuestionIndex = 0;
   bool _isLoading = true;
   bool _isSubmitting = false;
@@ -31,6 +42,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
 
   // Answer state
   dynamic _selectedAnswer; // String for single choice, List<String> for multiple choice
+  bool _showHint = false;
 
   @override
   void initState() {
@@ -123,17 +135,134 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     setState(() {
       _currentQuestionIndex++;
       _selectedAnswer = null;
+      _showHint = false;
     });
   }
 
-  void _handlePrevious() {
-    if (_currentQuestionIndex > 0) {
-      _saveCurrentAnswer();
-      setState(() {
-        _currentQuestionIndex--;
-        _loadAnswerForCurrentQuestion();
-      });
+  // Back/Previous navigation removed in mockup.
+
+  void _toggleHint(String languageCode) {
+    final q = _testQuestions[_currentQuestionIndex];
+    final hint = q.getExplanation(languageCode).trim();
+    if (hint.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không có gợi ý cho câu này.')),
+      );
+      return;
     }
+    setState(() => _showHint = !_showHint);
+  }
+
+  Widget _buildAssessmentAppBar({
+    required String title,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            color: _kOnSurface,
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                color: _kOnSurface,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: _kSurfaceContainer,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {},
+              icon: const Icon(Icons.person_rounded, size: 20),
+              color: _kOnSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressHeader({
+    required int percent,
+    required int questionNumber,
+    required double progress,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'PROGRESS',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1,
+                  color: _kOnSurfaceVariant,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFED01B),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '$percent%',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF594700),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Question ${questionNumber.toString().padLeft(2, '0')}',
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: _kOnSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: SizedBox(
+              height: 8,
+              width: double.infinity,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  const ColoredBox(color: _kSurfaceContainer),
+                  FractionallySizedBox(
+                    widthFactor: progress.clamp(0.0, 1.0),
+                    alignment: Alignment.centerLeft,
+                    child: const DecoratedBox(
+                      decoration: BoxDecoration(gradient: _kPrimaryCtaGradient),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _saveCurrentAnswer() {
@@ -173,26 +302,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     }
   }
 
-  void _loadAnswerForCurrentQuestion() {
-    final question = _testQuestions[_currentQuestionIndex];
-    final answer = _answers.firstWhere(
-      (a) => a.questionId == question.id,
-      orElse: () => PlacementTestAnswer(
-        questionId: question.id,
-        selectedAnswers: [],
-        isCorrect: false,
-        answeredAt: DateTime.now(),
-      ),
-    );
-
-    if (question.type == PlacementTestType.multipleChoice) {
-      _selectedAnswer = List<String>.from(answer.selectedAnswers);
-    } else {
-      _selectedAnswer = answer.selectedAnswers.isNotEmpty
-          ? answer.selectedAnswers.first
-          : null;
-    }
-  }
+  // Removed answer backfill helper (no Previous in mockup).
 
   Future<void> _handleSubmit() async {
     if (_isSubmitting) return;
@@ -250,22 +360,44 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
 
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.placementTest),
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(),
+        backgroundColor: _kSurface,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildAssessmentAppBar(title: 'Assessment'),
+              _buildProgressHeader(
+                percent: 0,
+                questionNumber: 1,
+                progress: 0,
+              ),
+              const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(color: _kPrimary),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
 
     if (_testQuestions.isEmpty) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.placementTest),
-        ),
-        body: const Center(
-          child: Text('No questions available'),
+        backgroundColor: _kSurface,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildAssessmentAppBar(title: 'Assessment'),
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    'No questions available',
+                    style: TextStyle(color: _kOnSurfaceVariant, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -273,174 +405,80 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final question = _testQuestions[_currentQuestionIndex];
     final progress = (_currentQuestionIndex + 1) / _testQuestions.length;
     final isLastQuestion = _currentQuestionIndex >= _testQuestions.length - 1;
+    final percent = (progress * 100).round();
+    final canNext = _selectedAnswer != null && !_isSubmitting;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.placementTest),
-        actions: [
-          if (_startTime != null)
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Text(
-                  '${_timeSpentSeconds ~/ 60}:${(_timeSpentSeconds % 60).toString().padLeft(2, '0')}',
-                  style: const TextStyle(fontSize: 16),
+      backgroundColor: _kSurface,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAssessmentAppBar(title: 'Assessment'),
+            _buildProgressHeader(
+              percent: percent,
+              questionNumber: _currentQuestionIndex + 1,
+              progress: progress,
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _QuestionCard(
+                      questionLabel: _questionTypeLabel(question.type),
+                      questionText: question.getQuestion(languageCode),
+                      levelText: 'Level: ${question.level.toString()}',
+                    ),
+                    const SizedBox(height: 14),
+                    _buildAnswerSection(question),
+                    if (_showHint) ...[
+                      const SizedBox(height: 14),
+                      _HintCard(text: question.getExplanation(languageCode)),
+                    ],
+                  ],
                 ),
               ),
             ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Progress bar
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
-            minHeight: 4,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Question ${_currentQuestionIndex + 1} of ${_testQuestions.length}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  '${(progress * 100).toInt()}%',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppTheme.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-          ),
-
-          // Question content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            PositionedFooter(
+              child: Row(
                 children: [
-                  // Question card
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  _getCategoryLabel(question.category),
-                                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                                ),
-                                backgroundColor: AppTheme.primaryColor,
-                              ),
-                              Chip(
-                                label: Text(
-                                  question.level.toString(),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            question.getQuestion(languageCode),
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.star, size: 16, color: Colors.amber),
-                              const SizedBox(width: 4),
-                              Text('${question.points} points'),
-                              const SizedBox(width: 16),
-                              Chip(
-                                label: Text(
-                                  question.difficulty,
-                                  style: const TextStyle(fontSize: 10),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                  _FooterHintButton(
+                    onPressed:
+                        _isSubmitting ? null : () => _toggleHint(languageCode),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _FooterNextButton(
+                      label: isLastQuestion ? 'Submit' : 'Next',
+                      isLoading: _isSubmitting,
+                      onPressed: canNext
+                          ? (isLastQuestion ? _handleSubmit : _handleNext)
+                          : null,
                     ),
                   ),
-                  const SizedBox(height: 24),
-
-                  // Answer section
-                  _buildAnswerSection(question, languageCode),
                 ],
               ),
             ),
-          ),
-
-          // Navigation buttons
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                if (_currentQuestionIndex > 0)
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: _handlePrevious,
-                      child: const Text('Previous'),
-                    ),
-                  ),
-                if (_currentQuestionIndex > 0) const SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton(
-                    onPressed: _selectedAnswer != null && !_isSubmitting
-                        ? (isLastQuestion ? _handleSubmit : _handleNext)
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: _isSubmitting
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Text(isLastQuestion ? 'Submit' : 'Next'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildAnswerSection(PlacementTestQuestion question, String languageCode) {
+  String _questionTypeLabel(PlacementTestType type) {
+    switch (type) {
+      case PlacementTestType.fillBlank:
+        return 'Fill in the blank:';
+      case PlacementTestType.multipleChoice:
+        return 'Select all that apply:';
+      case PlacementTestType.singleChoice:
+        return 'Select one:';
+    }
+  }
+
+  Widget _buildAnswerSection(PlacementTestQuestion question) {
     switch (question.type) {
       case PlacementTestType.singleChoice:
         return _buildSingleChoice(question);
@@ -453,35 +491,21 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
 
   Widget _buildSingleChoice(PlacementTestQuestion question) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${AppLocalizations.of(context)!.selectOneAnswer}:',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 16),
-        ...question.options.asMap().entries.map((entry) {
-          final option = entry.value;
-          final isSelected = _selectedAnswer == option;
-
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            color: isSelected ? AppTheme.primaryColor.withOpacity(0.1) : null,
-            child: RadioListTile<String>(
-              title: Text(option),
-              value: option,
-              groupValue: _selectedAnswer,
-              onChanged: (value) {
-                setState(() {
-                  _selectedAnswer = value;
-                });
-              },
-            ),
-          );
-        }),
-      ],
+      children: question.options.asMap().entries.map((e) {
+        final index = e.key;
+        final option = e.value;
+        final isSelected = _selectedAnswer == option;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _OptionTile(
+            letter: String.fromCharCode('A'.codeUnitAt(0) + index),
+            text: option,
+            selected: isSelected,
+            showCheck: isSelected,
+            onTap: () => setState(() => _selectedAnswer = option),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -489,86 +513,358 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final selectedAnswers = _selectedAnswer as List<String>? ?? [];
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${AppLocalizations.of(context)!.selectAllCorrectAnswers}:',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 16),
-        ...question.options.map((option) {
-          final isSelected = selectedAnswers.contains(option);
-
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            color: isSelected ? AppTheme.primaryColor.withOpacity(0.1) : null,
-            child: CheckboxListTile(
-              title: Text(option),
-              value: isSelected,
-              onChanged: (value) {
-                setState(() {
-                  final current = List<String>.from(selectedAnswers);
-                  if (value == true) {
-                    current.add(option);
-                  } else {
-                    current.remove(option);
-                  }
-                  _selectedAnswer = current;
-                });
-              },
-            ),
-          );
-        }),
-      ],
+      children: question.options.asMap().entries.map((e) {
+        final index = e.key;
+        final option = e.value;
+        final isSelected = selectedAnswers.contains(option);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _OptionTile(
+            letter: String.fromCharCode('A'.codeUnitAt(0) + index),
+            text: option,
+            selected: isSelected,
+            showCheck: isSelected,
+            onTap: () {
+              setState(() {
+                final current = List<String>.from(selectedAnswers);
+                if (isSelected) {
+                  current.remove(option);
+                } else {
+                  current.add(option);
+                }
+                _selectedAnswer = current;
+              });
+            },
+          ),
+        );
+      }).toList(),
     );
   }
 
   Widget _buildFillBlank(PlacementTestQuestion question) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${AppLocalizations.of(context)!.selectOneAnswer}:',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 16),
-        ...question.options.map((option) {
-          final isSelected = _selectedAnswer == option;
-
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            color: isSelected ? AppTheme.primaryColor.withOpacity(0.1) : null,
-            child: RadioListTile<String>(
-              title: Text(option),
-              value: option,
-              groupValue: _selectedAnswer,
-              onChanged: (value) {
-                setState(() {
-                  _selectedAnswer = value;
-                });
-              },
-            ),
-          );
-        }),
-      ],
-    );
+    // UI giống single choice (như mockup).
+    return _buildSingleChoice(question);
   }
 
-  String _getCategoryLabel(PlacementTestCategory category) {
-    switch (category) {
-      case PlacementTestCategory.vocabulary:
-        return 'Vocabulary';
-      case PlacementTestCategory.grammar:
-        return 'Grammar';
-      case PlacementTestCategory.reading:
-        return 'Reading';
-      case PlacementTestCategory.listening:
-        return 'Listening';
-    }
+  // Category label helper removed (not used in mockup).
+}
+
+class PositionedFooter extends StatelessWidget {
+  const PositionedFooter({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _QuestionCard extends StatelessWidget {
+  const _QuestionCard({
+    required this.questionLabel,
+    required this.questionText,
+    required this.levelText,
+  });
+
+  final String questionLabel;
+  final String questionText;
+  final String levelText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF86EFAC),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  levelText,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF064E3B),
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  questionLabel,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: _kOnSurfaceVariant.withValues(alpha: 0.9),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.only(right: 80),
+                  child: Text(
+                    questionText,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      height: 1.25,
+                      color: _kOnSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OptionTile extends StatelessWidget {
+  const _OptionTile({
+    required this.letter,
+    required this.text,
+    required this.selected,
+    required this.showCheck,
+    required this.onTap,
+  });
+
+  final String letter;
+  final String text;
+  final bool selected;
+  final bool showCheck;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = selected ? _kPrimary.withValues(alpha: 0.85) : Colors.white;
+    final border =
+        selected ? Colors.transparent : Colors.grey.withValues(alpha: 0.18);
+    final fg = selected ? Colors.white : _kOnSurface;
+
+    return Material(
+      color: bg,
+      elevation: selected ? 2 : 0,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: border),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? Colors.white.withValues(alpha: 0.2)
+                        : _kSurfaceContainer,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Center(
+                    child: Text(
+                      letter,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: selected ? Colors.white : _kOnSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      color: fg,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                if (showCheck)
+                  const Icon(Icons.check_circle_rounded, color: Colors.white),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FooterHintButton extends StatelessWidget {
+  const _FooterHintButton({required this.onPressed});
+
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.help_outline_rounded,
+                color: enabled ? _kOnSurfaceVariant : Colors.grey,
+                size: 18,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'Hint',
+                style: TextStyle(
+                  color: enabled ? _kOnSurfaceVariant : Colors.grey,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FooterNextButton extends StatelessWidget {
+  const _FooterNextButton({
+    required this.label,
+    required this.isLoading,
+    required this.onPressed,
+  });
+
+  final String label;
+  final bool isLoading;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null && !isLoading;
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: enabled ? _kPrimaryCtaGradient : null,
+          color: enabled ? null : Colors.grey.shade400,
+          borderRadius: BorderRadius.circular(999),
+          boxShadow: enabled
+              ? [
+                  BoxShadow(
+                    color: _kPrimary.withValues(alpha: 0.22),
+                    blurRadius: 14,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: enabled ? onPressed : null,
+            borderRadius: BorderRadius.circular(999),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Center(
+                child: isLoading
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            label,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HintCard extends StatelessWidget {
+  const _HintCard({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF6FF),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: _kOnSurfaceVariant.withValues(alpha: 0.92),
+          height: 1.35,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }
 

@@ -419,6 +419,8 @@ class TopicVocabularyItem {
   final List<String> examples;
   final String? audioUrl;
   final String? imageUrl;
+  /// IPA / phiên âm (optional — hiển thị pill trên flashcard).
+  final String? phonetic;
 
   TopicVocabularyItem({
     required this.word,
@@ -427,6 +429,7 @@ class TopicVocabularyItem {
     this.examples = const [],
     this.audioUrl,
     this.imageUrl,
+    this.phonetic,
   });
 
   /// Get definition theo language code
@@ -462,6 +465,7 @@ class TopicVocabularyItem {
       examples: examplesList,
       audioUrl: map['audioUrl'],
       imageUrl: map['imageUrl'],
+      phonetic: map['phonetic']?.toString() ?? map['ipa']?.toString(),
     );
   }
 
@@ -473,6 +477,7 @@ class TopicVocabularyItem {
       'examples': examples,
       if (audioUrl != null) 'audioUrl': audioUrl,
       if (imageUrl != null) 'imageUrl': imageUrl,
+      if (phonetic != null) 'phonetic': phonetic,
     };
   }
 }

@@ -10,6 +10,8 @@ import '../auth/login_screen.dart';
 import '../../widgets/common/practice_top_app_bar.dart';
 import '../settings/settings_screen.dart';
 import '../main_navigation.dart';
+import '../../widgets/common/guest_locked_view.dart';
+import '../auth/register_screen.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -64,7 +66,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
           builder: (context, authProvider, _) {
             final title = AppLocalizations.of(context)!.progressTitle;
             if (!authProvider.isAuthenticated) {
-              return AppBar(title: Text(title));
+              return AppBar(
+                backgroundColor: const Color(0xFFF4F6FF),
+                surfaceTintColor: Colors.transparent,
+                elevation: 0,
+                centerTitle: true,
+                title: Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF14304F),
+                    fontSize: 18,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              );
             }
             return PracticeTopAppBar(
               title: title,
@@ -89,7 +105,27 @@ class _ProgressScreenState extends State<ProgressScreen> {
         builder: (context, authProvider, child) {
           // Nếu chưa đăng nhập, hiển thị empty state với nút đăng nhập
           if (!authProvider.isAuthenticated) {
-            return _buildLoginRequiredView(context);
+            final loc = AppLocalizations.of(context)!;
+            return GuestLockedView(
+              title: loc.loginToSync,
+              subtitle: loc.loginToSaveProgress,
+              onLogin: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+              onRegister: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RegisterScreen(),
+                  ),
+                );
+              },
+            );
           }
 
           // Nếu đã đăng nhập, hiển thị progress content
@@ -99,58 +135,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget _buildLoginRequiredView(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.lock_outline,
-              size: 80,
-              color: AppTheme.primaryColor.withOpacity(0.5),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context)!.loginToSync,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocalizations.of(context)!.loginToSaveProgress,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.login),
-              label: Text(AppLocalizations.of(context)!.login),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Removed legacy guest login-required view (replaced by `GuestLockedView`).
 
   Widget _buildProgressContent(BuildContext context) {
     if (_isLoading) {

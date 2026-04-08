@@ -485,6 +485,66 @@ class AppLocalizationsRu extends AppLocalizations {
   String get practiceVocabularyEmpty => 'No vocabulary to practice';
 
   @override
+  String get vocabularySearchDictionaryHint => 'Search your dictionary...';
+
+  @override
+  String get vocabularyRecentMasteries => 'RECENT MASTERIES';
+
+  @override
+  String get vocabularyChipVerbs => 'Verbs';
+
+  @override
+  String get vocabularyChipNouns => 'Nouns';
+
+  @override
+  String get vocabularyChipIdioms => 'Idioms';
+
+  @override
+  String get vocabularyChipWeakWords => 'Weak Words';
+
+  @override
+  String get vocabularyWeakWordsEmpty => 'No weak words yet. Keep practicing!';
+
+  @override
+  String get vocabularyWordOfTheDay => 'Word of the Day';
+
+  @override
+  String vocabularyWordOfTheDayBody(String word) {
+    return 'Master \"$word\" and earn triple points in today\'s challenge.';
+  }
+
+  @override
+  String get vocabularyExplore => 'EXPLORE';
+
+  @override
+  String get vocabularyReviewSoon => 'REVIEW SOON';
+
+  @override
+  String get vocabularySort => 'Sort';
+
+  @override
+  String get vocabularyFlashcardCurrentSession => 'CURRENT SESSION';
+
+  @override
+  String get vocabularyFlashcardWordOfTheMoment => 'WORD OF THE MOMENT';
+
+  @override
+  String get vocabularyFlashcardTapToFlip => 'Tap to flip definition';
+
+  @override
+  String get vocabularyFlashcardStillLearning => 'STILL LEARNING';
+
+  @override
+  String get vocabularyFlashcardGotIt => 'GOT IT';
+
+  @override
+  String get vocabularyFlashcardSyncing => 'Syncing vocabulary…';
+
+  @override
+  String get vocabularyFlashcardSyncFailed =>
+      'Could not sync vocabulary. Will retry later.';
+
+  @override
   String get flashcardTapShowWord => 'Tap to show word';
 
   @override

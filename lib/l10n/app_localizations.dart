@@ -1010,6 +1010,120 @@ abstract class AppLocalizations {
   /// **'No vocabulary to practice'**
   String get practiceVocabularyEmpty;
 
+  /// No description provided for @vocabularySearchDictionaryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search your dictionary...'**
+  String get vocabularySearchDictionaryHint;
+
+  /// No description provided for @vocabularyRecentMasteries.
+  ///
+  /// In en, this message translates to:
+  /// **'RECENT MASTERIES'**
+  String get vocabularyRecentMasteries;
+
+  /// No description provided for @vocabularyChipVerbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Verbs'**
+  String get vocabularyChipVerbs;
+
+  /// No description provided for @vocabularyChipNouns.
+  ///
+  /// In en, this message translates to:
+  /// **'Nouns'**
+  String get vocabularyChipNouns;
+
+  /// No description provided for @vocabularyChipIdioms.
+  ///
+  /// In en, this message translates to:
+  /// **'Idioms'**
+  String get vocabularyChipIdioms;
+
+  /// No description provided for @vocabularyChipWeakWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak Words'**
+  String get vocabularyChipWeakWords;
+
+  /// No description provided for @vocabularyWeakWordsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No weak words yet. Keep practicing!'**
+  String get vocabularyWeakWordsEmpty;
+
+  /// No description provided for @vocabularyWordOfTheDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Word of the Day'**
+  String get vocabularyWordOfTheDay;
+
+  /// No description provided for @vocabularyWordOfTheDayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Master \"{word}\" and earn triple points in today\'s challenge.'**
+  String vocabularyWordOfTheDayBody(String word);
+
+  /// No description provided for @vocabularyExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'EXPLORE'**
+  String get vocabularyExplore;
+
+  /// No description provided for @vocabularyReviewSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'REVIEW SOON'**
+  String get vocabularyReviewSoon;
+
+  /// No description provided for @vocabularySort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get vocabularySort;
+
+  /// No description provided for @vocabularyFlashcardCurrentSession.
+  ///
+  /// In en, this message translates to:
+  /// **'CURRENT SESSION'**
+  String get vocabularyFlashcardCurrentSession;
+
+  /// No description provided for @vocabularyFlashcardWordOfTheMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'WORD OF THE MOMENT'**
+  String get vocabularyFlashcardWordOfTheMoment;
+
+  /// No description provided for @vocabularyFlashcardTapToFlip.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to flip definition'**
+  String get vocabularyFlashcardTapToFlip;
+
+  /// No description provided for @vocabularyFlashcardStillLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'STILL LEARNING'**
+  String get vocabularyFlashcardStillLearning;
+
+  /// No description provided for @vocabularyFlashcardGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'GOT IT'**
+  String get vocabularyFlashcardGotIt;
+
+  /// No description provided for @vocabularyFlashcardSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing vocabulary…'**
+  String get vocabularyFlashcardSyncing;
+
+  /// No description provided for @vocabularyFlashcardSyncFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sync vocabulary. Will retry later.'**
+  String get vocabularyFlashcardSyncFailed;
+
   /// No description provided for @flashcardTapShowWord.
   ///
   /// In en, this message translates to:

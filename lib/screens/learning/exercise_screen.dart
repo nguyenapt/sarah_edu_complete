@@ -168,100 +168,46 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     return 0.0;
   }
 
-  Widget _buildPracticeSessionHeader() {
-    final loc = AppLocalizations.of(context)!;
-    final languageCode =
-        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
-    final exerciseTitle = widget.exercise.getTitle(languageCode);
-    final hasLessonLine = exerciseTitle.trim().isNotEmpty;
-    final lessonLine =
-        hasLessonLine ? '${loc.lessonCapsLabel}: ${exerciseTitle.toUpperCase()}' : null;
-    final pct = (_sessionProgressFraction() * 100).round().clamp(0, 100);
+  /// Tổng điểm tối đa của exercise (sum `point` từng câu hoặc `exercise.points`).
+  int _totalExercisePoints() {
+    final group = widget.exercise.groupQuestions;
+    if (group != null && group.isNotEmpty) {
+      var sum = 0;
+      for (final q in group) {
+        sum += q.point;
+      }
+      return sum;
+    }
+    return widget.exercise.points;
+  }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (lessonLine != null) ...[
-          Text(
-            lessonLine,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.8,
-              color: _kOnSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 6),
-        ],
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  /// Thanh tiến độ giữa AppBar (mockup exercise: bo tròn, track sáng, fill gradient).
+  Widget _buildExerciseAppBarProgress() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(999),
+      child: SizedBox(
+        height: 10,
+        width: double.infinity,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            Expanded(
-              child: Text(
-                loc.practiceSessionHeading,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: _kOnSurface,
-                  letterSpacing: -0.5,
+            const ColoredBox(color: _kSurfaceContainer),
+            FractionallySizedBox(
+              widthFactor: _sessionProgressFraction().clamp(0.0, 1.0),
+              alignment: Alignment.centerLeft,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [_kPrimary, _kPrimaryFixedDim],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '$pct%',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: _kOnSurface,
-                    letterSpacing: -0.5,
-                    height: 1.1,
-                  ),
-                ),
-                Text(
-                  loc.progress,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: _kOnSurfaceVariant,
-                    height: 1.2,
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
-        const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: SizedBox(
-            height: 8,
-            width: double.infinity,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                const ColoredBox(color: _kSurfaceContainer),
-                FractionallySizedBox(
-                  widthFactor: _sessionProgressFraction().clamp(0.0, 1.0),
-                  alignment: Alignment.centerLeft,
-                  child: const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [_kPrimary, _kPrimaryFixedDim],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -277,28 +223,51 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         scrolledUnderElevation: 0,
         foregroundColor: _kOnSurface,
         iconTheme: IconThemeData(color: _kOnSurface),
+        titleSpacing: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
+          icon: const Icon(Icons.close_rounded),
           color: _kOnSurface,
-          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: Text(
-          loc.appName,
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.2,
-            color: _kOnSurface,
+        title: Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Row(
+            children: [
+              Expanded(child: _buildExerciseAppBarProgress()),
+            ],
           ),
         ),
-        centerTitle: false,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Icon(
-              Icons.account_circle_rounded,
-              color: _kOnSurface.withValues(alpha: 0.85),
-              size: 28,
+            padding: const EdgeInsets.only(right: 12),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: _kTertiaryContainer,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.star_rounded,
+                      size: 16,
+                      color: _kOnTertiaryContainer,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${_totalExercisePoints()}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        color: _kOnTertiaryContainer,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -306,10 +275,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: _buildPracticeSessionHeader(),
-          ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),

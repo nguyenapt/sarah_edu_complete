@@ -24,6 +24,20 @@ class FirebaseConstants {
   static const String progressLevelProgress = 'levelProgress';
   static const String progressWeakPoints = 'weakPoints';
   static const String progressExerciseHistory = 'exerciseHistory';
+
+  /// `users/{uid}/vocabularyWords/{wordDocId}`
+  static const String userVocabularyWordsSubcollection = 'vocabularyWords';
+
+  static const String vocabFieldFavorited = 'favorited';
+  static const String vocabFieldLastOutcome = 'lastOutcome';
+  static const String vocabFieldStillLearningCount = 'stillLearningCount';
+  static const String vocabFieldGotItCount = 'gotItCount';
+  static const String vocabFieldEaseFactor = 'easeFactor';
+  static const String vocabFieldIntervalDays = 'intervalDays';
+  static const String vocabFieldRepetitions = 'repetitions';
+  static const String vocabFieldNextReviewAt = 'nextReviewAt';
+  static const String vocabFieldLastReviewedAt = 'lastReviewedAt';
+  static const String vocabFieldUpdatedAt = 'updatedAt';
 }
 
 

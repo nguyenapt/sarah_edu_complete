@@ -212,6 +212,32 @@
   "vocabularySortDefinitionDesc": "ĐN Z-A",
   "practiceVocabularyTitle": "Luyện tập từ vựng",
   "practiceVocabularyEmpty": "Không có từ vựng để luyện tập",
+  "vocabularySearchDictionaryHint": "Tìm trong từ điển...",
+  "vocabularyRecentMasteries": "THÀNH THẠO GẦN ĐÂY",
+  "vocabularyChipVerbs": "Động từ",
+  "vocabularyChipNouns": "Danh từ",
+  "vocabularyChipIdioms": "Thành ngữ",
+  "vocabularyChipWeakWords": "Từ yếu",
+  "vocabularyWeakWordsEmpty": "Chưa có từ yếu. Hãy luyện tập thêm!",
+  "vocabularyWordOfTheDay": "Từ trong ngày",
+  "vocabularyWordOfTheDayBody": "Ôn \"{word}\" và nhận gấp ba điểm trong thử thách hôm nay.",
+  "@vocabularyWordOfTheDayBody": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "vocabularyExplore": "KHÁM PHÁ",
+  "vocabularyReviewSoon": "ÔN SỚM",
+  "vocabularySort": "Sắp xếp",
+  "vocabularyFlashcardCurrentSession": "PHIÊN HIỆN TẠI",
+  "vocabularyFlashcardWordOfTheMoment": "TỪ ĐANG HỌC",
+  "vocabularyFlashcardTapToFlip": "Chạm để lật xem nghĩa",
+  "vocabularyFlashcardStillLearning": "VẪN ĐANG HỌC",
+  "vocabularyFlashcardGotIt": "ĐÃ NHỚ",
+  "vocabularyFlashcardSyncing": "Đang đồng bộ từ vựng…",
+  "vocabularyFlashcardSyncFailed": "Không đồng bộ được. Sẽ thử lại sau.",
   "flashcardTapShowWord": "Chạm để xem từ",
   "flashcardTapShowDefinition": "Chạm để xem định nghĩa",
   "weakSkills": "Kỹ năng yếu",

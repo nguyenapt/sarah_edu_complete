@@ -8,6 +8,7 @@ import '../../providers/theme_provider.dart';
 import '../auth/login_screen.dart';
 import '../auth/register_screen.dart';
 import '../../widgets/common/practice_top_app_bar.dart';
+import '../../widgets/common/guest_locked_view.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -21,7 +22,21 @@ class SettingsScreen extends StatelessWidget {
           builder: (context, authProvider, _) {
             final title = AppLocalizations.of(context)!.settings;
             if (!authProvider.isAuthenticated) {
-              return AppBar(title: Text(title));
+              return AppBar(
+                backgroundColor: const Color(0xFFF4F6FF),
+                surfaceTintColor: Colors.transparent,
+                elevation: 0,
+                centerTitle: true,
+                title: Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF14304F),
+                    fontSize: 18,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              );
             }
             return PracticeTopAppBar(title: title);
           },
@@ -31,7 +46,41 @@ class SettingsScreen extends StatelessWidget {
         builder: (context, authProvider, child) {
           // Nếu chưa đăng nhập, hiển thị login/register
           if (!authProvider.isAuthenticated) {
-            return _buildAuthSection(context, authProvider);
+            final loc = AppLocalizations.of(context)!;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  GuestLockedView(
+                    icon: Icons.account_circle_rounded,
+                    title: loc.loginToSync,
+                    subtitle: loc.loginToSaveProgress,
+                    onLogin: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    onRegister: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  // Language selection vẫn cho phép khi chưa login
+                  Card(
+                    child: _buildLanguageTile(context),
+                  ),
+                ],
+              ),
+            );
           }
 
           // Nếu đã đăng nhập, hiển thị settings
@@ -41,79 +90,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAuthSection(BuildContext context, AuthProvider authProvider) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 40),
-          Icon(
-            Icons.account_circle,
-            size: 100,
-            color: AppTheme.primaryColor.withOpacity(0.5),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)!.loginToSync,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.of(context)!.loginToSaveProgress,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.login),
-            label: Text(AppLocalizations.of(context)!.login),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: AppTheme.primaryColor,
-              foregroundColor: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const RegisterScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.person_add),
-            label: Text(AppLocalizations.of(context)!.register),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-          ),
-          const SizedBox(height: 32),
-          const Divider(),
-          const SizedBox(height: 16),
-          // Language Selection - Available even when not logged in
-          Card(
-            child: _buildLanguageTile(context),
-          ),
-        ],
-      ),
-    );
-  }
+  // Removed legacy guest auth section (replaced by `GuestLockedView`).
 
   Widget _buildSettingsSection(BuildContext context, AuthProvider authProvider) {
     final user = authProvider.user;

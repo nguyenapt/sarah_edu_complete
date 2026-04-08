@@ -35,6 +35,12 @@ const Color _kStreakGradientStart = Color(0xFFFDE68A);
 const Color _kStreakGradientEnd = Color(0xFFB45309);
 const double _kCardRadius = 18;
 
+const LinearGradient _kBottomCtaGradient = LinearGradient(
+  colors: [_kPracticePrimaryDeep, Color(0xFF0EA5E9)],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
+
 class PracticeScreen extends StatefulWidget {
   final bool reviewMode;
   final String? reviewLevel; // Level để ôn tập (chỉ dùng khi reviewMode = true)
@@ -271,14 +277,41 @@ class _PracticeScreenState extends State<PracticeScreen> {
             );
           }
 
+          final showBottomContinue =
+              authProvider.isAuthenticated && !widget.reviewMode;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildPracticeHeader(context, authProvider),
               Expanded(
-                child: authProvider.isAuthenticated
-                    ? _buildAuthenticatedView(authProvider)
-                    : _buildGuestView(),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    authProvider.isAuthenticated
+                        ? _buildAuthenticatedView(
+                            authProvider,
+                            bottomInset: showBottomContinue ? 120 : 0,
+                          )
+                        : _buildGuestView(),
+                    if (showBottomContinue)
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: SafeArea(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                            child: Center(
+                              child: _buildBottomContinueLearningCta(
+                                authProvider.user?.currentLevel ?? 'A1',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ],
           );
@@ -298,34 +331,24 @@ class _PracticeScreenState extends State<PracticeScreen> {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
           child: Row(
             children: [
-              IconButton(
-                tooltip: loc.progress,
-                onPressed: () {
-                  if (!authProvider.isAuthenticated) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(loc.loginToSync)),
-                    );
-                    return;
-                  }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const ProgressScreen(),
-                    ),
-                  );
-                },
-                icon: Icon(
-                  Icons.insert_chart_outlined_rounded,
-                  color: _kPracticeInk.withOpacity(0.85),
+              if (widget.reviewMode) ...[
+                IconButton(
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: _kPracticeInk.withOpacity(0.85),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 6),
+              ],
               Expanded(
                 child: Text(
                   title,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -427,7 +450,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
   }
 
   // View cho authenticated user
-  Widget _buildAuthenticatedView(AuthProvider authProvider) {
+  Widget _buildAuthenticatedView(
+    AuthProvider authProvider, {
+    required double bottomInset,
+  }) {
     final currentLevel = authProvider.user?.currentLevel ?? 'A1';
     // Trong review mode, dùng reviewLevel; không phải review mode thì dùng currentLevel
     final displayLevel = widget.reviewMode && widget.reviewLevel != null 
@@ -439,13 +465,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
       return CustomScrollView(
         controller: _scrollController,
         slivers: [
-          if (!widget.reviewMode)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                child: _buildContinueLearningCard(currentLevel),
-              ),
-            ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
@@ -474,6 +493,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 child: _buildStreakCard(authProvider),
               ),
             ),
+          if (bottomInset > 0)
+            SliverToBoxAdapter(child: SizedBox(height: bottomInset)),
         ],
       );
     }
@@ -509,19 +530,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
       );
     }
 
-    return Column(
-      children: [
-        // "Học tiếp" section - style giống trang chủ (background màu xanh) (chỉ hiển thị khi không phải review mode)
-        if (!widget.reviewMode)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: _buildContinueLearningCard(currentLevel),
-          ),
-        // Danh sách units - dùng displayLevel (reviewLevel nếu là review mode)
-        Expanded(
-          child: _buildUnitsList(highlightCurrentLevel: displayLevel),
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: _buildUnitsList(highlightCurrentLevel: displayLevel),
     );
   }
 
@@ -1528,13 +1539,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
     );
   }
 
-  // Continue learning card - pill giống mockup (nền xanh đậm)
-  Widget _buildContinueLearningCard(String currentLevel) {
+  Widget _buildBottomContinueLearningCta(String currentLevel) {
+    final loc = AppLocalizations.of(context)!;
     return Material(
-      elevation: 2,
-      borderRadius: BorderRadius.circular(_kCardRadius),
-      shadowColor: _kPracticePrimary.withOpacity(0.35),
+      elevation: 8,
+      shadowColor: _kPracticePrimaryDeep.withOpacity(0.35),
+      borderRadius: BorderRadius.circular(999),
       child: InkWell(
+        borderRadius: BorderRadius.circular(999),
         onTap: () async {
           if (mounted) {
             showDialog<void>(
@@ -1547,97 +1559,82 @@ class _PracticeScreenState extends State<PracticeScreen> {
           }
 
           try {
-            // Lấy highestProgress
             final highestProgress = _userProgress?.highestProgress;
-            
-            // Tìm exercise tiếp theo
             final nextExercise = highestProgress != null
                 ? await _nextExerciseService.getNextExercise(highestProgress)
                 : await _nextExerciseService.getFirstExercise();
 
-            if (mounted) {
-              Navigator.pop(context); // Đóng loading dialog
+            if (!mounted) return;
+            Navigator.pop(context);
 
-              if (nextExercise != null) {
-                // Navigate to exercise
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ExerciseScreen(exercise: nextExercise),
-                  ),
-                );
-              } else {
-                // Đã học hết hoặc không tìm thấy, fallback về unit
-                if (_currentUnitId != null) {
-                  final unit = _allUnits.firstWhere(
-                    (u) => u.id == _currentUnitId,
-                    orElse: () => _allUnits.firstWhere(
-                      (u) => u.levelId == currentLevel,
-                      orElse: () => _allUnits.first,
-                    ),
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UnitListScreen(unit: unit),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.allLessonsCompleted),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
-              }
-            }
-          } catch (e) {
-            if (mounted) {
-              Navigator.pop(context); // Đóng loading dialog
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Lỗi: $e'),
-                  backgroundColor: Colors.red,
+            if (nextExercise != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExerciseScreen(exercise: nextExercise),
                 ),
               );
+              return;
             }
+
+            if (_currentUnitId != null) {
+              final unit = _allUnits.firstWhere(
+                (u) => u.id == _currentUnitId,
+                orElse: () => _allUnits.firstWhere(
+                  (u) => u.levelId == currentLevel,
+                  orElse: () => _allUnits.first,
+                ),
+              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UnitListScreen(unit: unit),
+                ),
+              );
+              return;
+            }
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loc.allLessonsCompleted),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } catch (e) {
+            if (!mounted) return;
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Lỗi: $e'),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
-        borderRadius: BorderRadius.circular(_kCardRadius),
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(_kCardRadius),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [_kPracticePrimaryDeep, Color(0xFF0EA5E9)],
-            ),
+            borderRadius: BorderRadius.circular(999),
+            gradient: _kBottomCtaGradient,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(
-                  Icons.play_circle_filled,
+                  Icons.play_arrow_rounded,
                   color: Colors.white,
-                  size: 44,
+                  size: 26,
                 ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    AppLocalizations.of(context)!.continueLearning,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                    ),
+                const SizedBox(width: 8),
+                Text(
+                  loc.continueLearning,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
                   ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.white,
-                  size: 18,
                 ),
               ],
             ),

@@ -747,6 +747,42 @@ class FirestoreService {
       throw Exception('Error saving level skip test attempt: $e');
     }
   }
+
+  static String _vocabularyDocId(String vocabularyKey) {
+    return vocabularyKey.replaceAll('/', '_').replaceAll('\\', '_');
+  }
+
+  /// Merge-set từ vựng user; tối đa ~450 op/batch (giới hạn Firestore 500).
+  Future<void> batchUpsertUserVocabularyWords(
+    String userId,
+    Map<String, Map<String, dynamic>> byVocabularyKey,
+  ) async {
+    if (byVocabularyKey.isEmpty) return;
+    try {
+      const maxOps = 450;
+      WriteBatch batch = _firestore.batch();
+      var n = 0;
+      for (final e in byVocabularyKey.entries) {
+        final ref = _firestore
+            .collection(FirebaseConstants.usersCollection)
+            .doc(userId)
+            .collection(FirebaseConstants.userVocabularyWordsSubcollection)
+            .doc(_vocabularyDocId(e.key));
+        batch.set(ref, e.value, SetOptions(merge: true));
+        n++;
+        if (n >= maxOps) {
+          await batch.commit();
+          batch = _firestore.batch();
+          n = 0;
+        }
+      }
+      if (n > 0) {
+        await batch.commit();
+      }
+    } catch (e) {
+      throw Exception('Error batch upsert vocabulary words: $e');
+    }
+  }
 }
 
 
