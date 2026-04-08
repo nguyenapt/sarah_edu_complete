@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/services/language_service.dart';
 
 class LanguageProvider with ChangeNotifier {
-  Locale _locale = const Locale('vi'); // Default to Vietnamese
+  Locale _locale = const Locale('en'); // Default to English
   bool _isLoading = true;
 
   Locale get locale => _locale;
@@ -18,7 +18,7 @@ class LanguageProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _locale = const Locale('vi');
+      _locale = const Locale('en');
       _isLoading = false;
       notifyListeners();
     }

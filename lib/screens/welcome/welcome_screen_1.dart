@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
 
+const Color _kPrimary = Color(0xFF006286);
+const Color _kPrimaryContainer = Color(0xFF2DB7F2);
+const LinearGradient _kPrimaryCtaGradient = LinearGradient(
+  colors: [_kPrimary, _kPrimaryContainer],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
+
 class WelcomeScreen1 extends StatelessWidget {
   final VoidCallback onNext;
   final VoidCallback onSkip;
@@ -57,32 +65,91 @@ class WelcomeScreen1 extends StatelessWidget {
               ),
               const Spacer(),
               // Next Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: onNext,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.next,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
+              _GradientPillButton(
+                label: AppLocalizations.of(context)!.next,
+                onPressed: onNext,
               ),
               const SizedBox(height: 16),
               // Skip Button
-              TextButton(
+              _GhostButton(
+                label: AppLocalizations.of(context)!.skip,
                 onPressed: onSkip,
-                child: Text(AppLocalizations.of(context)!.skip),
               ),
               const SizedBox(height: 24),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _GradientPillButton extends StatelessWidget {
+  const _GradientPillButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: _kPrimaryCtaGradient,
+        borderRadius: BorderRadius.circular(999),
+        boxShadow: [
+          BoxShadow(
+            color: _kPrimary.withValues(alpha: 0.22),
+            blurRadius: 14,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(999),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Center(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GhostButton extends StatelessWidget {
+  const _GhostButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        foregroundColor: const Color(0xFF445D7F),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.w800),
       ),
     );
   }

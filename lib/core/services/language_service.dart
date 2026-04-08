@@ -7,7 +7,7 @@ class LanguageService {
   // Get current language from SharedPreferences
   static Future<Locale> getCurrentLanguage() async {
     final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString(_languageKey) ?? 'vi'; // Default to Vietnamese
+    final languageCode = prefs.getString(_languageKey) ?? 'en'; // Default to English
     return Locale(languageCode);
   }
 
@@ -43,7 +43,7 @@ class LanguageService {
       case 'hi':
         return 'हिन्दी';
       default:
-        return 'Tiếng Việt';
+        return 'English';
     }
   }
 
@@ -73,7 +73,7 @@ class LanguageService {
       case 'hi':
         return '🇮🇳';
       default:
-        return '🇻🇳';
+        return '🇬🇧';
     }
   }
 }

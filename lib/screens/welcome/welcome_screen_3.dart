@@ -6,6 +6,14 @@ import '../../providers/language_provider.dart';
 import '../../core/services/welcome_service.dart';
 import '../main_navigation.dart';
 
+const Color _kPrimary = Color(0xFF006286);
+const Color _kPrimaryContainer = Color(0xFF2DB7F2);
+const LinearGradient _kPrimaryCtaGradient = LinearGradient(
+  colors: [_kPrimary, _kPrimaryContainer],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
+
 class WelcomeScreen3 extends StatelessWidget {
   final VoidCallback onPrevious;
 
@@ -118,20 +126,15 @@ class WelcomeScreen3 extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
+                    child: _OutlinePillButton(
                       onPressed: onPrevious,
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.previous),
+                      label: AppLocalizations.of(context)!.previous,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton(
+                    child: _GradientPillButton(
+                      label: AppLocalizations.of(context)!.getStarted,
                       onPressed: () async {
                         // Đánh dấu đã xem welcome
                         await WelcomeService.setHasSeenWelcome(true);
@@ -144,19 +147,97 @@ class WelcomeScreen3 extends StatelessWidget {
                           );
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.getStarted),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GradientPillButton extends StatelessWidget {
+  const _GradientPillButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: _kPrimaryCtaGradient,
+        borderRadius: BorderRadius.circular(999),
+        boxShadow: [
+          BoxShadow(
+            color: _kPrimary.withValues(alpha: 0.22),
+            blurRadius: 14,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(999),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Center(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlinePillButton extends StatelessWidget {
+  const _OutlinePillButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(999),
+        side: BorderSide(color: _kPrimary.withValues(alpha: 0.35)),
+      ),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(999),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: _kPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
           ),
         ),
       ),
