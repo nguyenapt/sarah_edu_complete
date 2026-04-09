@@ -12,8 +12,13 @@ import '../../models/unit_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../practice/vocabulary_flashcard_screen.dart';
+import '../../core/ads/ad_ids.dart';
+import '../../core/ads/widgets/native_ad_widget.dart';
+import '../../core/repositories/catalog_repository.dart';
+import '../../core/theme/horizon_colors.dart';
 
 /// Palette đồng bộ mockup vocabulary / exercise (Horizon).
+// Light palette defaults (dark mode dùng `HorizonColors.of(context)`).
 const Color _kSurface = Color(0xFFF4F6FF);
 const Color _kOnSurface = Color(0xFF14304F);
 const Color _kOnSurfaceVariant = Color(0xFF445D7F);
@@ -80,7 +85,8 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
           Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
       final userLevel = authProvider.user?.currentLevel ?? 'A1';
 
-      final levels = await _firestoreService.getLevels();
+      final repo = Provider.of<CatalogRepository>(context, listen: false);
+      final levels = await repo.getLevels(onFresh: (_) {});
       final allowedLevelIds = _getAllowedLevelIds(levels, userLevel);
 
       final lessonsRaw = await _firestoreService.getLessonsByLevelsAndType(
@@ -89,7 +95,7 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
       );
       final lessons = List<LessonModel>.from(lessonsRaw);
 
-      final units = await _firestoreService.getAllUnits();
+      final units = await repo.getAllUnits(onFresh: (_) {});
       lessons.sort((a, b) => _compareLessonOrder(a, b, levels, units));
 
       final deduped = <String, TopicVocabularyItem>{};
@@ -600,6 +606,9 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final languageCode = Provider.of<LanguageProvider>(context).currentLanguageCode;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final horizon = HorizonColors.of(context);
 
     final currentItems = _isLoading
         ? const <TopicVocabularyItem>[]
@@ -607,13 +616,13 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
     final wotd = _wordOfTheDayItem();
 
     return Scaffold(
-      backgroundColor: _kSurface,
+      backgroundColor: isDark ? horizon.surface : _kSurface,
       appBar: AppBar(
-        backgroundColor: _kSurface,
+        backgroundColor: isDark ? horizon.surface : _kSurface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: _kOnSurface,
-        iconTheme: const IconThemeData(color: _kOnSurface),
+        foregroundColor: isDark ? horizon.onSurface : _kOnSurface,
+        iconTheme: IconThemeData(color: isDark ? horizon.onSurface : _kOnSurface),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
@@ -622,9 +631,9 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
         ),
         title: Text(
           loc.vocabulary,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w800,
-            color: _kOnSurface,
+            color: isDark ? horizon.onSurface : _kOnSurface,
             fontSize: 20,
             letterSpacing: -0.3,
           ),
@@ -632,7 +641,10 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
         actions: [
           PopupMenuButton<VocabularySortOption>(
             tooltip: loc.vocabularySort,
-            child: const Icon(Icons.sort_rounded, color: _kOnSurface),
+            child: Icon(
+              Icons.sort_rounded,
+              color: isDark ? horizon.onSurface : _kOnSurface,
+            ),
             onSelected: (value) => setState(() => _sortOption = value),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -672,15 +684,22 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
                       padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
                       child: TextField(
                         focusNode: _searchFocusNode,
-                        style: const TextStyle(color: _kOnSurface, fontSize: 15),
+                        style: TextStyle(
+                          color: isDark ? horizon.onSurface : _kOnSurface,
+                          fontSize: 15,
+                        ),
                         decoration: InputDecoration(
                           hintText: loc.vocabularySearchDictionaryHint,
                           hintStyle: TextStyle(
-                            color: _kOnSurfaceVariant.withValues(alpha: 0.65),
+                            color: (isDark ? horizon.onSurfaceVariant : _kOnSurfaceVariant)
+                                .withValues(alpha: 0.65),
                           ),
-                          prefixIcon: const Icon(Icons.search_rounded, color: _kOnSurfaceVariant),
+                          prefixIcon: Icon(
+                            Icons.search_rounded,
+                            color: isDark ? horizon.onSurfaceVariant : _kOnSurfaceVariant,
+                          ),
                           filled: true,
-                          fillColor: _kCard,
+                          fillColor: isDark ? horizon.card : _kCard,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -752,15 +771,40 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               sliver: SliverList(
                                 delegate: SliverChildBuilderDelegate(
-                                  (context, index) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: _buildVocabularyCard(
-                                      currentItems[index],
-                                      languageCode,
-                                      loc,
-                                    ),
-                                  ),
-                                  childCount: currentItems.length,
+                                  (context, index) {
+                                    const freq = 8; // insert an ad after every 8 items
+                                    final adSlots = currentItems.length ~/ freq;
+                                    final total = currentItems.length + adSlots;
+
+                                    if (index >= total) return const SizedBox.shrink();
+
+                                    // Ad slot positions: 8,17,26,... (0-based)
+                                    final isAdSlot =
+                                        index > 0 && (index + 1) % (freq + 1) == 0;
+                                    if (isAdSlot) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: NativeAdWidget(
+                                          adUnitId: AdMobIds.nativeVocabList,
+                                          factoryId: 'listTile',
+                                          maxHeight: 180,
+                                        ),
+                                      );
+                                    }
+
+                                    final adsBefore = index ~/ (freq + 1);
+                                    final itemIndex = index - adsBefore;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: _buildVocabularyCard(
+                                        currentItems[itemIndex],
+                                        languageCode,
+                                        loc,
+                                      ),
+                                    );
+                                  },
+                                  childCount:
+                                      currentItems.length + (currentItems.length ~/ 8),
                                 ),
                               ),
                             ),

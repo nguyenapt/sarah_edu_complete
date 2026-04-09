@@ -5,21 +5,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/cache/app_image_cache_manager.dart';
 import '../../providers/auth_provider.dart';
 
-/// Top navigation giống `PracticeScreen`: text + avatar tròn bên phải.
-class PracticeTopAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const PracticeTopAppBar({
+/// App bar kiểu mới: back -> title -> avatar (đồng bộ các màn Horizon).
+class HorizonTopAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const HorizonTopAppBar({
     super.key,
     required this.title,
+    this.onBack,
     this.onAvatarTap,
-    this.backgroundColor,
-    this.titleColor = const Color(0xFF0F172A),
-    this.avatarTint = const Color(0xFFE0F2FE),
-    this.avatarIconColor = const Color(0xFF0369A1),
+    this.backgroundColor = const Color(0xFFF4F6FF),
+    this.titleColor = const Color(0xFF14304F),
+    this.avatarTint = const Color(0xFFDDE9FF),
+    this.avatarIconColor = const Color(0xFF445D7F),
   });
 
   final String title;
+  final VoidCallback? onBack;
   final VoidCallback? onAvatarTap;
-  final Color? backgroundColor;
+  final Color backgroundColor;
   final Color titleColor;
   final Color avatarTint;
   final Color avatarIconColor;
@@ -29,27 +31,34 @@ class PracticeTopAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
-
     return Material(
-      color: bg,
+      color: backgroundColor,
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          padding: const EdgeInsets.fromLTRB(8, 6, 16, 10),
           child: Row(
             children: [
+              IconButton(
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+                icon: const Icon(Icons.arrow_back_rounded),
+                color: titleColor,
+              ),
               Expanded(
                 child: Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
                     color: titleColor,
-                    letterSpacing: -0.3,
+                    letterSpacing: -0.2,
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
               Consumer<AuthProvider>(
                 builder: (context, authProvider, _) {
                   final photoUrl = authProvider.user?.photoUrl;
@@ -72,7 +81,7 @@ class PracticeTopAppBar extends StatelessWidget implements PreferredSizeWidget {
                           : Icon(
                               Icons.person_rounded,
                               color: avatarIconColor,
-                              size: 22,
+                              size: 20,
                             ),
                     ),
                   );

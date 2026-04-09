@@ -40,6 +40,7 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
   bool? _lastAuthState;
+  DateTime? _lastGuestSnackbarAt;
 
   @override
   Widget build(BuildContext context) {
@@ -131,24 +132,35 @@ class _MainNavigationState extends State<MainNavigation> {
           if (!isAuthenticated) {
             // 0=Home, 1=Practice, 2=Review, 3=Progress, 4=Settings
             if (index == 2 || index == 3) {
+              final now = DateTime.now();
+              final last = _lastGuestSnackbarAt;
+              // Tránh show lặp liên tục (khi user tap nhiều lần / rebuild nhanh).
+              if (last == null || now.difference(last) > const Duration(seconds: 2)) {
+                _lastGuestSnackbarAt = now;
               // Hiển thị thông báo yêu cầu đăng nhập
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.pleaseLoginToUseFeature),
-                  action: SnackBarAction(
-                    label: AppLocalizations.of(context)!.login,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
+                final messenger = ScaffoldMessenger.of(context);
+                messenger.hideCurrentSnackBar();
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context)!.pleaseLoginToUseFeature,
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: AppLocalizations.of(context)!.login,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    duration: const Duration(seconds: 3),
                   ),
-                  duration: const Duration(seconds: 3),
-                ),
-              );
+                );
+              }
               // Vẫn cho chuyển tab (không return)
             }
           }

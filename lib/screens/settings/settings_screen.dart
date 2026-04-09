@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../../core/cache/app_image_cache_manager.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/theme_provider.dart';
@@ -108,7 +110,10 @@ class SettingsScreen extends StatelessWidget {
                   radius: 35,
                   backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
                   backgroundImage: user?.photoUrl != null && user!.photoUrl!.isNotEmpty
-                      ? NetworkImage(user.photoUrl!)
+                      ? CachedNetworkImageProvider(
+                          user.photoUrl!,
+                          cacheManager: AppImageCacheManager.instance,
+                        )
                       : null,
                   child: user?.photoUrl == null || user!.photoUrl!.isEmpty
                       ? Icon(

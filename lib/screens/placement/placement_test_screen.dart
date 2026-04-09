@@ -6,6 +6,7 @@ import '../../core/services/placement_test_service.dart';
 import '../../core/services/placement_storage_service.dart';
 import '../../providers/language_provider.dart';
 import 'placement_test_result_screen.dart';
+import '../../core/theme/horizon_colors.dart';
 
 const Color _kSurface = Color(0xFFF4F6FF);
 const Color _kOnSurface = Color(0xFF14304F);
@@ -357,10 +358,13 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
     final languageCode = languageProvider.currentLanguageCode;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final horizon = HorizonColors.of(context);
 
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: _kSurface,
+        backgroundColor: isDark ? horizon.surface : _kSurface,
         body: SafeArea(
           child: Column(
             children: [
@@ -383,7 +387,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
 
     if (_testQuestions.isEmpty) {
       return Scaffold(
-        backgroundColor: _kSurface,
+        backgroundColor: isDark ? horizon.surface : _kSurface,
         body: SafeArea(
           child: Column(
             children: [
@@ -409,7 +413,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final canNext = _selectedAnswer != null && !_isSubmitting;
 
     return Scaffold(
-      backgroundColor: _kSurface,
+      backgroundColor: isDark ? horizon.surface : _kSurface,
       body: SafeArea(
         child: Column(
           children: [

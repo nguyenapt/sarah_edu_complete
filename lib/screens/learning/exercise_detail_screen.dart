@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import '../../core/theme/app_theme.dart';
-import '../../models/exercise_model.dart';
-import '../../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/ads/ad_policy.dart';
+import '../../core/ads/ads_manager.dart';
+import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
+import '../../models/exercise_model.dart';
 import '../../providers/language_provider.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
@@ -22,6 +27,15 @@ class ExerciseDetailScreen extends StatelessWidget {
     required this.selectedAnswers,
     required this.fillBlankAnswers,
   });
+
+  Future<void> _maybeShowInterstitialAndPop(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    try {
+      final ads = Provider.of<AdsManager>(context, listen: false);
+      await ads.maybeShowInterstitial(AdEvent.exerciseCompleted);
+    } catch (_) {}
+    if (context.mounted) navigator.pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +58,21 @@ class ExerciseDetailScreen extends StatelessWidget {
       totalUserPoints = questionResults.values.contains(true) ? exercise.points : 0;
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        unawaited(_maybeShowInterstitialAndPop(context));
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.exerciseDetails),
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: Colors.white,
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () => unawaited(_maybeShowInterstitialAndPop(context)),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -148,6 +172,7 @@ class ExerciseDetailScreen extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 

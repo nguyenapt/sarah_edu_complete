@@ -56,13 +56,26 @@ class ExerciseHistoryItem {
   }) : tagsSnapshot = tagsSnapshot ?? TagsSnapshot();
 
   factory ExerciseHistoryItem.fromMap(Map<String, dynamic> map) {
+    final completedAtRaw = map['completedAt'];
+    final completedAtMillis = map['completedAtMillis'];
+    DateTime completedAt;
+    if (completedAtMillis is int) {
+      completedAt = DateTime.fromMillisecondsSinceEpoch(completedAtMillis);
+    } else if (completedAtRaw is Timestamp) {
+      completedAt = completedAtRaw.toDate();
+    } else if (completedAtRaw is int) {
+      completedAt = DateTime.fromMillisecondsSinceEpoch(completedAtRaw);
+    } else {
+      completedAt = DateTime.now();
+    }
+
     return ExerciseHistoryItem(
       exerciseId: map['exerciseId'] ?? '',
       lessonId: map['lessonId'] ?? '', // THÊM MỚI
       unitId: map['unitId'] ?? '',
       level: map['level'] ?? '',
       score: (map['score'] ?? 0.0).toDouble(),
-      completedAt: (map['completedAt'] as Timestamp).toDate(),
+      completedAt: completedAt,
       timeSpent: map['timeSpent'] ?? 0,
       mistakes: List<String>.from(map['mistakes'] ?? []),
       correctCount: map['correctCount'] ?? 0,
@@ -75,6 +88,23 @@ class ExerciseHistoryItem {
     return {
       'exerciseId': exerciseId,
       'lessonId': lessonId, // THÊM MỚI
+      'unitId': unitId,
+      'level': level,
+      'score': score,
+      // Cache-safe
+      'completedAtMillis': completedAt.millisecondsSinceEpoch,
+      'timeSpent': timeSpent,
+      'mistakes': mistakes,
+      'correctCount': correctCount,
+      'totalCount': totalCount,
+      'tagsSnapshot': tagsSnapshot.toMap(),
+    };
+  }
+
+  Map<String, dynamic> toFirestoreMap() {
+    return {
+      'exerciseId': exerciseId,
+      'lessonId': lessonId,
       'unitId': unitId,
       'level': level,
       'score': score,
@@ -106,17 +136,42 @@ class HighestProgress {
   });
 
   factory HighestProgress.fromMap(Map<String, dynamic> map) {
+    final updatedAtRaw = map['updatedAt'];
+    final updatedAtMillis = map['updatedAtMillis'];
+    DateTime updatedAt;
+    if (updatedAtMillis is int) {
+      updatedAt = DateTime.fromMillisecondsSinceEpoch(updatedAtMillis);
+    } else if (updatedAtRaw is Timestamp) {
+      updatedAt = updatedAtRaw.toDate();
+    } else if (updatedAtRaw is int) {
+      updatedAt = DateTime.fromMillisecondsSinceEpoch(updatedAtRaw);
+    } else {
+      updatedAt = DateTime.now();
+    }
+
     return HighestProgress(
       levelId: map['levelId'] ?? '',
       unitId: map['unitId'] ?? '',
       lessonId: map['lessonId'] ?? '',
       exerciseId: map['exerciseId'] ?? '',
       groupId: map['groupId'],
-      updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
+    return {
+      'levelId': levelId,
+      'unitId': unitId,
+      'lessonId': lessonId,
+      'exerciseId': exerciseId,
+      'groupId': groupId,
+      // Cache-safe
+      'updatedAtMillis': updatedAt.millisecondsSinceEpoch,
+    };
+  }
+
+  Map<String, dynamic> toFirestoreMap() {
     return {
       'levelId': levelId,
       'unitId': unitId,
@@ -300,8 +355,21 @@ class WeakSkillStats {
       });
     }
 
+    final updatedAtRaw = map['updatedAt'];
+    final updatedAtMillis = map['updatedAtMillis'];
+    DateTime updatedAt;
+    if (updatedAtMillis is int) {
+      updatedAt = DateTime.fromMillisecondsSinceEpoch(updatedAtMillis);
+    } else if (updatedAtRaw is Timestamp) {
+      updatedAt = updatedAtRaw.toDate();
+    } else if (updatedAtRaw is int) {
+      updatedAt = DateTime.fromMillisecondsSinceEpoch(updatedAtRaw);
+    } else {
+      updatedAt = DateTime.now();
+    }
+
     return WeakSkillStats(
-      updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: updatedAt,
       skillTypes: (map['skillTypes'] as List<dynamic>?)
               ?.map((e) => WeakSkillItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
@@ -331,6 +399,31 @@ class WeakSkillStats {
       byLessonMap[key] = value.toMap();
     });
 
+    return {
+      // Cache-safe
+      'updatedAtMillis': updatedAt.millisecondsSinceEpoch,
+      'skillTypes': skillTypes.map((e) => e.toMap()).toList(),
+      'grammarTopics': grammarTopics.map((e) => e.toMap()).toList(),
+      'byLevel': byLevelMap,
+      'byUnit': byUnitMap,
+      'byLesson': byLessonMap,
+      'recommendedLessons': recommendedLessons,
+    };
+  }
+
+  Map<String, dynamic> toFirestoreMap() {
+    final byLevelMap = <String, dynamic>{};
+    byLevel.forEach((key, value) {
+      byLevelMap[key] = value.toMap();
+    });
+    final byUnitMap = <String, dynamic>{};
+    byUnit.forEach((key, value) {
+      byUnitMap[key] = value.toMap();
+    });
+    final byLessonMap = <String, dynamic>{};
+    byLesson.forEach((key, value) {
+      byLessonMap[key] = value.toMap();
+    });
     return {
       'updatedAt': Timestamp.fromDate(updatedAt),
       'skillTypes': skillTypes.map((e) => e.toMap()).toList(),
@@ -402,7 +495,53 @@ class UserProgressModel {
     );
   }
 
-  Map<String, dynamic> toFirestore() {
+  /// Dùng cho cache local (Hive/JSON). `lastUpdated` được lưu dạng epoch millis.
+  factory UserProgressModel.fromMap(Map<String, dynamic> data) {
+    // Parse levelProgress
+    final levelProgressMap = <String, LevelProgress>{};
+    if (data['levelProgress'] != null) {
+      (data['levelProgress'] as Map<String, dynamic>).forEach((key, value) {
+        levelProgressMap[key] = LevelProgress.fromMap(value as Map<String, dynamic>);
+      });
+    }
+
+    // Parse exerciseHistory
+    final exerciseHistoryList = <ExerciseHistoryItem>[];
+    if (data['exerciseHistory'] != null) {
+      exerciseHistoryList.addAll(
+        (data['exerciseHistory'] as List<dynamic>)
+            .map((e) => ExerciseHistoryItem.fromMap(e as Map<String, dynamic>))
+            .toList(),
+      );
+    }
+
+    // Parse highestProgress
+    HighestProgress? highestProgressData;
+    if (data['highestProgress'] != null) {
+      highestProgressData =
+          HighestProgress.fromMap(data['highestProgress'] as Map<String, dynamic>);
+    }
+
+    final lastUpdatedMillis = data['lastUpdatedMillis'] as int?;
+    final lastUpdated = lastUpdatedMillis != null
+        ? DateTime.fromMillisecondsSinceEpoch(lastUpdatedMillis)
+        : DateTime.now();
+
+    return UserProgressModel(
+      userId: (data['userId'] as String?) ?? '',
+      levelProgress: levelProgressMap,
+      weakPoints: WeakPoints.fromMap(data['weakPoints'] ?? {}),
+      exerciseHistory: exerciseHistoryList,
+      highestProgress: highestProgressData,
+      weakSkillStats: data['weakSkillStats'] != null
+          ? WeakSkillStats.fromMap(data['weakSkillStats'] as Map<String, dynamic>)
+          : null,
+      lastUpdated: lastUpdated,
+    );
+  }
+
+  /// Dùng cho cache local (Hive/JSON). Không chứa `Timestamp`.
+  Map<String, dynamic> toMap() {
     final levelProgressMap = <String, dynamic>{};
     levelProgress.forEach((key, value) {
       levelProgressMap[key] = value.toMap();
@@ -413,8 +552,25 @@ class UserProgressModel {
       'levelProgress': levelProgressMap,
       'weakPoints': weakPoints.toMap(),
       'exerciseHistory': exerciseHistory.map((e) => e.toMap()).toList(),
-      'highestProgress': highestProgress?.toMap(), // THÊM MỚI
+      'highestProgress': highestProgress?.toMap(),
       'weakSkillStats': weakSkillStats?.toMap(),
+      'lastUpdatedMillis': lastUpdated.millisecondsSinceEpoch,
+    };
+  }
+
+  Map<String, dynamic> toFirestore() {
+    final levelProgressMap = <String, dynamic>{};
+    levelProgress.forEach((key, value) {
+      levelProgressMap[key] = value.toMap();
+    });
+
+    return {
+      'userId': userId,
+      'levelProgress': levelProgressMap,
+      'weakPoints': weakPoints.toMap(),
+      'exerciseHistory': exerciseHistory.map((e) => e.toFirestoreMap()).toList(),
+      'highestProgress': highestProgress?.toFirestoreMap(), // THÊM MỚI
+      'weakSkillStats': weakSkillStats?.toFirestoreMap(),
       'lastUpdated': Timestamp.fromDate(lastUpdated),
     };
   }

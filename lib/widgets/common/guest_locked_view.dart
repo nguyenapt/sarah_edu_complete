@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../core/ads/ad_ids.dart';
+import '../../core/ads/ads_factory.dart';
+import '../../core/ads/widgets/banner_ad_widget.dart';
+import '../../l10n/app_localizations.dart';
+import '../../core/theme/horizon_colors.dart';
 
 const Color _kSurface = Color(0xFFF4F6FF);
 const Color _kOnSurface = Color(0xFF14304F);
@@ -25,18 +30,21 @@ class GuestLockedScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final horizon = HorizonColors.of(context);
     return Scaffold(
-      backgroundColor: _kSurface,
+      backgroundColor: isDark ? horizon.surface : _kSurface,
       appBar: AppBar(
-        backgroundColor: _kSurface,
+        backgroundColor: isDark ? horizon.surface : _kSurface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w900,
-            color: _kOnSurface,
+            color: isDark ? horizon.onSurface : _kOnSurface,
             fontSize: 18,
             letterSpacing: -0.2,
           ),
@@ -65,6 +73,7 @@ class GuestLockedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -111,18 +120,25 @@ class GuestLockedView extends StatelessWidget {
             ),
             const SizedBox(height: 22),
             _GradientPillButton(
-              label: 'Đăng nhập',
+              label: loc.login,
               onPressed: onLogin,
               icon: Icons.login_rounded,
             ),
             if (onRegister != null) ...[
               const SizedBox(height: 12),
               _OutlinePillButton(
-                label: 'Đăng ký',
+                label: loc.register,
                 onPressed: onRegister!,
                 icon: Icons.person_add_alt_1_rounded,
               ),
             ],
+            const SizedBox(height: 18),
+            Center(
+              child: BannerAdWidget(
+                factory: AdsFactory(),
+                adUnitId: AdMobIds.bannerHome,
+              ),
+            ),
           ],
         ),
       ),

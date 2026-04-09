@@ -71,12 +71,17 @@ dependencies:
   uuid: ^4.3.0
   flutter_html: ^3.0.0
   flutter_html_table: ^3.0.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
   # Charts
   fl_chart: ^0.66.0
 
   # Google Sign In
   google_sign_in: ^6.2.0
+
+  # Ads (mobile only; disabled on web by gate)
+  google_mobile_ads: ^7.0.0
 
 dev_dependencies:
   flutter_test:

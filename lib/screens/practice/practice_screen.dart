@@ -2,8 +2,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../../core/cache/app_image_cache_manager.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../core/services/firestore_service.dart';
@@ -16,6 +18,10 @@ import '../../models/unit_group_model.dart';
 import '../../models/multilanguage_content.dart';
 import 'package:flutter_html/flutter_html.dart';
 import '../../core/constants/firebase_constants.dart';
+import '../../core/ads/ad_ids.dart';
+import '../../core/ads/widgets/native_ad_widget.dart';
+import '../../core/repositories/catalog_repository.dart';
+import '../../core/theme/horizon_colors.dart';
 import '../learning/unit_list_screen.dart';
 import '../learning/exercise_screen.dart';
 import '../progress/progress_screen.dart';
@@ -107,11 +113,26 @@ class _PracticeScreenState extends State<PracticeScreen> {
       }
 
       // Parallel loading: load levels và units song song
+      final repo = Provider.of<CatalogRepository>(context, listen: false);
       final results = await Future.wait([
-        _firestoreService.getLevels(),
+        repo.getLevels(
+          onFresh: (fresh) {
+            if (!mounted) return;
+            setState(() {
+              _levels = fresh;
+            });
+          },
+        ),
         targetLevel != null
             ? _firestoreService.getUnitsByLevel(targetLevel)
-            : _firestoreService.getAllUnits(),
+            : repo.getAllUnits(
+                onFresh: (fresh) {
+                  if (!mounted) return;
+                  setState(() {
+                    _allUnits = fresh;
+                  });
+                },
+              ),
       ]);
 
       final levels = results[0] as List<LevelModel>;
@@ -265,8 +286,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final horizon = HorizonColors.of(context);
+
     return Scaffold(
-      backgroundColor: _kPracticeBg,
+      backgroundColor: isDark ? horizon.surface : _kPracticeBg,
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           if (_isLoading) {
@@ -322,12 +347,15 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   Widget _buildPracticeHeader(BuildContext context, AuthProvider authProvider) {
     final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final horizon = HorizonColors.of(context);
     final title = widget.reviewMode
         ? loc.reviewLevel(widget.reviewLevel ?? '')
         : loc.practice;
 
     return Material(
-      color: _kPracticeBg,
+      color: isDark ? horizon.surface : _kPracticeBg,
       child: SafeArea(
         bottom: false,
         child: Padding(
@@ -340,7 +368,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   onPressed: () => Navigator.of(context).maybePop(),
                   icon: Icon(
                     Icons.arrow_back_rounded,
-                    color: _kPracticeInk.withOpacity(0.85),
+                    color: (isDark ? horizon.onSurface : _kPracticeInk)
+                        .withValues(alpha: 0.85),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -349,10 +378,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 child: Text(
                   title,
                   textAlign: TextAlign.left,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: _kPracticeInk,
+                    color: isDark ? horizon.onSurface : _kPracticeInk,
                     letterSpacing: -0.3,
                   ),
                 ),
@@ -370,20 +399,16 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 icon: CircleAvatar(
                   radius: 18,
                   backgroundColor: _kPracticeCardTint,
-                  child: authProvider.user?.photoUrl != null
-                      ? ClipOval(
-                          child: Image.network(
-                            authProvider.user!.photoUrl!,
-                            width: 36,
-                            height: 36,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Icon(
-                              Icons.person_rounded,
-                              color: _kPracticePrimaryDeep,
-                              size: 22,
-                            ),
-                          ),
+                  backgroundImage: (authProvider.user?.photoUrl != null &&
+                          authProvider.user!.photoUrl!.isNotEmpty)
+                      ? CachedNetworkImageProvider(
+                          authProvider.user!.photoUrl!,
+                          cacheManager: AppImageCacheManager.instance,
                         )
+                      : null,
+                  child: (authProvider.user?.photoUrl != null &&
+                          authProvider.user!.photoUrl!.isNotEmpty)
+                      ? null
                       : Icon(
                           Icons.person_rounded,
                           color: _kPracticePrimaryDeep,
@@ -493,6 +518,17 @@ class _PracticeScreenState extends State<PracticeScreen> {
                 child: _buildStreakCard(authProvider),
               ),
             ),
+          // Native ad in-feed (practice timeline)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: NativeAdWidget(
+                adUnitId: AdMobIds.nativePractice,
+                factoryId: 'listTile',
+                maxHeight: 180,
+              ),
+            ),
+          ),
           if (bottomInset > 0)
             SliverToBoxAdapter(child: SizedBox(height: bottomInset)),
         ],

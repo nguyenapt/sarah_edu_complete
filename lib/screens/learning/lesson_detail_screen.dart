@@ -10,6 +10,8 @@ import '../../providers/language_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'exercise_screen.dart';
 import '../practice/vocabulary_flashcard_screen.dart';
+import '../../widgets/common/horizon_top_app_bar.dart';
+import '../../core/repositories/catalog_repository.dart';
 
 enum VocabularySortOption { wordAsc, wordDesc, definitionAsc, definitionDesc }
 
@@ -26,7 +28,6 @@ class LessonDetailScreen extends StatefulWidget {
 }
 
 class _LessonDetailScreenState extends State<LessonDetailScreen> {
-  final FirestoreService _firestoreService = FirestoreService();
   List<ExerciseModel> _exercises = [];
   bool _isLoadingExercises = false;
   String _vocabularySearchQuery = '';
@@ -45,9 +46,16 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
 
     try {
       final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
-      final exercises = await _firestoreService.getExercisesByLesson(
+      final repo = Provider.of<CatalogRepository>(context, listen: false);
+      final exercises = await repo.getExercisesByLesson(
         widget.lesson.id,
         languageCode: languageProvider.currentLanguageCode,
+        onFresh: (fresh) {
+          if (!mounted) return;
+          setState(() {
+            _exercises = fresh;
+          });
+        },
       );
       setState(() {
         _exercises = exercises;
@@ -73,8 +81,9 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
     
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.lesson.getTitle(languageCode)),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: HorizonTopAppBar(
+        title: widget.lesson.getTitle(languageCode),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

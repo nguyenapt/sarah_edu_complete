@@ -1,6 +1,4 @@
 import '../../models/exercise_model.dart';
-import '../../models/lesson_model.dart';
-import '../../models/unit_model.dart';
 import '../../models/progress_model.dart';
 import '../../core/services/firestore_service.dart';
 

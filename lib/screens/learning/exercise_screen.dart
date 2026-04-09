@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,8 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../core/services/firestore_service.dart';
+import '../../core/ads/ad_policy.dart';
+import '../../core/ads/ads_manager.dart';
 import '../../widgets/learning/question_audio_player.dart';
 import '../auth/login_screen.dart';
 import '../level_up/level_up_screen.dart';
@@ -211,10 +214,19 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     );
   }
 
+  Future<void> _exitAfterSubmittedExercise() async {
+    if (!mounted) return;
+    try {
+      final ads = Provider.of<AdsManager>(context, listen: false);
+      await ads.maybeShowInterstitial(AdEvent.exerciseCompleted);
+    } catch (_) {}
+    if (mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    return Scaffold(
+    final scaffold = Scaffold(
       backgroundColor: _kSurface,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -228,7 +240,13 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           icon: const Icon(Icons.close_rounded),
           color: _kOnSurface,
           tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () {
+            if (_isSubmitted) {
+              unawaited(_exitAfterSubmittedExercise());
+            } else {
+              Navigator.of(context).maybePop();
+            }
+          },
         ),
         title: Padding(
           padding: const EdgeInsets.only(right: 8),
@@ -302,6 +320,17 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         ],
       ),
     );
+    if (_isSubmitted) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          unawaited(_exitAfterSubmittedExercise());
+        },
+        child: scaffold,
+      );
+    }
+    return scaffold;
   }
 
   @override
@@ -4867,7 +4896,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         totalCount: totalCount,
       ).then((result) {
         print('✅ Progress saved successfully!');
-        
+
+        // Interstitial: hiển thị khi user bấm Back / Đóng / rời ExerciseDetail (xem exercise_detail_screen).
+
         // Refresh user data để cập nhật streak và XP
         authProvider.refreshUser();
         
@@ -4990,6 +5021,16 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       statusText = AppLocalizations.of(context)!.needToTryHarder;
       statusIcon = Icons.trending_up;
     }
+
+    final primary = AppTheme.primaryColor;
+    final gradient = LinearGradient(
+      colors: [
+        primary,
+        AppTheme.secondaryColor,
+      ],
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+    );
     
     return Container(
       margin: EdgeInsets.zero,
@@ -5155,7 +5196,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton.icon(
+                  child: _OutlinePillButton(
+                    icon: Icons.info_outline,
+                    label: AppLocalizations.of(context)!.viewDetails,
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -5170,52 +5213,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                         ),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.white,
-                      foregroundColor: AppTheme.primaryColor,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(
-                          color: AppTheme.primaryColor.withOpacity(0.3),
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
-                    icon: const Icon(Icons.info_outline, size: 20),
-                    label: Text(
-                      AppLocalizations.of(context)!.viewDetails,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.back,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
+                  child: _GradientPillButton(
+                    gradient: gradient,
+                    label: AppLocalizations.of(context)!.back,
+                    onPressed: () => unawaited(_exitAfterSubmittedExercise()),
                   ),
                 ),
               ],
@@ -5339,6 +5345,102 @@ class _FillBlankSlot extends StatelessWidget {
         ),
       ),
       child: child,
+    );
+  }
+}
+
+class _GradientPillButton extends StatelessWidget {
+  const _GradientPillButton({
+    required this.gradient,
+    required this.label,
+    required this.onPressed,
+    this.icon,
+  });
+
+  final LinearGradient gradient;
+  final String label;
+  final VoidCallback onPressed;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: gradient,
+        borderRadius: BorderRadius.circular(999),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.22),
+            blurRadius: 14,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(999),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: Colors.white, size: 18),
+                  const SizedBox(width: 10),
+                ],
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlinePillButton extends StatelessWidget {
+  const _OutlinePillButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 18),
+      label: Text(
+        label,
+        style: const TextStyle(
+          fontWeight: FontWeight.w900,
+          fontSize: 15,
+        ),
+      ),
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        foregroundColor: cs.primary,
+        side: BorderSide(color: cs.primary.withValues(alpha: 0.30), width: 1.5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(999),
+        ),
+        backgroundColor: cs.surface,
+      ),
     );
   }
 }

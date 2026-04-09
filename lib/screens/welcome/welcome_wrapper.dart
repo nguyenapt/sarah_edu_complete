@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/services/welcome_service.dart';
+import '../../core/ads/ads_manager.dart';
 import 'welcome_flow.dart';
 import '../main_navigation.dart';
 
@@ -39,6 +41,14 @@ class _WelcomeWrapperState extends State<WelcomeWrapper> {
     }
 
     if (_hasSeenWelcome) {
+      // Cold start only: show app-open after onboarding has been completed.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        try {
+          final ads = Provider.of<AdsManager>(context, listen: false);
+          ads.maybeShowAppOpen();
+        } catch (_) {}
+      });
       return const MainNavigation();
     }
 

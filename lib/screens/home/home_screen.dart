@@ -10,6 +10,7 @@ import '../../models/unit_model.dart';
 import '../../models/lesson_model.dart';
 import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../core/repositories/catalog_repository.dart';
 import '../learning/exercise_screen.dart';
 import '../auth/login_screen.dart';
 import '../placement/placement_test_screen.dart';
@@ -22,6 +23,10 @@ import '../../core/services/level_skip_test_service.dart';
 import '../../widgets/common/practice_top_app_bar.dart';
 import '../settings/settings_screen.dart';
 import '../main_navigation.dart';
+import '../../core/ads/ad_ids.dart';
+import '../../core/ads/ads_factory.dart';
+import '../../core/ads/widgets/banner_ad_widget.dart';
+import '../../core/ads/widgets/native_ad_widget.dart';
 
 /// Đồng bộ màu với nút Continue trong `exercise_screen.dart`.
 const Color _kPrimary = Color(0xFF006286);
@@ -325,7 +330,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadLevels() async {
     try {
-      final levels = await _firestoreService.getLevels();
+      final repo = Provider.of<CatalogRepository>(context, listen: false);
+      final levels = await repo.getLevels(
+        onFresh: (fresh) {
+          if (!mounted) return;
+          setState(() {
+            _levels = fresh;
+          });
+        },
+      );
       setState(() {
         _levels = levels;
         _isLoading = false;
@@ -458,9 +471,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Continue Learning
                     _buildContinueLearning(),
                     const SizedBox(height: 24),
+                    // Native ad in-feed (safe zone)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: NativeAdWidget(
+                        adUnitId: AdMobIds.nativeHome,
+                        factoryId: 'listTile',
+                        maxHeight: 180,
+                      ),
+                    ),
                   ] else ...[
                     _buildGuestHero(loc),
                     const SizedBox(height: 18),
+                    // Native ad below hero (safe spacing from CTAs)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 18),
+                      child: NativeAdWidget(
+                        adUnitId: AdMobIds.nativeHome,
+                        factoryId: 'listTile',
+                        maxHeight: 180,
+                      ),
+                    ),
                     const Text(
                       'The Learning Arc',
                       style: TextStyle(
@@ -641,6 +672,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 24),
                   ],
+
+                  // Banner at bottom (avoid CTAs)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: BannerAdWidget(
+                        factory: AdsFactory(),
+                        adUnitId: AdMobIds.bannerHome,
+                      ),
+                    ),
+                  ),
                   
                 ],
               ],
@@ -760,9 +802,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  child: const Text(
-                    'Đăng nhập',
-                    style: TextStyle(fontWeight: FontWeight.w900),
+                  child: Text(
+                    loc.login,
+                    style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
                 ),
               ],
@@ -946,8 +988,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Future<(UnitModel?, LessonModel?)> loadMeta() async {
       if (highestProgress == null) return (null, null);
-      final unit = await _firestoreService.getUnit(highestProgress.unitId);
-      final lesson = await _firestoreService.getLesson(highestProgress.lessonId);
+          final repo = Provider.of<CatalogRepository>(context, listen: false);
+          final unit = await repo.getUnit(highestProgress.unitId);
+          final lesson = await repo.getLesson(highestProgress.lessonId);
       return (unit, lesson);
     }
 

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/placement_test_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../core/ads/ad_policy.dart';
+import '../../core/ads/ads_manager.dart';
 import '../../l10n/app_localizations.dart';
+import '../../core/theme/horizon_colors.dart';
 import '../auth/login_screen.dart';
 import '../main_navigation.dart';
 
@@ -46,6 +49,9 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
     final isAuthenticated = authProvider.isAuthenticated;
     final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final horizon = HorizonColors.of(context);
 
     // Nếu user vừa đăng nhập thành công (chuyển từ unauthenticated sang authenticated)
     if (_wasUnauthenticated && isAuthenticated && mounted) {
@@ -61,7 +67,7 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
     }
 
     return Scaffold(
-      backgroundColor: _kSurface,
+      backgroundColor: isDark ? horizon.surface : _kSurface,
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
@@ -314,7 +320,11 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
             if (!isAuthenticated)
               _GradientPillButton(
                 label: loc.loginToSaveResult,
-                onPressed: () {
+                onPressed: () async {
+                  try {
+                    final ads = Provider.of<AdsManager>(context, listen: false);
+                    await ads.maybeShowInterstitial(AdEvent.placementResultLeaving);
+                  } catch (_) {}
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -325,7 +335,11 @@ class _PlacementTestResultScreenState extends State<PlacementTestResultScreen> {
               ),
             const SizedBox(height: 12),
             _OutlinePillButton(
-              onPressed: () {
+              onPressed: () async {
+                try {
+                  final ads = Provider.of<AdsManager>(context, listen: false);
+                  await ads.maybeShowInterstitial(AdEvent.placementResultLeaving);
+                } catch (_) {}
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(

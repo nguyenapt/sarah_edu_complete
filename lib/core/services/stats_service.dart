@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/firestore_service.dart';
-import '../../models/user_model.dart';
-import '../../core/constants/firebase_constants.dart';
 
 /// Service để tính toán và quản lý stats (streak, XP)
 class StatsService {
   final FirestoreService _firestoreService = FirestoreService();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Tính XP dựa vào kết quả exercise
   /// - Exercise đúng: +10 XP

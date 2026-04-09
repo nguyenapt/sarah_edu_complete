@@ -10,6 +10,9 @@ import '../../models/user_model.dart';
 import '../../models/level_skip_test_model.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../core/utils/progress_comparator.dart';
+import '../cache/cache_policy.dart';
+import '../cache/hive_cache_store.dart';
+import '../cache/cache_metrics.dart';
 import 'level_progression_service.dart';
 import 'stats_service.dart';
 import 'group_unit_service.dart';
@@ -30,6 +33,9 @@ class SaveExerciseProgressResult {
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final Map<String, UserProgressModel> _progressMemCache = {};
+  static final Map<String, DateTime> _progressMemFetchedAt = {};
+  static const CachePolicy _cachePolicy = CachePolicy.defaultPolicy;
 
   // Levels
   Future<List<LevelModel>> getLevels() async {
@@ -323,6 +329,38 @@ class FirestoreService {
   /// Lấy user progress từ Firestore
   Future<UserProgressModel?> getUserProgress(String userId) async {
     try {
+      // 1) Memory cache
+      final mem = _progressMemCache[userId];
+      final memAt = _progressMemFetchedAt[userId];
+      if (mem != null &&
+          memAt != null &&
+          _cachePolicy.isFresh(fetchedAt: memAt, ttl: _cachePolicy.progressTtl)) {
+        CacheMetrics.progressMemoryHits++;
+        return mem;
+      }
+
+      // 2) Disk cache (Hive)
+      final diskKey = 'user_progress__$userId';
+      final diskAt = HiveCacheStore.getFetchedAt(diskKey);
+      final diskFresh = diskAt != null &&
+          _cachePolicy.isFresh(fetchedAt: diskAt, ttl: _cachePolicy.progressTtl);
+      if (diskFresh) {
+        final cached = HiveCacheStore.getJson<UserProgressModel>(
+          diskKey,
+          decode: (json) =>
+              UserProgressModel.fromMap(Map<String, dynamic>.from(json as Map)),
+        );
+        if (cached != null) {
+          CacheMetrics.progressDiskHits++;
+          _progressMemCache[userId] = cached;
+          _progressMemFetchedAt[userId] = DateTime.now();
+          // SWR: refresh nền để đồng bộ (không block UI)
+          _refreshUserProgressInBackground(userId);
+          return cached;
+        }
+      }
+
+      CacheMetrics.progressNetworkFetches++;
       final doc = await _firestore
           .collection(FirebaseConstants.userProgressCollection)
           .doc(userId)
@@ -336,13 +374,46 @@ class FirestoreService {
           lastUpdated: DateTime.now(),
         );
         await updateUserProgress(userId, newProgress);
+        await _cacheUserProgress(userId, newProgress);
         return newProgress;
       }
       
-      return UserProgressModel.fromFirestore(doc);
+      final fresh = UserProgressModel.fromFirestore(doc);
+      await _cacheUserProgress(userId, fresh);
+      return fresh;
     } catch (e) {
       throw Exception('Error fetching user progress: $e');
     }
+  }
+
+  static Future<void> invalidateUserProgressCache(String userId) async {
+    _progressMemCache.remove(userId);
+    _progressMemFetchedAt.remove(userId);
+    await HiveCacheStore.delete('user_progress__$userId');
+  }
+
+  static Future<void> _cacheUserProgress(
+    String userId,
+    UserProgressModel progress,
+  ) async {
+    _progressMemCache[userId] = progress;
+    _progressMemFetchedAt[userId] = DateTime.now();
+    await HiveCacheStore.putJson(
+      'user_progress__$userId',
+      json: progress.toMap(),
+    );
+  }
+
+  void _refreshUserProgressInBackground(String userId) {
+    _firestore
+        .collection(FirebaseConstants.userProgressCollection)
+        .doc(userId)
+        .get()
+        .then((doc) async {
+      if (!doc.exists) return;
+      final fresh = UserProgressModel.fromFirestore(doc);
+      await _cacheUserProgress(userId, fresh);
+    }).catchError((_) {});
   }
 
   /// Update user progress lên Firestore
@@ -549,6 +620,8 @@ class FirestoreService {
       
       // Lưu lên Firestore
       await updateUserProgress(userId, updatedProgress);
+      // Invalidate progress cache ngay sau khi ghi (để UI lần sau đọc dữ liệu mới).
+      await invalidateUserProgressCache(userId);
       print('✅ Progress updated successfully in Firestore');
 
       // Tính toán và cập nhật stats (streak, XP)

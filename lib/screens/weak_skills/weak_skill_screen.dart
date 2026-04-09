@@ -7,6 +7,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
 import '../learning/lesson_detail_screen.dart';
+import '../../widgets/common/horizon_top_app_bar.dart';
 
 class WeakSkillScreen extends StatefulWidget {
   const WeakSkillScreen({super.key});
@@ -59,9 +60,8 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.weakSkills),
-      ),
+      backgroundColor: const Color(0xFFF4F6FF),
+      appBar: HorizonTopAppBar(title: localizations.weakSkills),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _stats == null

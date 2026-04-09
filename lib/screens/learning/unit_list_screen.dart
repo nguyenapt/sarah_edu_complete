@@ -7,6 +7,8 @@ import '../../models/lesson_model.dart';
 import '../../providers/language_provider.dart';
 import '../../l10n/app_localizations.dart';
 import 'lesson_detail_screen.dart';
+import '../../widgets/common/horizon_top_app_bar.dart';
+import '../../core/repositories/catalog_repository.dart';
 
 class UnitListScreen extends StatefulWidget {
   final UnitModel? unit; // Optional: nếu có thì hiển thị unit này
@@ -23,7 +25,6 @@ class UnitListScreen extends StatefulWidget {
 }
 
 class _UnitListScreenState extends State<UnitListScreen> {
-  final FirestoreService _firestoreService = FirestoreService();
   Map<String, List<LessonModel>> _lessonsByUnit = {}; // Map unitId -> lessons
   bool _isLoading = true;
 
@@ -50,7 +51,16 @@ class _UnitListScreenState extends State<UnitListScreen> {
       
       // Load lessons cho tất cả units
       for (final unit in units) {
-        final lessons = await _firestoreService.getLessonsByUnit(unit.id);
+        final repo = Provider.of<CatalogRepository>(context, listen: false);
+        final lessons = await repo.getLessonsByUnit(
+          unit.id,
+          onFresh: (fresh) {
+            if (!mounted) return;
+            setState(() {
+              _lessonsByUnit[unit.id] = fresh;
+            });
+          },
+        );
         lessonsMap[unit.id] = lessons;
       }
       
@@ -78,8 +88,9 @@ class _UnitListScreenState extends State<UnitListScreen> {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
     
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(''), // Xóa title
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: HorizonTopAppBar(
+        title: AppLocalizations.of(context)!.lessonsList,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

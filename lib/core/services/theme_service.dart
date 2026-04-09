@@ -25,9 +25,9 @@ class ThemeService {
       case 'dark':
         return ThemeMode.dark;
       case 'system':
-      default:
         return ThemeMode.system;
     }
+    return ThemeMode.system;
   }
 
   // Convert ThemeMode to string
@@ -38,7 +38,6 @@ class ThemeService {
       case ThemeMode.dark:
         return 'dark';
       case ThemeMode.system:
-      default:
         return 'system';
     }
   }
