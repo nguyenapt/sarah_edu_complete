@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
@@ -17,7 +16,6 @@ import '../../models/progress_model.dart';
 import '../../models/unit_group_model.dart';
 import '../../models/multilanguage_content.dart';
 import 'package:flutter_html/flutter_html.dart';
-import '../../core/constants/firebase_constants.dart';
 import '../../core/ads/ad_ids.dart';
 import '../../core/ads/widgets/native_ad_widget.dart';
 import '../../core/repositories/catalog_repository.dart';
@@ -264,23 +262,52 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   Future<void> _loadUserProgress(String userId) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection(FirebaseConstants.userProgressCollection)
-          .doc(userId)
-          .get();
+      final loaded = await _firestoreService.getUserProgress(userId);
+      if (!mounted || loaded == null) return;
+      setState(() {
+        _userProgress = loaded;
+        final currentLevel =
+            Provider.of<AuthProvider>(context, listen: false).user?.currentLevel ?? 'A1';
+        final levelProgress = loaded.levelProgress[currentLevel];
+        _currentUnitId = levelProgress?.currentUnit;
+      });
+    } catch (e) {
+      debugPrint('Error loading user progress: $e');
+    }
+  }
 
-      if (doc.exists && mounted) {
+  /// Sau khi đóng ExerciseScreen: sync progress + timeline (unit groups).
+  Future<void> _refreshProgressAfterExercise() async {
+    if (!mounted) return;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (!authProvider.isAuthenticated ||
+        authProvider.user == null ||
+        widget.reviewMode) {
+      return;
+    }
+    final userId = authProvider.user!.id;
+    await _loadUserProgress(userId);
+    if (!mounted || _unitGroups.isEmpty) return;
+    try {
+      final currentLevel = authProvider.user!.currentLevel;
+      final progress = _userProgress ??
+          UserProgressModel(
+            userId: userId,
+            weakPoints: WeakPoints(),
+            lastUpdated: DateTime.now(),
+          );
+      final groups = await _unitGroupService.getAllUnitGroups(
+        currentLevel,
+        progress,
+        progress.highestProgress,
+      );
+      if (mounted) {
         setState(() {
-          _userProgress = UserProgressModel.fromFirestore(doc);
-          
-          // Lấy currentUnit từ levelProgress của currentLevel
-          final currentLevel = Provider.of<AuthProvider>(context, listen: false).user?.currentLevel ?? 'A1';
-          final levelProgress = _userProgress!.levelProgress[currentLevel];
-          _currentUnitId = levelProgress?.currentUnit;
+          _unitGroups = groups;
         });
       }
     } catch (e) {
-      debugPrint('Error loading user progress: $e');
+      debugPrint('Error refreshing unit groups after exercise: $e');
     }
   }
 
@@ -765,8 +792,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
   /// Nhóm đã xong: mặc định thu gọn; bấm header để xem danh sách unit (REVIEW + thanh tiến độ).
   Widget _buildCompletedGroupCard(UnitGroup group, String levelId) {
     final loc = AppLocalizations.of(context)!;
-    final languageCode =
-        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
     final sorted = List<UnitModel>.from(group.units)
       ..sort((a, b) => a.order.compareTo(b.order));
     final key = _completedGroupKey(levelId, group);
@@ -850,25 +875,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            if (group.title != null)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8, left: 2),
-                                child: Html(
-                                  data: MultilanguageContent.getText(
-                                    group.title,
-                                    languageCode,
-                                  ),
-                                  style: {
-                                    'body': Style(
-                                      margin: Margins.zero,
-                                      padding: HtmlPaddings.zero,
-                                      fontSize: FontSize(13),
-                                      fontWeight: FontWeight.w700,
-                                      color: _kPracticePrimaryDeep,
-                                    ),
-                                  },
-                                ),
-                              ),
                             ...sorted.asMap().entries.map((entry) {
                               final i = entry.key;
                               final unit = entry.value;
@@ -1595,6 +1601,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
           }
 
           try {
+            final authProvider = Provider.of<AuthProvider>(context, listen: false);
+            if (authProvider.isAuthenticated &&
+                authProvider.user != null &&
+                !widget.reviewMode) {
+              await _loadUserProgress(authProvider.user!.id);
+            }
+            if (!mounted) return;
+
             final highestProgress = _userProgress?.highestProgress;
             final nextExercise = highestProgress != null
                 ? await _nextExerciseService.getNextExercise(highestProgress)
@@ -1604,12 +1618,13 @@ class _PracticeScreenState extends State<PracticeScreen> {
             Navigator.pop(context);
 
             if (nextExercise != null) {
-              Navigator.push(
+              await Navigator.push<void>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ExerciseScreen(exercise: nextExercise),
                 ),
               );
+              if (mounted) await _refreshProgressAfterExercise();
               return;
             }
 

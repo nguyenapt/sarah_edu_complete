@@ -12,6 +12,7 @@ import 'exercise_screen.dart';
 import '../practice/vocabulary_flashcard_screen.dart';
 import '../../widgets/common/horizon_top_app_bar.dart';
 import '../../core/repositories/catalog_repository.dart';
+import '../../providers/auth_provider.dart';
 
 enum VocabularySortOption { wordAsc, wordDesc, definitionAsc, definitionDesc }
 
@@ -1053,12 +1054,20 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {
-          Navigator.push(
+          Navigator.push<void>(
             context,
             MaterialPageRoute(
               builder: (context) => ExerciseScreen(exercise: exercise),
             ),
-          );
+          ).then((_) async {
+            if (!context.mounted) return;
+            final auth = Provider.of<AuthProvider>(context, listen: false);
+            if (auth.isAuthenticated && auth.user != null) {
+              try {
+                await FirestoreService().getUserProgress(auth.user!.id);
+              } catch (_) {}
+            }
+          });
         },
       ),
     );

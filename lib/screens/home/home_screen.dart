@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/firebase_constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/services/firestore_service.dart';
 import '../../core/services/next_exercise_service.dart';
@@ -183,7 +181,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     try {
-      // Lấy highestProgress để tìm exercise tiếp theo
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.isAuthenticated && authProvider.user != null) {
+        await _loadUserProgress(authProvider.user!.id);
+      }
+      if (!mounted) return;
+
+      // Lấy highestProgress để tìm exercise tiếp theo (đã sync từ Firestore/cache)
       final highestProgress = _userProgress?.highestProgress;
 
       // Tìm exercise tiếp theo
@@ -196,12 +200,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (nextExercise != null) {
         // Navigate to exercise
-        Navigator.push(
+        await Navigator.push<void>(
           context,
           MaterialPageRoute(
             builder: (context) => ExerciseScreen(exercise: nextExercise),
           ),
         );
+        if (!mounted) return;
+        final auth = Provider.of<AuthProvider>(context, listen: false);
+        if (auth.isAuthenticated && auth.user != null) {
+          await _loadUserProgress(auth.user!.id);
+        }
       } else {
         // Đã học hết
         ScaffoldMessenger.of(context).showSnackBar(
@@ -231,19 +240,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadUserProgress(String userId) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection(FirebaseConstants.userProgressCollection)
-          .doc(userId)
-          .get();
-
-      if (doc.exists && mounted) {
-        setState(() {
-          _userProgress = UserProgressModel.fromFirestore(doc);
-        });
-        
-        // Check level skip test availability
-        _checkLevelSkipAvailability(userId);
-      }
+      final progress = await _firestoreService.getUserProgress(userId);
+      if (!mounted) return;
+      setState(() {
+        _userProgress = progress;
+      });
+      _checkLevelSkipAvailability(userId);
     } catch (e) {
       debugPrint('Error loading user progress: $e');
     }
@@ -1020,6 +1022,9 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 final unit = snapshot.data?.$1;
                 final lesson = snapshot.data?.$2;
+                final waitingMeta = snapshot.connectionState ==
+                        ConnectionState.waiting &&
+                    highestProgress != null;
 
                 final unitTitle = unit?.getTitle(languageCode).trim();
                 final lessonTitle = lesson?.getTitle(languageCode).trim();
@@ -1030,11 +1035,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 final lessonNumber =
                     lessonNumberRaw > 0 ? lessonNumberRaw : lessonNumberRaw + 1;
 
-                final title = (unitTitle != null && unitTitle.isNotEmpty)
-                    ? 'Unit $unitNumber: $unitTitle – Lesson $lessonNumber'
-                    : (highestProgress != null
-                        ? 'Unit ${highestProgress.unitId} – Lesson ${highestProgress.lessonId}'
-                        : loc.continueLearning);
+                final String title;
+                if (waitingMeta) {
+                  title = loc.continueLearning;
+                } else if (unitTitle != null && unitTitle.isNotEmpty) {
+                  title =
+                      'Unit $unitNumber: $unitTitle – Lesson $lessonNumber';
+                } else if (highestProgress != null) {
+                  title =
+                      'Unit ${highestProgress.unitId} – Lesson ${highestProgress.lessonId}';
+                } else {
+                  title = loc.continueLearning;
+                }
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1057,17 +1069,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Text(
-                      title,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
+                    if (waitingMeta) ...[
+                      Text(
+                        loc.continueLearning,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.92),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          height: 1.15,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: const SizedBox(
+                          height: 3,
+                          child: LinearProgressIndicator(
+                            backgroundColor: Color(0x33FFFFFF),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                      ),
+                    ] else
+                      Text(
+                        title,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          height: 1.15,
+                        ),
+                      ),
                     if (lessonTitle != null && lessonTitle.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
