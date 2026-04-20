@@ -53,6 +53,14 @@
   "units": "Units",
   "lessons": "Bài học",
   "exercises": "Bài tập",
+  "reviewExerciseWithIndex": "Bài ôn {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "Chi tiết bài tập",
   "viewDetails": "Xem chi tiết",
   "position": "Vị trí {number}",
@@ -96,6 +104,7 @@
   "affirmative": "Khẳng định",
   "negative": "Phủ định",
   "interrogative": "Nghi vấn",
+  "grammarForm": "Dạng công thức",
   "minutes": "phút",
   "hours": "giờ",
   "submit": "Nộp bài",
@@ -229,6 +238,7 @@
     }
   },
   "vocabularyExplore": "KHÁM PHÁ",
+  "vocabularyLoadMore": "Tải thêm",
   "vocabularyReviewSoon": "ÔN SỚM",
   "vocabularySort": "Sắp xếp",
   "vocabularyFlashcardCurrentSession": "PHIÊN HIỆN TẠI",
@@ -271,6 +281,7 @@
   "currentLevelText": "Cấp độ hiện tại",
   "completed": "Đã hoàn thành",
   "notUnlocked": "Chưa mở khóa",
+  "reviewLevelNotAvailable": "Bạn chưa thể ôn tập cấp độ này với trình độ hiện tại.",
   "continueButton": "Tiếp tục",
   "xp": "XP",
   "levelLabel": "Level",

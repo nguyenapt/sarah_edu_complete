@@ -170,6 +170,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exercises => '练习';
 
   @override
+  String reviewExerciseWithIndex(int number) {
+    return '复习练习 $number';
+  }
+
+  @override
   String get exerciseDetails => '练习详情';
 
   @override
@@ -221,6 +226,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get interrogative => '疑问';
+
+  @override
+  String get grammarForm => '形式';
 
   @override
   String get minutes => '分钟';
@@ -508,6 +516,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get vocabularyExplore => 'EXPLORE';
 
   @override
+  String get vocabularyLoadMore => '加载更多';
+
+  @override
   String get vocabularyReviewSoon => 'REVIEW SOON';
 
   @override
@@ -592,6 +603,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notUnlocked => '未解锁';
+
+  @override
+  String get reviewLevelNotAvailable =>
+      'This level is not available for review yet.';
 
   @override
   String get continueButton => '继续';

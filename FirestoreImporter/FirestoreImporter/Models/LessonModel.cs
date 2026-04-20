@@ -186,6 +186,9 @@ public class GrammarForms
     [JsonProperty("question")]
     public List<string>? Question { get; set; }
 
+    [JsonProperty("form")]
+    public List<string>? Form { get; set; }
+
     public Dictionary<string, object> ToFirestore()
     {
         var data = new Dictionary<string, object>();
@@ -203,6 +206,11 @@ public class GrammarForms
         if (Question != null)
         {
             data["question"] = Question;
+        }
+
+        if (Form != null)
+        {
+            data["form"] = Form;
         }
 
         return data;

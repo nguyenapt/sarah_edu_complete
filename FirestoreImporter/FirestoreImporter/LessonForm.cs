@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using FirestoreImporter.Models;
 using FirestoreImporter.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FirestoreImporter
 {
@@ -30,7 +31,7 @@ namespace FirestoreImporter
         private List<TopicVocabularyItem> _topicVocabularyItems;
         private List<PhrasalVerbItem> _phrasalVerbItems;
         private List<PrepositionalPhraseItem> _prepositionalPhraseItems;
-        
+
         // Current vocabulary item being edited (for multi-language definitions)
         private TopicVocabularyItem? _currentTopicVocabularyItem;
         private PhrasalVerbItem? _currentPhrasalVerbItem;
@@ -1379,7 +1380,14 @@ namespace FirestoreImporter
                     .Where(s => !string.IsNullOrEmpty(s))
                     .ToList();
             }
-            if (forms.Statement != null || forms.Negative != null || forms.Question != null)
+            if (!string.IsNullOrWhiteSpace(txtForm.Text))
+            {
+                forms.Form = txtForm.Text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList();
+            }
+            if (forms.Statement != null || forms.Negative != null || forms.Question != null || forms.Form != null)
             {
                 theory.Forms = forms;
             }
@@ -1403,22 +1411,9 @@ namespace FirestoreImporter
                 theory.Usage = _usageItems;
             }
 
-            // Vocabulary Content
-            var vocabulary = new VocabularyContent();
-            if (_topicVocabularyItems.Count > 0)
-            {
-                vocabulary.TopicVocabulary = _topicVocabularyItems;
-            }
-            if (_phrasalVerbItems.Count > 0)
-            {
-                vocabulary.PhrasalVerbs = _phrasalVerbItems;
-            }
-            if (_prepositionalPhraseItems.Count > 0)
-            {
-                vocabulary.PrepositionalPhrases = _prepositionalPhraseItems;
-            }
-            if (vocabulary.TopicVocabulary != null || vocabulary.PhrasalVerbs != null ||
-                vocabulary.PrepositionalPhrases != null)
+            // Vocabulary Content: ưu tiên JSON trong txtJsonText (tab Json), không thì dùng nhập tay
+            var vocabulary = BuildVocabularyContentForExport();
+            if (vocabulary != null)
             {
                 theory.Vocabulary = vocabulary;
             }
@@ -1669,6 +1664,122 @@ namespace FirestoreImporter
             // Clear current usage language data
             _currentUsageLanguageData = null;
             grvUsageLanguage.DataSource = null;
+        }
+
+        private void btnReadFromJsonToUsage_Click(object sender, EventArgs e)
+        {
+            using var dlg = new Form
+            {
+                Text = "Import Usage từ JSON",
+                Size = new Size(640, 480),
+                StartPosition = FormStartPosition.CenterParent,
+                MinimizeBox = false,
+                MaximizeBox = false,
+                ShowInTaskbar = false,
+                FormBorderStyle = FormBorderStyle.Sizable
+            };
+            var txtJson = new TextBox
+            {
+                Multiline = true,
+                ScrollBars = ScrollBars.Both,
+                Dock = DockStyle.Fill,
+                AcceptsReturn = true,
+                AcceptsTab = true,
+                Font = new Font(FontFamily.GenericMonospace, 9f),
+                WordWrap = false
+            };
+            var bottom = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 44,
+                FlowDirection = FlowDirection.RightToLeft,
+                Padding = new Padding(8)
+            };
+            var btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, Width = 88 };
+            var btnCancel = new Button { Text = "Hủy", DialogResult = DialogResult.Cancel, Width = 88 };
+            bottom.Controls.Add(btnOk);
+            bottom.Controls.Add(btnCancel);
+            dlg.Controls.Add(bottom);
+            dlg.Controls.Add(txtJson);
+            dlg.AcceptButton = btnOk;
+            dlg.CancelButton = btnCancel;
+
+            if (dlg.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            var raw = txtJson.Text.Trim();
+            if (string.IsNullOrEmpty(raw))
+            {
+                MessageBox.Show("Chưa nhập JSON.", "Import Usage", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                var parsed = ParseUsageItemsFromJsonText(raw);
+                _usageItems = parsed;
+                RefreshUsageGrid();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"JSON không hợp lệ: {ex.Message}", "Import Usage", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Parse JSON thành danh sách usage: một object (một dòng usage) hoặc mảng các object.
+        /// Mỗi object: các key là mã ngôn ngữ, giá trị là object có title/example (giống khi nhập tay).
+        /// </summary>
+        private static List<Dictionary<string, object>> ParseUsageItemsFromJsonText(string json)
+        {
+            var token = JToken.Parse(json);
+            var list = new List<Dictionary<string, object>>();
+
+            switch (token)
+            {
+                case JArray arr:
+                    foreach (var item in arr)
+                    {
+                        if (item is not JObject obj)
+                            throw new JsonException("Mỗi phần tử trong mảng phải là object.");
+                        list.Add(JObjectToUsageDictionary(obj));
+                    }
+                    break;
+                case JObject jobj:
+                    list.Add(JObjectToUsageDictionary(jobj));
+                    break;
+                default:
+                    throw new JsonException("JSON phải là object hoặc mảng các object.");
+            }
+
+            return list;
+        }
+
+        private static Dictionary<string, object> JObjectToUsageDictionary(JObject obj)
+        {
+            var result = new Dictionary<string, object>();
+            foreach (var prop in obj.Properties())
+            {
+                if (prop.Value == null || prop.Value.Type == JTokenType.Null)
+                    continue;
+
+                if (prop.Value is JObject langObj)
+                {
+                    var inner = new Dictionary<string, string>();
+                    foreach (var p in langObj.Properties())
+                        inner[p.Name] = p.Value?.ToString() ?? "";
+                    result[prop.Name] = inner;
+                }
+                else
+                {
+                    result[prop.Name] = prop.Value.ToString() ?? "";
+                }
+            }
+
+            if (result.Count == 0)
+                throw new JsonException("Một usage item phải có ít nhất một khóa ngôn ngữ.");
+
+            return result;
         }
 
         private void btnTitleAddAndNext_Click(object sender, EventArgs e)
@@ -2116,6 +2227,104 @@ namespace FirestoreImporter
             if (cbPhrasalVerbLanguageCode.SelectedIndex != cbPhrasalVerbLanguageCode.Items.Count - 1)
             {
                 cbPhrasalVerbLanguageCode.SelectedIndex += 1;
+            }
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+            openFileDialog1.Title = "Chọn file vocabulary JSON";
+            openFileDialog1.FileName = "";
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
+            {
+                string path = openFileDialog1.FileName;
+                txtFileJson.Text = path;
+                string raw = File.ReadAllText(path, Encoding.UTF8);
+                var token = JToken.Parse(raw);
+                txtJsonText.Text = token.ToString(Formatting.Indented);
+                _ = ParseVocabularyFromText(txtJsonText.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không đọc hoặc không hợp lệ JSON vocabulary: {ex.Message}",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Nội dung vocabulary đưa vào lesson khi export: có txtJsonText thì parse từ đó, ngược lại dùng grid.
+        /// </summary>
+        private VocabularyContent? BuildVocabularyContentForExport()
+        {
+            if (!string.IsNullOrWhiteSpace(txtJsonText.Text))
+            {
+                var fromJson = ParseVocabularyFromText(txtJsonText.Text);
+                return HasAnyVocabularySection(fromJson) ? fromJson : null;
+            }
+
+            var vocabulary = new VocabularyContent();
+            if (_topicVocabularyItems.Count > 0)
+                vocabulary.TopicVocabulary = _topicVocabularyItems;
+            if (_phrasalVerbItems.Count > 0)
+                vocabulary.PhrasalVerbs = _phrasalVerbItems;
+            if (_prepositionalPhraseItems.Count > 0)
+                vocabulary.PrepositionalPhrases = _prepositionalPhraseItems;
+
+            return HasAnyVocabularySection(vocabulary) ? vocabulary : null;
+        }
+
+        private static bool HasAnyVocabularySection(VocabularyContent v)
+        {
+            return (v.TopicVocabulary?.Count > 0) == true
+                || (v.PhrasalVerbs?.Count > 0) == true
+                || (v.PrepositionalPhrases?.Count > 0) == true
+                || (v.WordFormation?.Count > 0) == true
+                || (v.WordPatterns?.Count > 0) == true;
+        }
+
+        /// <summary>
+        /// Hỗ trợ file dạng vocabulary_full.json (root "vocabulary") hoặc object vocabulary trần.
+        /// Phrasal verb trong file có thể để "verb" bên trong "definition" — chuẩn hóa về PhrasalVerbItem.
+        /// </summary>
+        private static VocabularyContent ParseVocabularyFromText(string text)
+        {
+            var root = JToken.Parse(text);
+            JToken? vocabNode = root["vocabulary"];
+            if (vocabNode == null &&
+                (root["topicVocabulary"] != null || root["phrasalVerbs"] != null ||
+                 root["prepositionalPhrases"] != null || root["wordFormation"] != null ||
+                 root["wordPatterns"] != null))
+            {
+                vocabNode = root;
+            }
+
+            if (vocabNode == null || vocabNode.Type == JTokenType.Null)
+                throw new InvalidOperationException("Thiếu khóa \"vocabulary\" hoặc không nhận dạng được cấu trúc vocabulary.");
+
+            var content = vocabNode.ToObject<VocabularyContent>()
+                ?? throw new InvalidOperationException("Không deserialize được VocabularyContent.");
+            NormalizePhrasalVerbsFromDefinitionVerb(content);
+            return content;
+        }
+
+        private static void NormalizePhrasalVerbsFromDefinitionVerb(VocabularyContent content)
+        {
+            if (content.PhrasalVerbs == null)
+                return;
+
+            foreach (var item in content.PhrasalVerbs)
+            {
+                if (item.Definition == null)
+                    continue;
+                if (item.Definition.TryGetValue("verb", out string? verbInDef) && !string.IsNullOrWhiteSpace(verbInDef))
+                {
+                    if (string.IsNullOrWhiteSpace(item.Verb))
+                        item.Verb = verbInDef.Trim();
+                    item.Definition.Remove("verb");
+                }
             }
         }
     }

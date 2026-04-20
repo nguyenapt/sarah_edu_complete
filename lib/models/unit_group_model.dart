@@ -17,6 +17,10 @@ class UnitGroup {
   final String displayName; // "Ôn tập", "Tiếp tục luyện tập", etc.
   final GroupType type; // REVIEW, CONTINUE, LOCKED, NORMAL
   final Map<String, dynamic>? title; // Group title (multi-language) from groupUnits collection
+  /// Unit ôn tập (từ `review_units` trên groupUnits), hiển thị dưới các unit chính.
+  final List<UnitModel> reviewUnits;
+  /// Mở khóa khi đã hoàn thành bài tập cuối của group (`highestExerciseId`) hoặc group đã qua.
+  final bool reviewUnlocked;
 
   UnitGroup({
     required this.levelId,
@@ -28,6 +32,8 @@ class UnitGroup {
     required this.displayName,
     required this.type,
     this.title,
+    this.reviewUnits = const [],
+    this.reviewUnlocked = false,
   });
 
   /// Tạo UnitGroup từ danh sách units
@@ -40,6 +46,8 @@ class UnitGroup {
     required bool isCompleted,
     required GroupType type,
     Map<String, dynamic>? title,
+    List<UnitModel> reviewUnits = const [],
+    bool reviewUnlocked = false,
   }) {
     // Xác định displayName dựa vào type
     String displayName;
@@ -68,6 +76,8 @@ class UnitGroup {
       displayName: displayName,
       type: type,
       title: title,
+      reviewUnits: reviewUnits,
+      reviewUnlocked: reviewUnlocked,
     );
   }
 }

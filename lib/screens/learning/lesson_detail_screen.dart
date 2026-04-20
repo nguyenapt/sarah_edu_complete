@@ -143,6 +143,283 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     return fixedHtml;
   }
 
+  Map<String, Style> _tableStylesForTheory() {
+    return {
+      'table': Style(
+        margin: Margins.only(bottom: 16),
+      ),
+      'td': Style(
+        border: Border.all(color: Colors.grey[400]!, width: 1),
+        padding: HtmlPaddings.all(8),
+        fontSize: FontSize(13),
+        backgroundColor: Colors.white,
+        color: Colors.black,
+      ),
+      'th': Style(
+        border: Border.all(color: Colors.grey[400]!, width: 1),
+        padding: HtmlPaddings.all(8),
+        fontSize: FontSize(13),
+        fontWeight: FontWeight.bold,
+        backgroundColor: Colors.grey[100],
+        color: Colors.black,
+      ),
+    };
+  }
+
+  Map<String, Style> _tableStylesGreyBorders() {
+    return {
+      'table': Style(
+        border: Border.all(color: Colors.grey, width: 1),
+        margin: Margins.symmetric(vertical: 8),
+      ),
+      'tr': Style(
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
+      'td': Style(
+        border: Border.all(color: Colors.grey, width: 1),
+        padding: HtmlPaddings.all(8),
+      ),
+      'th': Style(
+        border: Border.all(color: Colors.grey, width: 1),
+        padding: HtmlPaddings.all(8),
+        backgroundColor: Colors.grey[200],
+        fontWeight: FontWeight.bold,
+      ),
+    };
+  }
+
+  Map<String, Style> _theoryDescriptionStyleMap(BuildContext context) {
+    final body = Theme.of(context).textTheme.bodyLarge;
+    final color = body?.color ?? Colors.black;
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        fontSize: FontSize(body?.fontSize ?? 16),
+        color: color,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 8),
+        color: color,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      'span': Style(
+        color: color,
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _grammarFormLineStyleMap() {
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 4),
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+      ),
+      ..._tableStylesGreyBorders(),
+    };
+  }
+
+  Map<String, Style> _usageTitleStyleMap() {
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        color: AppTheme.primaryColor,
+        fontWeight: FontWeight.bold,
+        fontSize: FontSize(16),
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 6),
+        color: AppTheme.primaryColor,
+        fontWeight: FontWeight.bold,
+        fontSize: FontSize(16),
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: AppTheme.primaryColor,
+      ),
+      'span': Style(
+        color: AppTheme.primaryColor,
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _usageExampleStyleMap() {
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 6),
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: Colors.grey[700],
+      ),
+      'span': Style(
+        color: Colors.grey[700],
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _exampleSentenceStyleMap(BuildContext context) {
+    final color = Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        fontSize: FontSize(16),
+        fontWeight: FontWeight.w500,
+        color: color,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 6),
+        fontSize: FontSize(16),
+        fontWeight: FontWeight.w500,
+        color: color,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      'span': Style(
+        color: color,
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _exampleExplanationStyleMap() {
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 6),
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: Colors.grey[700],
+      ),
+      'span': Style(
+        color: Colors.grey[700],
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _vocabDefinitionStyleMap(BuildContext context) {
+    final body = Theme.of(context).textTheme.bodyMedium;
+    final color = body?.color ?? Colors.black;
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        fontSize: FontSize(body?.fontSize ?? 14),
+        color: color,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 6),
+        color: color,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      'span': Style(
+        color: color,
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _vocabExampleBulletStyleMap() {
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 4),
+        color: Colors.grey[700],
+        fontStyle: FontStyle.italic,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: Colors.grey[700],
+      ),
+      'span': Style(
+        color: Colors.grey[700],
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Map<String, Style> _wordPatternTitleStyleMap(BuildContext context) {
+    return {
+      'body': Style(
+        margin: Margins.zero,
+        padding: HtmlPaddings.zero,
+        color: AppTheme.primaryColor,
+        fontWeight: FontWeight.bold,
+        fontSize: FontSize(Theme.of(context).textTheme.titleMedium?.fontSize ?? 16),
+      ),
+      'p': Style(
+        margin: Margins.only(bottom: 6),
+        color: AppTheme.primaryColor,
+        fontWeight: FontWeight.bold,
+      ),
+      'strong': Style(
+        fontWeight: FontWeight.bold,
+        color: AppTheme.primaryColor,
+      ),
+      'span': Style(
+        color: AppTheme.primaryColor,
+      ),
+      ..._tableStylesForTheory(),
+    };
+  }
+
+  Widget _buildLessonHtml(String raw, Map<String, Style> style) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) return const SizedBox.shrink();
+    return Html(
+      data: _fixTableHtml(raw),
+      extensions: const [
+        TableHtmlExtension(),
+      ],
+      style: style,
+    );
+  }
+
   Widget _buildTheorySection() {
     final theory = widget.lesson.theory!;
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
@@ -176,53 +453,9 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             const SizedBox(height: 8),
             Builder(
               builder: (context) {
-                final htmlContent = theory.getDescription(languageCode);
-                final fixedHtmlContent = _fixTableHtml(htmlContent);               
-               
-                
-                return Html(
-                  data: fixedHtmlContent,
-                  extensions: [
-                    TableHtmlExtension(),
-                  ],
-                  style: {
-                    "body": Style(
-                      margin: Margins.zero,
-                      padding: HtmlPaddings.zero,
-                      fontSize: FontSize(Theme.of(context).textTheme.bodyLarge?.fontSize ?? 16),
-                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
-                    ),
-                    "p": Style(
-                      margin: Margins.only(bottom: 8),
-                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
-                    ),
-                    "strong": Style(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
-                    ),
-                    "span": Style(
-                      color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
-                    ),
-                    "table": Style(
-                      //border: Border.all(color: Colors.grey[400]!, width: 1),
-                      margin: Margins.only(bottom: 16),
-                    ),
-                    "td": Style(
-                      border: Border.all(color: Colors.grey[400]!, width: 1),
-                      padding: HtmlPaddings.all(8),
-                      fontSize: FontSize(13),
-                      backgroundColor: Colors.white,
-                      color: Colors.black,
-                    ),
-                    "th": Style(
-                      border: Border.all(color: Colors.grey[400]!, width: 1),
-                      padding: HtmlPaddings.all(8),
-                      fontSize: FontSize(13),
-                      fontWeight: FontWeight.bold,
-                      backgroundColor: Colors.grey[100],
-                      color: Colors.black,
-                    ),
-                  },
+                return _buildLessonHtml(
+                  theory.getDescription(languageCode),
+                  _theoryDescriptionStyleMap(context),
                 );
               },
             ),
@@ -277,6 +510,12 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             forms.getQuestion(),
             Icons.help_outline,
           ),
+        if (forms.form != null && forms.form!.isNotEmpty)
+          _buildFormList(
+            AppLocalizations.of(context)!.grammarForm,
+            forms.getForm(),
+            Icons.article_outlined,
+          ),
       ],
     );
   }
@@ -307,40 +546,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                     scrollDirection: Axis.horizontal,
                     child: ConstrainedBox(
                       constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                      child: Html(
-                        data: entry.value,
-                        extensions: [
-                          TableHtmlExtension(),
-                        ],
-                        style: {
-                          "body": Style(
-                            margin: Margins.zero,
-                            padding: HtmlPaddings.zero,
-                            color: Colors.grey[700],
-                            fontStyle: FontStyle.italic,
-                          ),
-                          "strong": Style(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          "table": Style(
-                            border: Border.all(color: Colors.grey, width: 1),
-                            margin: Margins.symmetric(vertical: 8),
-                          ),
-                          "tr": Style(
-                            border: Border.all(color: Colors.grey, width: 1),
-                          ),
-                          "td": Style(
-                            border: Border.all(color: Colors.grey, width: 1),
-                            padding: HtmlPaddings.all(8),
-                          ),
-                          "th": Style(
-                            border: Border.all(color: Colors.grey, width: 1),
-                            padding: HtmlPaddings.all(8),
-                            backgroundColor: Colors.grey[200],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        },
-                      ),
+                      child: _buildLessonHtml(entry.value, _grammarFormLineStyleMap()),
                     ),
                   );
                 },
@@ -387,24 +593,11 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (title.isNotEmpty) ...[
-              Text(
-                title,
-                style: TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
+              _buildLessonHtml(title, _usageTitleStyleMap()),
               const SizedBox(height: 8),
             ],
             if (example.isNotEmpty)
-              Text(
-                example,
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
+              _buildLessonHtml(example, _usageExampleStyleMap()),
           ],
         ),
       ),
@@ -538,21 +731,32 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             ),
             if (item.definitions != null) ...[
               const SizedBox(height: 8),
-              Text(
+              _buildLessonHtml(
                 item.getDefinition(languageCode),
-                style: Theme.of(context).textTheme.bodyMedium,
+                _vocabDefinitionStyleMap(context),
               ),
             ],
             if (item.examples.isNotEmpty) ...[
               const SizedBox(height: 8),
               ...item.examples.map((example) => Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      '• $example',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontStyle: FontStyle.italic,
-                      ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '• ',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildLessonHtml(
+                            example,
+                            _vocabExampleBulletStyleMap(),
+                          ),
+                        ),
+                      ],
                     ),
                   )),
             ],
@@ -579,21 +783,32 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             ),
             if (item.definition != null) ...[
               const SizedBox(height: 8),
-              Text(
+              _buildLessonHtml(
                 item.getDefinition(languageCode),
-                style: Theme.of(context).textTheme.bodyMedium,
+                _vocabDefinitionStyleMap(context),
               ),
             ],
             if (item.examples.isNotEmpty) ...[
               const SizedBox(height: 8),
               ...item.examples.map((example) => Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      '• $example',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontStyle: FontStyle.italic,
-                      ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '• ',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildLessonHtml(
+                            example,
+                            _vocabExampleBulletStyleMap(),
+                          ),
+                        ),
+                      ],
                     ),
                   )),
             ],
@@ -667,11 +882,11 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                     ),
                   );
                 },
-          child: Text(AppLocalizations.of(context)!.practice),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.primaryColor,
             foregroundColor: Colors.white,
           ),
+          child: Text(AppLocalizations.of(context)!.practice),
         ),
       ],
     );
@@ -756,21 +971,32 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             ),
             if (item.definition != null) ...[
               const SizedBox(height: 8),
-              Text(
+              _buildLessonHtml(
                 item.getDefinition(languageCode),
-                style: Theme.of(context).textTheme.bodyMedium,
+                _vocabDefinitionStyleMap(context),
               ),
             ],
             if (item.examples.isNotEmpty) ...[
               const SizedBox(height: 8),
               ...item.examples.map((example) => Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      '• $example',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontStyle: FontStyle.italic,
-                      ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '• ',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildLessonHtml(
+                            example,
+                            _vocabExampleBulletStyleMap(),
+                          ),
+                        ),
+                      ],
                     ),
                   )),
             ],
@@ -879,20 +1105,14 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            _buildLessonHtml(
               item.pattern,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
-                  ),
+              _wordPatternTitleStyleMap(context),
             ),
             const SizedBox(height: 8),
-            Text(
+            _buildLessonHtml(
               item.example,
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontStyle: FontStyle.italic,
-              ),
+              _usageExampleStyleMap(),
             ),
           ],
         ),
@@ -926,16 +1146,14 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.format_quote, color: AppTheme.primaryColor),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
+                  child: _buildLessonHtml(
                     example.sentence,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    _exampleSentenceStyleMap(context),
                   ),
                 ),
               ],
@@ -943,12 +1161,9 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.only(left: 32),
-              child: Text(
+              child: _buildLessonHtml(
                 example.getExplanation(languageCode),
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontStyle: FontStyle.italic,
-                ),
+                _exampleExplanationStyleMap(),
               ),
             ),
           ],

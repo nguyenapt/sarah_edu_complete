@@ -434,6 +434,12 @@ abstract class AppLocalizations {
   /// **'Exercises'**
   String get exercises;
 
+  /// No description provided for @reviewExerciseWithIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Review exercise {number}'**
+  String reviewExerciseWithIndex(int number);
+
   /// No description provided for @exerciseDetails.
   ///
   /// In en, this message translates to:
@@ -523,6 +529,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Interrogative'**
   String get interrogative;
+
+  /// No description provided for @grammarForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Form'**
+  String get grammarForm;
 
   /// No description provided for @minutes.
   ///
@@ -1070,6 +1082,12 @@ abstract class AppLocalizations {
   /// **'EXPLORE'**
   String get vocabularyExplore;
 
+  /// No description provided for @vocabularyLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get vocabularyLoadMore;
+
   /// No description provided for @vocabularyReviewSoon.
   ///
   /// In en, this message translates to:
@@ -1231,6 +1249,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not unlocked'**
   String get notUnlocked;
+
+  /// No description provided for @reviewLevelNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This level is not available for review yet.'**
+  String get reviewLevelNotAvailable;
 
   /// No description provided for @continueButton.
   ///

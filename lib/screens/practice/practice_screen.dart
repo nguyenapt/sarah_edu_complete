@@ -20,6 +20,7 @@ import '../../core/ads/ad_ids.dart';
 import '../../core/ads/widgets/native_ad_widget.dart';
 import '../../core/repositories/catalog_repository.dart';
 import '../../core/theme/horizon_colors.dart';
+import '../../core/utils/curriculum_position_compare.dart';
 import '../learning/unit_list_screen.dart';
 import '../learning/exercise_screen.dart';
 import '../progress/progress_screen.dart';
@@ -206,7 +207,13 @@ class _PracticeScreenState extends State<PracticeScreen> {
           }
         }
       } else {
-        // Guest user hoặc review mode: không cần load groups, set loading = false ngay
+        // Không load timeline groups: guest, hoặc review mode.
+        // Review + đã đăng nhập: cần [highestProgress] để khóa/mở unit đúng.
+        if (authProvider.isAuthenticated &&
+            authProvider.user != null &&
+            widget.reviewMode) {
+          await _loadUserProgress(authProvider.user!.id);
+        }
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -1460,7 +1467,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
         final sortedUnits = List<UnitModel>.from(units)
           ..sort((a, b) => a.order.compareTo(b.order));
 
-        // Chỉ áp dụng logic khóa cho guest user (khi highlightCurrentLevel == null)
         final isGuestUser = highlightCurrentLevel == null;
 
         return Column(
@@ -1470,7 +1476,19 @@ class _PracticeScreenState extends State<PracticeScreen> {
             ...sortedUnits.asMap().entries.map((entry) {
               final unitIndex = entry.key;
               final unit = entry.value;
-              final isLocked = isGuestUser && unitIndex > 0; // Unit đầu tiên (index 0) unlock, các unit khác bị khóa (chỉ cho guest user)
+              final bool isLocked;
+              if (isGuestUser) {
+                isLocked = unitIndex > 0;
+              } else if (widget.reviewMode) {
+                isLocked = CurriculumPositionCompare.isReviewUnitLocked(
+                  _userProgress?.highestProgress,
+                  level.id,
+                  unit,
+                  sortedIndexInLevel: unitIndex,
+                );
+              } else {
+                isLocked = false;
+              }
               return _buildUnitCard(
                 unit,
                 highlightCurrentLevel != null && 
@@ -1497,7 +1515,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   // Unit card cho level selection (giống LevelSelectionScreen)
   Widget _buildUnitCardForLevel(UnitModel unit, int index, String levelId, bool isHighlighted) {
-    final isLocked = index > 0; // Unit đầu tiên unlock, các unit khác cần hoàn thành unit trước
+    final bool isLocked = widget.reviewMode
+        ? CurriculumPositionCompare.isReviewUnitLocked(
+            _userProgress?.highestProgress,
+            levelId,
+            unit,
+            sortedIndexInLevel: index,
+          )
+        : index > 0;
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
 
     return Card(

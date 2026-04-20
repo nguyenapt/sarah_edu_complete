@@ -21,10 +21,6 @@ import '../../core/services/level_skip_test_service.dart';
 import '../../widgets/common/practice_top_app_bar.dart';
 import '../settings/settings_screen.dart';
 import '../main_navigation.dart';
-import '../../core/ads/ad_ids.dart';
-import '../../core/ads/ads_factory.dart';
-import '../../core/ads/widgets/banner_ad_widget.dart';
-import '../../core/ads/widgets/native_ad_widget.dart';
 
 /// Đồng bộ màu với nút Continue trong `exercise_screen.dart`.
 const Color _kPrimary = Color(0xFF006286);
@@ -467,33 +463,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CircularProgressIndicator(),
                     ),
                   )
+                else if (!authProvider.isAuthenticated &&
+                    authProvider.isLoading)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
                 else ...[
                   // Nếu đã đăng nhập: hiển thị Continue Learning
                   if (authProvider.isAuthenticated) ...[
-                    // Continue Learning
                     _buildContinueLearning(),
                     const SizedBox(height: 24),
-                    // Native ad in-feed (safe zone)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      child: NativeAdWidget(
-                        adUnitId: AdMobIds.nativeHome,
-                        factoryId: 'listTile',
-                        maxHeight: 180,
-                      ),
-                    ),
                   ] else ...[
                     _buildGuestHero(loc),
                     const SizedBox(height: 18),
-                    // Native ad below hero (safe spacing from CTAs)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 18),
-                      child: NativeAdWidget(
-                        adUnitId: AdMobIds.nativeHome,
-                        factoryId: 'listTile',
-                        maxHeight: 180,
-                      ),
-                    ),
                     const Text(
                       'The Learning Arc',
                       style: TextStyle(
@@ -675,17 +660,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 24),
                   ],
 
-                  // Banner at bottom (avoid CTAs)
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: BannerAdWidget(
-                        factory: AdsFactory(),
-                        adUnitId: AdMobIds.bannerHome,
-                      ),
-                    ),
-                  ),
-                  
                 ],
               ],
             ),

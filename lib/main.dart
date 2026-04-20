@@ -12,6 +12,7 @@ import 'core/ads/ads_factory.dart';
 import 'core/ads/ads_manager.dart';
 import 'core/ads/ads_route_observer.dart';
 import 'core/repositories/catalog_repository.dart';
+import 'core/widgets/app_update_prompt.dart';
 import 'providers/auth_provider.dart';
 import 'providers/language_provider.dart';
 import 'providers/theme_provider.dart';
@@ -49,13 +50,14 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late final AdsManager _adsManager;
   late final AdsRouteObserver _adsObserver;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _adsManager = AdsManager(
       factory: AdsFactory(),
       policy: AdPolicy(
@@ -64,6 +66,23 @@ class _MyAppState extends State<MyApp> {
     );
     _adsObserver = AdsRouteObserver(_adsManager);
     _adsManager.init();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        AppUpdateCoordinator.checkAndPrompt(context, fromResume: true);
+      });
+    }
   }
 
   @override

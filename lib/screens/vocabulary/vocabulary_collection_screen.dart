@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/services/firestore_service.dart';
@@ -5,6 +7,7 @@ import '../../core/services/vocabulary_user_state_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/vocabulary/vocab_card_status.dart';
 import '../../core/vocabulary/vocabulary_item_key.dart';
+import '../../core/vocabulary/vocabulary_practice_deck.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/lesson_model.dart';
 import '../../models/level_model.dart';
@@ -31,6 +34,8 @@ const Color _kOnTertiaryContainer = Color(0xFF594700);
 const Color _kWeakChipBg = Color(0xFFFFF4E0);
 const Color _kWotdTeal = Color(0xFF004D5C);
 
+const int _kVocabPageSize = 36;
+
 const LinearGradient _kPracticeGradient = LinearGradient(
   colors: [_kPrimary, _kPrimaryContainer],
   begin: Alignment.centerLeft,
@@ -56,6 +61,7 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
   String _searchQuery = '';
   VocabularySortOption _sortOption = VocabularySortOption.wordAsc;
   _VocabFilterChip _filterChip = _VocabFilterChip.all;
+  int _visibleVocabCount = _kVocabPageSize;
   late final VoidCallback _vocabStateListener;
 
   @override
@@ -114,12 +120,14 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
             ..clear()
             ..addAll(deduped.values);
           _isLoading = false;
+          _visibleVocabCount = _kVocabPageSize;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;
+          _visibleVocabCount = _kVocabPageSize;
         });
       }
       debugPrint('Error loading vocabulary: $e');
@@ -301,7 +309,10 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
         borderRadius: BorderRadius.circular(999),
         child: InkWell(
           borderRadius: BorderRadius.circular(999),
-          onTap: () => setState(() => _filterChip = chip),
+          onTap: () => setState(() {
+                _filterChip = chip;
+                _visibleVocabCount = _kVocabPageSize;
+              }),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Text(
@@ -561,7 +572,12 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
-        onTap: enabled ? () => _startPractice(items, languageCode) : null,
+        onTap: enabled
+            ? () => _startPractice(
+                  buildVocabularyPracticeDeck(items, math.Random()),
+                  languageCode,
+                )
+            : null,
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
@@ -613,6 +629,9 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
     final currentItems = _isLoading
         ? const <TopicVocabularyItem>[]
         : _filterSearchSort(List<TopicVocabularyItem>.from(_items), languageCode);
+    final takeCount = math.min(_visibleVocabCount, currentItems.length);
+    final displayedItems = currentItems.take(takeCount).toList();
+    final canLoadMoreVocab = currentItems.length > takeCount;
     final wotd = _wordOfTheDayItem();
 
     return Scaffold(
@@ -645,7 +664,10 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
               Icons.sort_rounded,
               color: isDark ? horizon.onSurface : _kOnSurface,
             ),
-            onSelected: (value) => setState(() => _sortOption = value),
+            onSelected: (value) => setState(() {
+                  _sortOption = value;
+                  _visibleVocabCount = _kVocabPageSize;
+                }),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: VocabularySortOption.wordAsc,
@@ -706,7 +728,10 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        onChanged: (value) => setState(() => _searchQuery = value),
+                        onChanged: (value) => setState(() {
+                              _searchQuery = value;
+                              _visibleVocabCount = _kVocabPageSize;
+                            }),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -747,6 +772,13 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
                               ),
                             ),
                           ),
+                          if (wotd != null && _items.isNotEmpty)
+                            SliverToBoxAdapter(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                child: _buildWordOfTheDayBanner(wotd, loc, languageCode),
+                              ),
+                            ),
                           if (currentItems.isEmpty)
                             SliverToBoxAdapter(
                               child: SizedBox(
@@ -773,8 +805,8 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
                                 delegate: SliverChildBuilderDelegate(
                                   (context, index) {
                                     const freq = 8; // insert an ad after every 8 items
-                                    final adSlots = currentItems.length ~/ freq;
-                                    final total = currentItems.length + adSlots;
+                                    final adSlots = displayedItems.length ~/ freq;
+                                    final total = displayedItems.length + adSlots;
 
                                     if (index >= total) return const SizedBox.shrink();
 
@@ -797,27 +829,29 @@ class _VocabularyCollectionScreenState extends State<VocabularyCollectionScreen>
                                     return Padding(
                                       padding: const EdgeInsets.only(bottom: 12),
                                       child: _buildVocabularyCard(
-                                        currentItems[itemIndex],
+                                        displayedItems[itemIndex],
                                         languageCode,
                                         loc,
                                       ),
                                     );
                                   },
                                   childCount:
-                                      currentItems.length + (currentItems.length ~/ 8),
+                                      displayedItems.length + (displayedItems.length ~/ 8),
                                 ),
                               ),
                             ),
-                          if (wotd != null && _items.isNotEmpty)
+                          if (canLoadMoreVocab)
                             SliverToBoxAdapter(
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  16,
-                                  currentItems.isEmpty ? 0 : 8,
-                                  16,
-                                  0,
+                                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                                child: Center(
+                                  child: OutlinedButton(
+                                    onPressed: () => setState(() {
+                                      _visibleVocabCount += _kVocabPageSize;
+                                    }),
+                                    child: Text(loc.vocabularyLoadMore),
+                                  ),
                                 ),
-                                child: _buildWordOfTheDayBanner(wotd, loc, languageCode),
                               ),
                             ),
                           const SliverToBoxAdapter(child: SizedBox(height: 120)),

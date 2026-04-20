@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Forms;
 using FirestoreImporter.Models;
 using FirestoreImporter.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FirestoreImporter
 {
@@ -19,6 +21,36 @@ namespace FirestoreImporter
         private List<GroupQuestion> _groupQuestions;
         private Dictionary<string, string> _titleDictionary;
         private Dictionary<string, VoiceConfig> _speakerVoices;
+        private const string CsvTemplateFileName = "exercise_group_template.csv";
+        private const string CsvImportFilter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+        private const string CsvColumnSeparator = "#";
+        private static readonly string[] CsvHeaders =
+        {
+            "exercise_id",
+            "lesson_id",
+            "unit_id",
+            "level_id",
+            "exercise_type",
+            "exercise_points",
+            "exercise_difficulty",
+            "exercise_time_limit",
+            "exercise_title_json",
+            "exercise_grammar_topics",
+            "exercise_skill_types",
+            "exercise_audio_url",
+            "exercise_image_url",
+            "exercise_sequential_title",
+            "question_order",
+            "question_type",
+            "question_point",
+            "question_difficulty",
+            "question_time_limit",
+            "question_text_json",
+            "question_content_json",
+            "question_explanation_json",
+            "question_audio_url",
+            "question_image_url"
+        };
 
         public ExerciseGroupForm()
         {
@@ -37,6 +69,17 @@ namespace FirestoreImporter
             numUnit.ValueChanged += OnIdControlsChanged;
             numLesson.ValueChanged += OnIdControlsChanged;
             numExercise.ValueChanged += OnIdControlsChanged;
+
+            cbType.SelectedIndexChanged += CbType_SelectedIndexChanged;
+            txtSequentialTitle.Enabled = false;
+        }
+
+        private void CbType_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            bool isSequential = cbType.SelectedItem?.ToString() == "sequentialQuestions";
+            txtSequentialTitle.Enabled = isSequential;
+            if (!isSequential)
+                txtSequentialTitle.Clear();
         }
 
         private void OnIdControlsChanged(object? sender, EventArgs e)
@@ -325,6 +368,35 @@ namespace FirestoreImporter
             public double Pitch { get; set; }
         }
 
+        private class CsvExerciseRow
+        {
+            public int DataRowNumber { get; set; }
+            public string ExerciseId { get; set; } = string.Empty;
+            public string LessonId { get; set; } = string.Empty;
+            public string UnitId { get; set; } = string.Empty;
+            public string LevelId { get; set; } = string.Empty;
+            public string ExerciseType { get; set; } = "single_choice";
+            public int ExercisePoints { get; set; } = 10;
+            public string ExerciseDifficulty { get; set; } = "easy";
+            public int? ExerciseTimeLimit { get; set; }
+            public Dictionary<string, string>? ExerciseTitle { get; set; }
+            public List<string> ExerciseGrammarTopics { get; set; } = new();
+            public List<string> ExerciseSkillTypes { get; set; } = new();
+            public string? ExerciseAudioUrl { get; set; }
+            public string? ExerciseImageUrl { get; set; }
+            public string? ExerciseSequentialTitle { get; set; }
+            public int QuestionOrder { get; set; }
+            public string QuestionType { get; set; } = "button_single_choice";
+            public int QuestionPoint { get; set; }
+            public string QuestionDifficulty { get; set; } = "easy";
+            public int? QuestionTimeLimit { get; set; }
+            public object? QuestionText { get; set; }
+            public Dictionary<string, object>? QuestionContent { get; set; }
+            public Dictionary<string, string>? QuestionExplanation { get; set; }
+            public string? QuestionAudioUrl { get; set; }
+            public string? QuestionImageUrl { get; set; }
+        }
+
         private void GrvTitle_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 0 && e.RowIndex >= 0) // Delete button column
@@ -507,6 +579,61 @@ namespace FirestoreImporter
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi export JSON: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnExportCsvTemplate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string filePath = Path.Combine(desktopPath, CsvTemplateFileName);
+                string content = BuildCsvTemplateContent();
+                File.WriteAllText(filePath, content, new UTF8Encoding(true));
+                MessageBox.Show($"Đã export CSV template thành công!\nFile đã được lưu tại: {filePath}",
+                    "Thành công",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi export CSV template: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnImportCsv_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using var openFileDialog = new OpenFileDialog
+                {
+                    Filter = CsvImportFilter,
+                    Title = "Chọn file CSV để import"
+                };
+
+                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                string csvContent = File.ReadAllText(openFileDialog.FileName, Encoding.UTF8);
+                var parsedRows = ParseCsvRows(csvContent);
+                ApplyCsvRowsToForm(parsedRows);
+
+                MessageBox.Show($"Import CSV thành công!\nSố questions: {_groupQuestions.Count}",
+                    "Thành công",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi import CSV: {ex.Message}",
                     "Lỗi",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -767,6 +894,12 @@ namespace FirestoreImporter
             }
             // Nếu không checked, không import bất kỳ voice data nào (HasVoice, DefaultVoice, SpeakerVoices đều null)
 
+            // Sequential Title - chỉ import khi type là sequentialQuestions và có giá trị
+            if (exercise.Type == "sequentialQuestions" && !string.IsNullOrWhiteSpace(txtSequentialTitle.Text))
+            {
+                exercise.SequentialTitle = txtSequentialTitle.Text.Trim();
+            }
+
             return exercise;
         }
 
@@ -781,6 +914,432 @@ namespace FirestoreImporter
             var jsonResult = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
 
             return jsonResult;
+        }
+
+        private string BuildCsvTemplateContent()
+        {
+            var rows = new List<string>
+            {
+                string.Join(CsvColumnSeparator, CsvHeaders.Select(EscapeCsvCell)),
+                string.Join(CsvColumnSeparator, BuildSampleCsvRow().Select(EscapeCsvCell))
+            };
+            return string.Join(Environment.NewLine, rows) + Environment.NewLine;
+        }
+
+        private List<string> BuildSampleCsvRow()
+        {
+            return new List<string>
+            {
+                "exercise_a1_1_1_1",
+                "lesson_a1_1_1",
+                "unit_a1_1",
+                "A1",
+                "sequentialQuestions",
+                "20",
+                "easy",
+                "300",
+                "{\"en\":\"Read and answer\",\"vi\":\"Đọc và trả lời\"}",
+                "present simple,comparatives",
+                "reading,listening",
+                "https://cdn.example.com/audio/exercise.mp3",
+                "https://cdn.example.com/images/exercise.jpg",
+                "Passage about healthy habits",
+                "1",
+                "button_single_choice",
+                "10",
+                "easy",
+                "90",
+                "{\"en\":\"What does Anna do every morning?\",\"vi\":\"Anna làm gì mỗi sáng?\"}",
+                "{\"options\":[\"She runs\",\"She sleeps\",\"She studies\"],\"correctAnswer\":0}",
+                "{\"en\":\"She goes jogging before breakfast.\"}",
+                "",
+                ""
+            };
+        }
+
+        private string EscapeCsvCell(string value)
+        {
+            string escaped = value.Replace("\"", "\"\"");
+            return $"\"{escaped}\"";
+        }
+
+        private List<CsvExerciseRow> ParseCsvRows(string csvContent)
+        {
+            var table = ParseCsvTable(csvContent);
+            if (table.Count < 2)
+            {
+                throw new InvalidOperationException("CSV không có dữ liệu. File phải có header và ít nhất 1 dòng question.");
+            }
+
+            var header = table[0];
+            var headerMap = header
+                .Select((name, index) => new { Name = name.Trim(), Index = index })
+                .ToDictionary(x => x.Name, x => x.Index, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var requiredHeader in CsvHeaders)
+            {
+                if (!headerMap.ContainsKey(requiredHeader))
+                {
+                    throw new InvalidOperationException($"Thiếu cột bắt buộc: {requiredHeader}");
+                }
+            }
+
+            var rows = new List<CsvExerciseRow>();
+            for (int i = 1; i < table.Count; i++)
+            {
+                var raw = table[i];
+                if (raw.All(string.IsNullOrWhiteSpace))
+                {
+                    continue;
+                }
+
+                int dataRowNumber = i + 1;
+                string exerciseId = GetCell(raw, headerMap, "exercise_id");
+                string lessonId = GetCell(raw, headerMap, "lesson_id");
+                if (string.IsNullOrWhiteSpace(exerciseId))
+                {
+                    throw new InvalidOperationException($"Dòng {dataRowNumber}: exercise_id là bắt buộc.");
+                }
+
+                if (string.IsNullOrWhiteSpace(lessonId))
+                {
+                    throw new InvalidOperationException($"Dòng {dataRowNumber}: lesson_id là bắt buộc.");
+                }
+
+                var row = new CsvExerciseRow
+                {
+                    DataRowNumber = dataRowNumber,
+                    ExerciseId = exerciseId.Trim(),
+                    LessonId = lessonId.Trim(),
+                    UnitId = GetCell(raw, headerMap, "unit_id").Trim(),
+                    LevelId = GetCell(raw, headerMap, "level_id").Trim(),
+                    ExerciseType = GetCell(raw, headerMap, "exercise_type", "single_choice").Trim(),
+                    ExercisePoints = ParseIntOrDefault(GetCell(raw, headerMap, "exercise_points"), 10, dataRowNumber, "exercise_points"),
+                    ExerciseDifficulty = GetCell(raw, headerMap, "exercise_difficulty", "easy").Trim(),
+                    ExerciseTimeLimit = ParseNullableInt(GetCell(raw, headerMap, "exercise_time_limit"), dataRowNumber, "exercise_time_limit"),
+                    ExerciseTitle = ParseDictionaryStringString(GetCell(raw, headerMap, "exercise_title_json"), dataRowNumber, "exercise_title_json"),
+                    ExerciseGrammarTopics = ParseCommaSeparatedList(GetCell(raw, headerMap, "exercise_grammar_topics")),
+                    ExerciseSkillTypes = ParseCommaSeparatedList(GetCell(raw, headerMap, "exercise_skill_types")),
+                    ExerciseAudioUrl = NormalizeNullableString(GetCell(raw, headerMap, "exercise_audio_url")),
+                    ExerciseImageUrl = NormalizeNullableString(GetCell(raw, headerMap, "exercise_image_url")),
+                    ExerciseSequentialTitle = NormalizeNullableString(GetCell(raw, headerMap, "exercise_sequential_title")),
+                    QuestionOrder = ParseIntOrDefault(GetCell(raw, headerMap, "question_order"), i, dataRowNumber, "question_order"),
+                    QuestionType = GetCell(raw, headerMap, "question_type", "button_single_choice").Trim(),
+                    QuestionPoint = ParseIntOrDefault(GetCell(raw, headerMap, "question_point"), 0, dataRowNumber, "question_point"),
+                    QuestionDifficulty = GetCell(raw, headerMap, "question_difficulty", "easy").Trim(),
+                    QuestionTimeLimit = ParseNullableInt(GetCell(raw, headerMap, "question_time_limit"), dataRowNumber, "question_time_limit"),
+                    QuestionText = ParseQuestionTextJson(GetCell(raw, headerMap, "question_text_json"), dataRowNumber),
+                    QuestionContent = ParseDictionaryStringObject(GetCell(raw, headerMap, "question_content_json"), dataRowNumber, "question_content_json"),
+                    QuestionExplanation = ParseDictionaryStringString(GetCell(raw, headerMap, "question_explanation_json"), dataRowNumber, "question_explanation_json"),
+                    QuestionAudioUrl = NormalizeNullableString(GetCell(raw, headerMap, "question_audio_url")),
+                    QuestionImageUrl = NormalizeNullableString(GetCell(raw, headerMap, "question_image_url"))
+                };
+
+                if (string.IsNullOrWhiteSpace(row.QuestionType))
+                {
+                    throw new InvalidOperationException($"Dòng {dataRowNumber}: question_type là bắt buộc.");
+                }
+
+                rows.Add(row);
+            }
+
+            if (rows.Count == 0)
+            {
+                throw new InvalidOperationException("CSV không có dòng dữ liệu hợp lệ.");
+            }
+
+            return rows.OrderBy(x => x.QuestionOrder).ToList();
+        }
+
+        private List<List<string>> ParseCsvTable(string csvContent)
+        {
+            var table = new List<List<string>>();
+            var row = new List<string>();
+            var cell = new StringBuilder();
+            bool inQuotes = false;
+
+            for (int i = 0; i < csvContent.Length; i++)
+            {
+                char current = csvContent[i];
+                if (inQuotes)
+                {
+                    if (current == '"')
+                    {
+                        if (i + 1 < csvContent.Length && csvContent[i + 1] == '"')
+                        {
+                            cell.Append('"');
+                            i++;
+                        }
+                        else
+                        {
+                            inQuotes = false;
+                        }
+                    }
+                    else
+                    {
+                        cell.Append(current);
+                    }
+                }
+                else
+                {
+                    if (current == '"')
+                    {
+                        inQuotes = true;
+                    }
+                    else if (IsColumnSeparator(csvContent, i))
+                    {
+                        row.Add(cell.ToString());
+                        cell.Clear();
+                        i += CsvColumnSeparator.Length - 1;
+                    }
+                    else if (current == '\r')
+                    {
+                        continue;
+                    }
+                    else if (current == '\n')
+                    {
+                        row.Add(cell.ToString());
+                        cell.Clear();
+                        table.Add(row);
+                        row = new List<string>();
+                    }
+                    else
+                    {
+                        cell.Append(current);
+                    }
+                }
+            }
+
+            if (inQuotes)
+            {
+                throw new InvalidOperationException("CSV không hợp lệ: dấu nháy kép chưa đóng.");
+            }
+
+            if (cell.Length > 0 || row.Count > 0)
+            {
+                row.Add(cell.ToString());
+                table.Add(row);
+            }
+
+            return table;
+        }
+
+        private bool IsColumnSeparator(string text, int index)
+        {
+            if (index + CsvColumnSeparator.Length > text.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < CsvColumnSeparator.Length; i++)
+            {
+                if (text[index + i] != CsvColumnSeparator[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void ApplyCsvRowsToForm(List<CsvExerciseRow> rows)
+        {
+            var first = rows[0];
+            if (rows.Any(r => !string.Equals(r.ExerciseId, first.ExerciseId, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new InvalidOperationException("CSV chỉ hỗ trợ 1 exercise_id trong cùng 1 lần import.");
+            }
+
+            txtId.Text = first.ExerciseId;
+            txtLessonId.Text = first.LessonId;
+            txtUnitId.Text = first.UnitId;
+            SetComboBoxValue(cbLevelId, first.LevelId);
+            SetComboBoxValue(cbType, first.ExerciseType);
+            numPoints.Value = ClampToNumericUpDown(numPoints, first.ExercisePoints);
+            SetComboBoxValue(cbDifficulty, first.ExerciseDifficulty);
+            numTimeLimit.Value = ClampToNumericUpDown(numTimeLimit, first.ExerciseTimeLimit ?? 0);
+            txtAudioUrl.Text = first.ExerciseAudioUrl ?? string.Empty;
+            txtImageUrl.Text = first.ExerciseImageUrl ?? string.Empty;
+            txtSequentialTitle.Text = first.ExerciseSequentialTitle ?? string.Empty;
+            txtGrammarTopics.Text = string.Join(",", first.ExerciseGrammarTopics);
+            txtSkillTopics.Text = string.Join(",", first.ExerciseSkillTypes);
+
+            _titleDictionary = first.ExerciseTitle != null
+                ? new Dictionary<string, string>(first.ExerciseTitle, StringComparer.OrdinalIgnoreCase)
+                : new Dictionary<string, string>();
+            RefreshTitleGrid();
+
+            _groupQuestions = rows.Select(r => new GroupQuestion
+            {
+                Type = r.QuestionType,
+                Point = r.QuestionPoint,
+                Difficulty = string.IsNullOrWhiteSpace(r.QuestionDifficulty) ? "easy" : r.QuestionDifficulty,
+                TimeLimit = r.QuestionTimeLimit,
+                Question = r.QuestionText,
+                Content = r.QuestionContent,
+                Explanation = r.QuestionExplanation,
+                AudioUrl = r.QuestionAudioUrl,
+                ImageUrl = r.QuestionImageUrl
+            }).ToList();
+            RefreshQuestionGrid();
+        }
+
+        private decimal ClampToNumericUpDown(NumericUpDown control, int value)
+        {
+            decimal decimalValue = value;
+            if (decimalValue < control.Minimum)
+            {
+                return control.Minimum;
+            }
+
+            if (decimalValue > control.Maximum)
+            {
+                return control.Maximum;
+            }
+
+            return decimalValue;
+        }
+
+        private void SetComboBoxValue(ComboBox comboBox, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+
+            for (int i = 0; i < comboBox.Items.Count; i++)
+            {
+                if (string.Equals(comboBox.Items[i]?.ToString(), value, StringComparison.OrdinalIgnoreCase))
+                {
+                    comboBox.SelectedIndex = i;
+                    return;
+                }
+            }
+        }
+
+        private string GetCell(List<string> row, Dictionary<string, int> headerMap, string columnName, string defaultValue = "")
+        {
+            if (!headerMap.TryGetValue(columnName, out int index))
+            {
+                return defaultValue;
+            }
+
+            if (index >= row.Count)
+            {
+                return defaultValue;
+            }
+
+            return row[index]?.Trim() ?? defaultValue;
+        }
+
+        private int ParseIntOrDefault(string value, int defaultValue, int rowNumber, string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return defaultValue;
+            }
+
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
+            {
+                return result;
+            }
+
+            throw new InvalidOperationException($"Dòng {rowNumber}: cột {columnName} phải là số nguyên.");
+        }
+
+        private int? ParseNullableInt(string value, int rowNumber, string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
+            {
+                return result;
+            }
+
+            throw new InvalidOperationException($"Dòng {rowNumber}: cột {columnName} phải là số nguyên hoặc để trống.");
+        }
+
+        private List<string> ParseCommaSeparatedList(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new List<string>();
+            }
+
+            return value.Split(',')
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToList();
+        }
+
+        private Dictionary<string, string>? ParseDictionaryStringString(string json, int rowNumber, string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException($"Dòng {rowNumber}: cột {columnName} không đúng JSON object dạng Dictionary<string,string>.");
+            }
+        }
+
+        private Dictionary<string, object>? ParseDictionaryStringObject(string json, int rowNumber, string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException($"Dòng {rowNumber}: cột {columnName} không đúng JSON object.");
+            }
+        }
+
+        private object? ParseQuestionTextJson(string json, int rowNumber)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                var token = JToken.Parse(json);
+                if (token.Type == JTokenType.Object)
+                {
+                    return token.ToObject<Dictionary<string, string>>();
+                }
+
+                if (token.Type == JTokenType.String)
+                {
+                    return token.ToObject<string>();
+                }
+
+                throw new InvalidOperationException($"Dòng {rowNumber}: question_text_json phải là JSON object hoặc JSON string.");
+            }
+            catch (JsonReaderException)
+            {
+                return json;
+            }
+        }
+
+        private string? NormalizeNullableString(string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
         }
 
         private void btnAddQuestion_Click_1(object sender, EventArgs e)

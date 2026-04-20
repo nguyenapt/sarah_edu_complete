@@ -74,27 +74,29 @@ class AuthProvider with ChangeNotifier {
       // Firebase Auth tự động lưu session vào local storage trên Android
       // currentUser sẽ trả về user nếu session còn hợp lệ
       final currentUser = _authService.currentUser;
-      
+
       if (currentUser != null) {
+        // authStateChanges có thể đã hydrate trước — tránh hủy listener / ghi đè
+        if (_user != null && _user!.id == currentUser.uid) {
+          debugPrint(
+            '✅ Session already hydrated from auth stream, skipping _checkCurrentUser',
+          );
+          return;
+        }
+
         debugPrint('✅ Found existing user session: ${currentUser.uid}');
         debugPrint('   Email: ${currentUser.email}');
         debugPrint('   Display Name: ${currentUser.displayName}');
-        
-        // Kiểm tra token để đảm bảo session còn hợp lệ
+
+        // Dùng token cache khi có; không force refresh — getIdToken(true) cần mạng và
+        // nếu lỗi sẽ không được coi là hết session (Firebase vẫn giữ currentUser).
         try {
-          // Refresh token để đảm bảo session còn valid
-          await currentUser.getIdToken(true);
-          debugPrint('✅ Token refreshed successfully, session is valid');
+          await currentUser.getIdToken();
+          debugPrint('✅ ID token available (cached or refreshed)');
         } catch (tokenError) {
-          debugPrint('⚠️ Token refresh failed: $tokenError');
-          // Nếu token không hợp lệ, clear user
-          _isLoading = false;
-          _user = null;
-          notifyListeners();
-          return;
+          debugPrint('⚠️ getIdToken failed (offline or transient): $tokenError');
         }
-        
-        // Load user data ngay lập tức
+
         await _setupUserListener(currentUser);
       } else {
         debugPrint('ℹ️ No existing user session found - user needs to login');
@@ -104,7 +106,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('❌ Error checking current user: $e');
       _isLoading = false;
-      _user = null;
+      // Không clear _user: authStateChanges có thể đã set song song
       notifyListeners();
     }
   }
@@ -117,6 +119,10 @@ class AuthProvider with ChangeNotifier {
 
       // Cancel previous subscription if exists
       await _userSubscription?.cancel();
+
+      // Optimistic user so UI (Home, Practice) does not flash guest before first snapshot.
+      _user = _buildFallbackUser(firebaseUser);
+      notifyListeners();
 
       // Setup snapshot listener để tự động cập nhật khi có thay đổi trên Firestore
       _userSubscription = FirebaseFirestore.instance

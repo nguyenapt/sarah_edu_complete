@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/ads/ad_policy.dart';
@@ -9,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/exercise_model.dart';
 import '../../providers/language_provider.dart';
+import '../../widgets/common/horizon_top_app_bar.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
   final ExerciseModel exercise;
@@ -65,14 +67,10 @@ class ExerciseDetailScreen extends StatelessWidget {
         unawaited(_maybeShowInterstitialAndPop(context));
       },
       child: Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.exerciseDetails),
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
-        leading: BackButton(
-          color: Colors.white,
-          onPressed: () => unawaited(_maybeShowInterstitialAndPop(context)),
-        ),
+      backgroundColor: const Color(0xFFF4F6FF),
+      appBar: HorizonTopAppBar(
+        title: AppLocalizations.of(context)!.exerciseDetails,
+        onBack: () => unawaited(_maybeShowInterstitialAndPop(context)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -270,12 +268,7 @@ class ExerciseDetailScreen extends StatelessWidget {
             const SizedBox(height: 16),
             
             // Câu hỏi
-            Text(
-              _formatQuestionText(question.question),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
+            _buildQuestionPrompt(context, question.question),
             const SizedBox(height: 16),
             
             // Chi tiết đáp án theo loại câu hỏi
@@ -369,12 +362,7 @@ class ExerciseDetailScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            Text(
-              exercise.question,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
+            _buildQuestionPrompt(context, exercise.question),
             // TODO: Thêm chi tiết đáp án cho single exercise
           ],
         ),
@@ -1165,5 +1153,45 @@ class ExerciseDetailScreen extends StatelessWidget {
   String _formatQuestionText(String question) {
     final regex = RegExp(r'\{(\d+)\}');
     return question.replaceAll(regex, '...');
+  }
+
+  bool _looksLikeHtml(String text) {
+    return RegExp(r'<[^>]+>').hasMatch(text);
+  }
+
+  Widget _buildQuestionPrompt(BuildContext context, String rawQuestion) {
+    final display = _formatQuestionText(rawQuestion);
+    final titleStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+        );
+    if (_looksLikeHtml(display)) {
+      final bodyStyle = titleStyle ?? Theme.of(context).textTheme.bodyLarge;
+      return Html(
+        data: display,
+        style: {
+          'body': Style(
+            margin: Margins.zero,
+            padding: HtmlPaddings.zero,
+            fontSize: FontSize(bodyStyle?.fontSize ?? 16),
+            fontWeight: bodyStyle?.fontWeight ?? FontWeight.bold,
+            color: bodyStyle?.color ?? const Color(0xFF14304F),
+          ),
+          'p': Style(
+            margin: Margins.only(bottom: 8),
+            color: bodyStyle?.color ?? const Color(0xFF14304F),
+            fontSize: FontSize(bodyStyle?.fontSize ?? 16),
+            fontWeight: bodyStyle?.fontWeight ?? FontWeight.bold,
+          ),
+          'span': Style(
+            color: bodyStyle?.color ?? const Color(0xFF14304F),
+            fontWeight: bodyStyle?.fontWeight ?? FontWeight.bold,
+          ),
+        },
+      );
+    }
+    return Text(
+      display,
+      style: titleStyle,
+    );
   }
 }

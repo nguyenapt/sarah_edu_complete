@@ -1,4 +1,4 @@
-﻿namespace FirestoreImporter
+namespace FirestoreImporter
 {
     partial class ExerciseGroupForm
     {
@@ -49,6 +49,8 @@
             txtImageUrl = new TextBox();
             btnExportJsonFireStore = new Button();
             btnExportJson = new Button();
+            btnExportCsvTemplate = new Button();
+            btnImportCsv = new Button();
             tabControl1 = new TabControl();
             tabPage2 = new TabPage();
             btnAddQuestion = new Button();
@@ -72,20 +74,24 @@
             label15 = new Label();
             txtSkillTopics = new TextBox();
             groupBox2 = new GroupBox();
-            cboDefaultVoiceAge = new ComboBox();
-            label16 = new Label();
-            cboDefaultVoiceGender = new ComboBox();
-            label17 = new Label();
-            cboDefaultVoiceLanguageCode = new ComboBox();
-            label20 = new Label();
-            label21 = new Label();
-            numRate = new NumericUpDown();
-            label22 = new Label();
             numPitch = new NumericUpDown();
+            label22 = new Label();
+            numRate = new NumericUpDown();
+            label21 = new Label();
+            label20 = new Label();
+            label17 = new Label();
+            label16 = new Label();
+            cboDefaultVoiceLanguageCode = new ComboBox();
+            cboDefaultVoiceGender = new ComboBox();
+            cboDefaultVoiceAge = new ComboBox();
             groupBox3 = new GroupBox();
+            grvSpeakerVoices = new DataGridView();
+            label28 = new Label();
+            btnAddVoice = new Button();
             numVoicePitch = new NumericUpDown();
             label23 = new Label();
             numVoiceAge = new NumericUpDown();
+            txtVoiceName = new TextBox();
             label24 = new Label();
             label25 = new Label();
             label26 = new Label();
@@ -93,11 +99,9 @@
             cboVoiceLanguageCode = new ComboBox();
             cboVoiceGender = new ComboBox();
             cboVoiceAge = new ComboBox();
-            btnAddVoice = new Button();
-            txtVoiceName = new TextBox();
-            label28 = new Label();
-            grvSpeakerVoices = new DataGridView();
             cbHasVoice = new CheckBox();
+            label29 = new Label();
+            txtSequentialTitle = new TextBox();
             ((System.ComponentModel.ISupportInitialize)grvQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPoints).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimeLimit).BeginInit();
@@ -109,12 +113,12 @@
             ((System.ComponentModel.ISupportInitialize)numUnit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numExercise).BeginInit();
             groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numRate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numPitch).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numRate).BeginInit();
             groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grvSpeakerVoices).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numVoicePitch).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numVoiceAge).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)grvSpeakerVoices).BeginInit();
             SuspendLayout();
             // 
             // txtLessonId
@@ -288,21 +292,41 @@
             // 
             // btnExportJson
             // 
-            btnExportJson.Location = new Point(568, 960);
+            btnExportJson.Location = new Point(487, 960);
             btnExportJson.Name = "btnExportJson";
-            btnExportJson.Size = new Size(75, 23);
+            btnExportJson.Size = new Size(156, 23);
             btnExportJson.TabIndex = 14;
             btnExportJson.Text = "Export Json";
             btnExportJson.UseVisualStyleBackColor = true;
             btnExportJson.Click += btnExportJson_Click;
             // 
+            // btnExportCsvTemplate
+            // 
+            btnExportCsvTemplate.Location = new Point(487, 931);
+            btnExportCsvTemplate.Name = "btnExportCsvTemplate";
+            btnExportCsvTemplate.Size = new Size(156, 23);
+            btnExportCsvTemplate.TabIndex = 27;
+            btnExportCsvTemplate.Text = "Export CSV Template";
+            btnExportCsvTemplate.UseVisualStyleBackColor = true;
+            btnExportCsvTemplate.Click += btnExportCsvTemplate_Click;
+            // 
+            // btnImportCsv
+            // 
+            btnImportCsv.Location = new Point(649, 931);
+            btnImportCsv.Name = "btnImportCsv";
+            btnImportCsv.Size = new Size(134, 23);
+            btnImportCsv.TabIndex = 28;
+            btnImportCsv.Text = "Import CSV";
+            btnImportCsv.UseVisualStyleBackColor = true;
+            btnImportCsv.Click += btnImportCsv_Click;
+            // 
             // tabControl1
             // 
             tabControl1.Controls.Add(tabPage2);
-            tabControl1.Location = new Point(66, 476);
+            tabControl1.Location = new Point(66, 543);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(725, 338);
+            tabControl1.Size = new Size(725, 271);
             tabControl1.TabIndex = 16;
             // 
             // tabPage2
@@ -312,7 +336,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(717, 310);
+            tabPage2.Size = new Size(717, 243);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Questions";
             tabPage2.UseVisualStyleBackColor = true;
@@ -345,9 +369,9 @@
             // grvTitle
             // 
             grvTitle.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvTitle.Location = new Point(6, 47);
+            grvTitle.Location = new Point(6, 77);
             grvTitle.Name = "grvTitle";
-            grvTitle.Size = new Size(711, 186);
+            grvTitle.Size = new Size(711, 156);
             grvTitle.TabIndex = 5;
             // 
             // btnAddTitle
@@ -363,8 +387,9 @@
             // txtLanguageTitleValue
             // 
             txtLanguageTitleValue.Location = new Point(265, 21);
+            txtLanguageTitleValue.Multiline = true;
             txtLanguageTitleValue.Name = "txtLanguageTitleValue";
-            txtLanguageTitleValue.Size = new Size(282, 23);
+            txtLanguageTitleValue.Size = new Size(282, 50);
             txtLanguageTitleValue.TabIndex = 8;
             // 
             // label6
@@ -511,76 +536,13 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "Default Voice";
             // 
-            // cboDefaultVoiceAge
+            // numPitch
             // 
-            cboDefaultVoiceAge.FormattingEnabled = true;
-            cboDefaultVoiceAge.Items.AddRange(new object[] { "young", "adult", "senior" });
-            cboDefaultVoiceAge.Location = new Point(114, 29);
-            cboDefaultVoiceAge.Name = "cboDefaultVoiceAge";
-            cboDefaultVoiceAge.Size = new Size(121, 23);
-            cboDefaultVoiceAge.TabIndex = 10;
-            // 
-            // label16
-            // 
-            label16.AutoSize = true;
-            label16.Location = new Point(15, 37);
-            label16.Name = "label16";
-            label16.Size = new Size(28, 15);
-            label16.TabIndex = 11;
-            label16.Text = "Age";
-            // 
-            // cboDefaultVoiceGender
-            // 
-            cboDefaultVoiceGender.FormattingEnabled = true;
-            cboDefaultVoiceGender.Items.AddRange(new object[] { "female", "male" });
-            cboDefaultVoiceGender.Location = new Point(114, 58);
-            cboDefaultVoiceGender.Name = "cboDefaultVoiceGender";
-            cboDefaultVoiceGender.Size = new Size(121, 23);
-            cboDefaultVoiceGender.TabIndex = 10;
-            // 
-            // label17
-            // 
-            label17.AutoSize = true;
-            label17.Location = new Point(15, 66);
-            label17.Name = "label17";
-            label17.Size = new Size(45, 15);
-            label17.TabIndex = 11;
-            label17.Text = "Gender";
-            // 
-            // cboDefaultVoiceLanguageCode
-            // 
-            cboDefaultVoiceLanguageCode.FormattingEnabled = true;
-            cboDefaultVoiceLanguageCode.Items.AddRange(new object[] { "en-US", "en-GB", "hi-IN", "vi-VN" });
-            cboDefaultVoiceLanguageCode.Location = new Point(114, 87);
-            cboDefaultVoiceLanguageCode.Name = "cboDefaultVoiceLanguageCode";
-            cboDefaultVoiceLanguageCode.Size = new Size(121, 23);
-            cboDefaultVoiceLanguageCode.TabIndex = 10;
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Location = new Point(15, 95);
-            label20.Name = "label20";
-            label20.Size = new Size(90, 15);
-            label20.TabIndex = 11;
-            label20.Text = "Language Code";
-            // 
-            // label21
-            // 
-            label21.AutoSize = true;
-            label21.Location = new Point(15, 120);
-            label21.Name = "label21";
-            label21.Size = new Size(30, 15);
-            label21.TabIndex = 11;
-            label21.Text = "Rate";
-            // 
-            // numRate
-            // 
-            numRate.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numRate.Location = new Point(114, 118);
-            numRate.Name = "numRate";
-            numRate.Size = new Size(120, 23);
-            numRate.TabIndex = 12;
+            numPitch.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            numPitch.Location = new Point(114, 147);
+            numPitch.Name = "numPitch";
+            numPitch.Size = new Size(120, 23);
+            numPitch.TabIndex = 12;
             // 
             // label22
             // 
@@ -591,13 +553,76 @@
             label22.TabIndex = 11;
             label22.Text = "Pitch";
             // 
-            // numPitch
+            // numRate
             // 
-            numPitch.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numPitch.Location = new Point(114, 147);
-            numPitch.Name = "numPitch";
-            numPitch.Size = new Size(120, 23);
-            numPitch.TabIndex = 12;
+            numRate.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            numRate.Location = new Point(114, 118);
+            numRate.Name = "numRate";
+            numRate.Size = new Size(120, 23);
+            numRate.TabIndex = 12;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(15, 120);
+            label21.Name = "label21";
+            label21.Size = new Size(30, 15);
+            label21.TabIndex = 11;
+            label21.Text = "Rate";
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(15, 95);
+            label20.Name = "label20";
+            label20.Size = new Size(90, 15);
+            label20.TabIndex = 11;
+            label20.Text = "Language Code";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(15, 66);
+            label17.Name = "label17";
+            label17.Size = new Size(45, 15);
+            label17.TabIndex = 11;
+            label17.Text = "Gender";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(15, 37);
+            label16.Name = "label16";
+            label16.Size = new Size(28, 15);
+            label16.TabIndex = 11;
+            label16.Text = "Age";
+            // 
+            // cboDefaultVoiceLanguageCode
+            // 
+            cboDefaultVoiceLanguageCode.FormattingEnabled = true;
+            cboDefaultVoiceLanguageCode.Items.AddRange(new object[] { "en-US", "en-GB", "hi-IN", "vi-VN" });
+            cboDefaultVoiceLanguageCode.Location = new Point(114, 87);
+            cboDefaultVoiceLanguageCode.Name = "cboDefaultVoiceLanguageCode";
+            cboDefaultVoiceLanguageCode.Size = new Size(121, 23);
+            cboDefaultVoiceLanguageCode.TabIndex = 10;
+            // 
+            // cboDefaultVoiceGender
+            // 
+            cboDefaultVoiceGender.FormattingEnabled = true;
+            cboDefaultVoiceGender.Items.AddRange(new object[] { "female", "male" });
+            cboDefaultVoiceGender.Location = new Point(114, 58);
+            cboDefaultVoiceGender.Name = "cboDefaultVoiceGender";
+            cboDefaultVoiceGender.Size = new Size(121, 23);
+            cboDefaultVoiceGender.TabIndex = 10;
+            // 
+            // cboDefaultVoiceAge
+            // 
+            cboDefaultVoiceAge.FormattingEnabled = true;
+            cboDefaultVoiceAge.Items.AddRange(new object[] { "young", "adult", "senior" });
+            cboDefaultVoiceAge.Location = new Point(114, 29);
+            cboDefaultVoiceAge.Name = "cboDefaultVoiceAge";
+            cboDefaultVoiceAge.Size = new Size(121, 23);
+            cboDefaultVoiceAge.TabIndex = 10;
             // 
             // groupBox3
             // 
@@ -621,6 +646,32 @@
             groupBox3.TabIndex = 25;
             groupBox3.TabStop = false;
             groupBox3.Text = "Speaker Voices";
+            // 
+            // grvSpeakerVoices
+            // 
+            grvSpeakerVoices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grvSpeakerVoices.Location = new Point(11, 173);
+            grvSpeakerVoices.Name = "grvSpeakerVoices";
+            grvSpeakerVoices.Size = new Size(351, 130);
+            grvSpeakerVoices.TabIndex = 11;
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Location = new Point(17, 25);
+            label28.Name = "label28";
+            label28.Size = new Size(39, 15);
+            label28.TabIndex = 25;
+            label28.Text = "Name";
+            // 
+            // btnAddVoice
+            // 
+            btnAddVoice.Location = new Point(251, 147);
+            btnAddVoice.Name = "btnAddVoice";
+            btnAddVoice.Size = new Size(111, 23);
+            btnAddVoice.TabIndex = 11;
+            btnAddVoice.Text = "Add";
+            btnAddVoice.UseVisualStyleBackColor = true;
             // 
             // numVoicePitch
             // 
@@ -646,6 +697,13 @@
             numVoiceAge.Name = "numVoiceAge";
             numVoiceAge.Size = new Size(76, 23);
             numVoiceAge.TabIndex = 12;
+            // 
+            // txtVoiceName
+            // 
+            txtVoiceName.Location = new Point(114, 22);
+            txtVoiceName.Name = "txtVoiceName";
+            txtVoiceName.Size = new Size(248, 23);
+            txtVoiceName.TabIndex = 24;
             // 
             // label24
             // 
@@ -710,39 +768,6 @@
             cboVoiceAge.Size = new Size(76, 23);
             cboVoiceAge.TabIndex = 10;
             // 
-            // btnAddVoice
-            // 
-            btnAddVoice.Location = new Point(251, 147);
-            btnAddVoice.Name = "btnAddVoice";
-            btnAddVoice.Size = new Size(111, 23);
-            btnAddVoice.TabIndex = 11;
-            btnAddVoice.Text = "Add";
-            btnAddVoice.UseVisualStyleBackColor = true;
-            // 
-            // txtVoiceName
-            // 
-            txtVoiceName.Location = new Point(114, 22);
-            txtVoiceName.Name = "txtVoiceName";
-            txtVoiceName.Size = new Size(248, 23);
-            txtVoiceName.TabIndex = 24;
-            // 
-            // label28
-            // 
-            label28.AutoSize = true;
-            label28.Location = new Point(17, 25);
-            label28.Name = "label28";
-            label28.Size = new Size(39, 15);
-            label28.TabIndex = 25;
-            label28.Text = "Name";
-            // 
-            // grvSpeakerVoices
-            // 
-            grvSpeakerVoices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grvSpeakerVoices.Location = new Point(11, 173);
-            grvSpeakerVoices.Name = "grvSpeakerVoices";
-            grvSpeakerVoices.Size = new Size(351, 130);
-            grvSpeakerVoices.TabIndex = 11;
-            // 
             // cbHasVoice
             // 
             cbHasVoice.AutoSize = true;
@@ -753,6 +778,23 @@
             cbHasVoice.Text = "Has Voice";
             cbHasVoice.UseVisualStyleBackColor = true;
             // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new Point(70, 481);
+            label29.Name = "label29";
+            label29.Size = new Size(88, 15);
+            label29.TabIndex = 23;
+            label29.Text = "Sequential Title";
+            // 
+            // txtSequentialTitle
+            // 
+            txtSequentialTitle.Location = new Point(204, 478);
+            txtSequentialTitle.Multiline = true;
+            txtSequentialTitle.Name = "txtSequentialTitle";
+            txtSequentialTitle.Size = new Size(577, 40);
+            txtSequentialTitle.TabIndex = 24;
+            // 
             // ExerciseGroupForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -761,6 +803,8 @@
             Controls.Add(cbHasVoice);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
+            Controls.Add(txtSequentialTitle);
+            Controls.Add(label29);
             Controls.Add(txtSkillTopics);
             Controls.Add(label15);
             Controls.Add(txtGrammarTopics);
@@ -775,6 +819,8 @@
             Controls.Add(label18);
             Controls.Add(groupBox1);
             Controls.Add(tabControl1);
+            Controls.Add(btnImportCsv);
+            Controls.Add(btnExportCsvTemplate);
             Controls.Add(btnExportJsonFireStore);
             Controls.Add(btnExportJson);
             Controls.Add(cbDifficulty);
@@ -810,13 +856,13 @@
             ((System.ComponentModel.ISupportInitialize)numExercise).EndInit();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numRate).EndInit();
             ((System.ComponentModel.ISupportInitialize)numPitch).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numRate).EndInit();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grvSpeakerVoices).EndInit();
             ((System.ComponentModel.ISupportInitialize)numVoicePitch).EndInit();
             ((System.ComponentModel.ISupportInitialize)numVoiceAge).EndInit();
-            ((System.ComponentModel.ISupportInitialize)grvSpeakerVoices).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -844,6 +890,8 @@
         private TextBox txtImageUrl;
         private Button btnExportJsonFireStore;
         private Button btnExportJson;
+        private Button btnExportCsvTemplate;
+        private Button btnImportCsv;
         private TabControl tabControl1;
         private TabPage tabPage2;
         private Button btnAddQuestion;
@@ -893,5 +941,7 @@
         private Label label28;
         private DataGridView grvSpeakerVoices;
         private CheckBox cbHasVoice;
+        private Label label29;
+        private TextBox txtSequentialTitle;
     }
 }

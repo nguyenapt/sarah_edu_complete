@@ -366,13 +366,19 @@ class CatalogRepository {
     final cached = HiveCacheStore.getJson<List<ExerciseModel>>(
       _kExercisesByLesson(lessonId),
       decode: (json) {
-        final list = (json as List).cast<Map>();
+        final list = (json as List).whereType<Map>().toList();
         return list
-            .map((m) => ExerciseModel.fromFirestore(
-                  Map<String, dynamic>.from(m['data'] as Map),
-                  m['id'] as String,
-                  languageCode: languageCode,
-                ))
+            .map((m) {
+              final rawData = m['data'];
+              final data = rawData is Map
+                  ? rawData.map((k, v) => MapEntry(k.toString(), v))
+                  : <String, dynamic>{};
+              return ExerciseModel.fromFirestore(
+                data,
+                (m['id'] ?? '').toString(),
+                languageCode: languageCode,
+              );
+            })
             .toList();
       },
     );

@@ -9,6 +9,9 @@ import '../../l10n/app_localizations.dart';
 import 'lesson_detail_screen.dart';
 import '../../widgets/common/horizon_top_app_bar.dart';
 import '../../core/repositories/catalog_repository.dart';
+import '../../core/services/unit_group_service.dart';
+import '../../models/exercise_model.dart';
+import 'exercise_screen.dart';
 
 class UnitListScreen extends StatefulWidget {
   final UnitModel? unit; // Optional: nếu có thì hiển thị unit này
@@ -25,7 +28,10 @@ class UnitListScreen extends StatefulWidget {
 }
 
 class _UnitListScreenState extends State<UnitListScreen> {
+  final FirestoreService _firestoreService = FirestoreService();
   Map<String, List<LessonModel>> _lessonsByUnit = {}; // Map unitId -> lessons
+  /// Khi unit không có lesson: bài tập gắn `unitId` (ôn tập).
+  Map<String, List<ExerciseModel>> _exercisesByUnit = {};
   bool _isLoading = true;
 
   // Lấy danh sách units cần hiển thị
@@ -48,7 +54,10 @@ class _UnitListScreenState extends State<UnitListScreen> {
     try {
       final units = _unitsToDisplay;
       final lessonsMap = <String, List<LessonModel>>{};
-      
+      final exercisesMap = <String, List<ExerciseModel>>{};
+      final languageCode =
+          Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+
       // Load lessons cho tất cả units
       for (final unit in units) {
         final repo = Provider.of<CatalogRepository>(context, listen: false);
@@ -62,10 +71,21 @@ class _UnitListScreenState extends State<UnitListScreen> {
           },
         );
         lessonsMap[unit.id] = lessons;
+        if (lessons.isEmpty) {
+          var ex = await _firestoreService.getExercisesByUnits(
+            [unit.id],
+            languageCode: languageCode,
+          );
+          ex.sort((a, b) => UnitGroupService.compareExerciseIds(a.id, b.id));
+          exercisesMap[unit.id] = ex;
+        } else {
+          exercisesMap[unit.id] = [];
+        }
       }
-      
+
       setState(() {
         _lessonsByUnit = lessonsMap;
+        _exercisesByUnit = exercisesMap;
         _isLoading = false;
       });
     } catch (e) {
@@ -100,14 +120,21 @@ class _UnitListScreenState extends State<UnitListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: _unitsToDisplay.map((unit) {
                   final lessons = _lessonsByUnit[unit.id] ?? [];
-                  return _buildUnitCard(unit, lessons, languageCode);
+                  final exercises = _exercisesByUnit[unit.id] ?? [];
+                  return _buildUnitCard(unit, lessons, exercises, languageCode);
                 }).toList(),
               ),
             ),
     );
   }
 
-  Widget _buildUnitCard(UnitModel unit, List<LessonModel> lessons, String languageCode) {
+  Widget _buildUnitCard(
+    UnitModel unit,
+    List<LessonModel> lessons,
+    List<ExerciseModel> unitExercises,
+    String languageCode,
+  ) {
+    final loc = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -131,36 +158,36 @@ class _UnitListScreenState extends State<UnitListScreen> {
               children: [
                 Chip(
                   avatar: const Icon(Icons.access_time, size: 18),
-                  label: Text('${unit.estimatedTime} ${AppLocalizations.of(context)!.minutes}'),
+                  label: Text('${unit.estimatedTime} ${loc.minutes}'),
                   backgroundColor:
                       AppTheme.primaryColor.withOpacity(0.1),
                 ),
                 const SizedBox(width: 12),
-                Chip(
-                  avatar: const Icon(Icons.menu_book, size: 18),
-                  label: Text(AppLocalizations.of(context)!.lessonsCount(lessons.length)),
-                  backgroundColor:
-                      AppTheme.primaryColor.withOpacity(0.1),
-                ),
+                if (lessons.isNotEmpty)
+                  Chip(
+                    avatar: const Icon(Icons.menu_book, size: 18),
+                    label: Text(loc.lessonsCount(lessons.length)),
+                    backgroundColor:
+                        AppTheme.primaryColor.withOpacity(0.1),
+                  )
+                else if (unitExercises.isNotEmpty)
+                  Chip(
+                    avatar: const Icon(Icons.quiz, size: 18),
+                    label: Text(loc.exercisesCount(unitExercises.length)),
+                    backgroundColor:
+                        AppTheme.primaryColor.withOpacity(0.1),
+                  ),
               ],
             ),
-            // Danh sách bài học ngay phía dưới
             const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context)!.lessonsList,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            if (lessons.isEmpty)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Text(AppLocalizations.of(context)!.noLessons),
-                ),
-              )
-            else
+            if (lessons.isNotEmpty) ...[
+              Text(
+                loc.lessonsList,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -170,8 +197,59 @@ class _UnitListScreenState extends State<UnitListScreen> {
                   return _buildLessonCard(lesson, index);
                 },
               ),
+            ] else if (unitExercises.isNotEmpty) ...[
+              Text(
+                loc.exercises,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: unitExercises.length,
+                itemBuilder: (context, index) {
+                  final ex = unitExercises[index];
+                  return _buildExerciseCard(ex, index + 1);
+                },
+              ),
+            ] else
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Text(loc.noLessons),
+                ),
+              ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildExerciseCard(ExerciseModel exercise, int displayIndex) {
+    final loc = AppLocalizations.of(context)!;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: AppTheme.primaryColor.withOpacity(0.85),
+          child: const Icon(Icons.quiz, color: Colors.white),
+        ),
+        title: Text(
+          loc.reviewExerciseWithIndex(displayIndex),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => ExerciseScreen(exercise: exercise),
+            ),
+          );
+        },
       ),
     );
   }

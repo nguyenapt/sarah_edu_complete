@@ -53,6 +53,14 @@
   "units": "ユニット",
   "lessons": "レッスン",
   "exercises": "練習問題",
+  "reviewExerciseWithIndex": "復習 {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "練習問題の詳細",
   "viewDetails": "詳細を見る",
   "position": "位置 {number}",
@@ -96,6 +104,7 @@
   "affirmative": "肯定",
   "negative": "否定",
   "interrogative": "疑問",
+  "grammarForm": "形式",
   "minutes": "分",
   "hours": "時間",
   "submit": "提出",
@@ -228,6 +237,7 @@
     }
   },
   "vocabularyExplore": "EXPLORE",
+  "vocabularyLoadMore": "さらに表示",
   "vocabularyReviewSoon": "REVIEW SOON",
   "vocabularySort": "Sort",
   "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
@@ -270,6 +280,7 @@
   "currentLevelText": "現在のレベル",
   "completed": "完了",
   "notUnlocked": "ロック解除されていません",
+  "reviewLevelNotAvailable": "This level is not available for review yet.",
   "continueButton": "続ける",
   "xp": "XP",
   "levelLabel": "レベル",

@@ -18,34 +18,37 @@ class UnitGroupService {
   /// So sánh 2 exercise IDs để xem exercise nào cao hơn
   /// Format: exercise_a1_1_2_4 -> [exercise, a1, 1, 2, 4]
   /// Trả về: -1 nếu exercise1 < exercise2, 0 nếu bằng, 1 nếu exercise1 > exercise2
-  int _compareExerciseIds(String exerciseId1, String exerciseId2) {
+  static int compareExerciseIds(String exerciseId1, String exerciseId2) {
     final parts1 = exerciseId1.split('_');
     final parts2 = exerciseId2.split('_');
-    
+
     // Cần ít nhất 5 parts: exercise_level_unit_lesson_exercise
     if (parts1.length < 5 || parts2.length < 5) {
       return exerciseId1.compareTo(exerciseId2);
     }
-    
+
     // So sánh level (index 1)
     final levelCompare = parts1[1].compareTo(parts2[1]);
     if (levelCompare != 0) return levelCompare;
-    
+
     // So sánh unit (index 2)
     final unit1 = int.tryParse(parts1[2]) ?? 0;
     final unit2 = int.tryParse(parts2[2]) ?? 0;
     if (unit1 != unit2) return unit1.compareTo(unit2);
-    
+
     // So sánh lesson (index 3)
     final lesson1 = int.tryParse(parts1[3]) ?? 0;
     final lesson2 = int.tryParse(parts2[3]) ?? 0;
     if (lesson1 != lesson2) return lesson1.compareTo(lesson2);
-    
+
     // So sánh exercise (index 4)
     final exercise1 = int.tryParse(parts1[4]) ?? 0;
     final exercise2 = int.tryParse(parts2[4]) ?? 0;
     return exercise1.compareTo(exercise2);
   }
+
+  int _compareExerciseIds(String exerciseId1, String exerciseId2) =>
+      compareExerciseIds(exerciseId1, exerciseId2);
 
   /// So sánh highestProgress với một group dựa trên unit/lesson của group
   /// So sánh theo thứ tự: levelId → unitId (số unit) → lessonId (số lesson) → exerciseId (số exercise)

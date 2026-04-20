@@ -53,6 +53,14 @@
   "units": "단원",
   "lessons": "수업",
   "exercises": "연습문제",
+  "reviewExerciseWithIndex": "복습 {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "연습문제 상세",
   "viewDetails": "상세 보기",
   "position": "위치 {number}",
@@ -96,6 +104,7 @@
   "affirmative": "긍정",
   "negative": "부정",
   "interrogative": "의문",
+  "grammarForm": "형태",
   "minutes": "분",
   "hours": "시간",
   "submit": "제출",
@@ -228,6 +237,7 @@
     }
   },
   "vocabularyExplore": "EXPLORE",
+  "vocabularyLoadMore": "더 보기",
   "vocabularyReviewSoon": "REVIEW SOON",
   "vocabularySort": "Sort",
   "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
@@ -270,6 +280,7 @@
   "currentLevelText": "현재 레벨",
   "completed": "완료됨",
   "notUnlocked": "잠금 해제되지 않음",
+  "reviewLevelNotAvailable": "This level is not available for review yet.",
   "continueButton": "계속",
   "xp": "XP",
   "levelLabel": "레벨",

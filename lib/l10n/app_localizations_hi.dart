@@ -170,6 +170,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get exercises => 'अभ्यास';
 
   @override
+  String reviewExerciseWithIndex(int number) {
+    return 'समीक्षा अभ्यास $number';
+  }
+
+  @override
   String get exerciseDetails => 'अभ्यास विवरण';
 
   @override
@@ -221,6 +226,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get interrogative => 'प्रश्नवाचक';
+
+  @override
+  String get grammarForm => 'रूप';
 
   @override
   String get minutes => 'मिनट';
@@ -515,6 +523,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get vocabularyExplore => 'EXPLORE';
 
   @override
+  String get vocabularyLoadMore => 'और लोड करें';
+
+  @override
   String get vocabularyReviewSoon => 'REVIEW SOON';
 
   @override
@@ -602,6 +613,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get notUnlocked => 'अनलॉक नहीं किया गया';
+
+  @override
+  String get reviewLevelNotAvailable =>
+      'This level is not available for review yet.';
 
   @override
   String get continueButton => 'जारी रखें';

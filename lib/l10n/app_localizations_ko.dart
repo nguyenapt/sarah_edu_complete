@@ -170,6 +170,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get exercises => '연습문제';
 
   @override
+  String reviewExerciseWithIndex(int number) {
+    return '복습 $number';
+  }
+
+  @override
   String get exerciseDetails => '연습문제 상세';
 
   @override
@@ -221,6 +226,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get interrogative => '의문';
+
+  @override
+  String get grammarForm => '형태';
 
   @override
   String get minutes => '분';
@@ -508,6 +516,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get vocabularyExplore => 'EXPLORE';
 
   @override
+  String get vocabularyLoadMore => '더 보기';
+
+  @override
   String get vocabularyReviewSoon => 'REVIEW SOON';
 
   @override
@@ -592,6 +603,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get notUnlocked => '잠금 해제되지 않음';
+
+  @override
+  String get reviewLevelNotAvailable =>
+      'This level is not available for review yet.';
 
   @override
   String get continueButton => '계속';

@@ -53,6 +53,14 @@
   "units": "Units",
   "lessons": "Lessons",
   "exercises": "Exercises",
+  "reviewExerciseWithIndex": "Review exercise {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "Exercise Details",
   "viewDetails": "View Details",
   "position": "Position {number}",
@@ -96,6 +104,7 @@
   "affirmative": "Affirmative",
   "negative": "Negative",
   "interrogative": "Interrogative",
+  "grammarForm": "Form",
   "minutes": "minutes",
   "hours": "hours",
   "submit": "Submit",
@@ -229,6 +238,7 @@
     }
   },
   "vocabularyExplore": "EXPLORE",
+  "vocabularyLoadMore": "Load more",
   "vocabularyReviewSoon": "REVIEW SOON",
   "vocabularySort": "Sort",
   "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
@@ -271,6 +281,7 @@
   "currentLevelText": "Current level",
   "completed": "Completed",
   "notUnlocked": "Not unlocked",
+  "reviewLevelNotAvailable": "This level is not available for review yet.",
   "continueButton": "Continue",
   "xp": "XP",
   "levelLabel": "Level",

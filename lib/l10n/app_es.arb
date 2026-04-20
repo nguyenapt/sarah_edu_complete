@@ -53,6 +53,14 @@
   "units": "Unidades",
   "lessons": "Lecciones",
   "exercises": "Ejercicios",
+  "reviewExerciseWithIndex": "Ejercicio de repaso {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "Detalles del ejercicio",
   "viewDetails": "Ver detalles",
   "position": "Posición {number}",
@@ -96,6 +104,7 @@
   "affirmative": "Afirmativo",
   "negative": "Negativo",
   "interrogative": "Interrogativo",
+  "grammarForm": "Forma",
   "minutes": "minutos",
   "hours": "horas",
   "submit": "Enviar",
@@ -228,6 +237,7 @@
     }
   },
   "vocabularyExplore": "EXPLORE",
+  "vocabularyLoadMore": "Cargar más",
   "vocabularyReviewSoon": "REVIEW SOON",
   "vocabularySort": "Sort",
   "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
@@ -270,6 +280,7 @@
   "currentLevelText": "Nivel actual",
   "completed": "Completado",
   "notUnlocked": "No desbloqueado",
+  "reviewLevelNotAvailable": "This level is not available for review yet.",
   "continueButton": "Continuar",
   "xp": "XP",
   "levelLabel": "Nivel",

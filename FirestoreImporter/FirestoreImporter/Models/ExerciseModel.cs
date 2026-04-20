@@ -96,6 +96,9 @@ public class ExerciseModel
     [JsonProperty("speakerVoices")]
     public Dictionary<string, VoiceConfig>? SpeakerVoices { get; set; }
 
+    [JsonProperty("sequentialTitle")]
+    public string? SequentialTitle { get; set; }
+
     public Dictionary<string, object> ToFirestore()
     {
         var data = new Dictionary<string, object>
@@ -185,6 +188,11 @@ public class ExerciseModel
             }
         }
         // Nếu HasVoice = false hoặc null, không export bất kỳ voice data nào
+
+        if (!string.IsNullOrEmpty(SequentialTitle))
+        {
+            data["sequentialTitle"] = SequentialTitle;
+        }
 
         return data;
     }

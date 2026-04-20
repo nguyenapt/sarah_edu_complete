@@ -236,11 +236,13 @@ class GrammarForms {
   final List<String>? statement; // Array of strings
   final List<String>? negative; // Array of strings
   final List<String>? question; // Array of strings
+  final List<String>? form; // Extra form lines (JSON key: form)
 
   GrammarForms({
     this.statement,
     this.negative,
     this.question,
+    this.form,
   });
 
   /// Get statement forms
@@ -256,6 +258,11 @@ class GrammarForms {
   /// Get question forms
   List<String> getQuestion() {
     return question ?? [];
+  }
+
+  /// Additional form patterns (e.g. structural formulas)
+  List<String> getForm() {
+    return form ?? [];
   }
 
   factory GrammarForms.fromMap(Map<String, dynamic> map) {
@@ -327,10 +334,25 @@ class GrammarForms {
       }
     }
 
+    List<String>? formData;
+    if (map['form'] != null) {
+      if (map['form'] is List) {
+        formData = (map['form'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+      } else if (map['form'] is Map) {
+        final formMap = map['form'] as Map<String, dynamic>;
+        formData = [formMap.values.first.toString()];
+      } else {
+        formData = [map['form'].toString()];
+      }
+    }
+
     return GrammarForms(
       statement: statementData,
       negative: negativeData,
       question: questionData,
+      form: formData,
     );
   }
 
@@ -339,6 +361,7 @@ class GrammarForms {
       'statement': statement,
       'negative': negative,
       'question': question,
+      'form': form,
     };
   }
 }

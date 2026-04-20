@@ -1,0 +1,404 @@
+{
+  "vocabulary": {
+    "topicVocabulary": [
+      {
+        "word": "amusing",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "funny or entertaining",
+          "vi": "buồn cười hoặc mang tính giải trí",
+          "de": "lustig oder unterhaltsam",
+          "es": "gracioso o entretenido",
+          "fr": "drôle ou divertissant",
+          "hi": "मज़ेदार या मनोरंजक",
+          "ja": "おかしく、または楽しませる",
+          "ko": "재미있거나 즐거운",
+          "pt": "engraçado ou divertido",
+          "ru": "смешной или развлекательный",
+          "zh": "滑稽的；或令人感到有趣的"
+        }
+      },
+      {
+        "word": "annoy",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to make someone feel slightly angry or impatient",
+          "vi": "làm cho ai đó cảm thấy hơi tức giận hoặc mất kiên nhẫn",
+          "de": "jemanden leicht wütend oder ungeduldig machen",
+          "es": "hacer que alguien se sienta un poco enfadado o impaciente",
+          "fr": "mettre quelqu'un un peu en colère ou impatient",
+          "hi": "किसी को थोड़ा गुस्सा या बेचैनी महसूस कराना",
+          "ja": "誰かを少し腹立たしくさせたり、いらいらさせたりする",
+          "ko": "누군가를 약간 화나게 하거나 참을성을 잃게 하다",
+          "pt": "fazer alguém sentir-se um pouco irritado ou impaciente",
+          "ru": "заставить кого-то почувствовать лёгкое раздражение или нетерпение",
+          "zh": "使某人感到有点生气或不耐烦"
+        }
+      },
+      {
+        "word": "attitude",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "opinions or feelings that you show by your behaviour",
+          "vi": "quan điểm hoặc cảm xúc mà bạn thể hiện qua hành vi",
+          "de": "Meinungen oder Gefühle, die man durch sein Verhalten zeigt",
+          "es": "opiniones o sentimientos que muestras con tu comportamiento",
+          "fr": "opinions ou sentiments que l’on manifeste par son comportement",
+          "hi": "व्यवहार से जो राय या भावनाएँ दिखाई देती हैं",
+          "ja": "行動によって示す意見や感情",
+          "ko": "행동으로 드러내는 의견이나 감정",
+          "pt": "opiniões ou sentimentos que você mostra pelo seu comportamento",
+          "ru": "мнения или чувства, которые вы показываете своим поведением",
+          "zh": "通过行为所表现出的观点或感受"
+        }
+      },
+      {
+        "word": "bad-tempered",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "made annoyed or angry very easily",
+          "vi": "rất dễ bực bội hoặc nổi giận",
+          "de": "leicht verärgert oder wütend werdend",
+          "es": "que se molesta o enfada con mucha facilidad",
+          "fr": "qui se met facilement en colère ou devient irritable",
+          "hi": "बहुत आसानी से चिढ़ या गुस्सा हो जाना",
+          "ja": "すぐにいら立ったり怒ったりする",
+          "ko": "매우 쉽게 짜증을 내거나 화를 내는",
+          "pt": "que fica irritado ou zangado com muita facilidade",
+          "ru": "легко раздражающийся или выходящий из себя",
+          "zh": "很容易恼火或发怒的"
+        }
+      },
+      {
+        "word": "behave",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to do things in a particular way",
+          "vi": "làm việc gì đó theo một cách nhất định",
+          "de": "Dinge auf eine bestimmte Art tun",
+          "es": "hacer las cosas de una manera concreta",
+          "fr": "faire les choses d’une certaine manière",
+          "hi": "चीज़ें किसी खास तरीके से करना",
+          "ja": "物事をある特定の仕方で行う",
+          "ko": "일을 특정한 방식으로 하다",
+          "pt": "fazer as coisas de um modo particular",
+          "ru": "делать что-то определённым образом",
+          "zh": "以某种特定方式做事"
+        }
+      },
+      {
+        "word": "bully",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to frighten or hurt someone who is smaller or weaker than you",
+          "vi": "dọa nạt hoặc làm tổn thương người nhỏ hơn hoặc yếu hơn mình",
+          "de": "jemanden einschüchtern oder verletzen, der kleiner oder schwächer ist als man selbst",
+          "es": "asustar o hacer daño a alguien más pequeño o débil que tú",
+          "fr": "effrayer ou blesser quelqu’un de plus petit ou plus faible que soi",
+          "hi": "अपने से छोटे या कमज़ोर व्यक्ति को डराना या चोट पहुँचाना",
+          "ja": "自分より弱い、または小さい相手を脅かしたり傷つけたりする",
+          "ko": "자신보다 작거나 약한 사람을 겁주거나 해치다",
+          "pt": "amedrontar ou machucar alguém menor ou mais fraco que você",
+          "ru": "пугать или причинять вред тому, кто слабее или моложе вас",
+          "zh": "恐吓或伤害比自己弱小的人"
+        }
+      },
+      {
+        "word": "calm",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "not affected by strong emotions",
+          "vi": "không bị cảm xúc mạnh chi phối",
+          "de": "von starken Gefühlen unbeeinflusst",
+          "es": "no afectado por emociones fuertes",
+          "fr": "non affecté par de fortes émotions",
+          "hi": "तीव्र भावनाओं से अप्रभावित",
+          "ja": "強い感情に左右されない",
+          "ko": "강한 감정의 영향을 받지 않는",
+          "pt": "não afetado por emoções fortes",
+          "ru": "не подверженный сильным эмоциям",
+          "zh": "不受强烈情绪左右的"
+        }
+      },
+      {
+        "word": "celebrate",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to do something enjoyable in order to show that an occasion or event is special",
+          "vi": "làm điều gì đó vui vẻ để thể hiện một dịp hay sự kiện là đặc biệt",
+          "de": "etwas Angenehmes tun, um zu zeigen, dass ein Anlass besonders ist",
+          "es": "hacer algo agradable para mostrar que una ocasión es especial",
+          "fr": "faire quelque chose d’agréable pour montrer qu’une occasion est importante",
+          "hi": "यह दिखाने के लिए कि कोई अवसर खास है, कुछ सुखद करना",
+          "ja": "行事や出来事が特別であることを示すために楽しいことをする",
+          "ko": "행사나 일이 특별함을 나타내기 위해 즐거운 일을 하다",
+          "pt": "fazer algo agradável para mostrar que uma ocasião é especial",
+          "ru": "делать что-то приятное, чтобы показать, что событие особенное",
+          "zh": "做令人愉快的事，以表明某个场合或活动很特别"
+        }
+      },
+      {
+        "word": "depressed",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "very unhappy and without any feelings of hope or enthusiasm",
+          "vi": "rất buồn và không còn chút hy vọng hay nhiệt huyết nào",
+          "de": "sehr unglücklich und ohne Hoffnung oder Begeisterung",
+          "es": "muy infeliz y sin ninguna sensación de esperanza o entusiasmo",
+          "fr": "très malheureux et sans aucun espoir ni enthousiasme",
+          "hi": "बहुत दुखी और बिना किसी उम्मीद या उत्साह के",
+          "ja": "非常に不幸で、希望や熱意をまったく感じない",
+          "ko": "매우 불행하고 희망이나 열정이 전혀 없는",
+          "pt": "muito infeliz e sem qualquer esperança ou entusiasmo",
+          "ru": "очень несчастный и без малейшей надежды или энтузиазма",
+          "zh": "非常不快乐，且毫无希望或热情"
+        }
+      },
+      {
+        "word": "enthusiastic",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "very interested in something, or excited by it",
+          "vi": "rất hứng thú với điều gì đó, hoặc hào hứng vì nó",
+          "de": "sehr an etwas interessiert oder davon begeistert",
+          "es": "muy interesado en algo o entusiasmado por ello",
+          "fr": "très intéressé par quelque chose ou enthousiasmé par cela",
+          "hi": "किसी चीज़ में बहुत रुचि रखना या उससे उत्साहित होना",
+          "ja": "何かに非常に興味がある、またはそれにわくわくしている",
+          "ko": "무언가에 매우 관심이 있거나 그것에 흥분한",
+          "pt": "muito interessado em algo ou entusiasmado com isso",
+          "ru": "очень заинтересованный в чём-то или взволнованный этим",
+          "zh": "对某事非常感兴趣或为之感到兴奋"
+        }
+      },
+      {
+        "word": "miserable",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "extremely unhappy",
+          "vi": "cực kỳ không vui, khổ sở",
+          "de": "extrem unglücklich",
+          "es": "extremadamente infeliz",
+          "fr": "extrêmement malheureux",
+          "hi": "अत्यंत दुखी",
+          "ja": "極度に不幸な",
+          "ko": "극도로 불행한",
+          "pt": "extremamente infeliz",
+          "ru": "крайне несчастный",
+          "zh": "极其不快乐"
+        }
+      },
+      {
+        "word": "polite",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "behaving towards other people in a pleasant way that follows all the usual rules of society",
+          "vi": "cư xử nhã nhặn, thân thiện với người khác theo các quy tắc xã hội thông thường",
+          "de": "sich gegenüber anderen freundlich verhalten und die üblichen gesellschaftlichen Regeln befolgen",
+          "es": "comportarse de forma agradable hacia los demás siguiendo las normas sociales habituales",
+          "fr": "se comporter de façon agréable envers les autres et respecter les usages sociaux",
+          "hi": "दूसरों के प्रति सुखद तरीके से व्यवहार करना जो सामान्य सामाजिक नियमों का पालन करता हो",
+          "ja": "社会の通例のしきたりに沿って、他者に対して穏やかにふるまう",
+          "ko": "사회의 통상적인 규범에 따라 다른 사람에게 정중하고 상냥하게 행동하는",
+          "pt": "comportar-se de modo agradável com as outras pessoas, seguindo as regras sociais usuais",
+          "ru": "вести себя любезно по отношению к другим в соответствии с общепринятыми нормами",
+          "zh": "待人友善并遵守社会通行规范的"
+        }
+      },
+      {
+        "word": "ridiculous",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "silly or unreasonable and deserving to be laughed at",
+          "vi": "ngớ ngẩn hoặc vô lý và đáng bị chế giễu",
+          "de": "albern oder unvernünftig und einer Auslacherei würdig",
+          "es": "tonto o irrazonable y que merece ser ridiculizado",
+          "fr": "stupide ou déraisonnable et qui mérite qu’on en rie",
+          "hi": "मूर्ख या अतर्कसंगत और हँसी का पात्र",
+          "ja": "ばかばかしい、または不合理で、笑われるに値する",
+          "ko": "어리석거나 불합리하며 비웃음을 살 만한",
+          "pt": "tonto ou irracional e que merece ser ridicularizado",
+          "ru": "глупый или неразумный и достойный насмешек",
+          "zh": "愚蠢或不合情理，因而显得可笑"
+        }
+      },
+      {
+        "word": "shy",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "nervous and embarrassed in the company of other people, especially people who you do not know",
+          "vi": "lo lắng và ngượng ngùng khi ở cùng người khác, nhất là người không quen",
+          "de": "in Gesellschaft nervös und verlegen, besonders gegenüber Unbekannten",
+          "es": "nervioso y avergonzado en compañía de otras personas, sobre todo desconocidos",
+          "fr": "mal à l’aise et gêné en présence d’autrui, surtout d’inconnus",
+          "hi": "दूसरों की संगति में घबराया हुआ और शर्मिंदा, खासकर अनजान लोगों के साथ",
+          "ja": "人、特に知らない人と一緒にいると緊張して気まずい",
+          "ko": "다른 사람, 특히 모르는 사람들과 있을 때 긴장하고 어색해하는",
+          "pt": "nervoso e constrangido na companhia de outras pessoas, especialmente desconhecidos",
+          "ru": "нервничающий и смущённый в обществе других, особенно незнакомцев",
+          "zh": "在他人面前，尤其在不认识的人面前感到紧张与尴尬"
+        }
+      }
+    ],
+    "phrasalVerbs": [
+      {
+        "definition": {
+          "en": "become/make calmer [cite: 37]",
+          "verb": "calm down"
+        }
+      },
+      {
+        "definition": {
+          "verb": "cheer up",
+          "en": "become/make happier [cite: 38]"
+        }
+      },
+      {
+        "definition": {
+          "en": "be quicker [cite: 39]",
+          "verb": "come on"
+        }
+      },
+      {
+        "definition": {
+          "verb": "go on",
+          "en": "continue happening or doing sth [cite: 40]"
+        }
+      },
+      {
+        "definition": {
+          "en": "wait [cite: 41]",
+          "verb": "hang on"
+        }
+      },
+      {
+        "definition": {
+          "verb": "run away (from)",
+          "en": "escape by running [cite: 42]"
+        }
+      },
+      {
+        "definition": {
+          "en": "stop talking, stop making a noise [cite: 43]",
+          "verb": "shut up"
+        }
+      },
+      {
+        "definition": {
+          "verb": "speak up",
+          "en": "talk more loudly so sb can hear you [cite: 44]"
+        }
+      }
+    ],
+    "prepositionalPhrases": [
+      {
+        "phrase": "at first",
+        "translations": {
+          "en": "at first",
+          "vi": "lúc đầu; ban đầu",
+          "de": "zuerst; anfangs",
+          "es": "al principio; en un primer momento",
+          "fr": "au début; d’abord",
+          "hi": "पहले; शुरुआत में",
+          "ja": "最初は; 初めは",
+          "ko": "처음에; 맨 처음에",
+          "pt": "no início; a princípio",
+          "ru": "сначала; вначале",
+          "zh": "起初；一开始"
+        }
+      },
+      {
+        "phrase": "at least",
+        "translations": {
+          "en": "at least",
+          "vi": "ít nhất; tối thiểu",
+          "de": "mindestens; wenigstens",
+          "es": "al menos; por lo menos",
+          "fr": "au moins",
+          "hi": "कम से कम; कम से कम इतना",
+          "ja": "少なくとも; せめて",
+          "ko": "적어도; 최소한",
+          "pt": "pelo menos; no mínimo",
+          "ru": "по крайней мере; как минимум",
+          "zh": "至少；起码"
+        }
+      },
+      {
+        "phrase": "at times",
+        "translations": {
+          "en": "at times",
+          "vi": "đôi khi; thỉnh thoảng",
+          "de": "manchmal; zuweilen",
+          "es": "a veces; de vez en cuando",
+          "fr": "parfois; par moments",
+          "hi": "कभी-कभी; समय-समय पर",
+          "ja": "時々; ときどき",
+          "ko": "때때로; 가끔",
+          "pt": "às vezes; de vez em quando",
+          "ru": "иногда; временами",
+          "zh": "有时；间或"
+        }
+      },
+      {
+        "phrase": "in secret",
+        "translations": {
+          "en": "in secret",
+          "vi": "bí mật; lén lút",
+          "de": "heimlich; insgeheim",
+          "es": "en secreto; a escondidas",
+          "fr": "en secret; secrètement",
+          "hi": "गुप्त रूप से; चुपके से",
+          "ja": "ひそかに; 内密に",
+          "ko": "비밀리에; 몰래",
+          "pt": "em segredo; às escondidas",
+          "ru": "тайно; потайком",
+          "zh": "秘密地；暗中"
+        }
+      },
+      {
+        "phrase": "in spite of",
+        "translations": {
+          "en": "in spite of",
+          "vi": "mặc dù; bất chấp",
+          "de": "trotz; ungeachtet",
+          "es": "a pesar de; pese a",
+          "fr": "malgré; en dépit de",
+          "hi": "के बावजूद; के होते हुए भी",
+          "ja": "にもかかわらず; ～にもかかわらず",
+          "ko": "에도 불구하고; 무릅쓰고",
+          "pt": "apesar de; não obstante",
+          "ru": "несмотря на; вопреки",
+          "zh": "尽管；不顾"
+        }
+      },
+      {
+        "phrase": "in tears",
+        "translations": {
+          "en": "in tears",
+          "vi": "đang khóc; nước mắt giàn giụa",
+          "de": "in Tränen; weinend",
+          "es": "en lágrimas; llorando",
+          "fr": "en larmes; les larmes aux yeux",
+          "hi": "आँसुओं में; रोते हुए",
+          "ja": "泣きながら; 涙を流して",
+          "ko": "눈물을 흘리며; 울면서",
+          "pt": "em lágrimas; a chorar",
+          "ru": "в слезах; плача",
+          "zh": "流着泪；含泪"
+        }
+      }
+    ],
+    "wordFormation": [
+      { "root": "Bore", "forms": ["boring", "bored [cite: 53]"] },
+      { "root": "Comedy", "forms": ["comedian [cite: 54]"] },
+      { "root": "Emotion", "forms": ["emotional [cite: 55]"] },
+      { "root": "Energy", "forms": ["energetic [cite: 56]"] },
+      { "root": "Excite", "forms": ["excitement", "exciting", "excited [cite: 57]"] },
+      { "root": "Feel", "forms": ["felt", "feeling(s) [cite: 58]"] },
+      { "root": "Happy", "forms": ["unhappy", "(un)happiness [cite: 59]"] },
+      { "root": "Hate", "forms": ["hatred [cite: 60]"] },
+      { "root": "Noise", "forms": ["noisy", "noisily [cite: 61]"] },
+      { "root": "Sympathy", "forms": ["sympathise", "sympathetic [cite: 62]"] }
+    ]
+  }
+}

@@ -53,6 +53,14 @@
   "units": "Единицы",
   "lessons": "Уроки",
   "exercises": "Упражнения",
+  "reviewExerciseWithIndex": "Повторение {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "Детали упражнения",
   "viewDetails": "Просмотр деталей",
   "position": "Позиция {number}",
@@ -96,6 +104,7 @@
   "affirmative": "Утвердительное",
   "negative": "Отрицательное",
   "interrogative": "Вопросительное",
+  "grammarForm": "Форма",
   "minutes": "минут",
   "hours": "часов",
   "submit": "Отправить",
@@ -228,6 +237,7 @@
     }
   },
   "vocabularyExplore": "EXPLORE",
+  "vocabularyLoadMore": "Загрузить ещё",
   "vocabularyReviewSoon": "REVIEW SOON",
   "vocabularySort": "Sort",
   "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
@@ -270,6 +280,7 @@
   "currentLevelText": "Текущий уровень",
   "completed": "Завершено",
   "notUnlocked": "Не разблокировано",
+  "reviewLevelNotAvailable": "This level is not available for review yet.",
   "continueButton": "Продолжить",
   "xp": "XP",
   "levelLabel": "Уровень",

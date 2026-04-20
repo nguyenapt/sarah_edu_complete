@@ -12,6 +12,7 @@ import '../settings/settings_screen.dart';
 import '../main_navigation.dart';
 import '../../widgets/common/guest_locked_view.dart';
 import '../auth/register_screen.dart';
+import '../../core/utils/cefr_level_order.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
@@ -38,7 +39,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
       });
 
       final levels = await _firestoreService.getLevels();
-      
+      sortLevelsByCefr(levels);
+
       if (mounted) {
         setState(() {
           _levels = levels;
@@ -58,14 +60,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
         );
       }
     }
-  }
-
-  /// Lấy danh sách các level đã hoàn thành
-  List<String> _getCompletedLevels(String currentLevel) {
-    const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-    final currentIndex = levelOrder.indexOf(currentLevel);
-    if (currentIndex <= 0) return [];
-    return levelOrder.sublist(0, currentIndex); // Các level trước currentLevel
   }
 
   @override
@@ -100,8 +94,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       );
     }
     
-    final currentLevel = authProvider.user?.currentLevel ?? 'A1';
-    final completedLevels = _getCompletedLevels(currentLevel);
+    final userMaxLevel = normalizeCefrLevelId(authProvider.user?.currentLevel ?? 'A1');
 
     if (_isLoading) {
       return Scaffold(
@@ -149,21 +142,22 @@ class _ReviewScreenState extends State<ReviewScreen> {
         itemCount: _levels.length,
         itemBuilder: (context, index) {
           final level = _levels[index];
-          final isCompleted = completedLevels.contains(level.id);
-          final isCurrentLevel = level.id == currentLevel;
-          final isEnabled = isCompleted || isCurrentLevel;
+          final levelIdNorm = normalizeCefrLevelId(level.id);
+          final isUnlocked = isLevelAtOrBelowUserMax(levelIdNorm, userMaxLevel);
+          final isCurrent = levelIdNorm == userMaxLevel;
+          final isPast = compareCefrLevel(levelIdNorm, userMaxLevel) < 0;
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: isEnabled
+                backgroundColor: isUnlocked
                     ? (AppTheme.levelColors[level.id] ?? AppTheme.primaryColor)
                     : Colors.grey[300],
                 child: Text(
                   level.id,
                   style: TextStyle(
-                    color: isEnabled ? Colors.white : Colors.grey[600],
+                    color: isUnlocked ? Colors.white : Colors.grey[600],
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -172,30 +166,30 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 level.id,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: isEnabled ? null : Colors.grey,
+                  color: isUnlocked ? null : Colors.grey,
                 ),
               ),
               subtitle: Text(
-                isCurrentLevel
+                isCurrent
                     ? AppLocalizations.of(context)!.currentLevelText
-                    : isCompleted
+                    : isUnlocked && isPast
                         ? AppLocalizations.of(context)!.completed
                         : AppLocalizations.of(context)!.notUnlocked,
                 style: TextStyle(
-                  color: isEnabled ? Colors.grey[600] : Colors.grey[400],
+                  color: isUnlocked ? Colors.grey[600] : Colors.grey[400],
                 ),
               ),
-              trailing: isEnabled
+              trailing: isUnlocked
                   ? const Icon(Icons.arrow_forward_ios, size: 16)
                   : Icon(Icons.lock, color: Colors.grey[400]),
-              onTap: isEnabled
+              onTap: isUnlocked
                   ? () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => PracticeScreen(
                             reviewMode: true,
-                            reviewLevel: level.id,
+                            reviewLevel: levelIdNorm,
                           ),
                         ),
                       );

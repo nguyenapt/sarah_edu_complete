@@ -1,4 +1,4 @@
-﻿namespace FirestoreImporter
+namespace FirestoreImporter
 {
     partial class LessonForm
     {
@@ -76,6 +76,7 @@
             cbHintLanguageCode = new ComboBox();
             label20 = new Label();
             tabPage5 = new TabPage();
+            btnReadFromJsonToUsage = new Button();
             btnUsageAddAndNext = new Button();
             txtUsageTitle = new TextBox();
             label21 = new Label();
@@ -88,6 +89,14 @@
             cbUsageLanguageCode = new ComboBox();
             label23 = new Label();
             tabPage6 = new TabPage();
+            tabControl3 = new TabControl();
+            tabPage10 = new TabPage();
+            btnBrowse = new Button();
+            txtFileJson = new TextBox();
+            label35 = new Label();
+            txtJsonText = new TextBox();
+            label30 = new Label();
+            tabPage11 = new TabPage();
             tabControl2 = new TabControl();
             tabPage7 = new TabPage();
             cbTopicVocabularyPartOfSpeech = new ComboBox();
@@ -140,6 +149,9 @@
             cbType = new ComboBox();
             txtExercises = new TextBox();
             label5 = new Label();
+            openFileDialog1 = new OpenFileDialog();
+            label36 = new Label();
+            txtForm = new TextBox();
             ((System.ComponentModel.ISupportInitialize)numOrder).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -155,6 +167,9 @@
             ((System.ComponentModel.ISupportInitialize)grvUsage).BeginInit();
             ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).BeginInit();
             tabPage6.SuspendLayout();
+            tabControl3.SuspendLayout();
+            tabPage10.SuspendLayout();
+            tabPage11.SuspendLayout();
             tabControl2.SuspendLayout();
             tabPage7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grvTopicVocabularyLanguage).BeginInit();
@@ -482,6 +497,8 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(txtForm);
+            tabPage3.Controls.Add(label36);
             tabPage3.Controls.Add(txtQuestion);
             tabPage3.Controls.Add(label16);
             tabPage3.Controls.Add(txtNegative);
@@ -629,6 +646,7 @@
             // 
             // tabPage5
             // 
+            tabPage5.Controls.Add(btnReadFromJsonToUsage);
             tabPage5.Controls.Add(btnUsageAddAndNext);
             tabPage5.Controls.Add(txtUsageTitle);
             tabPage5.Controls.Add(label21);
@@ -648,6 +666,16 @@
             tabPage5.Text = "Usage";
             tabPage5.UseVisualStyleBackColor = true;
             // 
+            // btnReadFromJsonToUsage
+            // 
+            btnReadFromJsonToUsage.Location = new Point(555, 237);
+            btnReadFromJsonToUsage.Name = "btnReadFromJsonToUsage";
+            btnReadFromJsonToUsage.Size = new Size(111, 23);
+            btnReadFromJsonToUsage.TabIndex = 32;
+            btnReadFromJsonToUsage.Text = "Read from Json";
+            btnReadFromJsonToUsage.UseVisualStyleBackColor = true;
+            btnReadFromJsonToUsage.Click += btnReadFromJsonToUsage_Click;
+            // 
             // btnUsageAddAndNext
             // 
             btnUsageAddAndNext.Location = new Point(555, 61);
@@ -661,8 +689,9 @@
             // txtUsageTitle
             // 
             txtUsageTitle.Location = new Point(109, 32);
+            txtUsageTitle.Multiline = true;
             txtUsageTitle.Name = "txtUsageTitle";
-            txtUsageTitle.Size = new Size(434, 23);
+            txtUsageTitle.Size = new Size(434, 36);
             txtUsageTitle.TabIndex = 31;
             // 
             // label21
@@ -712,10 +741,10 @@
             // 
             // txtUsageExample
             // 
-            txtUsageExample.Location = new Point(109, 61);
+            txtUsageExample.Location = new Point(109, 74);
             txtUsageExample.Multiline = true;
             txtUsageExample.Name = "txtUsageExample";
-            txtUsageExample.Size = new Size(434, 54);
+            txtUsageExample.Size = new Size(434, 41);
             txtUsageExample.TabIndex = 24;
             // 
             // label22
@@ -747,7 +776,7 @@
             // 
             // tabPage6
             // 
-            tabPage6.Controls.Add(tabControl2);
+            tabPage6.Controls.Add(tabControl3);
             tabPage6.Location = new Point(4, 24);
             tabPage6.Name = "tabPage6";
             tabPage6.Padding = new Padding(3);
@@ -756,15 +785,94 @@
             tabPage6.Text = "Vocabulary";
             tabPage6.UseVisualStyleBackColor = true;
             // 
+            // tabControl3
+            // 
+            tabControl3.Controls.Add(tabPage10);
+            tabControl3.Controls.Add(tabPage11);
+            tabControl3.Location = new Point(6, 19);
+            tabControl3.Name = "tabControl3";
+            tabControl3.SelectedIndex = 0;
+            tabControl3.Size = new Size(741, 484);
+            tabControl3.TabIndex = 0;
+            // 
+            // tabPage10
+            // 
+            tabPage10.Controls.Add(btnBrowse);
+            tabPage10.Controls.Add(txtFileJson);
+            tabPage10.Controls.Add(label35);
+            tabPage10.Controls.Add(txtJsonText);
+            tabPage10.Controls.Add(label30);
+            tabPage10.Location = new Point(4, 24);
+            tabPage10.Name = "tabPage10";
+            tabPage10.Padding = new Padding(3);
+            tabPage10.Size = new Size(733, 456);
+            tabPage10.TabIndex = 0;
+            tabPage10.Text = "Json";
+            tabPage10.UseVisualStyleBackColor = true;
+            // 
+            // btnBrowse
+            // 
+            btnBrowse.Location = new Point(633, 11);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(75, 23);
+            btnBrowse.TabIndex = 24;
+            btnBrowse.Text = "Browse";
+            btnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Click += btnBrowse_Click;
+            // 
+            // txtFileJson
+            // 
+            txtFileJson.Location = new Point(63, 11);
+            txtFileJson.Name = "txtFileJson";
+            txtFileJson.Size = new Size(564, 23);
+            txtFileJson.TabIndex = 25;
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Location = new Point(7, 14);
+            label35.Name = "label35";
+            label35.Size = new Size(48, 15);
+            label35.TabIndex = 24;
+            label35.Text = "JsonFile";
+            // 
+            // txtJsonText
+            // 
+            txtJsonText.Location = new Point(7, 65);
+            txtJsonText.Multiline = true;
+            txtJsonText.Name = "txtJsonText";
+            txtJsonText.Size = new Size(720, 371);
+            txtJsonText.TabIndex = 25;
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(7, 47);
+            label30.Name = "label30";
+            label30.Size = new Size(30, 15);
+            label30.TabIndex = 24;
+            label30.Text = "Json";
+            // 
+            // tabPage11
+            // 
+            tabPage11.Controls.Add(tabControl2);
+            tabPage11.Location = new Point(4, 24);
+            tabPage11.Name = "tabPage11";
+            tabPage11.Padding = new Padding(3);
+            tabPage11.Size = new Size(733, 456);
+            tabPage11.TabIndex = 1;
+            tabPage11.Text = "By hand";
+            tabPage11.UseVisualStyleBackColor = true;
+            // 
             // tabControl2
             // 
             tabControl2.Controls.Add(tabPage7);
             tabControl2.Controls.Add(tabPage8);
             tabControl2.Controls.Add(tabPage9);
-            tabControl2.Location = new Point(14, 18);
+            tabControl2.Location = new Point(10, 11);
             tabControl2.Name = "tabControl2";
             tabControl2.SelectedIndex = 0;
-            tabControl2.Size = new Size(733, 484);
+            tabControl2.Size = new Size(717, 439);
             tabControl2.TabIndex = 0;
             // 
             // tabPage7
@@ -784,7 +892,7 @@
             tabPage7.Location = new Point(4, 24);
             tabPage7.Name = "tabPage7";
             tabPage7.Padding = new Padding(3);
-            tabPage7.Size = new Size(725, 456);
+            tabPage7.Size = new Size(709, 411);
             tabPage7.TabIndex = 0;
             tabPage7.Text = "Word";
             tabPage7.UseVisualStyleBackColor = true;
@@ -803,7 +911,7 @@
             grvTopicVocabularyLanguage.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             grvTopicVocabularyLanguage.Location = new Point(6, 126);
             grvTopicVocabularyLanguage.Name = "grvTopicVocabularyLanguage";
-            grvTopicVocabularyLanguage.Size = new Size(712, 123);
+            grvTopicVocabularyLanguage.Size = new Size(697, 123);
             grvTopicVocabularyLanguage.TabIndex = 26;
             // 
             // grvTopicVocabulary
@@ -811,7 +919,7 @@
             grvTopicVocabulary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             grvTopicVocabulary.Location = new Point(6, 287);
             grvTopicVocabulary.Name = "grvTopicVocabulary";
-            grvTopicVocabulary.Size = new Size(712, 162);
+            grvTopicVocabulary.Size = new Size(697, 162);
             grvTopicVocabulary.TabIndex = 0;
             // 
             // cbWordLanguageCode
@@ -852,7 +960,7 @@
             // 
             btnAddLanguageWordDefinition.Location = new Point(643, 56);
             btnAddLanguageWordDefinition.Name = "btnAddLanguageWordDefinition";
-            btnAddLanguageWordDefinition.Size = new Size(75, 23);
+            btnAddLanguageWordDefinition.Size = new Size(60, 23);
             btnAddLanguageWordDefinition.TabIndex = 1;
             btnAddLanguageWordDefinition.Text = "Add";
             btnAddLanguageWordDefinition.UseVisualStyleBackColor = true;
@@ -862,7 +970,7 @@
             // 
             btnAddTopicVocabulary.Location = new Point(643, 255);
             btnAddTopicVocabulary.Name = "btnAddTopicVocabulary";
-            btnAddTopicVocabulary.Size = new Size(75, 23);
+            btnAddTopicVocabulary.Size = new Size(60, 23);
             btnAddTopicVocabulary.TabIndex = 1;
             btnAddTopicVocabulary.Text = "Add";
             btnAddTopicVocabulary.UseVisualStyleBackColor = true;
@@ -909,7 +1017,7 @@
             tabPage8.Location = new Point(4, 24);
             tabPage8.Name = "tabPage8";
             tabPage8.Padding = new Padding(3);
-            tabPage8.Size = new Size(725, 456);
+            tabPage8.Size = new Size(709, 411);
             tabPage8.TabIndex = 1;
             tabPage8.Text = "Phrasal Verb";
             tabPage8.UseVisualStyleBackColor = true;
@@ -1015,7 +1123,7 @@
             tabPage9.Controls.Add(btnAddPrepositionalPhrase);
             tabPage9.Location = new Point(4, 24);
             tabPage9.Name = "tabPage9";
-            tabPage9.Size = new Size(725, 456);
+            tabPage9.Size = new Size(709, 411);
             tabPage9.TabIndex = 2;
             tabPage9.Text = "Prepositional phrases";
             tabPage9.UseVisualStyleBackColor = true;
@@ -1251,6 +1359,27 @@
             label5.TabIndex = 22;
             label5.Text = "Exercises";
             // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // label36
+            // 
+            label36.AutoSize = true;
+            label36.Location = new Point(19, 260);
+            label36.Name = "label36";
+            label36.Size = new Size(35, 15);
+            label36.TabIndex = 24;
+            label36.Text = "Form";
+            // 
+            // txtForm
+            // 
+            txtForm.Location = new Point(121, 260);
+            txtForm.Multiline = true;
+            txtForm.Name = "txtForm";
+            txtForm.Size = new Size(589, 71);
+            txtForm.TabIndex = 25;
+            // 
             // LessonForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1299,6 +1428,10 @@
             ((System.ComponentModel.ISupportInitialize)grvUsage).EndInit();
             ((System.ComponentModel.ISupportInitialize)grvUsageLanguage).EndInit();
             tabPage6.ResumeLayout(false);
+            tabControl3.ResumeLayout(false);
+            tabPage10.ResumeLayout(false);
+            tabPage10.PerformLayout();
+            tabPage11.ResumeLayout(false);
             tabControl2.ResumeLayout(false);
             tabPage7.ResumeLayout(false);
             tabPage7.PerformLayout();
@@ -1436,5 +1569,17 @@
         private Label label29;
         private DataGridView grvPrepositionalPhrase;
         private Button btnAddPrepositialPhrase;
+        private TabControl tabControl3;
+        private TabPage tabPage10;
+        private TextBox txtJsonText;
+        private Label label30;
+        private TabPage tabPage11;
+        private Button btnBrowse;
+        private TextBox txtFileJson;
+        private Label label35;
+        private OpenFileDialog openFileDialog1;
+        private Button btnReadFromJsonToUsage;
+        private TextBox txtForm;
+        private Label label36;
     }
 }

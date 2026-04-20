@@ -53,6 +53,14 @@
   "units": "इकाइयां",
   "lessons": "पाठ",
   "exercises": "अभ्यास",
+  "reviewExerciseWithIndex": "समीक्षा अभ्यास {number}",
+  "@reviewExerciseWithIndex": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "exerciseDetails": "अभ्यास विवरण",
   "viewDetails": "विवरण देखें",
   "position": "स्थिति {number}",
@@ -96,6 +104,7 @@
   "affirmative": "सकारात्मक",
   "negative": "नकारात्मक",
   "interrogative": "प्रश्नवाचक",
+  "grammarForm": "रूप",
   "minutes": "मिनट",
   "hours": "घंटे",
   "submit": "सबमिट करें",
@@ -228,6 +237,7 @@
     }
   },
   "vocabularyExplore": "EXPLORE",
+  "vocabularyLoadMore": "और लोड करें",
   "vocabularyReviewSoon": "REVIEW SOON",
   "vocabularySort": "Sort",
   "vocabularyFlashcardCurrentSession": "CURRENT SESSION",
@@ -270,6 +280,7 @@
   "currentLevelText": "वर्तमान स्तर",
   "completed": "पूर्ण",
   "notUnlocked": "अनलॉक नहीं किया गया",
+  "reviewLevelNotAvailable": "This level is not available for review yet.",
   "continueButton": "जारी रखें",
   "xp": "XP",
   "levelLabel": "स्तर",

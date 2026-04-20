@@ -168,6 +168,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get exercises => 'Bài tập';
 
   @override
+  String reviewExerciseWithIndex(int number) {
+    return 'Bài ôn $number';
+  }
+
+  @override
   String get exerciseDetails => 'Chi tiết bài tập';
 
   @override
@@ -219,6 +224,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get interrogative => 'Nghi vấn';
+
+  @override
+  String get grammarForm => 'Dạng công thức';
 
   @override
   String get minutes => 'phút';
@@ -513,6 +521,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get vocabularyExplore => 'KHÁM PHÁ';
 
   @override
+  String get vocabularyLoadMore => 'Tải thêm';
+
+  @override
   String get vocabularyReviewSoon => 'ÔN SỚM';
 
   @override
@@ -599,6 +610,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get notUnlocked => 'Chưa mở khóa';
+
+  @override
+  String get reviewLevelNotAvailable =>
+      'Bạn chưa thể ôn tập cấp độ này với trình độ hiện tại.';
 
   @override
   String get continueButton => 'Tiếp tục';

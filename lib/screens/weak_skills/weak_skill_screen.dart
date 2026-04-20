@@ -6,6 +6,9 @@ import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/progress_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/language_provider.dart';
+import '../../models/lesson_model.dart';
+import '../../models/unit_model.dart';
 import '../learning/lesson_detail_screen.dart';
 import '../../widgets/common/horizon_top_app_bar.dart';
 
@@ -20,6 +23,8 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
   final FirestoreService _firestoreService = FirestoreService();
   bool _isLoading = true;
   WeakSkillStats? _stats;
+  /// lessonId → localized title từ Firestore (Practice Suggestions).
+  Map<String, String> _lessonTitles = {};
 
   @override
   void initState() {
@@ -36,13 +41,20 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
       return;
     }
 
+    final lang = Provider.of<LanguageProvider>(context, listen: false)
+        .currentLanguageCode;
+
     try {
       final progress = await _firestoreService.getUserProgress(authProvider.user!.id);
       final stats = progress?.weakSkillStats ??
           WeakSkillService().buildStats(progress?.exerciseHistory ?? []);
+      final titles = stats.recommendedLessons.isEmpty
+          ? <String, String>{}
+          : await _fetchLessonTitles(stats.recommendedLessons, lang);
       if (mounted) {
         setState(() {
           _stats = stats;
+          _lessonTitles = titles;
           _isLoading = false;
         });
       }
@@ -53,6 +65,64 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
         });
       }
     }
+  }
+
+  Future<Map<String, String>> _fetchLessonTitles(
+    List<String> ids,
+    String languageCode,
+  ) async {
+    final out = <String, String>{};
+    final unitCache = <String, UnitModel?>{};
+
+    Future<UnitModel?> unitCached(String unitId) async {
+      if (unitId.isEmpty) return null;
+      if (unitCache.containsKey(unitId)) return unitCache[unitId];
+      try {
+        final u = await _firestoreService.getUnit(unitId);
+        unitCache[unitId] = u;
+        return u;
+      } catch (_) {
+        unitCache[unitId] = null;
+        return null;
+      }
+    }
+
+    await Future.wait(ids.map((id) async {
+      try {
+        final lesson = await _firestoreService.getLesson(id);
+        if (lesson == null) return;
+
+        String? resolved;
+        // Bài vocabulary: hiển thị title của vocabulary unit (UnitModel), không chỉ lesson.
+        if (lesson.type == LessonType.vocabulary && lesson.unitId.isNotEmpty) {
+          final unit = await unitCached(lesson.unitId);
+          final ut = unit?.getTitle(languageCode).trim() ?? '';
+          if (ut.isNotEmpty) resolved = ut;
+        }
+        if (resolved == null) {
+          final lt = lesson.getTitle(languageCode).trim();
+          if (lt.isNotEmpty) resolved = lt;
+        }
+        if (resolved != null) out[id] = resolved;
+      } catch (_) {
+        // Bỏ qua từng bài lỗi; UI vẫn hiển thị humanize id.
+      }
+    }));
+    return out;
+  }
+
+  /// Hiển thị slug/technical id dễ đọc khi chưa có title đa ngôn ngữ.
+  String _humanizeSlug(String raw) {
+    if (raw.isEmpty) return raw;
+    return raw
+        .replaceAll('_', ' ')
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .map((w) {
+          if (w.length == 1) return w.toUpperCase();
+          return '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}';
+        })
+        .join(' ');
   }
 
   @override
@@ -122,7 +192,7 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
               return ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
-                title: Text(item.id),
+                title: Text(_humanizeSlug(item.id)),
                 subtitle: Text(AppLocalizations.of(context)!.correctPercent(percent, item.attempts)),
                 trailing: Icon(
                   Icons.trending_down,
@@ -155,10 +225,12 @@ class _WeakSkillScreenState extends State<WeakSkillScreen> {
             ),
             const SizedBox(height: 8),
             ...lessonIds.map((lessonId) {
+              final label =
+                  _lessonTitles[lessonId] ?? _humanizeSlug(lessonId);
               return ListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
-                title: Text(lessonId),
+                title: Text(label),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                 onTap: () async {
                   final lesson = await _firestoreService.getLesson(lessonId);
