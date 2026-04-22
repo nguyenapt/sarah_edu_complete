@@ -8,6 +8,7 @@ import '../cache/cache_policy.dart';
 import '../cache/hive_cache_store.dart';
 import '../cache/cache_metrics.dart';
 import '../services/firestore_service.dart';
+import '../services/unit_group_service.dart';
 
 /// Catalog = data ít thay đổi: levels/units/lessons/exercises.
 /// Áp dụng stale-while-revalidate: trả cache nhanh, refresh nền.
@@ -429,6 +430,42 @@ class CatalogRepository {
             })
         .toList();
     await HiveCacheStore.putJson(_kExercisesByLesson(lessonId), json: json);
+  }
+
+  Future<List<ExerciseModel>> getExercisesByUnit(
+    String unitId, {
+    String? languageCode,
+  }) async {
+    final lessons = await getLessonsByUnit(unitId);
+    if (lessons.isEmpty) {
+      final fallback =
+          await _firestore.getExercisesByUnits([unitId], languageCode: languageCode);
+      fallback.sort((a, b) => UnitGroupService.compareExerciseIds(a.id, b.id));
+      return fallback;
+    }
+
+    final lessonOrderById = <String, int>{};
+    final allExercises = <ExerciseModel>[];
+
+    for (final lesson in lessons) {
+      lessonOrderById[lesson.id] = lesson.order;
+      final lessonExercises = await getExercisesByLesson(
+        lesson.id,
+        languageCode: languageCode,
+      );
+      allExercises.addAll(lessonExercises);
+    }
+
+    allExercises.sort((a, b) {
+      final aLessonOrder = lessonOrderById[a.lessonId] ?? 1 << 20;
+      final bLessonOrder = lessonOrderById[b.lessonId] ?? 1 << 20;
+      if (aLessonOrder != bLessonOrder) {
+        return aLessonOrder.compareTo(bLessonOrder);
+      }
+      return UnitGroupService.compareExerciseIds(a.id, b.id);
+    });
+
+    return allExercises;
   }
 }
 

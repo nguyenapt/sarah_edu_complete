@@ -4,15 +4,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/lesson_model.dart';
-import '../../core/services/firestore_service.dart';
-import '../../models/exercise_model.dart';
 import '../../providers/language_provider.dart';
 import '../../l10n/app_localizations.dart';
-import 'exercise_screen.dart';
 import '../practice/vocabulary_flashcard_screen.dart';
 import '../../widgets/common/horizon_top_app_bar.dart';
-import '../../core/repositories/catalog_repository.dart';
-import '../../providers/auth_provider.dart';
 
 enum VocabularySortOption { wordAsc, wordDesc, definitionAsc, definitionDesc }
 
@@ -29,53 +24,8 @@ class LessonDetailScreen extends StatefulWidget {
 }
 
 class _LessonDetailScreenState extends State<LessonDetailScreen> {
-  List<ExerciseModel> _exercises = [];
-  bool _isLoadingExercises = false;
   String _vocabularySearchQuery = '';
   VocabularySortOption _vocabularySortOption = VocabularySortOption.wordAsc;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadExercises();
-  }
-
-  Future<void> _loadExercises() async {
-    setState(() {
-      _isLoadingExercises = true;
-    });
-
-    try {
-      final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
-      final repo = Provider.of<CatalogRepository>(context, listen: false);
-      final exercises = await repo.getExercisesByLesson(
-        widget.lesson.id,
-        languageCode: languageProvider.currentLanguageCode,
-        onFresh: (fresh) {
-          if (!mounted) return;
-          setState(() {
-            _exercises = fresh;
-          });
-        },
-      );
-      setState(() {
-        _exercises = exercises;
-        _isLoadingExercises = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoadingExercises = false;
-      });
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.errorLoadingExercises}: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +43,6 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
           children: [
             // Theory Section
             if (widget.lesson.theory != null) _buildTheorySection(),
-
-            const SizedBox(height: 24),
-
-            // Exercises Section
-            _buildExercisesSection(),
           ],
         ),
       ),
@@ -1172,176 +1117,6 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     );
   }
 
-  Widget _buildExercisesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.quiz, color: AppTheme.primaryColor),
-            const SizedBox(width: 8),
-            Text(
-              AppLocalizations.of(context)!.exercises,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (_isLoadingExercises)
-          const Center(child: CircularProgressIndicator())
-        else if (_exercises.isEmpty)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(AppLocalizations.of(context)!.noExercises),
-            ),
-          )
-        else
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _exercises.length,
-            itemBuilder: (context, index) {
-              final exercise = _exercises[index];
-              return _buildExerciseCard(exercise, index);
-            },
-          ),
-      ],
-    );
-  }
-
-  Widget _buildExerciseCard(ExerciseModel exercise, int index) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 6),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: _getDifficultyColor(exercise.difficulty),
-          child: Text(
-            '${index + 1}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        title: Text(
-          exercise.question,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Chip(
-                  label: Text(
-                    _getExerciseTypeLabel(exercise.type),
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                  padding: EdgeInsets.zero,
-                ),
-                const SizedBox(width: 8),
-                Chip(
-                  label: Text(
-                    _getDifficultyLabel(exercise.difficulty),
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                  padding: EdgeInsets.zero,
-                ),
-                const SizedBox(width: 8),
-                Icon(Icons.star, size: 14, color: Colors.amber),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text(
-                    '${exercise.points} ${AppLocalizations.of(context)!.points}',
-                    style: const TextStyle(fontSize: 12),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          Navigator.push<void>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExerciseScreen(exercise: exercise),
-            ),
-          ).then((_) async {
-            if (!context.mounted) return;
-            final auth = Provider.of<AuthProvider>(context, listen: false);
-            if (auth.isAuthenticated && auth.user != null) {
-              try {
-                await FirestoreService().getUserProgress(auth.user!.id);
-              } catch (_) {}
-            }
-          });
-        },
-      ),
-    );
-  }
-
-  Color _getDifficultyColor(Difficulty difficulty) {
-    switch (difficulty) {
-      case Difficulty.easy:
-        return Colors.green;
-      case Difficulty.medium:
-        return Colors.orange;
-      case Difficulty.hard:
-        return Colors.red;
-    }
-  }
-
-  String _getDifficultyLabel(Difficulty difficulty) {
-    final localizations = AppLocalizations.of(context)!;
-    switch (difficulty) {
-      case Difficulty.easy:
-        return localizations.easy;
-      case Difficulty.medium:
-        return localizations.medium;
-      case Difficulty.hard:
-        return localizations.hard;
-    }
-  }
-
-  String _getExerciseTypeLabel(ExerciseType type) {
-    final localizations = AppLocalizations.of(context)!;
-    switch (type) {
-      case ExerciseType.singleChoice:
-        return localizations.selectOneAnswerShort;
-      case ExerciseType.multipleChoice:
-        return localizations.selectMultipleAnswersShort;
-      case ExerciseType.fillBlank:
-        return localizations.fillBlank;
-      case ExerciseType.matching:
-        return localizations.matching;
-      case ExerciseType.listening:
-        return localizations.listening;
-      case ExerciseType.speaking:
-        return localizations.speaking;
-      case ExerciseType.buttonSingleChoice:
-        return localizations.selectOneAnswerShort;
-      case ExerciseType.crossword:
-        return localizations.crossword;
-      case ExerciseType.sequentialQuestions:
-        return 'Sequential Questions';
-      case ExerciseType.wordMatching:
-        return 'Word Matching';
-      case ExerciseType.definitionMatching:
-        return 'Definition Matching';
-      case ExerciseType.wordFormationExercise:
-        return 'Word Formation';
-      case ExerciseType.wordPatternExercise:
-        return 'Word Pattern';
-    }
-  }
 }
 
 
