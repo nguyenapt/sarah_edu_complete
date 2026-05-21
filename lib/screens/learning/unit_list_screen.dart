@@ -98,11 +98,15 @@ class _UnitListScreenState extends State<UnitListScreen> {
   @override
   Widget build(BuildContext context) {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final appBarTitle = widget.unit?.getTitle(languageCode) ??
+        (_unitsToDisplay.length == 1
+            ? _unitsToDisplay.first.getTitle(languageCode)
+            : AppLocalizations.of(context)!.lessonsList);
     
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: HorizonTopAppBar(
-        title: AppLocalizations.of(context)!.lessonsList,
+        title: appBarTitle,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -127,6 +131,7 @@ class _UnitListScreenState extends State<UnitListScreen> {
     String languageCode,
   ) {
     final loc = AppLocalizations.of(context)!;
+    final showUnitTitleInCard = _unitsToDisplay.length > 1;
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -134,18 +139,15 @@ class _UnitListScreenState extends State<UnitListScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              unit.getTitle(languageCode),
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(unit.getDescription(languageCode)),
-            const SizedBox(height: 16),
+            if (showUnitTitleInCard) ...[
+              Text(
+                unit.getTitle(languageCode),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+            ],
             Wrap(
               spacing: 12,
               runSpacing: 8,
@@ -172,6 +174,8 @@ class _UnitListScreenState extends State<UnitListScreen> {
                   ),
               ],
             ),
+            const SizedBox(height: 12),
+            Text(unit.getDescription(languageCode)),
             const SizedBox(height: 24),
             if (lessons.isNotEmpty) ...[
               Text(

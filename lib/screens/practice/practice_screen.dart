@@ -677,7 +677,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
     required String previousGroupTitle,
     required bool isLast,
   }) {
-    final locked = !widget.reviewMode && (!group.isUnlocked || group.type == GroupType.locked);
+    final locked = !widget.reviewMode &&
+        (!group.isUnlocked || group.type == GroupType.locked);
     final completed = group.isCompleted && group.isUnlocked && !locked;
 
     _TimelineDotStyle dotStyle;
@@ -942,7 +943,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
           final i = entry.key;
           final unit = entry.value;
           final isCompleted = _isUnitCompleted(unit);
-          final isLocked = !isCompleted && firstInc >= 0 && i > firstInc;
+          final isLocked = !isCompleted &&
+              firstInc >= 0 &&
+              i > firstInc;
           final isCurrent = !isCompleted && firstInc >= 0 && i == firstInc;
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),

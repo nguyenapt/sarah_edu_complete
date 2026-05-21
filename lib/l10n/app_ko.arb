@@ -152,7 +152,7 @@
   "selectLanguage": "언어 선택",
   "sentenceForms": "문장 형태",
   "howToUse": "사용법",
-  "lessonsList": "수업 목록",
+  "lessonsList": "수업",
   "lessonNumber": "수업 {number}",
   "@lessonNumber": {
     "placeholders": {

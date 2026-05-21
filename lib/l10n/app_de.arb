@@ -152,7 +152,7 @@
   "selectLanguage": "Sprache auswählen",
   "sentenceForms": "Satzformen",
   "howToUse": "Verwendung",
-  "lessonsList": "Lektionenliste",
+  "lessonsList": "Lektionen",
   "lessonNumber": "Lektion {number}",
   "@lessonNumber": {
     "placeholders": {

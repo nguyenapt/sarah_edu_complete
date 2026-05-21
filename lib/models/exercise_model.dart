@@ -734,6 +734,40 @@ class GroupQuestion {
   }
 }
 
+class SequentialInforItem {
+  final int index;
+  final String value;
+
+  SequentialInforItem({
+    required this.index,
+    required this.value,
+  });
+
+  factory SequentialInforItem.fromMap(Map<String, dynamic> map) {
+    int indexValue = 0;
+    final rawIndex = map['index'];
+    if (rawIndex is int) {
+      indexValue = rawIndex;
+    } else if (rawIndex is num) {
+      indexValue = rawIndex.toInt();
+    } else if (rawIndex != null) {
+      indexValue = int.tryParse(rawIndex.toString()) ?? 0;
+    }
+
+    return SequentialInforItem(
+      index: indexValue,
+      value: map['value']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'index': index,
+      'value': value,
+    };
+  }
+}
+
 // Content cho Speaking
 class SpeakingContent {
   final String prompt;
@@ -1091,6 +1125,8 @@ class ExerciseModel {
   final String? imageUrl;
   final String? audioUrl;
   final Map<String, dynamic>? title; // Multi-language: Map<String, String>
+  final String? sequentialTitle;
+  final List<SequentialInforItem> infors;
   final Map<String, VoiceConfig>? speakerVoices; // Map speaker name -> VoiceConfig
   final VoiceConfig? defaultVoice; // Default voice for text without speaker name
 
@@ -1112,6 +1148,8 @@ class ExerciseModel {
     this.imageUrl,
     this.audioUrl,
     this.title,
+    this.sequentialTitle,
+    this.infors = const [],
     this.speakerVoices,
     this.defaultVoice,
   });
@@ -1301,6 +1339,22 @@ class ExerciseModel {
       }
     }
 
+    String? sequentialTitleText;
+    if (normalizedData['sequentialTitle'] != null) {
+      sequentialTitleText = normalizedData['sequentialTitle'].toString();
+      if (sequentialTitleText.trim().isEmpty) {
+        sequentialTitleText = null;
+      }
+    }
+
+    List<SequentialInforItem> inforsData = const [];
+    if (normalizedData['infors'] is List) {
+      final rawInfors = normalizedData['infors'] as List<dynamic>;
+      inforsData = rawInfors
+          .map((item) => SequentialInforItem.fromMap(_normalizeStringDynamicMap(item)))
+          .toList();
+    }
+
     return ExerciseModel(
       id: id,
       lessonId: normalizedData['lessonId'] ?? '',
@@ -1319,6 +1373,8 @@ class ExerciseModel {
       imageUrl: normalizedData['imageUrl'],
       audioUrl: normalizedData['audioUrl'],
       title: titleData,
+      sequentialTitle: sequentialTitleText,
+      infors: inforsData,
       speakerVoices: speakerVoicesData,
       defaultVoice: defaultVoiceData,
     );
@@ -1368,6 +1424,8 @@ class ExerciseModel {
       'imageUrl': imageUrl,
       'audioUrl': audioUrl,
       'title': title,
+      'sequentialTitle': sequentialTitle,
+      'infors': infors.map((item) => item.toMap()).toList(),
       'speakerVoices': speakerVoices?.map((key, value) => MapEntry(key, value.toMap())),
       'defaultVoice': defaultVoice?.toMap(),
     };

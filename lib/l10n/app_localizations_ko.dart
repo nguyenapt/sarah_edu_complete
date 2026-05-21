@@ -356,7 +356,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get howToUse => '사용법';
 
   @override
-  String get lessonsList => '수업 목록';
+  String get lessonsList => '수업';
 
   @override
   String lessonNumber(int number) {

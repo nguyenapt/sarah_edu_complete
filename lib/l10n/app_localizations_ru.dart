@@ -360,7 +360,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get howToUse => 'Как использовать';
 
   @override
-  String get lessonsList => 'Список уроков';
+  String get lessonsList => 'Уроки';
 
   @override
   String lessonNumber(int number) {

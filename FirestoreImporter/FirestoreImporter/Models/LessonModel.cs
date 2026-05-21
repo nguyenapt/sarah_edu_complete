@@ -334,6 +334,30 @@ public class PrepositionalPhraseItem
     }
 }
 
+public class PhraseAndCollocationItem
+{
+    [JsonProperty("phrase")]
+    public string Phrase { get; set; } = string.Empty;
+
+    [JsonProperty("translations")]
+    public Dictionary<string, string>? Translations { get; set; }
+
+    public Dictionary<string, object> ToFirestore()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "phrase", Phrase }
+        };
+
+        if (Translations != null && Translations.Count > 0)
+        {
+            data["translations"] = Translations;
+        }
+
+        return data;
+    }
+}
+
 public class WordFormationItem
 {
     [JsonProperty("baseWord")]
@@ -399,6 +423,9 @@ public class VocabularyContent
     [JsonProperty("prepositionalPhrases")]
     public List<PrepositionalPhraseItem>? PrepositionalPhrases { get; set; }
 
+    [JsonProperty("phrasesAndCollocations")]
+    public List<PhraseAndCollocationItem>? PhrasesAndCollocations { get; set; }
+
     [JsonProperty("wordFormation")]
     public List<WordFormationItem>? WordFormation { get; set; }
 
@@ -422,6 +449,11 @@ public class VocabularyContent
         if (PrepositionalPhrases != null && PrepositionalPhrases.Count > 0)
         {
             data["prepositionalPhrases"] = PrepositionalPhrases.Select(e => e.ToFirestore()).ToList();
+        }
+
+        if (PhrasesAndCollocations != null && PhrasesAndCollocations.Count > 0)
+        {
+            data["phrasesAndCollocations"] = PhrasesAndCollocations.Select(e => e.ToFirestore()).ToList();
         }
 
         if (WordFormation != null && WordFormation.Count > 0)

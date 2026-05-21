@@ -152,7 +152,7 @@
   "selectLanguage": "选择语言",
   "sentenceForms": "句子形式",
   "howToUse": "使用方法",
-  "lessonsList": "课程列表",
+  "lessonsList": "课程",
   "lessonNumber": "课程 {number}",
   "@lessonNumber": {
     "placeholders": {

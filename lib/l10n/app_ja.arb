@@ -152,7 +152,7 @@
   "selectLanguage": "言語を選択",
   "sentenceForms": "文の形式",
   "howToUse": "使い方",
-  "lessonsList": "レッスン一覧",
+  "lessonsList": "レッスン",
   "lessonNumber": "レッスン {number}",
   "@lessonNumber": {
     "placeholders": {

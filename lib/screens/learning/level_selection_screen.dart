@@ -72,7 +72,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
           );
         }
       }
-      
+
       setState(() {
         _units = units;
         _isLoading = false;

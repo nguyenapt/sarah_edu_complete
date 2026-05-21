@@ -357,7 +357,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get howToUse => 'Cách dùng';
 
   @override
-  String get lessonsList => 'Danh sách bài học';
+  String get lessonsList => 'Bài học';
 
   @override
   String lessonNumber(int number) {

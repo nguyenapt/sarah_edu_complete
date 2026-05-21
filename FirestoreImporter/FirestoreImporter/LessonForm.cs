@@ -2281,12 +2281,14 @@ namespace FirestoreImporter
             return (v.TopicVocabulary?.Count > 0) == true
                 || (v.PhrasalVerbs?.Count > 0) == true
                 || (v.PrepositionalPhrases?.Count > 0) == true
+                || (v.PhrasesAndCollocations?.Count > 0) == true
                 || (v.WordFormation?.Count > 0) == true
                 || (v.WordPatterns?.Count > 0) == true;
         }
 
         /// <summary>
         /// Hỗ trợ file dạng vocabulary_full.json (root "vocabulary") hoặc object vocabulary trần.
+        /// Bao gồm cả section "phrasesAndCollocations".
         /// Phrasal verb trong file có thể để "verb" bên trong "definition" — chuẩn hóa về PhrasalVerbItem.
         /// </summary>
         private static VocabularyContent ParseVocabularyFromText(string text)
@@ -2295,7 +2297,8 @@ namespace FirestoreImporter
             JToken? vocabNode = root["vocabulary"];
             if (vocabNode == null &&
                 (root["topicVocabulary"] != null || root["phrasalVerbs"] != null ||
-                 root["prepositionalPhrases"] != null || root["wordFormation"] != null ||
+                 root["prepositionalPhrases"] != null || root["phrasesAndCollocations"] != null ||
+                 root["wordFormation"] != null ||
                  root["wordPatterns"] != null))
             {
                 vocabNode = root;
@@ -2304,10 +2307,81 @@ namespace FirestoreImporter
             if (vocabNode == null || vocabNode.Type == JTokenType.Null)
                 throw new InvalidOperationException("Thiếu khóa \"vocabulary\" hoặc không nhận dạng được cấu trúc vocabulary.");
 
+            NormalizeVocabularyShape(vocabNode);
+
             var content = vocabNode.ToObject<VocabularyContent>()
                 ?? throw new InvalidOperationException("Không deserialize được VocabularyContent.");
             NormalizePhrasalVerbsFromDefinitionVerb(content);
             return content;
+        }
+
+        /// <summary>
+        /// Chuẩn hóa các biến thể schema trong file JSON thực tế về schema model hiện tại.
+        /// </summary>
+        private static void NormalizeVocabularyShape(JToken vocabNode)
+        {
+            if (vocabNode is not JObject vocabObj)
+                return;
+
+            // phrasalVerbs: hỗ trợ "definitions" -> "definition"
+            if (vocabObj["phrasalVerbs"] is JArray phrasalVerbs)
+            {
+                foreach (var token in phrasalVerbs.OfType<JObject>())
+                {
+                    if (token["definition"] == null && token["definitions"] is JObject definitionsObj)
+                    {
+                        token["definition"] = definitionsObj;
+                    }
+                }
+            }
+
+            // phrasesAndCollocations: hỗ trợ "translations" là mảng object -> object
+            if (vocabObj["phrasesAndCollocations"] is JArray phraseItems)
+            {
+                foreach (var token in phraseItems.OfType<JObject>())
+                {
+                    if (token["translations"] is JArray translationsArray)
+                    {
+                        var merged = new JObject();
+                        foreach (var item in translationsArray.OfType<JObject>())
+                        {
+                            foreach (var prop in item.Properties())
+                            {
+                                merged[prop.Name] = prop.Value;
+                            }
+                        }
+                        token["translations"] = merged;
+                    }
+                }
+            }
+
+            // wordFormation: hỗ trợ "root/forms" -> "baseWord/relatedForms"
+            if (vocabObj["wordFormation"] is JArray wordFormationItems)
+            {
+                foreach (var token in wordFormationItems.OfType<JObject>())
+                {
+                    if (token["baseWord"] == null && token["root"] != null)
+                    {
+                        token["baseWord"] = token["root"];
+                    }
+                    if (token["relatedForms"] == null && token["forms"] is JArray forms)
+                    {
+                        token["relatedForms"] = forms;
+                    }
+                }
+            }
+
+            // wordPatterns: hỗ trợ "examples" (array) -> "example" (string đại diện đầu tiên)
+            if (vocabObj["wordPatterns"] is JArray wordPatternItems)
+            {
+                foreach (var token in wordPatternItems.OfType<JObject>())
+                {
+                    if (token["example"] == null && token["examples"] is JArray examples && examples.Count > 0)
+                    {
+                        token["example"] = examples[0]?.ToString() ?? string.Empty;
+                    }
+                }
+            }
         }
 
         private static void NormalizePhrasalVerbsFromDefinitionVerb(VocabularyContent content)

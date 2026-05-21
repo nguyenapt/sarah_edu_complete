@@ -785,7 +785,7 @@ abstract class AppLocalizations {
   /// No description provided for @lessonsList.
   ///
   /// In en, this message translates to:
-  /// **'Lessons List'**
+  /// **'Lessons'**
   String get lessonsList;
 
   /// No description provided for @lessonNumber.

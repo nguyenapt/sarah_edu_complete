@@ -153,7 +153,7 @@
   "selectLanguage": "Chọn ngôn ngữ",
   "sentenceForms": "Các dạng câu",
   "howToUse": "Cách dùng",
-  "lessonsList": "Danh sách bài học",
+  "lessonsList": "Bài học",
   "lessonNumber": "Bài {number}",
   "@lessonNumber": {
     "placeholders": {

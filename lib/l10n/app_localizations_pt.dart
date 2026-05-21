@@ -360,7 +360,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get howToUse => 'Como usar';
 
   @override
-  String get lessonsList => 'Lista de lições';
+  String get lessonsList => 'Lições';
 
   @override
   String lessonNumber(int number) {

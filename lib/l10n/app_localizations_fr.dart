@@ -360,7 +360,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get howToUse => 'Comment utiliser';
 
   @override
-  String get lessonsList => 'Liste des leçons';
+  String get lessonsList => 'Leçons';
 
   @override
   String lessonNumber(int number) {

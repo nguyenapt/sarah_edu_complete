@@ -356,7 +356,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get howToUse => '使用方法';
 
   @override
-  String get lessonsList => '课程列表';
+  String get lessonsList => '课程';
 
   @override
   String lessonNumber(int number) {

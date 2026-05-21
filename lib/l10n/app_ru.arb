@@ -152,7 +152,7 @@
   "selectLanguage": "Выбрать язык",
   "sentenceForms": "Формы предложений",
   "howToUse": "Как использовать",
-  "lessonsList": "Список уроков",
+  "lessonsList": "Уроки",
   "lessonNumber": "Урок {number}",
   "@lessonNumber": {
     "placeholders": {

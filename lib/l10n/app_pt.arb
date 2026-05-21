@@ -152,7 +152,7 @@
   "selectLanguage": "Selecionar idioma",
   "sentenceForms": "Formas de frases",
   "howToUse": "Como usar",
-  "lessonsList": "Lista de lições",
+  "lessonsList": "Lições",
   "lessonNumber": "Lição {number}",
   "@lessonNumber": {
     "placeholders": {

@@ -718,6 +718,7 @@ class UnitGroupService {
           type = GroupType.locked;
           isUnlocked = false;
         }
+
         debugPrint(
           '  📌 continueIdx=$continueIdx, completedGroup=${completedGroup?.id}: group ${groupUnit.id} (index=${groupUnit.index}) isUnlocked=$isUnlocked, type=$type, isCompleted=$isCompleted',
         );

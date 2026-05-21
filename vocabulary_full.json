@@ -1,404 +1,1025 @@
 {
   "vocabulary": {
-    "topicVocabulary": [
-      {
-        "word": "amusing",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "funny or entertaining",
-          "vi": "buồn cười hoặc mang tính giải trí",
-          "de": "lustig oder unterhaltsam",
-          "es": "gracioso o entretenido",
-          "fr": "drôle ou divertissant",
-          "hi": "मज़ेदार या मनोरंजक",
-          "ja": "おかしく、または楽しませる",
-          "ko": "재미있거나 즐거운",
-          "pt": "engraçado ou divertido",
-          "ru": "смешной или развлекательный",
-          "zh": "滑稽的；或令人感到有趣的"
-        }
-      },
-      {
-        "word": "annoy",
-        "partOfSpeech": "verb",
-        "definitions": {
-          "en": "to make someone feel slightly angry or impatient",
-          "vi": "làm cho ai đó cảm thấy hơi tức giận hoặc mất kiên nhẫn",
-          "de": "jemanden leicht wütend oder ungeduldig machen",
-          "es": "hacer que alguien se sienta un poco enfadado o impaciente",
-          "fr": "mettre quelqu'un un peu en colère ou impatient",
-          "hi": "किसी को थोड़ा गुस्सा या बेचैनी महसूस कराना",
-          "ja": "誰かを少し腹立たしくさせたり、いらいらさせたりする",
-          "ko": "누군가를 약간 화나게 하거나 참을성을 잃게 하다",
-          "pt": "fazer alguém sentir-se um pouco irritado ou impaciente",
-          "ru": "заставить кого-то почувствовать лёгкое раздражение или нетерпение",
-          "zh": "使某人感到有点生气或不耐烦"
-        }
-      },
-      {
-        "word": "attitude",
-        "partOfSpeech": "noun",
-        "definitions": {
-          "en": "opinions or feelings that you show by your behaviour",
-          "vi": "quan điểm hoặc cảm xúc mà bạn thể hiện qua hành vi",
-          "de": "Meinungen oder Gefühle, die man durch sein Verhalten zeigt",
-          "es": "opiniones o sentimientos que muestras con tu comportamiento",
-          "fr": "opinions ou sentiments que l’on manifeste par son comportement",
-          "hi": "व्यवहार से जो राय या भावनाएँ दिखाई देती हैं",
-          "ja": "行動によって示す意見や感情",
-          "ko": "행동으로 드러내는 의견이나 감정",
-          "pt": "opiniões ou sentimentos que você mostra pelo seu comportamento",
-          "ru": "мнения или чувства, которые вы показываете своим поведением",
-          "zh": "通过行为所表现出的观点或感受"
-        }
-      },
-      {
-        "word": "bad-tempered",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "made annoyed or angry very easily",
-          "vi": "rất dễ bực bội hoặc nổi giận",
-          "de": "leicht verärgert oder wütend werdend",
-          "es": "que se molesta o enfada con mucha facilidad",
-          "fr": "qui se met facilement en colère ou devient irritable",
-          "hi": "बहुत आसानी से चिढ़ या गुस्सा हो जाना",
-          "ja": "すぐにいら立ったり怒ったりする",
-          "ko": "매우 쉽게 짜증을 내거나 화를 내는",
-          "pt": "que fica irritado ou zangado com muita facilidade",
-          "ru": "легко раздражающийся или выходящий из себя",
-          "zh": "很容易恼火或发怒的"
-        }
-      },
-      {
-        "word": "behave",
-        "partOfSpeech": "verb",
-        "definitions": {
-          "en": "to do things in a particular way",
-          "vi": "làm việc gì đó theo một cách nhất định",
-          "de": "Dinge auf eine bestimmte Art tun",
-          "es": "hacer las cosas de una manera concreta",
-          "fr": "faire les choses d’une certaine manière",
-          "hi": "चीज़ें किसी खास तरीके से करना",
-          "ja": "物事をある特定の仕方で行う",
-          "ko": "일을 특정한 방식으로 하다",
-          "pt": "fazer as coisas de um modo particular",
-          "ru": "делать что-то определённым образом",
-          "zh": "以某种特定方式做事"
-        }
-      },
-      {
-        "word": "bully",
-        "partOfSpeech": "verb",
-        "definitions": {
-          "en": "to frighten or hurt someone who is smaller or weaker than you",
-          "vi": "dọa nạt hoặc làm tổn thương người nhỏ hơn hoặc yếu hơn mình",
-          "de": "jemanden einschüchtern oder verletzen, der kleiner oder schwächer ist als man selbst",
-          "es": "asustar o hacer daño a alguien más pequeño o débil que tú",
-          "fr": "effrayer ou blesser quelqu’un de plus petit ou plus faible que soi",
-          "hi": "अपने से छोटे या कमज़ोर व्यक्ति को डराना या चोट पहुँचाना",
-          "ja": "自分より弱い、または小さい相手を脅かしたり傷つけたりする",
-          "ko": "자신보다 작거나 약한 사람을 겁주거나 해치다",
-          "pt": "amedrontar ou machucar alguém menor ou mais fraco que você",
-          "ru": "пугать или причинять вред тому, кто слабее или моложе вас",
-          "zh": "恐吓或伤害比自己弱小的人"
-        }
-      },
-      {
-        "word": "calm",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "not affected by strong emotions",
-          "vi": "không bị cảm xúc mạnh chi phối",
-          "de": "von starken Gefühlen unbeeinflusst",
-          "es": "no afectado por emociones fuertes",
-          "fr": "non affecté par de fortes émotions",
-          "hi": "तीव्र भावनाओं से अप्रभावित",
-          "ja": "強い感情に左右されない",
-          "ko": "강한 감정의 영향을 받지 않는",
-          "pt": "não afetado por emoções fortes",
-          "ru": "не подверженный сильным эмоциям",
-          "zh": "不受强烈情绪左右的"
-        }
-      },
-      {
-        "word": "celebrate",
-        "partOfSpeech": "verb",
-        "definitions": {
-          "en": "to do something enjoyable in order to show that an occasion or event is special",
-          "vi": "làm điều gì đó vui vẻ để thể hiện một dịp hay sự kiện là đặc biệt",
-          "de": "etwas Angenehmes tun, um zu zeigen, dass ein Anlass besonders ist",
-          "es": "hacer algo agradable para mostrar que una ocasión es especial",
-          "fr": "faire quelque chose d’agréable pour montrer qu’une occasion est importante",
-          "hi": "यह दिखाने के लिए कि कोई अवसर खास है, कुछ सुखद करना",
-          "ja": "行事や出来事が特別であることを示すために楽しいことをする",
-          "ko": "행사나 일이 특별함을 나타내기 위해 즐거운 일을 하다",
-          "pt": "fazer algo agradável para mostrar que uma ocasião é especial",
-          "ru": "делать что-то приятное, чтобы показать, что событие особенное",
-          "zh": "做令人愉快的事，以表明某个场合或活动很特别"
-        }
-      },
-      {
-        "word": "depressed",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "very unhappy and without any feelings of hope or enthusiasm",
-          "vi": "rất buồn và không còn chút hy vọng hay nhiệt huyết nào",
-          "de": "sehr unglücklich und ohne Hoffnung oder Begeisterung",
-          "es": "muy infeliz y sin ninguna sensación de esperanza o entusiasmo",
-          "fr": "très malheureux et sans aucun espoir ni enthousiasme",
-          "hi": "बहुत दुखी और बिना किसी उम्मीद या उत्साह के",
-          "ja": "非常に不幸で、希望や熱意をまったく感じない",
-          "ko": "매우 불행하고 희망이나 열정이 전혀 없는",
-          "pt": "muito infeliz e sem qualquer esperança ou entusiasmo",
-          "ru": "очень несчастный и без малейшей надежды или энтузиазма",
-          "zh": "非常不快乐，且毫无希望或热情"
-        }
-      },
-      {
-        "word": "enthusiastic",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "very interested in something, or excited by it",
-          "vi": "rất hứng thú với điều gì đó, hoặc hào hứng vì nó",
-          "de": "sehr an etwas interessiert oder davon begeistert",
-          "es": "muy interesado en algo o entusiasmado por ello",
-          "fr": "très intéressé par quelque chose ou enthousiasmé par cela",
-          "hi": "किसी चीज़ में बहुत रुचि रखना या उससे उत्साहित होना",
-          "ja": "何かに非常に興味がある、またはそれにわくわくしている",
-          "ko": "무언가에 매우 관심이 있거나 그것에 흥분한",
-          "pt": "muito interessado em algo ou entusiasmado com isso",
-          "ru": "очень заинтересованный в чём-то или взволнованный этим",
-          "zh": "对某事非常感兴趣或为之感到兴奋"
-        }
-      },
-      {
-        "word": "miserable",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "extremely unhappy",
-          "vi": "cực kỳ không vui, khổ sở",
-          "de": "extrem unglücklich",
-          "es": "extremadamente infeliz",
-          "fr": "extrêmement malheureux",
-          "hi": "अत्यंत दुखी",
-          "ja": "極度に不幸な",
-          "ko": "극도로 불행한",
-          "pt": "extremamente infeliz",
-          "ru": "крайне несчастный",
-          "zh": "极其不快乐"
-        }
-      },
-      {
-        "word": "polite",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "behaving towards other people in a pleasant way that follows all the usual rules of society",
-          "vi": "cư xử nhã nhặn, thân thiện với người khác theo các quy tắc xã hội thông thường",
-          "de": "sich gegenüber anderen freundlich verhalten und die üblichen gesellschaftlichen Regeln befolgen",
-          "es": "comportarse de forma agradable hacia los demás siguiendo las normas sociales habituales",
-          "fr": "se comporter de façon agréable envers les autres et respecter les usages sociaux",
-          "hi": "दूसरों के प्रति सुखद तरीके से व्यवहार करना जो सामान्य सामाजिक नियमों का पालन करता हो",
-          "ja": "社会の通例のしきたりに沿って、他者に対して穏やかにふるまう",
-          "ko": "사회의 통상적인 규범에 따라 다른 사람에게 정중하고 상냥하게 행동하는",
-          "pt": "comportar-se de modo agradável com as outras pessoas, seguindo as regras sociais usuais",
-          "ru": "вести себя любезно по отношению к другим в соответствии с общепринятыми нормами",
-          "zh": "待人友善并遵守社会通行规范的"
-        }
-      },
-      {
-        "word": "ridiculous",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "silly or unreasonable and deserving to be laughed at",
-          "vi": "ngớ ngẩn hoặc vô lý và đáng bị chế giễu",
-          "de": "albern oder unvernünftig und einer Auslacherei würdig",
-          "es": "tonto o irrazonable y que merece ser ridiculizado",
-          "fr": "stupide ou déraisonnable et qui mérite qu’on en rie",
-          "hi": "मूर्ख या अतर्कसंगत और हँसी का पात्र",
-          "ja": "ばかばかしい、または不合理で、笑われるに値する",
-          "ko": "어리석거나 불합리하며 비웃음을 살 만한",
-          "pt": "tonto ou irracional e que merece ser ridicularizado",
-          "ru": "глупый или неразумный и достойный насмешек",
-          "zh": "愚蠢或不合情理，因而显得可笑"
-        }
-      },
-      {
-        "word": "shy",
-        "partOfSpeech": "adjective",
-        "definitions": {
-          "en": "nervous and embarrassed in the company of other people, especially people who you do not know",
-          "vi": "lo lắng và ngượng ngùng khi ở cùng người khác, nhất là người không quen",
-          "de": "in Gesellschaft nervös und verlegen, besonders gegenüber Unbekannten",
-          "es": "nervioso y avergonzado en compañía de otras personas, sobre todo desconocidos",
-          "fr": "mal à l’aise et gêné en présence d’autrui, surtout d’inconnus",
-          "hi": "दूसरों की संगति में घबराया हुआ और शर्मिंदा, खासकर अनजान लोगों के साथ",
-          "ja": "人、特に知らない人と一緒にいると緊張して気まずい",
-          "ko": "다른 사람, 특히 모르는 사람들과 있을 때 긴장하고 어색해하는",
-          "pt": "nervoso e constrangido na companhia de outras pessoas, especialmente desconhecidos",
-          "ru": "нервничающий и смущённый в обществе других, особенно незнакомцев",
-          "zh": "在他人面前，尤其在不认识的人面前感到紧张与尴尬"
-        }
-      }
-    ],
     "phrasalVerbs": [
       {
-        "definition": {
-          "en": "become/make calmer [cite: 37]",
-          "verb": "calm down"
+      "verb": "catch up with",
+      "definitions": {
+        "en": "reach the same point/level as",
+        "vi": "đuổi kịp, theo kịp cùng mức độ/vị trí",
+        "de": "den gleichen Punkt/Stand erreichen wie",
+        "es": "alcanzar el mismo punto/nivel que",
+        "fr": "rattraper, atteindre le même niveau que",
+        "hi": "के समान बिंदु/स्तर पर पहुँचना",
+        "ja": "と同じ地点・レベルに達する",
+        "ko": "와 같은 지점/수준에 도달하다",
+        "pt": "alcançar o mesmo ponto/nível que",
+        "ru": "догнать, достичь того же уровня",
+        "zh": "赶上，达到同样的程度/水平"
+      }
+    },
+    {
+      "verb": "check in",
+      "definitions": {
+        "en": "register at a hotel or an airport",
+        "vi": "làm thủ tục nhận phòng khách sạn hoặc tại sân bay",
+        "de": "sich in einem Hotel oder am Flughafen anmelden",
+        "es": "registrarse en un hotel o aeropuerto",
+        "fr": "s'enregistrer à l'hôtel ou à l'aéroport",
+        "hi": "होटल या हवाई अड्डे पर पंजीकरण करना",
+        "ja": "ホテルや空港で搭乗・入居の手続きをする",
+        "ko": "호텔이나 공항에서 투숙/탑승 수속을 하다",
+        "pt": "fazer o check-in em um hotel ou aeroporto",
+        "ru": "зарегистрироваться в отеле или аэропорту",
+        "zh": "办理入住（酒店）或登机（机场）手续"
+      }
+    },
+    {
+      "verb": "check out",
+      "definitions": {
+        "en": "leave a hotel; investigate",
+        "vi": "làm thủ tục trả phòng; điều tra, kiểm tra",
+        "de": "ein Hotel verlassen; untersuchen",
+        "es": "dejar un hotel; investigar",
+        "fr": "quitter l'hôtel ; enquêter",
+        "hi": "होटल छोड़ना; जांच करना",
+        "ja": "ホテルをチェックアウトする；調査する",
+        "ko": "호텔을 퇴실하다; 조사하다",
+        "pt": "sair do hotel; investigar",
+        "ru": "выехать из отеля; расследовать",
+        "zh": "退房；调查"
+      }
+    },
+    {
+      "verb": "drop off",
+      "definitions": {
+        "en": "let someone get out of a vehicle; fall asleep",
+        "vi": "cho ai đó xuống xe; ngủ thiếp đi",
+        "de": "jemanden aussteigen lassen; einschlafen",
+        "es": "dejar a alguien bajar de un vehículo; quedarse dormido",
+        "fr": "déposer quelqu'un ; s'endormir",
+        "hi": "किसी को वाहन से उतरने देना; सो जाना",
+        "ja": "（車から）人を降ろす；眠りに落ちる",
+        "ko": "차에서 내려주다; 잠들다",
+        "pt": "deixar alguém sair de um veículo; pegar no sono",
+        "ru": "высадить кого-то из машины; заснуть",
+        "zh": "让人下车；睡着"
+      }
+    },
+    {
+      "verb": "get back",
+      "definitions": {
+        "en": "return from a place",
+        "vi": "trở về từ một nơi nào đó",
+        "de": "von einem Ort zurückkehren",
+        "es": "regresar de un lugar",
+        "fr": "revenir d'un endroit",
+        "hi": "किसी स्थान से वापस आना",
+        "ja": "（場所から）戻る",
+        "ko": "돌아오다",
+        "pt": "voltar de algum lugar",
+        "ru": "вернуться откуда-либо",
+        "zh": "返回"
+      }
+    },
+    {
+      "verb": "go away",
+      "definitions": {
+        "en": "go on holiday",
+        "vi": "đi nghỉ lễ, đi du lịch",
+        "de": "in den Urlaub fahren",
+        "es": "irse de vacaciones",
+        "fr": "partir en vacances",
+        "hi": "छुट्टी पर जाना",
+        "ja": "旅行に出かける",
+        "ko": "휴가를 떠나다",
+        "pt": "ir viajar/de férias",
+        "ru": "уехать в отпуск",
+        "zh": "外出度假"
+      }
+    },
+    {
+      "verb": "keep up with",
+      "definitions": {
+        "en": "stay at the same point/level as",
+        "vi": "giữ ở cùng mức độ/vị trí, không bị tụt lại",
+        "de": "auf dem gleichen Stand bleiben wie",
+        "es": "mantenerse al mismo nivel que",
+        "fr": "rester au même niveau que",
+        "hi": "के समान स्तर पर बने रहना",
+        "ja": "と同じレベルを維持する",
+        "ko": "와 같은 수준을 유지하다",
+        "pt": "manter-se ao mesmo nível que",
+        "ru": "идти в ногу с, оставаться на том же уровне",
+        "zh": "跟上，保持同一水平"
+      }
+    },
+    {
+      "verb": "make for",
+      "definitions": {
+        "en": "go in the direction of",
+        "vi": "đi về phía, hướng về một nơi nào đó",
+        "de": "in Richtung ... gehen",
+        "es": "ir en dirección a",
+        "fr": "se diriger vers",
+        "hi": "की दिशा में जाना",
+        "ja": "の方向へ向かう",
+        "ko": "의 방향으로 가다",
+        "pt": "ir na direção de",
+        "ru": "направляться к",
+        "zh": "向...方向前进"
+      }
+    },
+    {
+      "verb": "pick up",
+      "definitions": {
+        "en": "stop in a vehicle to give someone a lift",
+        "vi": "đón ai đó bằng xe",
+        "de": "jemanden mit dem Auto abholen",
+        "es": "recoger a alguien con el coche",
+        "fr": "passer prendre quelqu'un en voiture",
+        "hi": "किसी को लिफ्ट देने के लिए वाहन रोकना",
+        "ja": "車で人を迎えに行く",
+        "ko": "태워주기 위해 차를 세우다/태우다",
+        "pt": "buscar alguém de carro",
+        "ru": "подобрать кого-то на машине",
+        "zh": "（用车）接人"
+      }
+    },
+    {
+      "verb": "pull in",
+      "definitions": {
+        "en": "stop by the side of the road in a vehicle",
+        "vi": "tấp xe vào lề đường",
+        "de": "am Straßenrand anhalten",
+        "es": "parar a un lado de la carretera",
+        "fr": "se garer sur le côté de la route",
+        "hi": "वाहन को सड़क के किनारे रोकना",
+        "ja": "（車を）道の脇に寄せて止める",
+        "ko": "길가에 차를 대다",
+        "pt": "encostar o veículo no acostamento",
+        "ru": "притормозить у обочины",
+        "zh": "路边停车"
+      }
+    },
+    {
+      "verb": "run over",
+      "definitions": {
+        "en": "hit with a car",
+        "vi": "cán qua, tông bằng xe ô tô",
+        "de": "mit dem Auto überfahren",
+        "es": "atropellar con un coche",
+        "fr": "renverser avec une voiture",
+        "hi": "कार से कुचलना",
+        "ja": "車でひく",
+        "ko": "차로 치다",
+        "pt": "atropelar com um carro",
+        "ru": "переехать, задавить машиной",
+        "zh": "碾过，撞倒"
+      }
+    },
+    {
+      "verb": "see off",
+      "definitions": {
+        "en": "go to a train station, etc, to see someone leave",
+        "vi": "tiễn ai đó lên đường (tại nhà ga, sân bay...)",
+        "de": "jemanden verabschieden (zum Bahnhof gehen etc.)",
+        "es": "despedir a alguien (en la estación, etc.)",
+        "fr": "dire au revoir à quelqu'un (à la gare, etc.)",
+        "hi": "किसी को विदा करने के लिए स्टेशन आदि जाना",
+        "ja": "見送る",
+        "ko": "배웅하다",
+        "pt": "despedir-se de alguém (na estação, etc.)",
+        "ru": "провожать кого-то",
+        "zh": "送行"
+      }
+    },
+    {
+      "verb": "set out/off",
+      "definitions": {
+        "en": "start a journey",
+        "vi": "khởi hành, bắt đầu một chuyến đi",
+        "de": "eine Reise antreten",
+        "es": "comenzar un viaje",
+        "fr": "se mettre en route, commencer un voyage",
+        "hi": "यात्रा शुरू करना",
+        "ja": "出発する",
+        "ko": "출발하다",
+        "pt": "partir, começar uma viagem",
+        "ru": "отправляться в путь",
+        "zh": "出发，动身"
+      }
+    },
+    {
+      "verb": "take off",
+      "definitions": {
+        "en": "leave the ground",
+        "vi": "cất cánh (máy bay rời mặt đất)",
+        "de": "abheben",
+        "es": "despegar",
+        "fr": "décoller",
+        "hi": "जमीन छोड़ना (उड़ान भरना)",
+        "ja": "離陸する",
+        "ko": "이륙하다",
+        "pt": "decolar",
+        "ru": "взлетать",
+        "zh": "起飞"
+      }
+    },
+    {
+      "verb": "turn round",
+      "definitions": {
+        "en": "go back in the opposite direction",
+        "vi": "quay đầu xe, đi ngược lại hướng cũ",
+        "de": "umkehren",
+        "es": "dar la vuelta",
+        "fr": "faire demi-tour",
+        "hi": "विपरीत दिशा में वापस जाना",
+        "ja": "引き返す、向きを変える",
+        "ko": "되돌아가다",
+        "pt": "dar a volta",
+        "ru": "развернуться",
+        "zh": "转身，掉头"
+      }
+    }
+    ],
+    
+    "topicVocabulary": [
+      {
+        "word": "voyage",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "a long journey, especially on a ship",
+          "vi": "một chuyến đi dài, đặc biệt là bằng tàu thủy",
+          "de": "eine lange Reise, besonders auf einem Schiff",
+          "es": "un viaje largo, especialmente en un barco",
+          "fr": "un long voyage, en particulier sur un navire",
+          "hi": "एक लंबी यात्रा, विशेष रूप से एक जहाज पर",
+          "ja": "特に船による長い旅",
+          "ko": "특히 배를 타고 가는 긴 여정",
+          "pt": "uma longa viagem, especialmente em um navio",
+          "ru": "длинное путешествие, особенно на корабле",
+          "zh": "漫长的航行，尤指乘船"
         }
       },
       {
-        "definition": {
-          "verb": "cheer up",
-          "en": "become/make happier [cite: 38]"
+        "word": "journey",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "an occasion when you travel from one place to another, especially over a long distance",
+          "vi": "một dịp khi bạn di chuyển từ nơi này đến nơi khác, đặc biệt là trên một khoảng cách dài",
+          "de": "eine Gelegenheit, bei der man von einem Ort zum anderen reist, besonders über eine lange Distanz",
+          "es": "una ocasión en la que se viaja de un lugar a otro, especialmente a través de una larga distancia",
+          "fr": "une occasion où l'on voyage d'un endroit à un autre, surtout sur une longue distance",
+          "hi": "एक अवसर जब आप một स्थान से दूसरे स्थान की यात्रा करते हैं, विशेष रूप से लंबी दूरी पर",
+          "ja": "ある場所から別の場所へ移動すること、特に長い距離を移動する場合",
+          "ko": "한 장소에서 다른 장소로 이동하는 경우, 특히 먼 거리를 이동할 때",
+          "pt": "uma ocasião em que você viaja de um lugar para outro, especialmente por uma longa distância",
+          "ru": "случай, когда вы путешествуете из одного места в другое, особенно на большое расстояние",
+          "zh": "从一个地方到另一个地方的旅行，尤指长途旅行"
         }
       },
       {
-        "definition": {
-          "en": "be quicker [cite: 39]",
-          "verb": "come on"
+        "word": "trip",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "an occasion when you go somewhere and come back again",
+          "vi": "một dịp khi bạn đi đâu đó và quay trở lại",
+          "de": "eine Gelegenheit, bei der man irgendwohin geht und wieder zurückkommt",
+          "es": "una ocasión en la que se va a algún lugar y se regresa",
+          "fr": "une occasion où l'on va quelque part et d'où l'on revient",
+          "hi": "एक अवसर जब आप कहीं जाते हैं और वापस आते हैं",
+          "ja": "どこかへ行って戻ってくること",
+          "ko": "어딘가에 갔다가 다시 돌아오는 경우",
+          "pt": "uma ocasião em que você vai a algum lugar e volta novamente",
+          "ru": "случай, когда вы куда-то едете и возвращаетесь обратно",
+          "zh": "去某个地方并返回的过程"
         }
       },
       {
-        "definition": {
-          "verb": "go on",
-          "en": "continue happening or doing sth [cite: 40]"
+        "word": "travel",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the activity of travelling",
+          "vi": "hoạt động đi du lịch hoặc di chuyển",
+          "de": "die Tätigkeit des Reisens",
+          "es": "la actividad de viajar",
+          "fr": "l'activité de voyager",
+          "hi": "यात्रा करने की गतिविधि",
+          "ja": "旅行するという活動",
+          "ko": "여행하는 활동",
+          "pt": "a atividade de viajar",
+          "ru": "деятельность по совершению поездок",
+          "zh": "旅行活动"
         }
       },
       {
-        "definition": {
-          "en": "wait [cite: 41]",
-          "verb": "hang on"
+        "word": "excursion",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "a short journey that you make for pleasure",
+          "vi": "một chuyến đi ngắn mà bạn thực hiện để giải trí",
+          "de": "eine kurze Reise, die man zum Vergnügen macht",
+          "es": "un viaje corto que se realiza por placer",
+          "fr": "un court voyage que l'on fait pour le plaisir",
+          "hi": "आनंद के लिए की जाने वाली một छोटी यात्रा",
+          "ja": "楽しみのために行く短い旅",
+          "ko": "즐거움을 위해 가는 짧은 여행",
+          "pt": "uma curta viagem que você faz por prazer",
+          "ru": "короткая поездка, которую вы совершаете ради удовольствия",
+          "zh": "为了娱乐而进行的短途旅行"
         }
       },
       {
-        "definition": {
-          "verb": "run away (from)",
-          "en": "escape by running [cite: 42]"
+        "word": "view",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the things that you can see from a particular place",
+          "vi": "những thứ mà bạn có thể nhìn thấy từ một địa điểm cụ thể",
+          "de": "die Dinge, die man von einem bestimmten Ort aus sehen kann",
+          "es": "las cosas que se pueden ver desde un lugar determinado",
+          "fr": "les choses que l'on peut voir d'un endroit particulier",
+          "hi": "वे चीजें जो आप किसी विशेष स्थान से देख सकते हैं",
+          "ja": "特定の場所から見えるもの",
+          "ko": "특정한 장소에서 볼 수 있는 것들",
+          "pt": "as coisas que você pode ver de um lugar específico",
+          "ru": "вещи, которые вы можете видеть из определенного места",
+          "zh": "从特定地点可以看到的事物"
         }
       },
       {
-        "definition": {
-          "en": "stop talking, stop making a noise [cite: 43]",
-          "verb": "shut up"
+        "word": "sight",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "a person or thing that you see that has a particular feature",
+          "vi": "một người hoặc vật mà bạn nhìn thấy có một đặc điểm cụ thể",
+          "de": "eine Person oder Sache, die man sieht und die ein besonderes Merkmal hat",
+          "es": "una persona o cosa que se ve y que tiene una característica particular",
+          "fr": "une personne ou une chose que l'on voit et qui présente une caractéristique particulière",
+          "hi": "एक व्यक्ति या वस्तु जिसे आप देखते हैं और जिसमें một विशेष विशेषता होती है",
+          "ja": "特定の的な特徴を持つ、目にする人やもの",
+          "ko": "특정한 특징을 가진, 당신이 보는 사람이나 사물",
+          "pt": "uma pessoa ou coisa que você vê e que tem uma característica particular",
+          "ru": "человек или предмет, который вы видите и который имеет определенную особенность",
+          "zh": "具有特定特征的、可见的人或物"
         }
       },
       {
-        "definition": {
-          "verb": "speak up",
-          "en": "talk more loudly so sb can hear you [cite: 44]"
+        "word": "world",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the planet that we live on",
+          "vi": "hành tinh mà chúng ta đang sinh sống",
+          "de": "der Planet, auf dem wir leben",
+          "es": "el planeta en el que vivimos",
+          "fr": "la planète sur laquelle nous vivons",
+          "hi": "वह ग्रह जिस पर हम रहते हैं",
+          "ja": "私たちが住んでいる惑星",
+          "ko": "우리가 살고 있는 행성",
+          "pt": "o planeta em que vivemos",
+          "ru": "планета, на которой мы живем",
+          "zh": "我们生活的星球"
+        }
+      },
+      {
+        "word": "earth",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the land on which we live",
+          "vi": "vùng đất nơi chúng ta sinh sống",
+          "de": "das Land, auf dem wir leben",
+          "es": "la tierra en la que vivimos",
+          "fr": "la terre sur laquelle nous vivons",
+          "hi": "वह भूमि जिस पर हम रहते हैं",
+          "ja": "私たちが住んでいる陸地",
+          "ko": "우리가 살고 있는 땅",
+          "pt": "a terra em que vivemos",
+          "ru": "земля, на которой мы живем",
+          "zh": "我们居住的陆地"
+        }
+      },
+      {
+        "word": "area",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "a part of a place or building",
+          "vi": "một phần của một địa điểm hoặc tòa nhà",
+          "de": "ein Teil eines Ortes oder Gebäudes",
+          "es": "una parte de un lugar o edificio",
+          "fr": "une partie d'un lieu ou d'un bâtiment",
+          "hi": "किसी स्थान या भवन का một हिस्सा",
+          "ja": "場所や建物の一部",
+          "ko": "장소나 건물의 일부",
+          "pt": "uma parte de um lugar ou edifício",
+          "ru": "часть места или здания",
+          "zh": "某个地点或建筑物的一部分"
+        }
+      },
+      {
+        "word": "territory",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "an area of land controlled by a country, leader, or army",
+          "vi": "một khu vực đất đai được kiểm soát bởi một quốc gia, nhà lãnh đạo hoặc quân đội",
+          "de": "ein Landgebiet, das von einem Land, einem Führer oder einer Armee kontrolliert wird",
+          "es": "un área de tierra controlada por un país, líder o ejército",
+          "fr": "une zone de terre contrôlée par un pays, un chef ou une armée",
+          "hi": "किसी देश, नेता या सेना द्वारा नियंत्रित भूमि का क्षेत्र",
+          "ja": "国、指導者、または軍隊によって支配されている土地の領域",
+          "ko": "국가, 지도자 또는 군대에 의해 통제되는 영토",
+          "pt": "uma área de terra controlada por um país, líder ou exército",
+          "ru": "территория, контролируемая страной, лидером или армией",
+          "zh": "由国家、领袖或军队控制的一片土地范围"
+        }
+      },
+      {
+        "word": "season",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "one of the four periods into which the year is divided according to the weather",
+          "vi": "một trong bốn khoảng thời gian mà năm được chia ra dựa theo thời tiết",
+          "de": "eine der vier Perioden, in die das Jahr nach dem Wetter unterteilt ist",
+          "es": "uno de los cuatro períodos en los que se divide el año según el clima",
+          "fr": "l'une des quatre périodes en lesquelles l'année est divisée selon le temps qu'il fait",
+          "hi": "मौसम के अनुसार वर्ष को जिन bốn अवधियों में विभाजित किया गया है, उनमें से एक",
+          "ja": "天候に応じて一年を四つに分けた期間の一つ",
+          "ko": "날씨에 따라 일 년을 네 부분으로 나눈 기간 중 하나",
+          "pt": "um dos quatro períodos em que o ano é dividido de acordo com o clima",
+          "ru": "один из четырех периодов, на которые делится год в зависимости от погоды",
+          "zh": "根据天气将一年划分为四个时段中的一个"
+        }
+      },
+      {
+        "word": "period",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "an amount of time",
+          "vi": "một khoảng thời gian",
+          "de": "eine Zeitspanne",
+          "es": "una cantidad de tiempo",
+          "fr": "une durée de temps",
+          "hi": "समय की एक मात्रा",
+          "ja": "一定の期間",
+          "ko": "일정한 시간의 양",
+          "pt": "um período de tempo",
+          "ru": "отрезок времени",
+          "zh": "一段时间"
+        }
+      },
+      {
+        "word": "fare",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the money that you pay for a journey",
+          "vi": "số tiền mà bạn trả cho một chuyến đi",
+          "de": "das Geld, das man für eine Reise bezahlt",
+          "es": "el dinero que se paga por un viaje",
+          "fr": "l'argent que l'on paie pour un voyage",
+          "hi": "वह धन जो आप यात्रा के लिए भुगतान करते हैं",
+          "ja": "旅行のために支払うお金",
+          "ko": "여정을 위해 지불하는 돈",
+          "pt": "o dinheiro que você paga por uma jornada",
+          "ru": "деньги, которые вы платите за поездку",
+          "zh": "为旅行支付的费用（票价）"
+        }
+      },
+      {
+        "word": "ticket",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "a piece of paper that shows you have paid to do something such as travel",
+          "vi": "một tờ giấy cho thấy bạn đã trả tiền để thực hiện việc gì đó chẳng hạn như đi lại",
+          "de": "ein Stück Papier, das zeigt, dass man bezahlt hat, um etwas zu tun, wie z. B. zu reisen",
+          "es": "un trozo de papel que demuestra que se ha pagado por hacer algo, como viajar",
+          "fr": "un morceau de papier qui prouve que vous avez payé pour faire quelque chose, comme voyager",
+          "hi": "कागज का एक टुकड़ा जो दर्शाता है कि आपने यात्रा जैसी किसी चीज़ के लिए भुगतान किया है",
+          "ja": "旅行などのために支払いをしたことを示す一枚の紙",
+          "ko": "여행과 같은 일을 하기 위해 비용을 지불했음을 증명하는 종이 한 장",
+          "pt": "um pedaço de papel que mostra que você pagou para fazer algo, como viajar",
+          "ru": "листок бумаги, подтверждающий, что вы заплатили за что-то, например, за поездку",
+          "zh": "证明你已付费进行某项活动（如旅行）的一张纸"
+        }
+      },
+      {
+        "word": "fee",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "an amount of money that you pay to be allowed to do something such as join an organisation",
+          "vi": "một số tiền mà bạn trả để được phép làm việc gì đó chẳng hạn như gia nhập một tổ chức",
+          "de": "ein Geldbetrag, den man bezahlt, um etwas tun zu dürfen, wie z. B. einer Organisation beizutreten",
+          "es": "una cantidad de dinero que se paga para que se le permita hacer algo, como unirse a una organización",
+          "fr": "une somme d'argent que l'on paie pour être autorisé à faire quelque chose, như gia nhập một tổ chức",
+          "hi": "धन की वह मात्रा जो आप किसी संगठन में शामिल होने जैसी अनुमति के लिए भुगतान करते हैं",
+          "ja": "組織への加入など、何かをすることを許可されるために支払う金額",
+          "ko": "조직 가입 등 어떤 일을 할 수 있도록 허가받기 위해 지불하는 금액",
+          "pt": "uma quantia em dinheiro que você paga para ter permissão de fazer algo, como se juntar a uma organização",
+          "ru": "сумма денег, которую вы платите за право сделать что-то, например, вступить в организацию",
+          "zh": "为获准进行某事（如加入组织）而支付的金额"
+        }
+      },
+      {
+        "word": "miss",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to be too late for something such as a train or bus",
+          "vi": "đến quá muộn cho một việc gì đó chẳng hạn như tàu hỏa hoặc xe buýt",
+          "de": "zu spät für etwas zu sein, wie z. B. einen Zug oder einen Bus",
+          "es": "llegar demasiado tarde a algo, como un tren o autobús",
+          "fr": "être trop tard pour quelque chose, comme un train ou un bus",
+          "hi": "किसी चीज़ như ट्रेन hoặc बस के लिए rất muộn",
+          "ja": "電車やバスなどに間に合わないこと",
+          "ko": "기차나 버스 같은 것에 너무 늦는 것",
+          "pt": "estar atrasado para algo, como um trem ou ônibus",
+          "ru": "опоздать на что-то, например на поезд или автобус",
+          "zh": "错过（如火车或公共汽车），因为迟到"
+        }
+      },
+      {
+        "word": "lose",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to no longer have something",
+          "vi": "không còn sở hữu hoặc có một thứ gì đó",
+          "de": "etwas nicht mehr zu haben",
+          "es": "dejar de tener algo",
+          "fr": "ne plus avoir quelque chose",
+          "hi": "अब कुछ न होना",
+          "ja": "もはや何かを持っていないこと",
+          "ko": "더 이상 무언가를 가지고 있지 않은 것",
+          "pt": "não ter mais algo",
+          "ru": "больше не иметь чего-то",
+          "zh": "不再拥有某物（丢失）"
+        }
+      },
+      {
+        "word": "take",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to move or carry someone or something from one place to another",
+          "vi": "di chuyển hoặc mang một ai đó hoặc một thứ gì đó từ nơi này đến nơi khác",
+          "de": "jemanden oder etwas von einem Ort an einen anderen bewegen oder tragen",
+          "es": "mover o llevar a alguien o algo de un lugar a otro",
+          "fr": "déplacer ou transporter quelqu'un ou quelque chose d'un endroit à un autre",
+          "hi": "किसी व्यक्ति या वस्तु को एक स्थान से दूसरे स्थान पर ले जाना",
+          "ja": "人や物をある場所から別の場所へ移動させたり運んだりすること",
+          "ko": "누군가나 무언가를 한 장소에서 다른 장소로 옮기거나 실어 나르는 것",
+          "pt": "mover ou levar alguém ou algo de um lugar para outro",
+          "ru": "перемещать или переносить кого-то или что-то из одного места в другое",
+          "zh": "将某人或某物从一处移动或携带至另一处"
+        }
+      },
+      {
+        "word": "bring",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to take someone or something with you from one place to another",
+          "vi": "mang theo một ai đó hoặc một thứ gì đó đi cùng bạn từ nơi này đến nơi khác",
+          "de": "jemanden oder etwas von einem Ort an einen anderen mitnehmen",
+          "es": "llevar a alguien o algo contigo de un lugar a otro",
+          "fr": "emmener quelqu'un ou quelque chose avec soi d'un endroit à un autre",
+          "hi": "अपने साथ किसी व्यक्ति या वस्तु को एक स्थान से दूसरे स्थान पर ले जाना",
+          "ja": "人や物を連れてきたり持っていきたりすること",
+          "ko": "누군가나 무언가를 한 장소에서 다른 장소로 데려오거나 가져오는 것",
+          "pt": "levar alguém ou algo com você de um lugar para outro",
+          "ru": "брать кого-то или что-то с собой из одного места в другое",
+          "zh": "随身带着某人或某物从一处到另一处"
+        }
+      },
+      {
+        "word": "go",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to move or travel to a place that is away from where you are now",
+          "vi": "di chuyển hoặc đi đến một nơi cách xa nơi bạn đang đứng hiện tại",
+          "de": "sich an einen Ort bewegen oder reisen, der von dort entfernt ist, wo man sich gerade befindet",
+          "es": "moverse o viajar a un lugar que está alejado de donde te encuentras ahora",
+          "fr": "se déplacer ou se rendre dans un lieu éloigné de l'endroit où l'on se trouve actuellement",
+          "hi": "किसी ऐसे स्थान पर जाना या यात्रा करना जो आपके वर्तमान स्थान से दूर हो",
+          "ja": "今いる場所から離れた場所へ移動したり旅行したりすること",
+          "ko": "지금 있는 곳에서 떨어진 곳으로 이동하거나 여행하는 것",
+          "pt": "ir ou viajar para um lugar que está longe de onde você está agora",
+          "ru": "перемещаться или ехать в место, которое находится вдали от того, где вы сейчас находитесь",
+          "zh": "移动或旅行到离开你目前所在地的一处地方"
+        }
+      },
+      {
+        "word": "book",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to arrange to have or use something at a particular time in the future",
+          "vi": "sắp xếp để có hoặc sử dụng một thứ gì đó vào một thời điểm cụ thể trong tương lai",
+          "de": "zu vereinbaren, etwas zu einem bestimmten Zeitpunkt in der Zukunft zu haben oder zu nutzen",
+          "es": "organizar para tener o usar algo en un momento determinado en el futuro",
+          "fr": "s'organiser pour avoir ou utiliser quelque chose à un moment précis dans le futur",
+          "hi": "भविष्य में किसी विशेष समय पर कुछ रखने या उपयोग करने की व्यवस्था करना",
+          "ja": "将来の特定の時間に何かを持ったり使ったりするように手配すること",
+          "ko": "미래의 특정한 시간에 무언가를 가지거나 사용하도록 예약하는 것",
+          "pt": "providenciar para ter ou usar algo em um momento específico no futuro",
+          "ru": "договориться о том, чтобы иметь или использовать что-то в определенное время в будущем",
+          "zh": "安排在未来的特定时间拥有或使用某物"
+        }
+      },
+      {
+        "word": "keep",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to continue to have or own something",
+          "vi": "tiếp tục có hoặc sở hữu một thứ gì đó",
+          "de": "etwas weiterhin haben oder besitzen",
+          "es": "seguir teniendo o poseyendo algo",
+          "fr": "continuer à avoir ou à posséder quelque chose",
+          "hi": "किसी चीज़ को रखना या उसका स्वामी बने रहना",
+          "ja": "何かを持ち続けたり、所有し続けたりすること",
+          "ko": "무언가를 계속해서 가지거나 소유하는 것",
+          "pt": "continuar a ter ou possuir algo",
+          "ru": "продолжать иметь что-то или владеть чем-то",
+          "zh": "继续持有或拥有某物"
+        }
+      },
+      {
+        "word": "native",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "living in a particular country or area since birth",
+          "vi": "sống ở một quốc gia hoặc khu vực cụ thể kể từ khi sinh ra",
+          "de": "seit der Geburt in einem bestimmten Land oder Gebiet lebend",
+          "es": "que vive en un país o zona determinada desde su nacimiento",
+          "fr": "vivant dans un pays ou une région donnée depuis sa naissance",
+          "hi": "जन्म से ही किसी विशेष देश या क्षेत्र में रहना",
+          "ja": "生まれた時から特定の国や地域に住んでいること",
+          "ko": "태어날 때부터 특정한 나라나 지역에서 살고 있는 것",
+          "pt": "viver em um determinado país ou área desde o nascimento",
+          "ru": "живущий в определенной стране или местности с рождения",
+          "zh": "自出生以来就居住在特定的国家或地区"
+        }
+      },
+      {
+        "word": "remote",
+        "partOfSpeech": "adjective",
+        "definitions": {
+          "en": "far away from other cities, towns, or people",
+          "vi": "cách xa các thành phố, thị trấn hoặc người dân khác",
+          "de": "weit entfernt von anderen Städten, Dörfern oder Menschen",
+          "es": "lejos de otras ciudades, pueblos o personas",
+          "fr": "éloigné des autres villes, villages ou personnes",
+          "hi": "अन्य शहरों, कस्बों या लोगों से बहुत दूर",
+          "ja": "他の都市や町、あるいは人々から遠く離れていること",
+          "ko": "다른 도시, 마을 또는 사람들로부터 멀리 떨어진 것",
+          "pt": "longe de outras cidades, vilas ou pessoas",
+          "ru": "далеко от других городов, населенных пунктов или людей",
+          "zh": "远离其他城市、城镇或人群"
+        }
+      },
+      {
+        "word": "border",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the official line that separates two countries or regions",
+          "vi": "đường ranh giới chính thức ngăn cách hai quốc gia hoặc khu vực",
+          "de": "die offizielle Linie, die zwei Länder oder Regionen trennt",
+          "es": "la línea oficial que separa dos países o regiones",
+          "fr": "la ligne officielle qui sépare deux pays ou régions",
+          "hi": "दो देशों या क्षेत्रों को अलग करने वाली आधिकारिक रेखा",
+          "ja": "二つの国や地域を隔てる公式な境界線",
+          "ko": "두 국가나 지역을 나누는 공식적인 선",
+          "pt": "a linha oficial que separa dois países ou regiões",
+          "ru": "официальная линия, разделяющая две страны или региона",
+          "zh": "分隔两个国家或地区的官方界线"
+        }
+      },
+      {
+        "word": "edge",
+        "partOfSpeech": "noun",
+        "definitions": {
+          "en": "the part of something that is furthest from its centre",
+          "vi": "phần của một thứ gì đó nằm xa trung tâm của nó nhất",
+          "de": "der Teil von etwas, der am weitesten von seiner Mitte entfernt ist",
+          "es": "la parte de algo que está más alejada de su centro",
+          "fr": "la partie de quelque chose qui est la plus éloignée de son centre",
+          "hi": "किसी चीज़ का वह हिस्सा जो उसके केंद्र से सबसे दूर है",
+          "ja": "物の中心から最も遠い部分",
+          "ko": "어떤 것의 중심에서 가장 먼 부분",
+          "pt": "a parte de algo que está mais distante do seu centro",
+          "ru": "часть чего-либо, наиболее удаленная от его центра",
+          "zh": "某物距离中心最远的部分（边缘）"
+        }
+      },
+      {
+        "word": "guide",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to show someone where to go by going with them",
+          "vi": "chỉ cho ai đó nơi cần đi bằng cách đi cùng với họ",
+          "de": "jemandem den Weg zeigen, indem man mit ihm geht",
+          "es": "mostrarle a alguien adónde ir yendo con él",
+          "fr": "montrer à quelqu'un où aller en l'accompagnant",
+          "hi": "किसी को साथ जाकर रास्ता दिखाना कि कहाँ जाना है",
+          "ja": "一緒に行くことで、行くべき場所を誰かに教えること",
+          "ko": "누군가와 함께 가면서 갈 곳을 안내하는 것",
+          "pt": "mostrar a alguém para onde ir indo com essa pessoa",
+          "ru": "показывать кому-то, куда идти, сопровождая его",
+          "zh": "通过同行来告诉某人该去哪里"
+        }
+      },
+      {
+        "word": "lead",
+        "partOfSpeech": "verb",
+        "definitions": {
+          "en": "to go in front of a group of people to show them the way",
+          "vi": "đi trước một nhóm người để chỉ đường cho họ",
+          "de": "vor einer Gruppe von Menschen hergehen, um ihnen den Weg zu zeigen",
+          "es": "ir delante de un grupo de personas para mostrarles el camino",
+          "fr": "marcher devant un groupe de personnes pour leur montrer le chemin",
+          "hi": "लोगों के एक समूह के आगे चलना उन्हें रास्ता दिखाने के लिए",
+          "ja": "人々のグループの前を歩いて道案内をすること",
+          "ko": "사람들의 무리 앞에서 길을 안내하며 가는 것",
+          "pt": "ir à frente de um grupo de pessoas para mostrar o caminho",
+          "ru": "идти впереди группы людей, чтобы указывать им путь",
+          "zh": "走在一群人的前面为他们领路"
         }
       }
+
     ],
-    "prepositionalPhrases": [
+    "phrasesAndCollocations": [    
+  {
+    "phrase": "accident",
+    "translations": [
       {
-        "phrase": "at first",
-        "translations": {
-          "en": "at first",
-          "vi": "lúc đầu; ban đầu",
-          "de": "zuerst; anfangs",
-          "es": "al principio; en un primer momento",
-          "fr": "au début; d’abord",
-          "hi": "पहले; शुरुआत में",
-          "ja": "最初は; 初めは",
-          "ko": "처음에; 맨 처음에",
-          "pt": "no início; a princípio",
-          "ru": "сначала; вначале",
-          "zh": "起初；一开始"
-        }
-      },
-      {
-        "phrase": "at least",
-        "translations": {
-          "en": "at least",
-          "vi": "ít nhất; tối thiểu",
-          "de": "mindestens; wenigstens",
-          "es": "al menos; por lo menos",
-          "fr": "au moins",
-          "hi": "कम से कम; कम से कम इतना",
-          "ja": "少なくとも; せめて",
-          "ko": "적어도; 최소한",
-          "pt": "pelo menos; no mínimo",
-          "ru": "по крайней мере; как минимум",
-          "zh": "至少；起码"
-        }
-      },
-      {
-        "phrase": "at times",
-        "translations": {
-          "en": "at times",
-          "vi": "đôi khi; thỉnh thoảng",
-          "de": "manchmal; zuweilen",
-          "es": "a veces; de vez en cuando",
-          "fr": "parfois; par moments",
-          "hi": "कभी-कभी; समय-समय पर",
-          "ja": "時々; ときどき",
-          "ko": "때때로; 가끔",
-          "pt": "às vezes; de vez em quando",
-          "ru": "иногда; временами",
-          "zh": "有时；间或"
-        }
-      },
-      {
-        "phrase": "in secret",
-        "translations": {
-          "en": "in secret",
-          "vi": "bí mật; lén lút",
-          "de": "heimlich; insgeheim",
-          "es": "en secreto; a escondidas",
-          "fr": "en secret; secrètement",
-          "hi": "गुप्त रूप से; चुपके से",
-          "ja": "ひそかに; 内密に",
-          "ko": "비밀리에; 몰래",
-          "pt": "em segredo; às escondidas",
-          "ru": "тайно; потайком",
-          "zh": "秘密地；暗中"
-        }
-      },
-      {
-        "phrase": "in spite of",
-        "translations": {
-          "en": "in spite of",
-          "vi": "mặc dù; bất chấp",
-          "de": "trotz; ungeachtet",
-          "es": "a pesar de; pese a",
-          "fr": "malgré; en dépit de",
-          "hi": "के बावजूद; के होते हुए भी",
-          "ja": "にもかかわらず; ～にもかかわらず",
-          "ko": "에도 불구하고; 무릅쓰고",
-          "pt": "apesar de; não obstante",
-          "ru": "несмотря на; вопреки",
-          "zh": "尽管；不顾"
-        }
-      },
-      {
-        "phrase": "in tears",
-        "translations": {
-          "en": "in tears",
-          "vi": "đang khóc; nước mắt giàn giụa",
-          "de": "in Tränen; weinend",
-          "es": "en lágrimas; llorando",
-          "fr": "en larmes; les larmes aux yeux",
-          "hi": "आँसुओं में; रोते हुए",
-          "ja": "泣きながら; 涙を流して",
-          "ko": "눈물을 흘리며; 울면서",
-          "pt": "em lágrimas; a chorar",
-          "ru": "в слезах; плача",
-          "zh": "流着泪；含泪"
-        }
+        "en": "have an accident; be (involved) in an accident; do sth by accident",
+        "vi": "gặp tai nạn; bị liên quan đến tai nạn; làm gì đó tình cờ"
       }
-    ],
-    "wordFormation": [
-      { "root": "Bore", "forms": ["boring", "bored [cite: 53]"] },
-      { "root": "Comedy", "forms": ["comedian [cite: 54]"] },
-      { "root": "Emotion", "forms": ["emotional [cite: 55]"] },
-      { "root": "Energy", "forms": ["energetic [cite: 56]"] },
-      { "root": "Excite", "forms": ["excitement", "exciting", "excited [cite: 57]"] },
-      { "root": "Feel", "forms": ["felt", "feeling(s) [cite: 58]"] },
-      { "root": "Happy", "forms": ["unhappy", "(un)happiness [cite: 59]"] },
-      { "root": "Hate", "forms": ["hatred [cite: 60]"] },
-      { "root": "Noise", "forms": ["noisy", "noisily [cite: 61]"] },
-      { "root": "Sympathy", "forms": ["sympathise", "sympathetic [cite: 62]"] }
     ]
+  },
+  {
+    "phrase": "advance",
+    "translations": [
+      {
+        "en": "in advance; advance to/towards a place",
+        "vi": "trước; tiến tới một nơi"
+      }
+    ]
+  },
+  {
+    "phrase": "ahead",
+    "translations": [
+      {
+        "en": "go straight ahead; go ahead; be ahead of sth/sb",
+        "vi": "đi thẳng phía trước; tiếp tục đi; đi trước cái gì/ai đó"
+      }
+    ]
+  },
+  {
+    "phrase": "direction",
+    "translations": [
+      {
+        "en": "a change of direction; in the direction of sth; in this/that direction",
+        "vi": "sự thay đổi hướng; theo hướng của cái gì; theo hướng này/đó"
+      }
+    ]
+  },
+  {
+    "phrase": "head",
+    "translations": [
+      {
+        "en": "off the top of your head; head for/towards a place; head over heels (in love)",
+        "vi": "nói ngay không cần suy nghĩ; hướng tới một nơi; yêu say đắm"
+      }
+    ]
+  },
+  {
+    "phrase": "holiday",
+    "translations": [
+      {
+        "en": "go/be on holiday; have/take a holiday; bank holiday",
+        "vi": "đi/đang trong kỳ nghỉ; có/đi nghỉ; ngày nghỉ lễ"
+      }
+    ]
+  },
+  {
+    "phrase": "left",
+    "translations": [
+      {
+        "en": "go/turn/etc left; on the left; on the left-hand side; in the left-hand corner; left-handed",
+        "vi": "rẽ/trái; bên trái; phía tay trái; góc bên trái; thuận tay trái"
+      }
+    ]
+  },
+  {
+    "phrase": "route",
+    "translations": [
+      {
+        "en": "plan your/a route; take a route",
+        "vi": "lên kế hoạch tuyến đường; đi theo tuyến đường"
+      }
+    ]
+  },
+  {
+    "phrase": "sights",
+    "translations": [
+      {
+        "en": "see the sights",
+        "vi": "ngắm cảnh"
+      }
+    ]
+  },
+  {
+    "phrase": "sightseeing",
+    "translations": [
+      {
+        "en": "go sightseeing",
+        "vi": "đi tham quan"
+      }
+    ]
+  },
+  {
+    "phrase": "speed",
+    "translations": [
+      {
+        "en": "at (high/full/etc) speed; a burst of speed; speed limit",
+        "vi": "ở tốc độ cao/đầy đủ; một cú tăng tốc; giới hạn tốc độ"
+      }
+    ]
+  },
+  {
+    "phrase": "tour",
+    "translations": [
+      {
+        "en": "go on/take a tour of/(a)round somewhere; tour a place; tour guide",
+        "vi": "đi/tham gia một chuyến tham quan; tham quan một nơi; hướng dẫn viên du lịch"
+      }
+    ]
+  },
+  {
+    "phrase": "trip",
+    "translations": [
+      {
+        "en": "business trip; school trip; go on a trip; take a trip (to a place)",
+        "vi": "chuyến công tác; chuyến đi học; đi một chuyến; thực hiện chuyến đi (đến nơi nào đó)"
+      }
+    ]
+  },
+  {
+    "phrase": "way",
+    "translations": [
+      {
+        "en": "lose/make/find your way; in a way; on the way; go all the way (to sth/swh)",
+        "vi": "lạc/mở/tìm đường; theo một cách nào đó; trên đường đi; đi hết đường (đến cái gì/nơi nào đó)"
+      }
+    ]
+  }
+  ],
+  
+  "wordPatterns": [
+    {
+      "pattern": "afraid of sth/sb/doing; afraid to do",
+      "examples": [
+        "She is afraid of spiders.",
+        "He is afraid of making mistakes.",
+        "I’m afraid to ask her."
+      ]
+    },
+    {
+      "pattern": "appear to be",
+      "examples": [
+        "He appears to be tired.",
+        "The plan appears to be successful."
+      ]
+    },
+    {
+      "pattern": "arrange sth (with sb); arrange for sb to do",
+      "examples": [
+        "I arranged a meeting with my boss.",
+        "They arranged for a taxi to pick us up."
+      ]
+    },
+    {
+      "pattern": "arrive in/at a place; arrive here/there",
+      "examples": [
+        "We arrived in Paris at midnight.",
+        "She arrived at the station.",
+        "He arrived here yesterday."
+      ]
+    },
+    {
+      "pattern": "continue sth/doing; continue to do; continue with sth",
+      "examples": [
+        "She continued reading the book.",
+        "He continued to work despite the noise.",
+        "Let’s continue with the next exercise."
+      ]
+    },
+    {
+      "pattern": "differ from sth/sb",
+      "examples": [
+        "This method differs from the traditional one.",
+        "My opinion differs from yours."
+      ]
+    },
+    {
+      "pattern": "dream about/of sth/sb/doing",
+      "examples": [
+        "I dreamt about flying last night.",
+        "She dreams of becoming a doctor."
+      ]
+    },
+    {
+      "pattern": "invite sb to do",
+      "examples": [
+        "They invited me to join the party.",
+        "He invited her to speak at the conference."
+      ]
+    },
+    {
+      "pattern": "keen to do; keen on sth/sb/doing",
+      "examples": [
+        "She is keen to learn French.",
+        "He is keen on playing football.",
+        "I’m keen on you joining us."
+      ]
+    },
+    {
+      "pattern": "live in/at a place; live on/for sth; live here/there",
+      "examples": [
+        "They live in London.",
+        "He lives at 25 Green Street.",
+        "She lives on bread and cheese.",
+        "He lives for music.",
+        "We live here now."
+      ]
+    },
+    {
+      "pattern": "regret (not) doing; regret to tell/inform you",
+      "examples": [
+        "I regret not studying harder.",
+        "We regret to inform you that your application was unsuccessful."
+      ]
+    },
+    {
+      "pattern": "think of/about sth/sb/doing",
+      "examples": [
+        "I’m thinking of moving abroad.",
+        "She thought about her childhood.",
+        "What do you think of this idea?"
+      ]
+    },
+    {
+      "pattern": "write about sth/sb/doing; write (sth) (to sb); write sb sth; write sth down",
+      "examples": [
+        "He wrote about his travels.",
+        "She wrote a letter to her friend.",
+        "I wrote him a note.",
+        "Don’t forget to write the phone number down."
+      ]
+    }
+  ],
+  "wordFormation": [
+    {
+      "root": "arrange",
+      "forms": ["rearrange", "arrangement"]
+    },
+    {
+      "root": "broad",
+      "forms": ["breadth", "broaden"]
+    },
+    {
+      "root": "culture",
+      "forms": ["cultural", "culturally", "uncultured", "cultured"]
+    },
+    {
+      "root": "differ",
+      "forms": ["different", "differently", "difference"]
+    },
+    {
+      "root": "direct",
+      "forms": ["indirect", "direction", "director", "directly", "indirectly"]
+    },
+    {
+      "root": "distant",
+      "forms": ["distantly", "distance"]
+    },
+    {
+      "root": "enter",
+      "forms": ["entrance"]
+    },
+    {
+      "root": "inhabit",
+      "forms": ["inhabitant"]
+    },
+    {
+      "root": "photograph",
+      "forms": ["photography", "photographer", "photographic"]
+    },
+    {
+      "root": "recognise",
+      "forms": ["recognisable", "unrecognisable", "recognition"]
+    },
+    {
+      "root": "time",
+      "forms": ["timetable"]
+    },
+    {
+      "root": "tour",
+      "forms": ["tourism", "tourist"]
+    }
+  ]
   }
 }

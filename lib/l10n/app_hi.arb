@@ -152,7 +152,7 @@
   "selectLanguage": "भाषा चुनें",
   "sentenceForms": "वाक्य रूप",
   "howToUse": "कैसे उपयोग करें",
-  "lessonsList": "पाठ सूची",
+  "lessonsList": "पाठ",
   "lessonNumber": "पाठ {number}",
   "@lessonNumber": {
     "placeholders": {

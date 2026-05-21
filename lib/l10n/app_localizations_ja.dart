@@ -356,7 +356,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get howToUse => '使い方';
 
   @override
-  String get lessonsList => 'レッスン一覧';
+  String get lessonsList => 'レッスン';
 
   @override
   String lessonNumber(int number) {

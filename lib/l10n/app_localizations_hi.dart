@@ -358,7 +358,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get howToUse => 'कैसे उपयोग करें';
 
   @override
-  String get lessonsList => 'पाठ सूची';
+  String get lessonsList => 'पाठ';
 
   @override
   String lessonNumber(int number) {

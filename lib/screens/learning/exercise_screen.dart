@@ -45,6 +45,28 @@ const LinearGradient _kPrimaryCtaGradient = LinearGradient(
   end: Alignment.centerRight,
 );
 
+enum _SequentialTimelineItemType { question, infor }
+
+class _SequentialTimelineItem {
+  final _SequentialTimelineItemType type;
+  final int? questionIndex;
+  final SequentialInforItem? infor;
+
+  const _SequentialTimelineItem._({
+    required this.type,
+    this.questionIndex,
+    this.infor,
+  });
+
+  const _SequentialTimelineItem.question(int questionIndex)
+      : this._(type: _SequentialTimelineItemType.question, questionIndex: questionIndex);
+
+  const _SequentialTimelineItem.infor(SequentialInforItem infor)
+      : this._(type: _SequentialTimelineItemType.infor, infor: infor);
+
+  bool get isInfor => type == _SequentialTimelineItemType.infor;
+}
+
 class ExerciseScreen extends StatefulWidget {
   final ExerciseModel exercise;
 
@@ -89,6 +111,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   
   // Cho groupQuestions - chỉ hiển thị 1 question tại một thời điểm
   int _currentGroupQuestionIndex = 0;
+  int _currentSequentialTimelineIndex = 0;
   Map<int, bool> _questionResults = {}; // Map<questionIndex, isCorrect> - lưu kết quả từng question
   Map<int, dynamic> _groupQuestionAnswers = {}; // Map<groupIndex, selectedAnswer> - cho singleChoice và multipleChoice
   
@@ -154,6 +177,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
   /// 0–1: tiến độ phiên (mockup thanh %).
   double _sessionProgressFraction() {
+    if (widget.exercise.type == ExerciseType.sequentialQuestions) {
+      final timeline = _buildSequentialTimeline();
+      if (timeline.isEmpty) return 0;
+      final current = _effectiveSequentialTimelineIndex(timeline);
+      final baseProgress = current / timeline.length;
+      final currentItem = timeline[current];
+      if (currentItem.isInfor) {
+        return ((current + 1) / timeline.length).clamp(0.0, 1.0);
+      }
+      final qIndex = currentItem.questionIndex!;
+      final q = widget.exercise.groupQuestions![qIndex];
+      final extra = _isSequentialQuestionAnswered(qIndex, q) ? (1 / timeline.length) : 0.0;
+      return (baseProgress + extra).clamp(0.0, 1.0);
+    }
+
     final gq = widget.exercise.groupQuestions;
     if (gq != null && gq.isNotEmpty) {
       final total = gq.length;
@@ -226,39 +264,86 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     if (mounted) Navigator.of(context).pop();
   }
 
-  /// Chỉ số câu hỏi sequential cuối cùng đã mở khóa (dùng cho layout + nút Submit cố định).
-  int _sequentialLastUnlockedIndex() {
-    final groupQuestions = widget.exercise.groupQuestions!;
-    int lastUnlockedIndex = 0;
-    for (int i = 0; i < groupQuestions.length; i++) {
-      final question = groupQuestions[i];
-      bool hasAnswer = false;
+  List<_SequentialTimelineItem> _buildSequentialTimeline() {
+    final groupQuestions = widget.exercise.groupQuestions ?? const <GroupQuestion>[];
+    final infors = widget.exercise.infors;
+    final beforeBuckets = <int, List<SequentialInforItem>>{};
+    final afterItems = <SequentialInforItem>[];
 
-      if (question.type == ExerciseType.buttonSingleChoice) {
-        final placeholderCount = _countPlaceholders(question.question);
-        bool hasAllAnswers = true;
-        for (int j = 0; j < placeholderCount; j++) {
-          final key = i * 1000 + j;
-          if (_selectedAnswers[key] == null) {
-            hasAllAnswers = false;
-            break;
-          }
-        }
-        hasAnswer = hasAllAnswers;
-      } else if (question.type == ExerciseType.singleChoice) {
-        hasAnswer = _groupQuestionAnswers[i] != null;
-      } else if (question.type == ExerciseType.multipleChoice) {
-        final selectedAnswers = _groupQuestionAnswers[i] as List<String>?;
-        hasAnswer = selectedAnswers != null && selectedAnswers.isNotEmpty;
+    for (final infor in infors) {
+      final rawIndex = infor.index;
+      if (groupQuestions.isEmpty || rawIndex >= groupQuestions.length) {
+        afterItems.add(infor);
+        continue;
       }
-
-      if (hasAnswer && i < groupQuestions.length - 1) {
-        lastUnlockedIndex = i + 1;
-      } else if (!hasAnswer) {
-        break;
-      }
+      final targetIndex = rawIndex < 0 ? 0 : rawIndex;
+      beforeBuckets.putIfAbsent(targetIndex, () => <SequentialInforItem>[]).add(infor);
     }
-    return lastUnlockedIndex;
+
+    final timeline = <_SequentialTimelineItem>[];
+    for (int i = 0; i < groupQuestions.length; i++) {
+      final beforeItems = beforeBuckets[i];
+      if (beforeItems != null) {
+        for (final infor in beforeItems) {
+          timeline.add(_SequentialTimelineItem.infor(infor));
+        }
+      }
+      timeline.add(_SequentialTimelineItem.question(i));
+    }
+    for (final infor in afterItems) {
+      timeline.add(_SequentialTimelineItem.infor(infor));
+    }
+    return timeline;
+  }
+
+  int _effectiveSequentialTimelineIndex(List<_SequentialTimelineItem> timeline) {
+    if (timeline.isEmpty) return 0;
+    return _currentSequentialTimelineIndex.clamp(0, timeline.length - 1);
+  }
+
+  void _goToNextSequentialTimelineItem() {
+    final timeline = _buildSequentialTimeline();
+    if (timeline.isEmpty) return;
+    final current = _effectiveSequentialTimelineIndex(timeline);
+    if (current >= timeline.length - 1) return;
+    setState(() {
+      _currentSequentialTimelineIndex = current + 1;
+    });
+  }
+
+  bool _isSequentialQuestionAnswered(int questionIndex, GroupQuestion question) {
+    if (question.type == ExerciseType.buttonSingleChoice) {
+      final placeholderCount = _countPlaceholders(question.question);
+      for (int j = 0; j < placeholderCount; j++) {
+        final key = questionIndex * 1000 + j;
+        if (_selectedAnswers[key] == null) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (question.type == ExerciseType.singleChoice) {
+      return _groupQuestionAnswers[questionIndex] != null;
+    }
+    if (question.type == ExerciseType.multipleChoice) {
+      final selectedAnswers = _groupQuestionAnswers[questionIndex] as List<String>?;
+      return selectedAnswers != null && selectedAnswers.isNotEmpty;
+    }
+    if (question.type == ExerciseType.fillBlank) {
+      final regex = RegExp(r'\{(\d+)\}');
+      final matches = regex.allMatches(question.question);
+      final placeholderIndices = matches.map((m) => int.parse(m.group(1)!)).toList();
+      if (placeholderIndices.isEmpty) return false;
+      for (final placeholderIndex in placeholderIndices) {
+        final key = questionIndex * 1000 + placeholderIndex;
+        final answer = _fillBlankAnswers[key];
+        if (answer == null || answer.trim().isEmpty) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
   /// Nút Submit / Tiếp luôn bám đáy màn hình (practice / exercise).
@@ -266,16 +351,30 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     if (_isSubmitted) return null;
 
     if (widget.exercise.type == ExerciseType.sequentialQuestions) {
+      final timeline = _buildSequentialTimeline();
+      if (timeline.isEmpty) return null;
+      final currentTimelineIndex = _effectiveSequentialTimelineIndex(timeline);
+      final currentItem = timeline[currentTimelineIndex];
+      if (currentItem.isInfor) {
+        return null;
+      }
       final gq = widget.exercise.groupQuestions!;
-      if (_sequentialLastUnlockedIndex() != gq.length - 1) return null;
+      final questionIndex = currentItem.questionIndex!;
+      final isLast = currentTimelineIndex == timeline.length - 1;
+      final canProceed = _isSequentialQuestionAnswered(questionIndex, gq[questionIndex]);
+      final onPressed = canProceed
+          ? (isLast
+              ? (_canSubmitSequentialQuestions() ? _handleSubmit : null)
+              : _goToNextSequentialTimelineItem)
+          : null;
       return SafeArea(
         top: false,
         minimum: const EdgeInsets.only(bottom: 8),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: _buildGradientCtaButton(
-            onPressed: _canSubmitSequentialQuestions() ? _handleSubmit : null,
-            label: loc.submit,
+            onPressed: onPressed,
+            label: isLast ? loc.submit : loc.continueText,
           ),
         ),
       );
@@ -728,11 +827,42 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
   Widget _buildSequentialQuestions() {
     final groupQuestions = widget.exercise.groupQuestions!;
-    final lastUnlockedIndex = _sequentialLastUnlockedIndex();
+    final timeline = _buildSequentialTimeline();
+    if (timeline.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final currentTimelineIndex = _effectiveSequentialTimelineIndex(timeline);
+    final sequentialTitle = widget.exercise.sequentialTitle?.trim() ?? '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (sequentialTitle.isNotEmpty) ...[
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.zero,
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF2D2D2D)
+                  : Theme.of(context).cardTheme.color ?? Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: _looksLikeHtml(sequentialTitle)
+                  ? _buildHtmlContent(sequentialTitle)
+                  : Text(sequentialTitle),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         // Hiển thị paragraph nếu có (từ exercise.question)
         if (widget.exercise.question.isNotEmpty) ...[
           Stack(
@@ -772,9 +902,29 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           ),
           const SizedBox(height: 24),
         ],
-        // Hiển thị tất cả questions đã unlock
-        ...List.generate(lastUnlockedIndex + 1, (index) {
-          final question = groupQuestions[index];
+        // Hiển thị timeline cho đến item hiện tại.
+        ...List.generate(currentTimelineIndex + 1, (timelineIndex) {
+          final item = timeline[timelineIndex];
+          final isCurrentItem = timelineIndex == currentTimelineIndex;
+          final isLastTimelineItem = timelineIndex == timeline.length - 1;
+
+          if (item.isInfor) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSequentialInforCard(
+                  item.infor!,
+                  isCurrentItem: isCurrentItem,
+                  isLastTimelineItem: isLastTimelineItem,
+                ),
+                if (timelineIndex < currentTimelineIndex)
+                  const SizedBox(height: 24),
+              ],
+            );
+          }
+
+          final questionIndex = item.questionIndex!;
+          final question = groupQuestions[questionIndex];
           final languageCode =
               Provider.of<LanguageProvider>(context, listen: false)
                   .currentLanguageCode;
@@ -784,18 +934,20 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (question.type == ExerciseType.buttonSingleChoice)
-                _buildButtonSingleChoiceForGroup(question, index)
+                _buildButtonSingleChoiceForGroup(question, questionIndex)
               else if (question.type == ExerciseType.singleChoice)
-                _buildSingleChoiceForGroup(question, index)
+                _buildSingleChoiceForGroup(question, questionIndex)
               else if (question.type == ExerciseType.multipleChoice)
-                _buildMultipleChoiceForGroup(question, index),
+                _buildMultipleChoiceForGroup(question, questionIndex)
+              else if (question.type == ExerciseType.fillBlank)
+                _buildFillBlankForGroup(question, questionIndex),
               if (explanation != null &&
                   explanation.isNotEmpty &&
                   question.type != ExerciseType.buttonSingleChoice) ...[
                 const SizedBox(height: 12),
                 _buildExplanationBox(explanation),
               ],
-              if (index < lastUnlockedIndex) const SizedBox(height: 24),
+              if (timelineIndex < currentTimelineIndex) const SizedBox(height: 24),
             ],
           );
         }),
@@ -807,26 +959,82 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final groupQuestions = widget.exercise.groupQuestions!;
     for (int i = 0; i < groupQuestions.length; i++) {
       final question = groupQuestions[i];
-      if (question.type == ExerciseType.buttonSingleChoice) {
-        final placeholderCount = _countPlaceholders(question.question);
-        for (int j = 0; j < placeholderCount; j++) {
-          final key = i * 1000 + j;
-          if (_selectedAnswers[key] == null) {
-            return false;
-          }
-        }
-      } else if (question.type == ExerciseType.singleChoice) {
-        if (_groupQuestionAnswers[i] == null) {
-          return false;
-        }
-      } else if (question.type == ExerciseType.multipleChoice) {
-        final selectedAnswers = _groupQuestionAnswers[i] as List<String>?;
-        if (selectedAnswers == null || selectedAnswers.isEmpty) {
-          return false;
-        }
+      if (!_isSequentialQuestionAnswered(i, question)) {
+        return false;
       }
     }
     return true;
+  }
+
+  Widget _buildSequentialInforCard(
+    SequentialInforItem infor, {
+    required bool isCurrentItem,
+    required bool isLastTimelineItem,
+  }) {
+    final loc = AppLocalizations.of(context)!;
+    final value = infor.value.trim();
+    final ctaLabel = isLastTimelineItem ? loc.submit : loc.continueText;
+    final onPressed = isCurrentItem
+        ? (isLastTimelineItem
+            ? (_canSubmitSequentialQuestions() ? _handleSubmit : null)
+            : _goToNextSequentialTimelineItem)
+        : null;
+
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF2D2D2D)
+            : Theme.of(context).cardTheme.color ?? Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 52),
+                  child: value.isEmpty
+                      ? const SizedBox.shrink()
+                      : (_looksLikeHtml(value)
+                          ? _buildHtmlContent(value)
+                          : Text(value)),
+                ),
+                if (value.isNotEmpty)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: QuestionAudioPlayer(
+                      questionText: value,
+                      speakerVoices: widget.exercise.speakerVoices,
+                      defaultVoice: widget.exercise.defaultVoice,
+                      autoPlay: false,
+                    ),
+                  ),
+              ],
+            ),
+            if (isCurrentItem) ...[
+              const SizedBox(height: 16),
+              _buildGradientCtaButton(
+                onPressed: onPressed,
+                label: ctaLabel,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
   
   void _goToNextQuestion() {
