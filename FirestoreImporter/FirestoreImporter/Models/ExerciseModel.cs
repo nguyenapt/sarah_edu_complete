@@ -99,6 +99,9 @@ public class ExerciseModel
     [JsonProperty("sequentialTitle")]
     public string? SequentialTitle { get; set; }
 
+    [JsonProperty("contentMeta")]
+    public Dictionary<string, object>? ContentMeta { get; set; }
+
     public Dictionary<string, object> ToFirestore()
     {
         var data = new Dictionary<string, object>
@@ -192,6 +195,11 @@ public class ExerciseModel
         if (!string.IsNullOrEmpty(SequentialTitle))
         {
             data["sequentialTitle"] = SequentialTitle;
+        }
+
+        if (ContentMeta != null && ContentMeta.Count > 0)
+        {
+            data["contentMeta"] = ContentMeta;
         }
 
         return data;

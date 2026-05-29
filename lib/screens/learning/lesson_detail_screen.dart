@@ -14,9 +14,13 @@ enum VocabularySortOption { wordAsc, wordDesc, definitionAsc, definitionDesc }
 class LessonDetailScreen extends StatefulWidget {
   final LessonModel lesson;
 
+  /// Nhúng trong bottom sheet (không Scaffold) — quick view grammar khi làm bài.
+  final bool embedded;
+
   const LessonDetailScreen({
     super.key,
     required this.lesson,
+    this.embedded = false,
   });
 
   @override
@@ -30,7 +34,26 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
-    
+
+    final body = widget.lesson.theory != null
+        ? _buildTheorySection()
+        : Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                widget.lesson.getTitle(languageCode),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+
+    if (widget.embedded) {
+      return body;
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: HorizonTopAppBar(
@@ -38,13 +61,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Theory Section
-            if (widget.lesson.theory != null) _buildTheorySection(),
-          ],
-        ),
+        child: body,
       ),
     );
   }
@@ -369,59 +386,67 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
     final theory = widget.lesson.theory!;
     final languageCode = Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
 
+    final theoryBody = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!widget.embedded) ...[
+          Row(
+            children: [
+              Icon(Icons.auto_stories, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                AppLocalizations.of(context)!.theory,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+        Text(
+          theory.getTitle(languageCode),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: 8),
+        Builder(
+          builder: (context) {
+            return _buildLessonHtml(
+              theory.getDescription(languageCode),
+              _theoryDescriptionStyleMap(context),
+            );
+          },
+        ),
+        if (theory.usage != null && theory.usage!.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildUsageSection(theory.usage!, languageCode),
+        ],
+        if (theory.forms != null) ...[
+          const SizedBox(height: 16),
+          _buildFormsSection(theory.forms!, languageCode),
+        ],
+        if (theory.vocabulary != null) ...[
+          const SizedBox(height: 16),
+          _buildVocabularySection(theory.vocabulary!, languageCode),
+        ],
+        if (theory.examples.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildExamplesSection(theory.examples, languageCode),
+        ],
+      ],
+    );
+
+    if (widget.embedded) {
+      return theoryBody;
+    }
+
     return Card(
       margin: const EdgeInsets.only(bottom: 6),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.auto_stories, color: AppTheme.primaryColor),
-                const SizedBox(width: 8),
-                Text(
-                  AppLocalizations.of(context)!.theory,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              theory.getTitle(languageCode),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Builder(
-              builder: (context) {
-                return _buildLessonHtml(
-                  theory.getDescription(languageCode),
-                  _theoryDescriptionStyleMap(context),
-                );
-              },
-            ),
-            if (theory.usage != null && theory.usage!.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _buildUsageSection(theory.usage!, languageCode),
-            ],
-            if (theory.forms != null) ...[
-              const SizedBox(height: 16),
-              _buildFormsSection(theory.forms!, languageCode),
-            ],
-            if (theory.vocabulary != null) ...[
-              const SizedBox(height: 16),
-              _buildVocabularySection(theory.vocabulary!, languageCode),
-            ],
-            if (theory.examples.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _buildExamplesSection(theory.examples, languageCode),
-            ],
-          ],
-        ),
+        child: theoryBody,
       ),
     );
   }

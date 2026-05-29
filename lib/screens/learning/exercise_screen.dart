@@ -11,12 +11,15 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../core/services/firestore_service.dart';
+import '../../core/repositories/catalog_repository.dart';
 import '../../core/ads/ad_policy.dart';
 import '../../core/ads/ads_manager.dart';
+import '../../models/lesson_model.dart';
 import '../../widgets/learning/question_audio_player.dart';
 import '../auth/login_screen.dart';
 import '../level_up/level_up_screen.dart';
 import 'exercise_detail_screen.dart';
+import '../../widgets/learning/unit_lessons_quick_sheet.dart';
 
 /// Màu đồng bộ với `mockup_1.html` (tailwind theme.extend.colors — Fluent Horizon).
 const Color _kSurface = Color(0xFFF4F6FF); // background / surface
@@ -119,10 +122,27 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
   DateTime? _startTime;
   final FirestoreService _firestoreService = FirestoreService();
 
+  /// Grammar note slide-down (group questions — single/multiple/button/fill blank).
+  late final AnimationController _grammarNoteController;
+  bool _grammarNoteExpanded = false;
+  List<LessonModel>? _unitLessons;
+  bool _unitLessonsLoading = false;
+
+  /// TTS tự động khi sequential question điền đủ placeholder.
+  QuestionSpeechController? _sequentialSpeech;
+  String? _lastSequentialSpeechKey;
+
   @override
   void initState() {
     super.initState();
     _startTime = DateTime.now();
+    _grammarNoteController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 280),
+    );
+    if (_isPaginatedGroupQuestionsExercise()) {
+      unawaited(_loadUnitLessonsIfNeeded());
+    }
   }
 
   /// Nút Submit / Tiếp — gradient như footer `mockup_1.html`.
@@ -517,8 +537,93 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     return scaffold;
   }
 
+  String _resolveQuestionTemplate(GroupQuestion question, int groupIndex) {
+    var text = _normalizeQuestionText(question.question);
+    final regex = RegExp(r'\{(\d+)\}');
+    text = text.replaceAllMapped(regex, (match) {
+      final placeholderIndex = int.parse(match.group(1)!);
+      final key = groupIndex * 1000 + placeholderIndex;
+      if (question.type == ExerciseType.fillBlank) {
+        return _fillBlankAnswers[key]?.trim() ?? '';
+      }
+      if (question.type == ExerciseType.buttonSingleChoice) {
+        return _selectedAnswers[key] ?? '';
+      }
+      return '';
+    });
+    return text;
+  }
+
+  /// Văn bản đọc TTS: giữ role để chọn giọng, bỏ nhãn speaker khỏi nội dung đọc.
+  String _speechTextForResolvedQuestion(String resolved) {
+    final normalized = _normalizeQuestionText(resolved);
+    final lines = normalized
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .toList();
+    if (lines.isEmpty) return '';
+
+    final (speaker, dialogueOnFirst) = _parseSpeaker(lines.first);
+    if (speaker != null) {
+      if (dialogueOnFirst.isNotEmpty) {
+        return dialogueOnFirst.replaceAll(RegExp(r'\s+'), ' ').trim();
+      }
+      if (lines.length > 1) {
+        return lines.sublist(1).join(' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+      }
+    }
+    return normalized.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
+
+  void _maybeAutoSpeakSequentialQuestion(int groupIndex) {
+    if (widget.exercise.type != ExerciseType.sequentialQuestions) return;
+    final gq = widget.exercise.groupQuestions;
+    if (gq == null || groupIndex < 0 || groupIndex >= gq.length) return;
+
+    final question = gq[groupIndex];
+    if (question.type != ExerciseType.buttonSingleChoice &&
+        question.type != ExerciseType.fillBlank) {
+      return;
+    }
+    if (!_isSequentialQuestionAnswered(groupIndex, question)) {
+      _lastSequentialSpeechKey = null;
+      return;
+    }
+
+    final resolved = _resolveQuestionTemplate(question, groupIndex);
+    final speechText = _speechTextForResolvedQuestion(resolved);
+    if (speechText.isEmpty) return;
+
+    final voiceLookup = resolved.trim();
+    if (resolveVoiceConfigForQuestionText(
+          voiceLookup,
+          speakerVoices: widget.exercise.speakerVoices,
+          defaultVoice: widget.exercise.defaultVoice,
+        ) ==
+        null) {
+      return;
+    }
+
+    final speechKey = '$groupIndex|$speechText';
+    if (_lastSequentialSpeechKey == speechKey) return;
+    _lastSequentialSpeechKey = speechKey;
+
+    _sequentialSpeech ??= QuestionSpeechController();
+    unawaited(
+      _sequentialSpeech!.speak(
+        speechText,
+        voiceLookupText: resolved,
+        speakerVoices: widget.exercise.speakerVoices,
+        defaultVoice: widget.exercise.defaultVoice,
+      ),
+    );
+  }
+
   @override
   void dispose() {
+    _grammarNoteController.dispose();
+    unawaited(_sequentialSpeech?.dispose());
     for (var controller in _animationControllers.values) {
       controller.dispose();
     }
@@ -526,6 +631,211 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       focusNode.dispose();
     }
     super.dispose();
+  }
+
+  /// Group questions từng câu (không sequential / crossword).
+  bool _isPaginatedGroupQuestionsExercise() {
+    if (widget.exercise.type == ExerciseType.sequentialQuestions ||
+        widget.exercise.type == ExerciseType.crossword) {
+      return false;
+    }
+    final gq = widget.exercise.groupQuestions;
+    return gq != null && gq.isNotEmpty;
+  }
+
+  bool _isGroupGrammarSupportedType(ExerciseType type) {
+    return type == ExerciseType.singleChoice ||
+        type == ExerciseType.multipleChoice ||
+        type == ExerciseType.buttonSingleChoice ||
+        type == ExerciseType.fillBlank;
+  }
+
+  bool _groupQuestionHasGrammarNote(GroupQuestion q, String languageCode) {
+    final text = q.getExplanation(languageCode);
+    return text != null && text.trim().isNotEmpty;
+  }
+
+  void _collapseGrammarNote() {
+    _grammarNoteExpanded = false;
+    _grammarNoteController.reverse();
+  }
+
+  void _toggleGrammarNoteVisible() {
+    setState(() {
+      _grammarNoteExpanded = !_grammarNoteExpanded;
+      if (_grammarNoteExpanded) {
+        _grammarNoteController.forward();
+      } else {
+        _grammarNoteController.reverse();
+      }
+    });
+  }
+
+  Future<void> _loadUnitLessonsIfNeeded() async {
+    if (_unitLessons != null || _unitLessonsLoading) return;
+    final unitId = widget.exercise.unitId;
+    if (unitId.isEmpty) return;
+    _unitLessonsLoading = true;
+    try {
+      final repo = Provider.of<CatalogRepository>(context, listen: false);
+      final lessons = await repo.getLessonsByUnit(unitId);
+      if (!mounted) return;
+      setState(() {
+        _unitLessons = lessons;
+        _unitLessonsLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _unitLessons = [];
+        _unitLessonsLoading = false;
+      });
+    }
+  }
+
+  IconData _lessonTypeIcon(LessonType type) {
+    switch (type) {
+      case LessonType.grammar:
+        return Icons.auto_stories_rounded;
+      case LessonType.vocabulary:
+        return Icons.book_rounded;
+      case LessonType.listening:
+        return Icons.headphones_rounded;
+      case LessonType.speaking:
+        return Icons.mic_rounded;
+      case LessonType.reading:
+        return Icons.article_rounded;
+      case LessonType.writing:
+        return Icons.edit_rounded;
+    }
+  }
+
+  Color _lessonTypeColor(LessonType type) {
+    switch (type) {
+      case LessonType.grammar:
+        return _kPrimary;
+      case LessonType.vocabulary:
+        return Colors.green.shade700;
+      case LessonType.listening:
+        return Colors.orange.shade700;
+      case LessonType.speaking:
+        return Colors.purple.shade700;
+      case LessonType.reading:
+        return Colors.teal.shade700;
+      case LessonType.writing:
+        return Colors.red.shade700;
+    }
+  }
+
+  void _showUnitLessonsSheet() {
+    final lessons = _unitLessons;
+    if (lessons == null || lessons.isEmpty) return;
+    showUnitLessonsQuickSheet(
+      context,
+      lessons: lessons,
+      lessonTypeColor: _lessonTypeColor,
+      lessonTypeIcon: _lessonTypeIcon,
+    );
+  }
+
+  Widget _buildGroupGrammarToolbarIcon({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onPressed,
+    bool isActive = false,
+  }) {
+    return Material(
+      color: isActive ? _kOptionSelectedFill : _kSurfaceContainerLowest,
+      borderRadius: BorderRadius.circular(12),
+      elevation: isActive ? 0 : 1,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Tooltip(
+          message: tooltip,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Icon(
+              icon,
+              size: 22,
+              color: isActive ? _kPrimary : _kOnSurfaceVariant,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGroupGrammarIconRow(GroupQuestion question) {
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final hasNote = _groupQuestionHasGrammarNote(question, languageCode);
+    final hasLessons = _unitLessons != null && _unitLessons!.isNotEmpty;
+    if (!hasNote && !hasLessons) {
+      return const SizedBox.shrink();
+    }
+
+    final loc = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (hasLessons)
+            _buildGroupGrammarToolbarIcon(
+              icon: Icons.menu_book_rounded,
+              tooltip: loc.grammar,
+              onPressed: _showUnitLessonsSheet,
+            ),
+          if (hasNote) ...[
+            if (hasLessons) const SizedBox(width: 8),
+            _buildGroupGrammarToolbarIcon(
+              icon: Icons.lightbulb_outline_rounded,
+              tooltip: loc.grammarNoteTitle,
+              isActive: _grammarNoteExpanded,
+              onPressed: _toggleGrammarNoteVisible,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGroupGrammarNoteSlideSection(GroupQuestion question) {
+    final languageCode =
+        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
+    final text = question.getExplanation(languageCode)?.trim();
+    if (text == null || text.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return ClipRect(
+      child: SizeTransition(
+        sizeFactor: CurvedAnimation(
+          parent: _grammarNoteController,
+          curve: Curves.easeInOut,
+        ),
+        axisAlignment: -1,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: _buildGrammarNoteCard(text),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGroupGrammarFooter(GroupQuestion question) {
+    if (!_isGroupGrammarSupportedType(question.type)) {
+      return const SizedBox.shrink();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildGroupGrammarIconRow(question),
+        _buildGroupGrammarNoteSlideSection(question),
+      ],
+    );
   }
 
   /// Check if exercise has title or image
@@ -815,9 +1125,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         else if (currentQuestion.type == ExerciseType.matching)
           _buildMatchingForGroup(currentQuestion, _currentGroupQuestionIndex),
 
-        if (currentExplanation != null &&
-            currentExplanation.isNotEmpty &&
-            currentQuestion.type != ExerciseType.buttonSingleChoice) ...[
+        if (_isGroupGrammarSupportedType(currentQuestion.type))
+          _buildGroupGrammarFooter(currentQuestion)
+        else if (currentExplanation != null && currentExplanation.isNotEmpty) ...[
           const SizedBox(height: 12),
           _buildExplanationBox(currentExplanation),
         ],
@@ -1124,6 +1434,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     if (_currentGroupQuestionIndex < widget.exercise.groupQuestions!.length - 1) {
       setState(() {
         _currentGroupQuestionIndex++;
+        _collapseGrammarNote();
       });
     }
   }
@@ -1359,9 +1670,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
 
   Widget _buildButtonSingleChoiceForGroup(GroupQuestion groupQuestion, int groupIndex) {
     final content = groupQuestion.content as ButtonSingleChoiceContent;
-    final languageCode =
-        Provider.of<LanguageProvider>(context, listen: false).currentLanguageCode;
-    final grammarExplanation = groupQuestion.getExplanation(languageCode);
 
     // Initialize keys và animations cho group này
     final placeholderCount = _countPlaceholders(groupQuestion.question);
@@ -1400,10 +1708,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           const SizedBox(height: 16),
         ],
         _buildQuestionContent(groupQuestion.question, groupIndex, content),
-        if (grammarExplanation != null && grammarExplanation.trim().isNotEmpty) ...[
-          const SizedBox(height: 16),
-          _buildGrammarNoteCard(grammarExplanation.trim()),
-        ],
         if (!isQuestionAnswered) ...[
           const SizedBox(height: 24),
           _buildOptionsButtons(content.options, groupIndex, content),
@@ -1929,14 +2233,37 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         Positioned(
           top: 8,
           right: 8,
-          child: QuestionAudioPlayer(
-            questionText: normalizedQuestion,
-            speakerVoices: widget.exercise.speakerVoices,
-            defaultVoice: widget.exercise.defaultVoice,
-            autoPlay: false,
+          child: _buildSequentialQuestionAudioPlayer(
+            normalizedQuestion,
+            groupIndex,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSequentialQuestionAudioPlayer(String templateText, int groupIndex) {
+    var questionText = templateText;
+    String? spokenText;
+    var enabled = true;
+    if (widget.exercise.type == ExerciseType.sequentialQuestions &&
+        groupIndex >= 0 &&
+        widget.exercise.groupQuestions != null) {
+      final q = widget.exercise.groupQuestions![groupIndex];
+      enabled = _isSequentialQuestionAnswered(groupIndex, q);
+      if (enabled) {
+        final resolved = _resolveQuestionTemplate(q, groupIndex);
+        questionText = resolved;
+        spokenText = _speechTextForResolvedQuestion(resolved);
+      }
+    }
+    return QuestionAudioPlayer(
+      questionText: questionText,
+      spokenText: spokenText,
+      speakerVoices: widget.exercise.speakerVoices,
+      defaultVoice: widget.exercise.defaultVoice,
+      autoPlay: false,
+      enabled: enabled,
     );
   }
 
@@ -2399,6 +2726,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
         _buttonSingleChoiceOptionByPlaceholder[key] = index;
       }
     });
+    if (groupIndex >= 0) {
+      _maybeAutoSpeakSequentialQuestion(groupIndex);
+    }
   }
 
   void _removeFromPlaceholder(int placeholderIndex, int groupIndex, String option) {
@@ -2406,6 +2736,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
       final key = groupIndex == -1 ? placeholderIndex : groupIndex * 1000 + placeholderIndex;
       _selectedAnswers.remove(key);
       _buttonSingleChoiceOptionByPlaceholder.remove(key);
+      if (groupIndex >= 0) {
+        _lastSequentialSpeechKey = null;
+      }
     });
   }
 
@@ -3232,7 +3565,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
     final category = _fillBlankCategoryLabel();
     final showCategoryChip = category != null && !hasExerciseTitle;
 
-    return Container(
+    final card = Container(
       width: double.infinity,
       decoration: _kFillBlankCardDecoration,
       child: Padding(
@@ -3266,6 +3599,23 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
           ],
         ),
       ),
+    );
+
+    if (widget.exercise.type != ExerciseType.sequentialQuestions) {
+      return card;
+    }
+
+    final templateText = _normalizeQuestionText(groupQuestion.question);
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        card,
+        Positioned(
+          top: 16,
+          right: 16,
+          child: _buildSequentialQuestionAudioPlayer(templateText, groupIndex),
+        ),
+      ],
     );
   }
 
@@ -3458,7 +3808,19 @@ class _ExerciseScreenState extends State<ExerciseScreen> with TickerProviderStat
                     onChanged: (value) {
                       setState(() {
                         _fillBlankAnswers[storageKey] = value;
+                        if (widget.exercise.type == ExerciseType.sequentialQuestions &&
+                            groupIndex >= 0) {
+                          final gq = widget.exercise.groupQuestions;
+                          if (gq != null &&
+                              !_isSequentialQuestionAnswered(groupIndex, gq[groupIndex])) {
+                            _lastSequentialSpeechKey = null;
+                          }
+                        }
                       });
+                      if (widget.exercise.type == ExerciseType.sequentialQuestions &&
+                          groupIndex >= 0) {
+                        _maybeAutoSpeakSequentialQuestion(groupIndex);
+                      }
                     },
                     textAlign: TextAlign.center,
                     style: TextStyle(

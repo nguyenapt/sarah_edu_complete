@@ -25,6 +25,16 @@
    dotnet run
    ```
 
+## AI Grammar (OpenAI / Gemini)
+
+Lồng ghép ngữ pháp qua batch AI: Phase 1 topic-anchor (chỉ câu neo trong `groupQuestions`); Phase 2 grammar checkpoint.
+
+Xem hướng dẫn đầy đủ: [GRAMMAR_AI_PIPELINE.md](../GRAMMAR_AI_PIPELINE.md) (thư mục gốc repo).
+
+1. Cấu hình `OPENAI_API_KEY` / `GEMINI_API_KEY` hoặc `appsettings.local.json` (xem `appsettings.local.example.json`)
+2. Chạy app → load JSON hoặc Firestore → **AI Grammar**
+3. Review grid (Topic / Neo) → Áp dụng → Export → Upload Firestore
+
 ## Cách sử dụng
 
 ### 1. Lấy Firebase Credentials

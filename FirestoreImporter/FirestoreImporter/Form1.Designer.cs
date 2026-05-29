@@ -54,6 +54,7 @@ partial class Form1
         button2 = new Button();
         button3 = new Button();
         btnCreateGroupExercise = new Button();
+        btnOpenGrammarAi = new Button();
         groupBoxConnection.SuspendLayout();
         groupBoxImport.SuspendLayout();
         SuspendLayout();
@@ -137,17 +138,18 @@ partial class Form1
         groupBoxImport.Controls.Add(btnBrowseJson);
         groupBoxImport.Controls.Add(txtJsonFile);
         groupBoxImport.Controls.Add(lblJsonFile);
+        groupBoxImport.Controls.Add(btnOpenGrammarAi);
         groupBoxImport.Controls.Add(btnImport);
         groupBoxImport.Location = new Point(12, 165);
         groupBoxImport.Name = "groupBoxImport";
-        groupBoxImport.Size = new Size(420, 200);
+        groupBoxImport.Size = new Size(420, 235);
         groupBoxImport.TabIndex = 7;
         groupBoxImport.TabStop = false;
         groupBoxImport.Text = "Import Data";
         // 
         // btnCreateExercise
         // 
-        btnCreateExercise.Location = new Point(288, 205);
+        btnCreateExercise.Location = new Point(288, 240);
         btnCreateExercise.Name = "btnCreateExercise";
         btnCreateExercise.Size = new Size(120, 30);
         btnCreateExercise.TabIndex = 10;
@@ -157,7 +159,7 @@ partial class Form1
         // 
         // btnCreateLesson
         // 
-        btnCreateLesson.Location = new Point(150, 205);
+        btnCreateLesson.Location = new Point(150, 240);
         btnCreateLesson.Name = "btnCreateLesson";
         btnCreateLesson.Size = new Size(120, 30);
         btnCreateLesson.TabIndex = 9;
@@ -167,7 +169,7 @@ partial class Form1
         // 
         // btnCreateUnit
         // 
-        btnCreateUnit.Location = new Point(12, 205);
+        btnCreateUnit.Location = new Point(12, 240);
         btnCreateUnit.Name = "btnCreateUnit";
         btnCreateUnit.Size = new Size(120, 30);
         btnCreateUnit.TabIndex = 8;
@@ -248,6 +250,16 @@ partial class Form1
         lblJsonFile.Size = new Size(59, 15);
         lblJsonFile.TabIndex = 0;
         lblJsonFile.Text = "JSON File:";
+        // 
+        // btnOpenGrammarAi
+        // 
+        btnOpenGrammarAi.Location = new Point(230, 165);
+        btnOpenGrammarAi.Name = "btnOpenGrammarAi";
+        btnOpenGrammarAi.Size = new Size(170, 30);
+        btnOpenGrammarAi.TabIndex = 11;
+        btnOpenGrammarAi.Text = "AI Grammar";
+        btnOpenGrammarAi.UseVisualStyleBackColor = true;
+        btnOpenGrammarAi.Click += BtnOpenGrammarAi_Click;
         // 
         // btnImport
         // 
@@ -378,4 +390,5 @@ partial class Form1
     private Button button2;
     private Button button3;
     private Button btnCreateGroupExercise;
+    private Button btnOpenGrammarAi;
 }

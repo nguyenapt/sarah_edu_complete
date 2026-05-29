@@ -1,3 +1,6 @@
+# FirestoreImporter secrets
+FirestoreImporter/FirestoreImporter/appsettings.local.json
+
 # Miscellaneous
 *.class
 *.log

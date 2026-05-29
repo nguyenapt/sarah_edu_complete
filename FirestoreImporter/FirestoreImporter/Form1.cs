@@ -321,4 +321,21 @@ public partial class Form1 : Form
             //}
         }
     }
+
+    private void BtnOpenGrammarAi_Click(object? sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(txtProjectId.Text))
+        {
+            MessageBox.Show("Nhập Project ID trước.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var jsonPath = File.Exists(txtJsonFile.Text) ? txtJsonFile.Text : null;
+        using var form = new GrammarAiForm(
+            _firestoreService!,
+            txtProjectId.Text.Trim(),
+            txtCredentials.Text.Trim(),
+            jsonPath);
+        form.ShowDialog();
+    }
 }

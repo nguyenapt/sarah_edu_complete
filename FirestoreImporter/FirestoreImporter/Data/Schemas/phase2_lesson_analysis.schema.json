@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase2LessonAnalysis",
+  "type": "object",
+  "required": ["inferredGrammarTopic", "confidence", "checkpoints"],
+  "additionalProperties": false,
+  "properties": {
+    "inferredGrammarTopic": { "type": "string", "minLength": 1 },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["afterExerciseId", "teachThenPractice"],
+        "additionalProperties": false,
+        "properties": {
+          "afterExerciseId": { "type": "string", "minLength": 1 },
+          "teachThenPractice": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

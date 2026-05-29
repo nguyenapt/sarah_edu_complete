@@ -1,0 +1,271 @@
+{
+  "levels": null,
+  "units": {
+    "unit_a1_1": {
+      "id": "unit_a1_1",
+      "levelId": "A1",
+      "title": {
+        "de": "Präsens, Präsens-Verlaufsform, Zustandsverben",
+        "en": "Present simple, present continuous, stative verbs",
+        "fr": "Présent simple, présent continu, verbes d'état",
+        "ja": "現在形、現在進行形、状態動詞",
+        "ko": "현재 단순 시제, 현재 진행 시제, 상태 동사",
+        "ru": "Простое настоящее время, настоящее продолженное время, стативные глаголы",
+        "vi": "Thì hiện tại đơn, thì hiện tại tiếp diễn, động từ trạng thái"
+      },
+      "description": {
+        "vi": "Học về thì hiện tại đơn, thì hiện tại tiếp diễn và động từ trạng thái",
+        "en": "Learn about the present simple tense, the present continuous tense, and state verbs.",
+        "ko": "현재 단순 시제, 현재 진행 시제, 그리고 상태 동사에 대해 알아보세요.",
+        "ja": "現在形、現在進行形、状態動詞について学びます。",
+        "fr": "Apprenez-en davantage sur le présent simple, le présent continu et les verbes d'état.",
+        "de": "Lerne das Präsens (einfache Zeitform), das Präsens-Verlaufsform und Zustandsverben kennen.",
+        "ru": "Изучите простое настоящее время, настоящее продолженное время и глаголы состояния."
+      },
+      "order": 1,
+      "estimatedTime": 60,
+      "lessons": [
+        "lesson_a1_1_1",
+        "lesson_a1_1_2",
+        "lesson_a1_1_3",
+        "lesson_a1_2_1",
+        "lesson_a1_2_2",
+        "lesson_a1_2_3"
+      ],
+      "prerequisites": [
+        ""
+      ],
+      "group": "A1_1_3"
+    }
+  },
+  "lessons": {
+    "lesson_a1_1_1": {
+      "id": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "title": {
+        "en": "Present simple",
+        "vi": "Thì hiện tại đơn"
+      },
+      "type": "grammar",
+      "order": 1,
+      "content": {
+        "theory": {
+          "title": null,
+          "description": null,
+          "examples": [],
+          "usage": [
+            {
+              "en": {
+                "example": "Marsha goes to dance lessons every Saturday.",
+                "title": "Present habits"
+              }
+            },
+            {
+              "en": {
+                "example": "Does Dan work at the cinema?",
+                "title": "Permanent situations"
+              }
+            },
+            {
+              "en": {
+                "example": "I like the new James Bond film",
+                "title": "States"
+              }
+            },
+            {
+              "en": {
+                "example": "You play chess with 32 pieces",
+                "title": "General truths"
+              }
+            }
+          ],
+          "hints": {
+            "en": [
+              "<p>The present simple is often used with the following words and phrases:</p>\n<p><strong>adverbs</strong></p>\n<p style=\"padding-left: 40px;\">&bull; always <br />&bull; usually <br />&bull; often<br />&bull; sometimes <br />&bull; rarely <br />&bull; never</p>\n<p><strong>phrases</strong></p>\n<p style=\"padding-left: 40px;\">&bull; every Monday/week/etc<br />&bull; each Monday/week/etc<br />&bull; once/twice a week/month/etc<br />&bull; three times a week/month/etc</p>",
+              "<p><span class=\"fontstyle0\">Remember that these adverbs usually go </span><span class=\"fontstyle0\">before the verb, but </span><span class=\"fontstyle2\">after </span><span class=\"fontstyle0\">the verb </span><span class=\"fontstyle3\">be.</span></p>\n<p><span class=\"fontstyle3\">&bull; I </span><span class=\"fontstyle4\"><strong>often</strong> </span><span class=\"fontstyle3\">play football with </span><span class=\"fontstyle0\">my </span><span class=\"fontstyle3\">friends.</span></p>\n<p><span class=\"fontstyle3\">&bull; I am </span><span class=\"fontstyle4\"><strong>often</strong> </span><span class=\"fontstyle3\">late for </span><span class=\"fontstyle0\">my </span><span class=\"fontstyle3\">piano lessons.</span> </p>"
+            ]
+          },
+          "forms": {
+            "statement": [
+              "I/you/we/they play ...",
+              "He/she/it plays ..."
+            ],
+            "negative": [
+              "I/you/wejthey do not (don't} play ...",
+              "He/she/it does not (doesn't} play ..."
+            ],
+            "question": [
+              "Do I/you/we/they play ...?",
+              "Does he/she/it play ...?"
+            ],
+            "form": null
+          },
+          "vocabulary": null
+        },
+        "exercises": [
+          "exercise_a1_1_1_1",
+          "exercise_a1_1_1_2",
+          "exercise_a1_1_1_3"
+        ]
+      }
+    }
+  },
+  "exercises": {
+    "exercise_a1_1_1_1": {
+      "id": "exercise_a1_1_1_1",
+      "lessonId": "lesson_a1_1_1",
+      "unitId": "unit_a1_1",
+      "levelId": "A1",
+      "type": "single_choice",
+      "question": null,
+      "content": null,
+      "points": 6,
+      "timeLimit": 60,
+      "difficulty": "medium",
+      "explanation": null,
+      "groupQuestions": [
+        {
+          "question": "1. Everyday, Mina {0} at half past seven",
+          "type": "button_single_choice",
+          "content": {
+            "correctAnswers": [
+              "gets up"
+            ],
+            "options": [
+              "get up",
+              "gets up",
+              "went up",
+              "go up"
+            ]
+          },
+          "point": 1,
+          "timeLimit": 10,
+          "difficulty": "medium",
+          "explanation": {
+            "en": "<p>She usually <strong>drinks</strong> coffee in the morning.</p>\n<p>They <strong>play</strong> football on Sundays.</p>\n<p>I <strong>play</strong> ....</p>\n<p>He <strong>plays</strong> ...</p>"
+          },
+          "imageUrl": null,
+          "audioUrl": null
+        },
+        {
+          "question": "2. Mina often {0} fast food for lunch",
+          "type": "button_single_choice",
+          "content": {
+            "options": [
+              "eat",
+              "ate",
+              "eats",
+              "eaten"
+            ],
+            "correctAnswers": [
+              "eats"
+            ]
+          },
+          "point": 1,
+          "timeLimit": 10,
+          "difficulty": "medium",
+          "explanation": null,
+          "imageUrl": null,
+          "audioUrl": null
+        },
+        {
+          "question": "3. In the evening, Helen usually {0} her friends for coffee",
+          "type": "button_single_choice",
+          "content": {
+            "correctAnswers": [
+              "meets"
+            ],
+            "options": [
+              "meet",
+              "met",
+              "meets"
+            ]
+          },
+          "point": 1,
+          "timeLimit": 10,
+          "difficulty": "medium",
+          "explanation": null,
+          "imageUrl": null,
+          "audioUrl": null
+        },
+        {
+          "question": "4. Once a week, Mina {0} a film at the cinema",
+          "type": "button_single_choice",
+          "content": {
+            "options": [
+              "watch",
+              "see",
+              "seen",
+              "watches"
+            ],
+            "correctAnswers": [
+              "watches"
+            ]
+          },
+          "point": 1,
+          "timeLimit": 1,
+          "difficulty": "medium",
+          "explanation": null,
+          "imageUrl": null,
+          "audioUrl": null
+        },
+        {
+          "question": "5. Mina rarely {0} the gym",
+          "type": "button_single_choice",
+          "content": {
+            "options": [
+              "go to",
+              "went to",
+              "goes to",
+              "got to"
+            ],
+            "correctAnswers": [
+              "goes to"
+            ]
+          },
+          "point": 1,
+          "timeLimit": 10,
+          "difficulty": "medium",
+          "explanation": null,
+          "imageUrl": null,
+          "audioUrl": null
+        },
+        {
+          "question": "6. Mina {0} a driving lesson twice a week",
+          "type": "button_single_choice",
+          "content": {
+            "correctAnswers": [
+              "has"
+            ],
+            "options": [
+              "had",
+              "has",
+              "have"
+            ]
+          },
+          "point": 1,
+          "timeLimit": 10,
+          "difficulty": "medium",
+          "explanation": null,
+          "imageUrl": null,
+          "audioUrl": null
+        }
+      ],
+      "imageUrl": null,
+      "audioUrl": null,
+      "title": null,
+      "grammarTopics": [
+        "present_simple"
+      ],
+      "skillTypes": [
+        "reading"
+      ],
+      "hasVoice": null,
+      "defaultVoice": null,
+      "speakerVoices": null,
+      "sequentialTitle": null,
+      "contentMeta": null
+    }
+  }
+}

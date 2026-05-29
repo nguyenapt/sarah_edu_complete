@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase1AnchorExplanations",
+  "type": "object",
+  "required": ["anchorPatches"],
+  "additionalProperties": false,
+  "properties": {
+    "anchorPatches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "topicId", "explanation"],
+        "additionalProperties": false,
+        "properties": {
+          "index": { "type": "integer", "minimum": 0 },
+          "topicId": { "type": "string", "minLength": 1 },
+          "explanation": {
+            "type": "object",
+            "required": ["en", "vi"],
+            "additionalProperties": false,
+            "properties": {
+              "en": { "type": "string", "minLength": 10 },
+              "vi": { "type": "string", "minLength": 10 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

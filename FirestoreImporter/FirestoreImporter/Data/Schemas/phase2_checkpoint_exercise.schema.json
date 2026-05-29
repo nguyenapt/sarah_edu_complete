@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase2CheckpointExercise",
+  "type": "object",
+  "required": ["type", "question", "explanation", "content", "grammarTopics", "skillTypes", "points", "difficulty"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["button_single_choice", "single_choice"]
+    },
+    "question": {
+      "type": "object",
+      "required": ["en", "vi"],
+      "properties": {
+        "en": { "type": "string" },
+        "vi": { "type": "string" }
+      }
+    },
+    "explanation": {
+      "type": "object",
+      "required": ["en", "vi"],
+      "properties": {
+        "en": { "type": "string" },
+        "vi": { "type": "string" }
+      }
+    },
+    "content": {
+      "type": "object",
+      "required": ["options", "correctAnswers"],
+      "properties": {
+        "options": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2
+        },
+        "correctAnswers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "grammarTopics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "skillTypes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "points": { "type": "integer", "minimum": 1, "maximum": 20 },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard"]
+    }
+  }
+}

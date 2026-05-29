@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase1GrammarEnrichment",
+  "type": "object",
+  "required": ["grammarTopics", "explanation"],
+  "additionalProperties": false,
+  "properties": {
+    "grammarTopics": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "maxItems": 3
+    },
+    "explanation": {
+      "type": "object",
+      "required": ["en", "vi"],
+      "additionalProperties": false,
+      "properties": {
+        "en": { "type": "string", "minLength": 10 },
+        "vi": { "type": "string", "minLength": 10 }
+      }
+    },
+    "groupQuestionPatches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "explanation"],
+        "additionalProperties": false,
+        "properties": {
+          "index": { "type": "integer", "minimum": 0 },
+          "explanation": {
+            "type": "object",
+            "required": ["en", "vi"],
+            "properties": {
+              "en": { "type": "string" },
+              "vi": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

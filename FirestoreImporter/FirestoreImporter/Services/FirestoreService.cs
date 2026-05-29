@@ -8,6 +8,13 @@ public class FirestoreService
     private FirestoreDb? _db;
     private string? _projectId;
 
+    public FirestoreDb GetDb()
+    {
+        if (_db == null)
+            throw new InvalidOperationException("Firestore chưa được khởi tạo. Vui lòng nhập Project ID và Credentials.");
+        return _db;
+    }
+
     public async Task InitializeAsync(string projectId, string? credentialsPath = null)
     {
         _projectId = projectId;
@@ -49,7 +56,7 @@ public class FirestoreService
 
         var collection = _db.Collection("units");
         var docRef = collection.Document(unit.Id);
-        await docRef.SetAsync(unit.ToFirestore());
+        await docRef.SetAsync(FirestoreValueNormalizer.PrepareDocument(unit.ToFirestore()));
     }
 
     public async Task ImportLessonAsync(LessonModel lesson)
@@ -61,7 +68,7 @@ public class FirestoreService
 
         var collection = _db.Collection("lessons");
         var docRef = collection.Document(lesson.Id);
-        await docRef.SetAsync(lesson.ToFirestore());
+        await docRef.SetAsync(FirestoreValueNormalizer.PrepareDocument(lesson.ToFirestore()));
     }
 
     public async Task ImportExerciseAsync(ExerciseModel exercise)
@@ -73,7 +80,7 @@ public class FirestoreService
 
         var collection = _db.Collection("exercises");
         var docRef = collection.Document(exercise.Id);
-        await docRef.SetAsync(exercise.ToFirestore());
+        await docRef.SetAsync(FirestoreValueNormalizer.PrepareDocument(exercise.ToFirestore()));
     }
 
     public async Task ImportLevelAsync(string levelId, LevelData levelData)
